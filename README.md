@@ -44,10 +44,18 @@ gallery/
 
 Nginx `auth_request` 探活：`GET /api/auth/gate`（挂在 `/gallery/` 且未剥前缀时也认 `/gallery/api/auth/gate`）— 有效会话 **204**，未登录 **401**。不要用 `/api/auth/status` 做 auth_request（它在未登录时仍返回 200 JSON `{ok:false}`，nginx 会当成放行）。
 - `GALLERY_MAXKB_TOKEN` / `GALLERY_MAXKB_TOKEN_FILE` — MaxKB 联邦检索
+- `GALLERY_MAXKB_KNOWLEDGE_IDS` / `GALLERY_MAXKB_MODE` / `GALLERY_MAXKB_SIMILARITY` / `GALLERY_MAXKB_TOP` — 知识库 hit_test 入参（默认 blend / 0.3 / 8）
+- `GALLERY_MAXKB_EXPAND` — 知识通道查询扩展，默认开；`0` 只打原始问句
+- `GALLERY_MAXKB_VARIANTS` — 扩展变体上限（默认 4）
+- `GALLERY_MAXKB_RRF_K` — RRF 常数（默认 60）
+- `GALLERY_MAXKB_PER_DOC` — 同一文档最多保留段落数（默认 3）
+- `GALLERY_MAXKB_SYNONYMS` — 可选 JSON，覆盖/追加内存同义词表
 - `GALLERY_KMS_BASE` + `GALLERY_KMS_TOKEN` — KMS 检索
 - `FEEDBACK_PUBLIC_BASE` 或 `GALLERY_FEEDBACK_BASE` — 反馈台对外基址（默认 `http://120.55.184.234:8787`，联邦检索里的 admin / shot URL 用它）
 - `GALLERY_FED_TIMEOUT` — 联邦检索每路超时秒数（默认 `10`）
 - `GALLERY_FED_TIMEOUT_DEMOS` / `_FEEDBACK` / `_KNOWLEDGE` / `_FEISHU` — 单路覆盖
+
+知识通道排序（只改 `search_maxkb`，不改四路 UI）：扩展 2–4 条问句 → 各 KB `hit_test` → 按段落 id 做 RRF → `售前武器/` 等路径加权 → 每文档最多 3 段。详见 `CHANGE-SUMMARY.md`。
 
 ## 本地 / CI
 

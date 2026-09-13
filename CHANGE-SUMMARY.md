@@ -1,5 +1,18 @@
 # Gallery Change Summary
 
+## 2026-09-13 · MaxKB knowledge-channel ranking (RRF + expansion)
+
+- Knowledge lane only (`search_maxkb` in `search_federation.py`). Multi-lane UI / cross-channel merge unchanged. Catalog stays **1.6.3**.
+- Query expansion (2–4 variants): original, strip tails (`怎么讲` / `怎么说` …), in-file synonym map (稽核→迎检/驻厂/审计包/追溯, 稼动→OEE/WIP/良率, 园区→填报/月报). Optional JSON override `GALLERY_MAXKB_SYNONYMS`.
+- Per-variant `hit_test` against configured KB ids, then **RRF fuse** across `(kb × query_variant)` lists (do not trust raw `comprehensive_score` across KBs).
+- After RRF: path/title boost for `售前武器/` `作战卡` `开场` `反对意见` `Playbook` `检索卡`; mild downrank of 百科/词条 stub titles. Objection/怎么讲 intent boosts ammo paths more; process nouns less.
+- Dedupe by paragraph id first; cap **2–3 paragraphs per document** (default 3) instead of one hit per `document_name`.
+- Existing knobs still sent to MaxKB: `GALLERY_MAXKB_MODE` / `SIMILARITY` / `TOP` / `KNOWLEDGE_IDS` / timeouts. New optional: `GALLERY_MAXKB_EXPAND` (0=off), `GALLERY_MAXKB_VARIANTS`, `GALLERY_MAXKB_RRF_K` (default 60), `GALLERY_MAXKB_PER_DOC` (default 3).
+- Tests: `tests/test_search_maxkb.py` mocks `hit_test` and proves RRF consensus, playbook boost, multi-para cap.
+- No MaxKB admin / Nginx / ECS deploy script changes. **Merge ≠ deploy.**
+
+---
+
 ## 2026-09-13 · Cleanup follow-through + DEMO change flow
 
 - Re-read `demos/CLEANUP.md` on current `main`. Priority A stubs already registered; fields match policy (`family=biren-finance`, `archived=true`, `is_latest=false`, `audience=client`, `featured=false`). Latest stays `biren-finance`. rev1/rev2 thumb/cover remain warn-only — no invented covers. Catalog `meta.version` left at **1.6.3** (no catalog.json edit).

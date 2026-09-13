@@ -89,9 +89,14 @@
 |---|---|
 | `GALLERY_MAXKB_BASE` / `GALLERY_MAXKB_PUBLIC` | MaxKB API 基址 |
 | `GALLERY_MAXKB_TOKEN` / `GALLERY_MAXKB_TOKEN_FILE` | MaxKB Bearer |
+| `GALLERY_MAXKB_KNOWLEDGE_IDS` / `_MODE` / `_SIMILARITY` / `_TOP` | hit_test 入参（默认 blend / 0.3 / 8） |
+| `GALLERY_MAXKB_EXPAND` / `_VARIANTS` / `_RRF_K` / `_PER_DOC` | 知识通道扩展 + RRF + 每文档段落上限 |
+| `GALLERY_MAXKB_SYNONYMS` | 可选 JSON 同义词覆盖 |
 | `GALLERY_KMS_BASE` + `GALLERY_KMS_TOKEN` | KMS 检索 |
 | `GALLERY_KH_TOKEN` | FineRAG / KH MCP Bearer |
 | `FEEDBACK_DB` | 反馈 SQLite 路径（可选搜反馈） |
+
+知识通道（`search_maxkb`）在库内做：**查询扩展 → 每 (KB × 变体) `hit_test` → RRF 融合 → 路径/标题加权 → 按段落 id 去重、每文档最多 2–3 段**。四路联邦（demos / feedback / knowledge / feishu）仍并行、不跨通道合并。客户名检索仍走 demos 原句，不改。
 
 ---
 
