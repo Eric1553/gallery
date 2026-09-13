@@ -2,7 +2,7 @@
   "meta": {
     "title": "DEMO案例库",
     "subtitle": "Vibe coding 成果的展示、检索与客户演示入口",
-    "version": "1.6.2",
+    "version": "1.6.3",
     "updated_at": "2026-09-13",
     "host_hint": "http://120.55.184.234",
     "cover_policy": "webp_thumb_800 + cover_1600",
@@ -588,17 +588,17 @@
     },
     {
       "id": "jiangyuan-rd-pm",
-      "title": "江原科技 · 研发项目管理（简道云原型）",
+      "title": "江原科技 · 研发项目管理",
       "client": "江原科技",
       "industry": "半导体",
       "hall": "ops",
       "type": "交互原型",
-      "summary": "简道云式工作台壳，覆盖立项、计划、任务验收、Signoff、Exit、结项/中止，以及工时、费用与待办闭环。",
+      "summary": "覆盖立项、计划、任务验收、Signoff、Exit、结项/中止，以及工时、费用与待办闭环。",
       "tags": [
         "半导体",
         "研发运营",
         "项目管理",
-        "简道云"
+        "江原科技"
       ],
       "entry": "index.html",
       "source": "J-江原科技/研发管理/jiangyuan-rd-pm-prototype",
