@@ -1,5 +1,13 @@
 # Gallery Change Summary
 
+## 2026-09-13 · Missing DEMO covers (catalog 1.6.2)
+
+- Added `cover.webp` (1600×1000) and `thumb.webp` (800×500) for `weijie-sales-lite`, `jiandaoyun-carousel`, `ammo-search`.
+- Catalog stamps `cover`/`thumb` only; audience / featured / hall / tags unchanged. 帆软/简道云 stay internal, not featured.
+- Screenshots taken locally from each catalog entry via Linux Chrome headless (no Mac Chrome, SSH, scp, `/opt`, or systemd). Merge ≠ deploy.
+
+---
+
 ## 2026-09-13 · nginx auth_request gate
 
 - `GET /api/auth/gate` (also `/gallery/api/auth/gate`): **204** if `gallery_session` is valid, **401** if not. Never 2xx when unauthenticated.

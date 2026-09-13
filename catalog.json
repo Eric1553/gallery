@@ -2,7 +2,7 @@
   "meta": {
     "title": "DEMO案例库",
     "subtitle": "Vibe coding 成果的展示、检索与客户演示入口",
-    "version": "1.6.1",
+    "version": "1.6.2",
     "updated_at": "2026-09-13",
     "host_hint": "http://120.55.184.234",
     "cover_policy": "webp_thumb_800 + cover_1600",
@@ -502,6 +502,8 @@
       "version_label": "单页轻量版",
       "is_latest": false,
       "archived": true,
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
       "added_at": "2026-06-05",
       "audience": "client"
     },
@@ -701,6 +703,8 @@
       "version_label": "简道云 AI 轮播",
       "is_latest": false,
       "archived": true,
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
       "audience": "internal",
       "added_at": "2026-04-10"
     },
@@ -779,6 +783,8 @@
       "version_label": "通用检索工作台",
       "is_latest": false,
       "archived": true,
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
       "added_at": "2026-02-20",
       "audience": "internal"
     },
