@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>D-00 统一明细底表 · 唯捷创芯</title>
+<link rel="stylesheet" href="../assets/style.css" />
+<script src="../assets/echarts.min.js"></script>
+</head>
+<body>
+<div id="content">
+
+  <div class="grid r-23" style="margin-bottom:4px">
+    <div class="card"><div class="card-b" style="padding:12px 16px">
+      <div class="flow">
+        <div class="step"><span class="sn">1</span>筛选</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">2</span>明细</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">3</span>导出</div>
+      </div>
+    </div></div>
+    <div class="card"><div class="card-b" style="padding:12px 16px">
+      <div class="meta-strip">
+        <span class="ms">维度 <b>销售组为主</b></span>
+        <span class="ms">FCST对照 <b>仅联动 D-06</b></span>
+        <span class="ms">预测侧对照 <b>暂缓</b></span>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>明细主题</h2>
+    <span class="desc">为各看板提供统一下钻、对账与留痕能力</span><span class="line"></span></div>
+  <div class="card"><div class="card-b" style="padding:14px 16px">
+    <div class="tabs" id="themeTabs"></div>
+  </div></div>
+
+  <div class="grid g4" id="kpi" style="margin-top:14px"></div>
+
+  <div class="section-head"><span class="bar"></span><h2>通用筛选维度</h2>
+    <span class="desc">时间 / 销售组 / 渠道 / 产品 / 客户等</span><span class="line"></span></div>
+  <div class="card"><div class="card-b" style="padding:14px 16px">
+    <div class="filters" style="padding:0">
+      <div class="filter"><span class="fk">时间</span><span class="fv">2026-06</span></div>
+      <div class="filter"><span class="fk">销售组</span><span class="fv">全部销售组</span></div>
+      <div class="filter"><span class="fk">渠道</span><span class="fv">全部</span></div>
+      <div class="filter"><span class="fk">产品大类</span><span class="fv">全部</span></div>
+      <div class="filter"><span class="fk">客户</span><span class="fv">全部</span></div>
+      <div class="filter"><span class="fk">版本</span><span class="fv">V3 vs V1</span></div>
+      <button class="btn-primary" style="margin-left:auto">查询明细</button>
+      <button class="btn-ghost">字段配置</button>
+      <button class="btn-ghost">导出 Excel</button>
+    </div>
+  </div></div>
+
+  <div class="section-head"><span class="bar"></span><h2 id="tblTitle">销售预测明细</h2>
+    <span class="desc" id="tblDesc">支持联动各看板下钻字段</span><span class="line"></span></div>
+  <div class="card">
+    <div class="card-h"><div class="ct"><span class="ci"></span>明细数据（示意 · 前 6 行）</div>
+      <div class="card-tools"><span class="tag tag-gray">共 12,486 行</span><button class="btn-ghost">导出</button></div></div>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl" id="tbl"></table></div></div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>主题权限控制</h2>
+    <span class="desc">按主题与销售组等维度配置可见范围</span><span class="line"></span></div>
+  <div class="card"><div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl" id="tblPerm"></table></div></div></div>
+
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+renderLayout("d00",{chapter:"支撑层 · 底表与对账",
+ sub:"为各看板提供统一下钻、对账与留痕能力。预测侧 FCST 对照暂缓；库存侧对照明细仍保留并联动 D-06。",
+ filters:false,
+ batchTags:'<span class="tag tag-green" style="margin-left:8px">一期 P0</span>'});
+
+const THEMES={
+ forecast:{name:"销售预测明细",desc:"年度/月度预测明细，联动 D-01 / D-02（按销售组）",
+  head:["日期","销售组","客户","产品大类","型号","预测单价(元)","预测数量(万颗)","预测收入(万元)","版本"],
+  rows:[
+   ["2026-07","华东一组","汇顶科技","消费电子","WL3088","2.36","3,200","7,552","V3"],
+   ["2026-07","华南一组","汇川技术","工业控制","WL5521","3.10","1,480","4,588","V3"],
+   ["2026-07","华北一组","比亚迪半导","汽车电子","WL2456","4.82","860","4,145","V3"],
+   ["2026-07","西南一组","紫光展锐","通信","WL1207","1.95","1,560","3,042","V3"],
+   ["2026-07","海外一组","Tier-1 ODM","消费电子","WL3088","2.30","620","1,426","V3"],
+   ["2026-07","华东一组","中颖电子","消费电子","WL6602","2.10","540","1,134","V3"],
+  ]},
+ version:{name:"月度预测版本对比明细",desc:"版本差异、变更原因，联动 D-02",
+  head:["销售组","客户","产品大类","型号","V1收入(万元)","V3收入(万元)","差异(万元)","变更原因"],
+  rows:[
+   ["华东一组","汇顶科技","消费电子","WL3088","7,420","7,552","+132","需求上调"],
+   ["华南一组","汇川技术","工业控制","WL5521","4,610","4,588","-22","价格调整"],
+   ["华北一组","比亚迪半导","汽车电子","WL2456","3,980","4,145","+165","新增订单"],
+   ["西南一组","紫光展锐","通信","WL1207","3,120","3,042","-78","订单流失"],
+   ["华东一组","中颖电子","消费电子","WL6602","1,080","1,134","+54","需求上调"],
+   ["海外一组","Tier-1 ODM","消费电子","WL3088","1,460","1,426","-34","价格调整"],
+  ]},
+ fcst:{name:"FCST 与实际订单对照明细",desc:"库存/供需侧对照底表，仅联动 D-06（预测页对照暂缓）",
+  head:["月份","销售组","客户","型号","FCST(万颗)","实际订单(万颗)","POP出货","POS出货","命中率"],
+  rows:[
+   ["2026-06","华东一组","汇顶科技","WL3088","58","55","53","50","94.8%"],
+   ["2026-06","华南一组","汇川技术","WL5521","42","40","39","37","95.2%"],
+   ["2026-06","华北一组","比亚迪半导","WL2456","36","38","36","34","94.7%"],
+   ["2026-06","西南一组","紫光展锐","WL1207","28","26","25","24","92.9%"],
+   ["2026-06","华东一组","中颖电子","WL6602","16","15","14","13","93.8%"],
+   ["2026-06","海外一组","Tier-1 ODM","WL3088","10","12","11","10","83.3%"],
+  ]},
+};
+
+const kpiData=[
+ {t:"明细总行数",v:"12,486",u:"行",sc:"#2468f2"},
+ {t:"覆盖主题",v:"3",u:"个",sc:"#16b8c8"},
+ {t:"通用维度",v:"6",u:"个",sc:"#25a36c"},
+ {t:"对账一致率",v:"99.2",u:"%",sc:"#7a6ff0"},
+];
+document.getElementById("kpi").innerHTML=kpiData.map(k=>`
+ <div class="kpi"><div class="kt"><span class="dot" style="background:${k.sc}"></span>${k.t}</div>
+ <div class="kv">${k.v}<small>${k.u}</small></div></div>`).join("");
+
+const tabs=[["forecast","销售预测明细"],["version","版本对比明细"],["fcst","FCST对照(D-06)"]];
+function renderTabs(active){
+ document.getElementById("themeTabs").innerHTML=tabs.map(t=>
+  `<button class="tab-btn ${t[0]===active?'active':''}" data-k="${t[0]}" onclick="loadTheme('${t[0]}')">${t[1]}</button>`).join("");
+}
+const st=document.createElement("style");
+st.textContent=`.tabs{display:flex;gap:8px;flex-wrap:wrap}.tab-btn{border:1px solid #d4e0ee;background:#fff;color:#2468f2;border-radius:9px;padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer}.tab-btn.active{background:#2468f2;color:#fff;border-color:#2468f2}`;
+document.head.appendChild(st);
+
+function loadTheme(k){
+ const t=THEMES[k];
+ renderTabs(k);
+ document.getElementById("tblTitle").textContent=t.name;
+ document.getElementById("tblDesc").textContent=t.desc;
+ document.getElementById("tbl").innerHTML=
+  "<thead><tr>"+t.head.map((h,i)=>`<th class="${i>=3&&h.match(/万|颗|率|%|元/)?'num':''}">${h}</th>`).join("")+"</tr></thead><tbody>"+
+  t.rows.map(r=>"<tr>"+r.map((c,i)=>`<td class="${i>=3&&t.head[i].match(/万|颗|率|%|元/)?'num':''} ${i===0?'strong':''}">${c}</td>`).join("")+"</tr>").join("")+"</tbody>";
+}
+loadTheme("forecast");
+
+const perm=[
+ ["销售管理层","全部主题","全部销售组","全部","可见+导出"],
+ ["销售组负责人","全部主题","本销售组","本组客户","可见+导出"],
+ ["销售运营","预测/版本","全部销售组","全部","可见"],
+ ["客户经理","预测明细","本销售组","本人客户","可见"],
+];
+const ph=["角色","可见主题","销售组范围","客户范围","权限"];
+document.getElementById("tblPerm").innerHTML=
+ "<thead><tr>"+ph.map(h=>`<th>${h}</th>`).join("")+"</tr></thead><tbody>"+
+ perm.map(r=>"<tr>"+r.map((c,i)=>`<td class="${i===0?'strong':''}">${i===4?'<span class="tag tag-blue">'+c+'</span>':c}</td>`).join("")+"</tr>").join("")+"</tbody>";
+</script>
+</body>
+</html>

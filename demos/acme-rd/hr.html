@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>人力资源看板 - 盛美半导体研发运营看板</title>
+<link rel="stylesheet" href="assets/style.css?v=67">
+<link rel="stylesheet" href="assets/req-spec.css?v=67">
+</head>
+<body data-page="hr">
+<div class="layout">
+<aside class="sidebar">
+    <div class="brand">
+    <div class="brand-logo">ACM</div>
+    <h1>研发运营看板</h1>
+    <p>盛美半导体 · 演示原型 v4.4</p>
+  </div>
+  <nav class="nav">
+    <div class="nav-section">业务模块</div>
+    <a href="index.html" class="" data-page="index">总览</a>
+    <a href="hr.html" class="active" data-page="hr">人力资源</a>
+    <a href="site-product.html" class="" data-page="site-product">Site 与产品</a>
+    <a href="case.html" class="" data-page="case">Case 追踪</a>
+    <a href="change.html" class="" data-page="change">变更管理</a>
+    <a href="wet-rd.html" class="" data-page="wet-rd">Wet-RD</a>
+    <a href="lingang.html" class="" data-page="lingang">临港研发线</a>
+    <a href="oa-monitor.html" class="" data-page="oa-monitor">OA 流程监控</a>
+    <a href="knowledge.html" class="" data-page="knowledge">知识库<span class="nav-badge">预览</span></a>
+  </nav>
+  <div class="footer-note">演示数据，口径以业务确认为准</div>
+</aside>
+<main class="main">
+  <header class="topbar">
+    <div class="breadcrumb"><a href="index.html">总览</a><span class="sep">/</span><span class="current">人力资源</span></div>
+    <div class="topbar-actions">
+                  <div class="topbar-period" data-period-mode="month">
+        <span>时间</span>
+    <select data-period-year aria-label="年份">
+      <option value="2025">2025 年</option>
+      <option value="2026" selected>2026 年</option>
+    </select>
+    <select data-period-month aria-label="月份">
+    <option value="all">全年</option>
+    <option value="01">1 月</option>
+    <option value="02">2 月</option>
+    <option value="03">3 月</option>
+    <option value="04">4 月</option>
+    <option value="05">5 月</option>
+    <option value="06" selected>6 月</option>
+    <option value="07">7 月</option>
+    <option value="08">8 月</option>
+    <option value="09">9 月</option>
+    <option value="10">10 月</option>
+    <option value="11">11 月</option>
+    <option value="12">12 月</option>
+    <optgroup label="滚动区间">
+      <option value="mtd-half">近半月</option>
+      <option value="mtd-hy">近半年</option>
+    </optgroup>
+    </select>
+      </div>
+      <span class="chip">演示数据</span>
+      <button class="btn" data-action="export"><span class="bi"></span>导出数据</button>
+      <a class="btn btn-primary" href="report.html">月度运营报告</a>
+    </div>
+  </header>
+  <div class="content">
+    <div class="page-header">
+      <div class="ph-titles"><h2>人力资源看板</h2><p>人员资历 · 出差统计 · 跨区域支援</p></div>
+      <div class="ph-actions"><button class="btn" data-action="req">需求说明</button></div>
+    </div>
+    
+    
+
+<div id="req-spec-data" data-title="人力资源看板 · 需求说明" data-sub="对应客户原始需求（人员资历 / 出差统计 / 跨区域支援）" style="display:none">
+  <div class="req-list">
+    <div class="req-item"><div class="req-idx">1</div><div class="req-body2"><div class="req-item-t">人员资历多维分析</div><div class="req-item-d">整合 HR 与 OA 人员数据，通过员工唯一编号关联合并。展示职能（Site / 产品 / 研发 / 临港研发线）、工龄、司龄、学历（大专 / 本科 / 硕士 / 博士）、技能标签（OA 产品技能等级评定，季度更新）的多维分布，支持交叉筛选。</div></div></div>
+    <div class="req-item"><div class="req-idx">2</div><div class="req-body2"><div class="req-item-t">出差统计</div><div class="req-item-d">从 OA 出差申请单统计各城市出差人员数量，按 Site / 城市排名展示出差人次，用于现场支援与出差强度分析。</div></div></div>
+    <div class="req-item"><div class="req-idx">3</div><div class="req-body2"><div class="req-item-t">跨区域人力支援</div><div class="req-item-d">统计 CRM / OA 人力支援流程：按所属大区（Site）、产品类型、工艺线展示流程数量与状态（进行中 / 已完成），支持半月 / 半年 MTD 累计，观察跨区域资源调配。</div></div></div>
+    <div class="req-item"><div class="req-idx">+</div><div class="req-body2"><div class="req-item-t">补充需求</div><div class="req-item-d">在人员资历基础上增加司龄、工龄维度，并补充每月人员离职情况分析。</div></div></div>
+  </div>
+</div>
+<div class="filter-bar">
+  <div class="filter-group"><label>职能线</label><select><option>全部</option><option>Site</option><option>产品</option><option>研发</option><option>临港研发线</option></select></div>
+  <div class="filter-group"><label>工龄</label><select><option>全部</option><option>0-3年</option><option>3-5年</option><option>5-10年</option><option>10年+</option></select></div>
+  <div class="filter-group"><label>司龄</label><select><option>全部</option><option>0-3年</option><option>3-5年</option><option>5-10年</option><option>10年+</option></select></div>
+  <div class="filter-group"><label>学历</label><select><option>全部</option><option>大专</option><option>本科</option><option>硕士</option><option>博士</option></select></div>
+  <button class="btn-apply" type="button">应用</button>
+</div>
+<div class="alert-box info" id="hr-cross-result" style="margin-bottom:18px">筛选结果：<strong>职能线=Site · 司龄=3-5年 · 学历=本科</strong> → 匹配 <strong>28</strong> 人 · <a class="link" href="#" data-action="drill" data-title="人员资历明细" data-sub="HR+OA 员工编号关联 · 交叉筛选结果" data-cols="工号,姓名,职能线,司龄,工龄,学历,技能等级,所属部门">查看人员明细 →</a></div>
+
+<div class="kpi-grid fixed3">
+  <div class="kpi-card accent-blue"><div class="kpi-top"><div class="kpi-label">在岗总人数</div></div><div class="kpi-value">342</div><div class="kpi-sub">HR / OA 工号关联</div></div>
+  <div class="kpi-card accent-green"><div class="kpi-top"><div class="kpi-label">本科及以上</div></div><div class="kpi-value">89%</div><div class="kpi-sub">硕士 34% · 博士 8%</div></div>
+  <div class="kpi-card accent-amber"><div class="kpi-top"><div class="kpi-label">出差人次</div></div><div class="kpi-value">127</div><div class="kpi-sub">2026 年 6 月</div></div>
+  <div class="kpi-card accent-purple"><div class="kpi-top"><div class="kpi-label">支援流程(进行中)</div></div><div class="kpi-value">18</div><div class="kpi-sub">6 个大区 · 4 产品类型</div></div>
+  <div class="kpi-card accent-amber"><div class="kpi-top"><div class="kpi-label">离职人数</div></div><div class="kpi-value">5</div><div class="kpi-sub">2026 年 6 月</div><div class="kpi-trend down">较上月 -2</div></div>
+</div>
+
+<div class="grid-2">
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>职能线分布</h3></div></div>
+    <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"Site","v":118},{"l":"产品","v":96},{"l":"研发","v":84},{"l":"临港研发线","v":44}]'></div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>学历分布</h3></div></div>
+    <div class="panel-body">
+      <div class="chart-wrap" data-donut='[{"l":"本科","v":37,"c":"#2563eb"},{"l":"硕士","v":34,"c":"#4a7ab0"},{"l":"大专","v":21,"c":"#64748b"},{"l":"博士","v":8,"c":"#7c3aed"}]' data-total="342" data-label="在岗人数"></div>
+    </div>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-head"><div class="panel-head-left"><h3>工龄 vs 司龄分布</h3></div></div>
+  <div class="panel-body"><div class="chart-wrap" data-group-bars='{"groups":[{"label":"0-3年","values":[90,124]},{"label":"3-5年","values":[78,96]},{"label":"5-10年","values":[112,86]},{"label":"10年+","values":[62,36]}],"series":["工龄","司龄"]}'></div></div>
+</div>
+
+<div class="grid-2">
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>每月离职情况</h3></div><a class="link" href="#" data-action="drill" data-title="离职明细" data-sub="HR · 每月离职人员明细" data-cols="工号,姓名,职能线,司龄,离职日期,离职原因">明细 →</a></div>
+    <div class="panel-body"><div class="chart-wrap" data-line='{"labels":["1月","2月","3月","4月","5月","6月"],"series":[{"name":"离职人数","data":[8,6,7,9,7,5],"c":"#b42318"}]}'></div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>离职分布 按职能线</h3></div></div>
+    <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"Site","v":14},{"l":"产品","v":9},{"l":"研发","v":11},{"l":"临港研发线","v":8}]'></div>
+      <p class="chart-footnote">近 6 月累计离职 42 人，月均离职率 1.7%</p></div>
+  </div>
+</div>
+
+<div class="grid-3">
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>技能标签分布</h3></div><span class="chip">OA · 季度</span></div>
+    <div class="panel-body"><div class="chart-wrap" data-short="true" data-bars='[{"l":"L1","v":48},{"l":"L2","v":96},{"l":"L3","v":112},{"l":"L4","v":62},{"l":"L5","v":24}]'></div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><h3>出差人次 · Site Top5</h3><span class="chip">OA</span></div>
+    <div class="panel-body panel-body-rank">
+      <ul class="rank-list">
+        <li class="rank-item"><span class="rank-num top">1</span><span style="flex:1">TSMC</span><div class="rank-bar"><div class="rank-bar-fill" style="width:100%"></div></div><span class="rank-val">18</span></li>
+        <li class="rank-item"><span class="rank-num top">2</span><span style="flex:1">SMIC</span><div class="rank-bar"><div class="rank-bar-fill" style="width:78%"></div></div><span class="rank-val">14</span></li>
+        <li class="rank-item"><span class="rank-num top">3</span><span style="flex:1">Intel</span><div class="rank-bar"><div class="rank-bar-fill" style="width:67%"></div></div><span class="rank-val">12</span></li>
+        <li class="rank-item"><span class="rank-num">4</span><span style="flex:1">Samsung</span><div class="rank-bar"><div class="rank-bar-fill" style="width:50%"></div></div><span class="rank-val">9</span></li>
+        <li class="rank-item"><span class="rank-num">5</span><span style="flex:1">Micron</span><div class="rank-bar"><div class="rank-bar-fill" style="width:44%"></div></div><span class="rank-val">8</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><h3>出差人次 · 城市 Top5</h3><span class="chip">目的地</span></div>
+    <div class="panel-body panel-body-rank">
+      <ul class="rank-list">
+        <li class="rank-item"><span class="rank-num top">1</span><span style="flex:1">上海</span><div class="rank-bar"><div class="rank-bar-fill" style="width:100%"></div></div><span class="rank-val">42</span></li>
+        <li class="rank-item"><span class="rank-num top">2</span><span style="flex:1">北京</span><div class="rank-bar"><div class="rank-bar-fill" style="width:76%"></div></div><span class="rank-val">32</span></li>
+        <li class="rank-item"><span class="rank-num top">3</span><span style="flex:1">深圳</span><div class="rank-bar"><div class="rank-bar-fill" style="width:55%"></div></div><span class="rank-val">23</span></li>
+        <li class="rank-item"><span class="rank-num">4</span><span style="flex:1">成都</span><div class="rank-bar"><div class="rank-bar-fill" style="width:40%"></div></div><span class="rank-val">17</span></li>
+        <li class="rank-item"><span class="rank-num">5</span><span style="flex:1">武汉</span><div class="rank-bar"><div class="rank-bar-fill" style="width:33%"></div></div><span class="rank-val">14</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>产品类型 × 大区 支援流程数</h3></div></div>
+    <div class="panel-body"><div class="chart-wrap" data-group-bars='{"groups":[{"label":"华东","values":[24,12,8]},{"label":"华北","values":[18,9,6]},{"label":"华南","values":[15,7,5]},{"label":"西部","values":[11,4,3]}],"series":["WET","ECP","Track"]}'></div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>支援流程趋势 (半年 MTD)</h3></div></div>
+    <div class="panel-body"><div class="chart-wrap" data-line='{"labels":["1月","2月","3月","4月","5月","6月"],"series":[{"name":"新增","data":[8,12,10,15,13,18],"c":"#2563eb"},{"name":"完成","data":[5,9,11,12,14,16],"c":"#5b7c99"}]}'></div></div>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-head"><h3>跨区域人力支援 · 产品类型 × 大区 明细</h3><a class="link" href="#" data-action="drill">查看明细 →</a></div>
+  <div class="panel-body flush">
+    <table>
+      <tr><th>大区</th><th>产品类型</th><th>工艺线</th><th>流程数</th><th>进行中</th><th>已完成</th><th>时间范围</th></tr>
+      <tr><td>华东</td><td>WET</td><td>CMP</td><td>24</td><td>6</td><td>18</td><td>2026 H1 MTD</td></tr>
+      <tr><td>华北</td><td>ECP</td><td>Plating</td><td>18</td><td>4</td><td>14</td><td>2026 H1 MTD</td></tr>
+      <tr><td>华南</td><td>WET</td><td>Clean</td><td>15</td><td>3</td><td>12</td><td>2026 H1 MTD</td></tr>
+      <tr><td>西部</td><td>Track</td><td>Coater</td><td>11</td><td>2</td><td>9</td><td>2026 H1 MTD</td></tr>
+    </table>
+  </div>
+</div>
+  </div>
+</main>
+</div>
+<script src="assets/charts.js?v=67"></script>
+<script src="assets/app.js?v=67"></script>
+<script>setActiveNav('hr');</script>
+
+<script
+  src="http://120.55.184.234:8787/embed.js?v=20260801acme4"
+  data-demo-id="acme-rd"
+  data-mode="basic"
+  data-api="http://120.55.184.234:8787"
+  async defer></script>
+
+</body>
+</html>

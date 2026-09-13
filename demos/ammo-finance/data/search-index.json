@@ -1,0 +1,84 @@
+{
+  "meta": {
+    "version": "1.0",
+    "syncedAt": "2026-07-09",
+    "totalItems": 72
+  },
+  "quickTags": [
+    "半导体", "合并报表", "金税四期", "SAP月结", "Board Deck",
+    "零基预算", "标杆案例", "递延所得税", "财务BP", "TCL"
+  ],
+  "items": [
+    {"id":"q01","type":"query","title":"半导体行业拜访弹药","module":"02","moduleName":"财务分析","submodule":"行业研究","desc":"IDM/Fabless/Foundry模式、毛利率、产能利用率","tags":["半导体","行业框架","拜访"],"keywords":"半导体 IDM Fabless Foundry 毛利率 产能利用率 Fab","query":"@fico 半导体行业财务分析框架 核心指标","page":"pages/02-财务分析.html"},
+    {"id":"q02","type":"query","title":"合并报表方案弹药","module":"01","moduleName":"基础财务","submodule":"财务会计","desc":"IFRS10控制判断、投资抵销、内部交易未实现利润","tags":["合并报表","IFRS10","抵销"],"keywords":"合并报表 IFRS10 抵销 内部交易 商誉 少数股东","query":"@fico 合并报表 内部交易抵销 IFRS 10","page":"pages/01-基础财务.html"},
+    {"id":"q03","type":"query","title":"税务合规专题弹药","module":"01","moduleName":"基础财务","submodule":"税务管理","desc":"金税四期六大预警、增值税税负率、递延所得税","tags":["金税四期","税务","递延所得税"],"keywords":"金税四期 税务 增值税 递延所得税 转让定价 稽查","query":"@fico 金税四期 税务健康自检 递延所得税","page":"pages/01-基础财务.html"},
+    {"id":"q04","type":"query","title":"SAP月结与成本弹药","module":"01","moduleName":"基础财务","submodule":"SAP财务","desc":"OB52开账、外币评估、成本中心分配、CO-OM-CCA","tags":["SAP","FI","月结","CO"],"keywords":"SAP FI 月结 OB52 外币评估 成本中心 CO-OM-CCA","query":"@fico SAP FI月结 成本中心分配 CO-OM-CCA","page":"pages/01-基础财务.html"},
+    {"id":"q05","type":"query","title":"Board Deck交付弹药","module":"03","moduleName":"财务咨询","submodule":"交付物模板","desc":"金字塔原理、BLUF沟通法、CEO 10分钟决策模板","tags":["Board Deck","BLUF","交付物"],"keywords":"Board Deck BLUF 金字塔 咨询交付物 CEO 决策","query":"@fico Board Deck 模板 BLUF 咨询交付物","page":"pages/03-财务咨询.html"},
+    {"id":"q06","type":"query","title":"标杆案例举证弹药","module":"04","moduleName":"实战案例","submodule":"标杆案例","desc":"TCL集团财务共享与合并报表、SAP BPC+帆软BI","tags":["标杆案例","制造业","TCL"],"keywords":"标杆案例 制造业 集团财务共享 合并报表 TCL","query":"@fico 标杆案例 制造业 集团财务共享 合并报表","page":"pages/04-实战案例.html"},
+    {"id":"q07","type":"query","title":"预算管理方法论弹药","module":"01","moduleName":"基础财务","submodule":"管理会计","desc":"零基预算ZBB五步落地、滚动预测三轨、BSC","tags":["ZBB","预算","BSC"],"keywords":"零基预算 ZBB 滚动预测 BSC 平衡计分卡 全面预算","query":"@fico 零基预算 ZBB 滚动预测 BSC","page":"pages/01-基础财务.html"},
+
+    {"id":"d001","type":"document","title":"SAP FI 财务会计核心知识","module":"01","moduleName":"基础财务","submodule":"SAP财务","desc":"总账/AR/AP、月结年结、凭证类型与过账逻辑","tags":["FI","总账","月结"],"keywords":"SAP FI 总账 AR AP 月结 年结 凭证","query":"@fico SAP FI 财务会计核心知识 总账 AR AP","page":"pages/01-基础财务.html"},
+    {"id":"d002","type":"document","title":"SAP 成本管理知识库","module":"01","moduleName":"基础财务","submodule":"SAP财务","desc":"成本中心、分配分摊、内部订单、CO模块","tags":["CO","成本中心"],"keywords":"SAP CO 成本中心 分配 分摊 内部订单","query":"@fico SAP CO 成本管理 成本中心 内部订单","page":"pages/01-基础财务.html"},
+    {"id":"d003","type":"document","title":"SAP CO产品成本核算实战","module":"01","moduleName":"基础财务","submodule":"SAP财务","desc":"标准成本、工单结算、差异分析","tags":["CO","产品成本"],"keywords":"产品成本 标准成本 工单 差异分析","query":"@fico SAP CO产品成本核算 标准成本 差异分析","page":"pages/01-基础财务.html"},
+    {"id":"d004","type":"document","title":"SAP FI/CO集成与业财一体化","module":"01","moduleName":"基础财务","submodule":"SAP财务","desc":"成本要素、自动过账、断点排查","tags":["FI-CO","业财一体"],"keywords":"FI CO 集成 业财一体化 成本要素 自动过账","query":"@fico SAP FI CO集成 业财一体化","page":"pages/01-基础财务.html"},
+    {"id":"d005","type":"document","title":"SAP FI月结与S/4HANA变革","module":"01","moduleName":"基础财务","submodule":"SAP财务","desc":"OB52、外币评估、ECC迁移S/4HANA","tags":["月结","S/4HANA"],"keywords":"FI月结 OB52 外币评估 S4HANA ECC迁移","query":"@fico SAP FI月结 S4HANA 外币评估","page":"pages/01-基础财务.html"},
+    {"id":"d006","type":"document","title":"SAP S/4HANA财务核心变革","module":"01","moduleName":"基础财务","submodule":"SAP财务","desc":"Universal Journal、简化T-Code、新特性","tags":["S/4HANA"],"keywords":"S4HANA Universal Journal T-Code 财务变革","query":"@fico SAP S4HANA 财务核心变革 Universal Journal","page":"pages/01-基础财务.html"},
+
+    {"id":"d007","type":"document","title":"税务管理深度实战","module":"01","moduleName":"基础财务","submodule":"税务管理","desc":"金税四期、六大预警、月度自检清单","tags":["金税四期","税务"],"keywords":"税务管理 金税四期 预警 自检 合规","query":"@fico 税务管理深度实战 金税四期","page":"pages/01-基础财务.html"},
+    {"id":"d008","type":"document","title":"递延所得税与税会差异","module":"01","moduleName":"基础财务","submodule":"税务管理","desc":"永久性差异、暂时性差异、DTA/DTL","tags":["递延所得税"],"keywords":"递延所得税 税会差异 永久性 暂时性 DTA DTL","query":"@fico 递延所得税 税会差异处理","page":"pages/01-基础财务.html"},
+    {"id":"d009","type":"document","title":"转让定价深度实战","module":"01","moduleName":"基础财务","submodule":"税务管理","desc":"跨国关联交易、OECD指南、文档准备","tags":["转让定价","OECD"],"keywords":"转让定价 关联交易 OECD 跨国 文档","query":"@fico 转让定价深度实战 OECD","page":"pages/01-基础财务.html"},
+    {"id":"d010","type":"document","title":"税务风险指标清单","module":"01","moduleName":"基础财务","submodule":"税务管理","desc":"增值税税负率、进项弹性系数、异常预警","tags":["税务风险"],"keywords":"税务风险 增值税 税负率 进项弹性 指标","query":"@fico 税务风险指标 增值税税负率","page":"pages/01-基础财务.html"},
+    {"id":"d011","type":"document","title":"税收优惠申请与稽查应对","module":"01","moduleName":"基础财务","submodule":"税务管理","desc":"高新优惠、稽查应对、资料准备","tags":["税收优惠","稽查"],"keywords":"税收优惠 稽查应对 高新 申请","query":"@fico 税收优惠申请 税务稽查应对","page":"pages/01-基础财务.html"},
+
+    {"id":"d012","type":"document","title":"全面预算管理实战指南","module":"01","moduleName":"基础财务","submodule":"管理会计","desc":"KPI预算管控、预实偏差分析框架","tags":["全面预算","KPI"],"keywords":"全面预算 KPI 预实 偏差分析 管控","query":"@fico 全面预算管理 KPI预算管控","page":"pages/01-基础财务.html"},
+    {"id":"d013","type":"document","title":"零基预算ZBB落地指南","module":"01","moduleName":"基础财务","submodule":"管理会计","desc":"五步落地、基线+增量管理","tags":["ZBB","零基预算"],"keywords":"零基预算 ZBB 五步 基线 增量","query":"@fico 零基预算 ZBB 落地指南","page":"pages/01-基础财务.html"},
+    {"id":"d014","type":"document","title":"滚动预测三轨方法论","module":"01","moduleName":"基础财务","submodule":"管理会计","desc":"财务轨/业务轨/战略轨滚动预测","tags":["滚动预测"],"keywords":"滚动预测 财务轨 业务轨 战略轨","query":"@fico 滚动预测 三轨 财务业务战略","page":"pages/01-基础财务.html"},
+    {"id":"d015","type":"document","title":"作业成本法ABC实战","module":"01","moduleName":"基础财务","submodule":"管理会计","desc":"多维成本、间接费用分摊","tags":["ABC","作业成本"],"keywords":"作业成本 ABC 多维成本 间接费用 分摊","query":"@fico 作业成本法 ABC 多维成本分析","page":"pages/01-基础财务.html"},
+    {"id":"d016","type":"document","title":"标准成本与BSC平衡计分卡","module":"01","moduleName":"基础财务","submodule":"管理会计","desc":"标准成本差异、因果链、领先滞后指标","tags":["标准成本","BSC"],"keywords":"标准成本 BSC 平衡计分卡 因果链 指标","query":"@fico 标准成本 BSC 平衡计分卡","page":"pages/01-基础财务.html"},
+
+    {"id":"d017","type":"document","title":"合并报表知识","module":"01","moduleName":"基础财务","submodule":"财务会计","desc":"IFRS10控制判断、投资抵销、商誉减值","tags":["合并报表","IFRS10"],"keywords":"合并报表 IFRS10 控制 投资抵销 商誉 减值","query":"@fico 合并报表 IFRS10 投资抵销","page":"pages/01-基础财务.html"},
+    {"id":"d018","type":"document","title":"合并范围变更处理","module":"01","moduleName":"基础财务","submodule":"财务会计","desc":"收购/处置/增资导致的合并范围变更","tags":["合并范围"],"keywords":"合并范围 收购 处置 增资 变更","query":"@fico 合并范围变更 收购处置增资","page":"pages/01-基础财务.html"},
+
+    {"id":"d019","type":"document","title":"半导体行业财务分析框架","module":"02","moduleName":"财务分析","submodule":"行业研究","desc":"IDM/Fabless/Foundry、毛利率、产能利用率、Fab投资","tags":["半导体","行业框架"],"keywords":"半导体 IDM Fabless Foundry 毛利率 产能 Fab","query":"@fico 半导体行业财务分析框架","page":"pages/02-财务分析.html"},
+    {"id":"d020","type":"document","title":"制造业财务分析框架","module":"02","moduleName":"财务分析","submodule":"行业研究","desc":"单位经济、ROIC、边际贡献、盈亏平衡","tags":["制造业"],"keywords":"制造业 单位经济 ROIC 边际贡献 盈亏平衡","query":"@fico 制造业财务分析框架 ROIC","page":"pages/02-财务分析.html"},
+    {"id":"d021","type":"document","title":"生物医药行业财务分析框架","module":"02","moduleName":"财务分析","submodule":"行业研究","desc":"管线估值、医保谈判、集采、R&D强度","tags":["生物医药","医保"],"keywords":"生物医药 管线 医保谈判 集采 R&D","query":"@fico 生物医药行业财务分析框架","page":"pages/02-财务分析.html"},
+    {"id":"d022","type":"document","title":"电商与零售行业财务分析框架","module":"02","moduleName":"财务分析","submodule":"行业研究","desc":"GMV、获客、复购、库存周转","tags":["零售","电商"],"keywords":"电商 零售 GMV 获客 复购 库存周转","query":"@fico 电商零售行业财务分析框架","page":"pages/02-财务分析.html"},
+    {"id":"d023","type":"document","title":"游戏行业财务分析框架","module":"02","moduleName":"财务分析","submodule":"行业研究","desc":"付费率、ARPU、流水结构、渠道分成","tags":["游戏"],"keywords":"游戏 付费率 ARPU 流水 渠道分成","query":"@fico 游戏行业财务分析框架 ARPU","page":"pages/02-财务分析.html"},
+    {"id":"d024","type":"document","title":"医疗服务行业财务分析框架","module":"02","moduleName":"财务分析","submodule":"行业研究","desc":"政策敏感、合规成本、预收款","tags":["医疗"],"keywords":"医疗服务 合规 预收款 政策","query":"@fico 医疗服务行业财务分析框架","page":"pages/02-财务分析.html"},
+    {"id":"d025","type":"document","title":"教育与EdTech行业框架","module":"02","moduleName":"财务分析","submodule":"行业研究","desc":"预收款、季节性、获客成本","tags":["教育","EdTech"],"keywords":"教育 EdTech 预收款 季节性 获客","query":"@fico 教育EdTech行业财务分析框架","page":"pages/02-财务分析.html"},
+    {"id":"d026","type":"document","title":"竞争格局财务分析框架","module":"02","moduleName":"财务分析","submodule":"专题对标","desc":"盈利能力/运营能力/偿债能力三角分析","tags":["竞争格局","对标"],"keywords":"竞争格局 盈利能力 运营能力 偿债能力 对标","query":"@fico 竞争格局财务分析框架","page":"pages/02-财务分析.html"},
+    {"id":"d027","type":"document","title":"行业周期与宏观趋势映射","module":"02","moduleName":"财务分析","submodule":"专题对标","desc":"行业周期判断、宏观趋势映射","tags":["行业周期"],"keywords":"行业周期 宏观趋势 判断 映射","query":"@fico 行业周期 宏观趋势 财务分析","page":"pages/02-财务分析.html"},
+
+    {"id":"d028","type":"document","title":"咨询交付物写作训练","module":"03","moduleName":"财务咨询","submodule":"交付物模板","desc":"金字塔原理、Board Deck 10页结构","tags":["交付物","金字塔"],"keywords":"咨询交付物 金字塔 Board Deck 写作","query":"@fico 咨询交付物写作训练 金字塔原理","page":"pages/03-财务咨询.html"},
+    {"id":"d029","type":"document","title":"Board Deck BLUF沟通法","module":"03","moduleName":"财务咨询","submodule":"交付物模板","desc":"CEO 10分钟决策模板、BLUF先行","tags":["Board Deck","BLUF"],"keywords":"Board Deck BLUF CEO 决策 沟通法","query":"@fico Board Deck BLUF 沟通法 模板","page":"pages/03-财务咨询.html"},
+    {"id":"d030","type":"document","title":"BI与Dashboard设计规范","module":"03","moduleName":"财务咨询","submodule":"交付物模板","desc":"财务BI看板设计、指标口径、交互规范","tags":["BI","Dashboard"],"keywords":"BI Dashboard 看板 设计规范 指标","query":"@fico BI Dashboard 设计规范","page":"pages/03-财务咨询.html"},
+    {"id":"d031","type":"document","title":"交付物模板库","module":"03","moduleName":"财务咨询","submodule":"交付物模板","desc":"税务筹划、预算差异、行业分析模板合集","tags":["模板库"],"keywords":"交付物模板 税务筹划 预算差异 行业分析","query":"@fico 交付物模板库 咨询交付","page":"pages/03-财务咨询.html"},
+
+    {"id":"d032","type":"document","title":"咨询项目管理实操","module":"03","moduleName":"财务咨询","submodule":"项目管理","desc":"里程碑、范围、干系人管理","tags":["项目管理"],"keywords":"咨询项目管理 里程碑 范围 干系人","query":"@fico 咨询项目管理实操","page":"pages/03-财务咨询.html"},
+    {"id":"d033","type":"document","title":"客户对话与项目救火指南","module":"03","moduleName":"财务咨询","submodule":"项目管理","desc":"客户沟通、危机处理、项目救火","tags":["客户对话","救火"],"keywords":"客户对话 项目救火 危机 沟通","query":"@fico 客户对话 项目救火指南","page":"pages/03-财务咨询.html"},
+    {"id":"d034","type":"document","title":"财务BP实战能力模型","module":"03","moduleName":"财务咨询","submodule":"项目管理","desc":"财务BP能力矩阵、SBU→KPI→模型","tags":["财务BP"],"keywords":"财务BP 能力模型 SBU KPI 模型","query":"@fico 财务BP实战能力模型","page":"pages/03-财务咨询.html"},
+    {"id":"d035","type":"document","title":"从传统分析到财务BP转型","module":"03","moduleName":"财务咨询","submodule":"项目管理","desc":"SBU→KPI→模型三步法、财务BI新技能","tags":["财务BP","转型"],"keywords":"财务BP 转型 传统分析 BI 三步法","query":"@fico 财务BP转型 SBU KPI 模型","page":"pages/03-财务咨询.html"},
+
+    {"id":"d036","type":"document","title":"差异分析与归因方法论","module":"03","moduleName":"财务咨询","submodule":"方法论框架","desc":"瀑布图根因拆解、差异归因","tags":["差异分析","归因"],"keywords":"差异分析 归因 瀑布图 根因 拆解","query":"@fico 差异分析 归因方法论 瀑布图","page":"pages/03-财务咨询.html"},
+    {"id":"d037","type":"document","title":"数据治理与ETL方法论","module":"03","moduleName":"财务咨询","submodule":"方法论框架","desc":"主数据、口径统一、ETL流程","tags":["数据治理","ETL"],"keywords":"数据治理 ETL 主数据 口径统一","query":"@fico 数据治理 ETL 方法论","page":"pages/03-财务咨询.html"},
+    {"id":"d038","type":"document","title":"合并报表需求分级与系统架构","module":"03","moduleName":"财务咨询","submodule":"方法论框架","desc":"需求分级、系统选型、架构设计","tags":["合并报表","架构"],"keywords":"合并报表 需求分级 系统架构 选型","query":"@fico 合并报表需求分级 系统架构","page":"pages/03-财务咨询.html"},
+    {"id":"d039","type":"document","title":"商誉减值与流动性压力测试","module":"03","moduleName":"财务咨询","submodule":"方法论框架","desc":"IAS36商誉减值、情景分析、流动性测试","tags":["商誉","压力测试"],"keywords":"商誉减值 IAS36 流动性 压力测试 情景","query":"@fico 商誉减值 流动性压力测试","page":"pages/03-财务咨询.html"},
+    {"id":"d040","type":"document","title":"新能源车企扭亏战略财务规划","module":"03","moduleName":"财务咨询","submodule":"方法论框架","desc":"价格战扭亏、战略财务规划","tags":["新能源","扭亏"],"keywords":"新能源 车企 扭亏 价格战 战略财务","query":"@fico 新能源车企扭亏 战略财务规划","page":"pages/03-财务咨询.html"},
+
+    {"id":"c001","type":"case","title":"TCL集团财务共享与合并报表","module":"04","moduleName":"实战案例","submodule":"制造业","desc":"SAP BPC+帆软BI一体化、集团财务共享中心","tags":["TCL","制造业","合并报表"],"keywords":"TCL 财务共享 合并报表 SAP BPC 帆软BI","query":"@fico 标杆案例 TCL 集团财务共享 合并报表","page":"pages/04-实战案例.html"},
+    {"id":"c002","type":"case","title":"古井贡酒数字化经营平台","module":"04","moduleName":"实战案例","submodule":"零售消费","desc":"数字化经营、渠道KPI、预算预实","tags":["古井","零售","数字化"],"keywords":"古井贡酒 数字化 经营平台 渠道 KPI","query":"@fico 标杆案例 古井贡酒 数字化经营","page":"pages/04-实战案例.html"},
+    {"id":"c003","type":"case","title":"特变电工应收账款分析","module":"04","moduleName":"实战案例","submodule":"能源矿产","desc":"应收账款管理、回款分析、信用风险","tags":["特变","能源","应收"],"keywords":"特变电工 应收账款 回款 信用风险","query":"@fico 标杆案例 特变电工 应收账款","page":"pages/04-实战案例.html"},
+    {"id":"c004","type":"case","title":"五矿期货投研平台","module":"04","moduleName":"实战案例","submodule":"金融","desc":"金融投研平台、数据分析、风控","tags":["五矿","金融"],"keywords":"五矿期货 投研平台 金融 风控","query":"@fico 标杆案例 五矿期货 投研平台","page":"pages/04-实战案例.html"},
+    {"id":"c005","type":"case","title":"制造业标杆案例合集","module":"04","moduleName":"实战案例","submodule":"制造业","desc":"60个制造业标杆案例合集","tags":["制造业","标杆"],"keywords":"制造业 标杆案例 合集 60","query":"@fico 标杆案例 制造业","page":"pages/04-实战案例.html"},
+    {"id":"c006","type":"case","title":"零售消费标杆案例合集","module":"04","moduleName":"实战案例","submodule":"零售消费","desc":"37个零售消费标杆案例","tags":["零售","标杆"],"keywords":"零售消费 标杆案例 合集 37","query":"@fico 标杆案例 零售消费","page":"pages/04-实战案例.html"},
+    {"id":"c007","type":"case","title":"能源矿产标杆案例合集","module":"04","moduleName":"实战案例","submodule":"能源矿产","desc":"19个能源矿产标杆案例","tags":["能源","标杆"],"keywords":"能源矿产 标杆案例 合集 19","query":"@fico 标杆案例 能源矿产","page":"pages/04-实战案例.html"},
+    {"id":"c008","type":"case","title":"金融标杆案例合集","module":"04","moduleName":"实战案例","submodule":"金融","desc":"15个金融标杆案例","tags":["金融","标杆"],"keywords":"金融 标杆案例 合集 15","query":"@fico 标杆案例 金融","page":"pages/04-实战案例.html"},
+    {"id":"c009","type":"case","title":"创新药+医保谈判综合诊断","module":"04","moduleName":"实战案例","submodule":"综合诊断","desc":"创新药研发、医保谈判、集采综合诊断","tags":["创新药","医保","诊断"],"keywords":"创新药 医保谈判 集采 综合诊断","query":"@fico 创新药 医保谈判 综合财务诊断","page":"pages/04-实战案例.html"},
+    {"id":"c010","type":"case","title":"制造业产能优化定量建模","module":"04","moduleName":"实战案例","submodule":"综合诊断","desc":"产能优化、成本结构定量建模","tags":["制造业","产能"],"keywords":"制造业 产能优化 成本结构 定量建模","query":"@fico 制造业 产能优化 成本结构建模","page":"pages/04-实战案例.html"},
+
+    {"id":"s001","type":"scene","title":"集团财务共享中心","module":"04","moduleName":"实战案例","submodule":"场景","desc":"多组织核算、共享中心、司库管理","tags":["共享中心","集团财务"],"keywords":"集团财务 共享中心 多组织 司库","query":"@fico 集团财务共享中心 多组织核算","page":"pages/04-实战案例.html"},
+    {"id":"s002","type":"scene","title":"业财税一体化","module":"01","moduleName":"基础财务","submodule":"场景","desc":"业务-财务-税务数据贯通","tags":["业财税"],"keywords":"业财税一体化 业务财务税务 贯通","query":"@fico 业财税一体化 数据贯通","page":"pages/01-基础财务.html"},
+    {"id":"s003","type":"scene","title":"IPO财务规范","module":"04","moduleName":"实战案例","submodule":"场景","desc":"IPO财务规范、SaaS财务建模","tags":["IPO","SaaS"],"keywords":"IPO 财务规范 SaaS 建模 上市","query":"@fico IPO财务规范 SaaS财务建模","page":"pages/04-实战案例.html"},
+    {"id":"s004","type":"scene","title":"财务数字化经营","module":"04","moduleName":"实战案例","submodule":"场景","desc":"数字化经营平台、渠道KPI、预实分析","tags":["数字化"],"keywords":"数字化经营 渠道KPI 预实分析 平台","query":"@fico 数字化经营平台 渠道KPI","page":"pages/04-实战案例.html"}
+  ]
+}

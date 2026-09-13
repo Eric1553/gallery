@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>下钻 · 里程碑全景</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">一把手总览</a> / 下钻：里程碑全景</div>
+    <div id="param-banner" class="param-banner" hidden></div>
+    <nav class="top-nav">
+      <a href="index.html">页1 总览</a>
+      <span class="current">里程碑全景</span>
+    </nav>
+
+    <h1>下钻：战略里程碑全景</h1>
+    <p class="sub">承接页1「F」· 支持按状态筛选（风险项例会）</p>
+
+    <div class="toolbar">
+      <div><span class="lbl">状态</span><span class="fake-select">全部 ▾</span></div>
+      <div><span class="lbl">类别</span><span class="fake-select">全部 ▾</span></div>
+    </div>
+
+    <section>
+      <div class="kpis">
+        <div class="kpi"><div class="label">本季里程碑总数</div><div class="val">24</div></div>
+        <div class="kpi"><div class="label">风险（红）</div><div class="val">3</div><div class="delta down">需总裁督办</div></div>
+        <div class="kpi"><div class="label">关注（黄）</div><div class="val">5</div></div>
+        <div class="kpi"><div class="label">正常（绿）</div><div class="val">16</div></div>
+      </div>
+    </section>
+
+    <section>
+      <table class="table-ph">
+        <thead>
+          <tr>
+            <th>类别</th><th>里程碑</th><th>责任</th><th>计划日</th><th>状态</th><th>依赖</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>产品</td><td>SigenStor 3.0 量产爬坡</td><td>供应链 VP</td><td>2026-04-20</td><td><span class="dot y"></span>关注</td><td>芯片到货</td></tr>
+          <tr><td>市场</td><td>欧洲分销龙头框架签署</td><td>销售总裁</td><td>2026-03-31</td><td><span class="dot g"></span>正常</td><td>法务条款</td></tr>
+          <tr><td>云</td><td>思格云 SLA 99.95%</td><td>云与软件</td><td>2026-06-30</td><td><span class="dot g"></span>正常</td><td>多活改造</td></tr>
+          <tr><td>交付</td><td>北美渠道首批交付</td><td>海外交付</td><td>2026-05-10</td><td><span class="dot r"></span>风险</td><td>认证+舱位</td></tr>
+          <tr><td>合规</td><td>欧盟电池法规配套</td><td>合规总监</td><td>2026-05-30</td><td><span class="dot y"></span>关注</td><td>实验室排期</td></tr>
+          <tr><td>投融资</td><td>授信额度续期</td><td>CFO</td><td>2026-04-05</td><td><span class="dot g"></span>正常</td><td>银行尽调</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <div class="page-intro">
+        <strong>FineBI 建议：</strong>红/黄项订阅推送至总裁办邮箱；与项目管理系统工单 ID 关联（可选）。
+      </div>
+    </section>
+
+    <footer><a href="index.html" style="color:var(--link)">← 返回总览</a></footer>
+  </div>
+  <script src="drill-context.js"></script>
+</body>
+</html>

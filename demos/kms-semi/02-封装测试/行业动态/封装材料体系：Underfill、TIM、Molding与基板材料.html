@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>封装材料体系：Underfill、TIM、Molding与基板材料 — 半导体知识库</title>
+<meta name="description" content="# 封装材料体系：Underfill、TIM、Molding与基板材料  > 封装材料是先进封装的"幕后英雄"——同样一颗3nm芯片，用不同的Underfill和TIM，散热能力可能差30%，可靠性寿命可能差3倍。先进封装对材料的要求已远超传统封装：从"包得住"升级为"匹配硅的热膨胀系数、从-40°">
+<link rel="stylesheet" href="/kb/assets/style.css">
+</head>
+<body>
+<div class="top-accent"></div>
+<header class="page-header">
+  <a href="/kb/首页.html" class="home-link">🔬 半导体知识库</a>
+</header>
+<main class="container">
+<nav class="breadcrumb"><a href="/kb/首页.html">半导体知识库</a> <span class="sep">›</span> <a href="/kb//02-封装测试/index.html">02-封装测试</a> <span class="sep">›</span> <a href="/kb//02-封装测试/行业动态/index.html">行业动态</a></nav>
+<article class="note">
+<header class="note-header">
+  <h1>封装材料体系：Underfill、TIM、Molding与基板材料</h1>
+  
+</header>
+<div class="note-body">
+<h1 id="underfilltimmolding">封装材料体系：Underfill、TIM、Molding与基板材料</h1>
+<blockquote>
+<p>封装材料是先进封装的"幕后英雄"——同样一颗3nm芯片，用不同的Underfill和TIM，散热能力可能差30%，可靠性寿命可能差3倍。先进封装对材料的要求已远超传统封装：从"包得住"升级为"匹配硅的热膨胀系数、从-40°C到150°C数千次循环不裂、导热率要突破10W/m·K"。封装材料也是国产替代中最被低估的机会区——日系垄断的局面正在被打破。</p>
+</blockquote>
+<hr />
+<h2 id="_1">📖 技术概述</h2>
+<p>封装材料的市场规模约<strong>300亿美元/年</strong>（含基板、引线框架、键合丝、模塑料、底填胶等），且增速高于封测行业整体（先进封装材料ASP是传统封装的2-5倍）。</p>
+<p>封装材料体系的核心矛盾只有一句话：<strong>芯片的热膨胀系数（CTE）≈3 ppm/°C，而有机基板≈15-18 ppm/°C——两者热胀冷缩的"步调不一致"是几乎所有封装可靠性问题的根源。</strong> 底部填充胶、模塑料、TIM、Die Attach——这些材料的使命本质上都是在不同位置、不同温度下管理CTE失配带来的应力。</p>
+<p><strong>在制造流程中的位置</strong>：封装材料贯穿从芯片贴装到成品出货的全部工序——Die Attach材料在第一步（芯片→基板）、Underfill在倒装焊后、Molding包裹整个封装体、TIM在封装体与散热器之间。任一环节的材料选择都影响最终产品的热/力/电性能和可靠性寿命。</p>
+<hr />
+<h2 id="_2">🔬 四大核心材料体系</h2>
+<h3 id="1-underfill">1. 底部填充胶（Underfill）</h3>
+<p>Underfill填充在倒装芯片（Flip-Chip）的芯片底部与基板之间的缝隙（~50-100μm），其核心使命是：<strong>将芯片与基板之间的CTE失配应力重新分布</strong>——不靠Underfill，焊点在几百次温度循环后就会开裂。</p>
+<p><strong>三种技术路线</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>工艺方式</th>
+<th style="text-align: center;">填料含量</th>
+<th>优势</th>
+<th>局限</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>毛细Underfill</strong></td>
+<td>芯片倒装焊后，液体胶沿芯片边缘毛细作用渗入缝隙</td>
+<td style="text-align: center;">50-65% SiO₂</td>
+<td>工艺最简单，最成熟</td>
+<td>填充速度慢（每颗芯片10-30秒）→ 不适合超高UPH产线</td>
+</tr>
+<tr>
+<td><strong>非流动Underfill</strong></td>
+<td>芯片贴装前预涂于基板，倒装焊+固化一步完成</td>
+<td style="text-align: center;">40-55% SiO₂</td>
+<td><strong>UPH极高</strong>（省去毛细渗透时间）</td>
+<td>填料含量低→CTE偏高→可靠性略差于毛细型</td>
+</tr>
+<tr>
+<td><strong>模塑Underfill（MUF）</strong></td>
+<td>Molding工艺与Underfill合二为一——模塑料直接填充芯片底部间隙</td>
+<td style="text-align: center;">70-90% SiO₂</td>
+<td>超高产能（批量模塑），适合Fan-Out/多芯片模组</td>
+<td>填充窄间隙（&lt;30μm）能力受限</td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键性能指标</strong>：
+- <strong>Tg（玻璃化转变温度）</strong>：120-165°C——Tg以上CTE急剧增大，Tg越高越好
+- <strong>CTE（低于Tg）</strong>：18-30 ppm/°C——越低越接近硅（3 ppm），但降低CTE需增加SiO₂填料→流动性恶化→填充困难
+- <strong>流动性/粘度</strong>：直接影响填充速度和空洞率
+- <strong>断裂韧性（K1C）</strong>：抵抗裂纹扩展的能力</p>
+<p><strong>主要厂商</strong>：
+| 厂商 | 总部 | 优势领域 | 关键客户 |
+|------|------|---------|---------|
+| <strong>Namics</strong> | 日本 | 全球Underfill龙头，毛细+非流动全产品线 | 台积电/Intel/ASE |
+| <strong>汉高（Henkel）</strong> | 德国 | 综合材料巨头，Underfill+Die Attach+EMC全覆盖 | 全球封测厂 |
+| <strong>日立化成</strong> | 日本 | 非流动Underfill先驱，与Intel深度绑定 | Intel/三星 |
+| <strong>信越化学</strong> | 日本 | 高纯度硅树脂基Underfill | 日系Fab |
+| <strong>德邦科技</strong> | 中国 | 国产Underfill龙头，毛细Underfill已规模供货 | 长电/通富/华天 |</p>
+<hr />
+<h3 id="2-tim-thermal-interface-material">2. 热界面材料（TIM, Thermal Interface Material）</h3>
+<p>TIM填充在芯片封装体与散热器（Heat Sink/Heat Spreader）之间的微观缝隙中——两个表面看似平整，但微观粗糙度带来空气间隙（空气导热率仅0.026 W/m·K），TIM的使命就是"赶走空气，建立热桥"。</p>
+<p><strong>TIM应用的两级位置</strong>：
+- <strong>TIM1</strong>：芯片Die ↔ 封装盖（Lid/Heat Spreader）——最靠近热源，导热要求最高
+- <strong>TIM2</strong>：封装盖（Lid）↔ 外部散热器（Heat Sink）——面积更大，导热要求略低于TIM1</p>
+<p><strong>三种材料类型</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th style="text-align: center;">导热率</th>
+<th style="text-align: center;">厚度（BLT）</th>
+<th>优势</th>
+<th>局限</th>
+<th>典型应用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>导热硅脂</strong></td>
+<td style="text-align: center;">3-8 W/m·K</td>
+<td style="text-align: center;">20-50 μm</td>
+<td>最薄BLT、成本低、易返修</td>
+<td>泵出（Pump-out）效应——长时间温度循环后挤出，导热率下降</td>
+<td>消费电子CPU/GPU</td>
+</tr>
+<tr>
+<td><strong>相变材料</strong></td>
+<td style="text-align: center;">1-5 W/m·K</td>
+<td style="text-align: center;">25-100 μm</td>
+<td>室温固态（易施工）→ 高温熔化为液态（填充性好）</td>
+<td>导热率低于硅脂</td>
+<td>服务器CPU/数据中心</td>
+</tr>
+<tr>
+<td><strong>液态金属</strong></td>
+<td style="text-align: center;"><strong>30-80 W/m·K</strong></td>
+<td style="text-align: center;">20-40 μm</td>
+<td>导热率碾压——镓铟合金，远超任何非金属材料</td>
+<td><strong>导电！</strong>（溢出短路风险极大）、腐蚀铝散热器、极难施工和返修</td>
+<td>高端游戏笔记本（Sony PS5也使用）</td>
+</tr>
+<tr>
+<td><strong>导热垫片</strong></td>
+<td style="text-align: center;">1-15 W/m·K</td>
+<td style="text-align: center;">0.5-5 mm</td>
+<td>可填充大间隙、弹性补偿公差</td>
+<td>厚BLT→热阻高</td>
+<td>多芯片高度不一的模块</td>
+</tr>
+</tbody>
+</table>
+<p><strong>AI时代TIM的挑战</strong>：一颗B200 GPU的TDP（热设计功耗）已达到1000W，且是3D堆叠封装——上层Die产生的热量要穿透下层的Die和键合层才能到达散热器。TIM1的导热率每提升1 W/m·K，结温（Tj）就可能降低2-3°C。<code>液态金属</code>在消费电子的高端笔记本中已广泛使用，但在数据中心GPU中尚未普及——因为大规模部署时的溢出短路风险和长期可靠性尚未充分验证。</p>
+<p><strong>主要厂商</strong>：
+- 富士高分子（Fujipoly）：导热垫片龙头
+- 信越化学/道康宁（Dow Corning）：导热硅脂领导者
+- Thermal Grizzly/Coollaboratory：液态金属消费市场品牌
+- 中石科技/飞荣达：国产导热材料和TIM方案商（主要是石墨片/导热垫片，芯片级TIM尚在追赶）</p>
+<hr />
+<h3 id="3-emc-epoxy-molding-compound">3. 环氧模塑料（EMC, Epoxy Molding Compound）</h3>
+<p>EMC是封装材料中用量最大的品类——将芯片和键合丝整体包裹保护，提供机械支撑、环境保护和绝缘。全球EMC市场规模约<strong>25亿美元/年</strong>。</p>
+<p><strong>EMC的核心配方</strong>：环氧树脂（基体）+ 酚醛固化剂 + SiO₂填料（70-90%重量比）+ 阻燃剂 + 脱模剂 + 炭黑颜料。配方决定了流动性（Spiral Flow）、热机械性能（CTE/Tg）和可靠性。</p>
+<p><strong>关键性能指标</strong>：
+- <strong>螺旋流动长度（Spiral Flow）</strong>：衡量EMC在模具中的流动能力——长度越长越好（&gt;80cm为优秀），因为先进封装（Fan-Out/SiP）中EMC需流经多芯片/窄间隙
+- <strong>填料含量与粒径</strong>：Fan-Out/WLP级EMC要求填料粒径&lt;5μm（传统EMC&lt;75μm）——微细化填料是技术难点
+- <strong>α粒子辐射率</strong>：EMC中的微量铀/钍杂质会释放α粒子→导致存储器软错误（Soft Error），HBM/DRAM封装要求超低α辐射EMC（&lt;0.001 cph/cm²）</p>
+<p><strong>主要厂商</strong>：
+| 厂商 | 总部 | 市占率（估） | 强项 |
+|------|------|:---:|------|
+| <strong>住友电木</strong> | 日本 | ~40% | EMC全球绝对龙头，先进封装EMC技术壁垒最高 |
+| <strong>日立化成</strong> | 日本 | ~20% | 与住友电木在高端市场双头竞争 |
+| <strong>三星SDI</strong> | 韩国 | ~15% | 三星集团供应链绑定，主要为三星存储芯片提供EMC |
+| <strong>KCC</strong> | 韩国 | ~8% | SK海力士供应链 |
+| <strong>华海诚科</strong> | 中国 | ~3% | 国产EMC龙头，中低端市场（DIP/SOP/QFP）成熟，先进封装EMC在研 |
+| <strong>长春塑胶</strong> | 台湾 | ~5% | ASE/SPIL供应链 |</p>
+<blockquote>
+<p><strong>国产替代窗口</strong>：EMC是中国封装材料国产化率最低的环节之一——高端先进封装EMC（Fan-Out级/WLP级/超低α辐射级）几乎100%依赖日系。华海诚科在中低端市场已规模供货，但在先进封装EMC上与住友电木的差距约为<strong>5-8年</strong>。中国封装材料"卡脖子"清单中，先进封装EMC排名前三。</p>
+</blockquote>
+<hr />
+<h3 id="4-die-attach">4. Die Attach材料</h3>
+<p>将芯片粘贴到引线框架或基板上的粘接材料。传统方案是含银导电胶（Ag Paste，导热导电），先进方案是烧结银（Sintered Ag）。</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th style="text-align: center;">工艺温度</th>
+<th style="text-align: center;">导热率</th>
+<th style="text-align: center;">电导率</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>导电银胶</strong></td>
+<td style="text-align: center;">120-175°C固化</td>
+<td style="text-align: center;">2-5 W/m·K</td>
+<td style="text-align: center;">10⁻⁴~10⁻³ Ω·cm</td>
+<td>传统IC/分立器件/消费电子</td>
+</tr>
+<tr>
+<td><strong>烧结银（Sintered Ag）</strong></td>
+<td style="text-align: center;">200-280°C + 10-40MPa压力</td>
+<td style="text-align: center;"><strong>100-300 W/m·K</strong></td>
+<td style="text-align: center;"><strong>10⁻⁶ Ω·cm</strong></td>
+<td>SiC/GaN功率器件（耐300°C+高温）</td>
+</tr>
+<tr>
+<td><strong>焊料（Solder）</strong></td>
+<td style="text-align: center;">220-260°C回流</td>
+<td style="text-align: center;">25-60 W/m·K</td>
+<td style="text-align: center;">金属级低电阻</td>
+<td>功率器件/射频器件</td>
+</tr>
+</tbody>
+</table>
+<p><strong>烧结银的价值</strong>：SiC（碳化硅）功率器件可在200°C+工作——远超传统导电胶的耐温上限（150-175°C）。烧结银的熔点（961°C）远高于工作温度，且导热率是银胶的50倍——是宽禁带半导体封装不可替代的Die Attach方案。</p>
+<hr />
+<h3 id="5">5. 临时键合/解键合材料</h3>
+<p>先进封装（尤其是Fan-Out和3D堆叠）中需要反复进行"临时键合→工艺操作→解键合"循环——将薄晶圆临时固定在载板上以便加工。临时键合材料必须同时满足：<strong>高键合强度（加工时不移位）+ 易解键合（完成后轻松剥离）</strong>。</p>
+<p><strong>主流方案</strong>：热塑性树脂（Thermoplastic）+ 激光释放层（Laser Release Layer）。激光透过透明载板照射释放层→局部热分解→机械剥离。</p>
+<p><strong>主要厂商</strong>：Brewer Science（美国），3M，东京应化（TOK）——全为日美企业，国产近乎空白。</p>
+<hr />
+<h2 id="_3">🏭 国产替代全景</h2>
+<table>
+<thead>
+<tr>
+<th>材料品类</th>
+<th style="text-align: center;">全球市场规模</th>
+<th style="text-align: center;">国产化率</th>
+<th>国产龙头</th>
+<th style="text-align: center;">替代难度</th>
+<th>关键瓶颈</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>导电银胶</td>
+<td style="text-align: center;">~$8亿</td>
+<td style="text-align: center;">30-40%</td>
+<td>德邦科技/长春永固</td>
+<td style="text-align: center;">🟡 中</td>
+<td>高端烧结银依赖进口</td>
+</tr>
+<tr>
+<td>毛细Underfill</td>
+<td style="text-align: center;">~$5亿</td>
+<td style="text-align: center;">10-15%</td>
+<td>德邦科技</td>
+<td style="text-align: center;">🟡 中</td>
+<td>先进封装高Tg/超低CTE配方受限</td>
+</tr>
+<tr>
+<td>TIM（导热硅脂/垫片）</td>
+<td style="text-align: center;">~$10亿</td>
+<td style="text-align: center;">20-30%</td>
+<td>中石科技/飞荣达</td>
+<td style="text-align: center;">🟡 中</td>
+<td>芯片级TIM1产品尚在验证</td>
+</tr>
+<tr>
+<td>EMC环氧模塑料</td>
+<td style="text-align: center;">~$25亿</td>
+<td style="text-align: center;">&lt;5%</td>
+<td>华海诚科</td>
+<td style="text-align: center;">🔴 高</td>
+<td>先进封装EMC几乎100%依赖日系</td>
+</tr>
+<tr>
+<td>临时键合材料</td>
+<td style="text-align: center;">~$3亿</td>
+<td style="text-align: center;">&lt;2%</td>
+<td>无成熟国产供应商</td>
+<td style="text-align: center;">🔴 极高</td>
+<td>激光释放层配方和工艺极度封闭</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_4">🎯 帆软产品关联度分析</h2>
+<table>
+<thead>
+<tr>
+<th>产品线</th>
+<th style="text-align: center;">关联度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FineReport</td>
+<td style="text-align: center;">🟢</td>
+<td>封装材料IQC（来料检验）报表：每批次EMC的螺旋流动长度/填料含量/DSC Tg曲线；Underfill粘度批次对比；TIM导热率批次合格率——封测厂对材料品质的要求，就是FineReport管理报表的机会</td>
+</tr>
+<tr>
+<td>FineBI</td>
+<td style="text-align: center;">🟢</td>
+<td>材料性能与封装良率关联分析——某批次Underfill粘度偏高是否导致焊点空洞率上升？某供应商EMC的α粒子辐射率是否与DRAM软错误率相关？——多维关联分析是FineBI的经典场景</td>
+</tr>
+<tr>
+<td>FDL数据底座</td>
+<td style="text-align: center;">🟡</td>
+<td>材料IQC数据（DSC/TGA/TMA/流变仪）多为实验室设备独立采集，格式各异 → FDL统一管道有明确价值但实施难度高于标准ATE STDF解析</td>
+</tr>
+<tr>
+<td>简道云与AI Agent</td>
+<td style="text-align: center;">🟡</td>
+<td>简道云：包装材料（包材/干燥剂/湿度指示卡/氮气柜）的库存和使用周期管理；AI Agent：EMC批次质量异常→自动关联产线封装空洞率，触发预警</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_5">🎤 售前场景</h2>
+<h3 id="1iqc">场景1：封测厂的材料IQC与批次追溯</h3>
+<p><strong>① 客户画像</strong>：长电/通富/华天/甬矽的IQC（来料检验）部门。每月处理数百批次来自住友电木/日立化成/汉高/德邦等多家供应商的EMC/Underfill/TIM/银胶等材料。每批材料需检测5-15个参数，数据分散在DSC/TGA/TMA/流变仪等多台实验室设备中。</p>
+<p><strong>② 痛点</strong>：材料IQC数据手抄Excel→纸质归档→没法跟产线良率做关联。某批次Underfill粘度偏高导致的焊点空洞率上升，可能要等整批产品做完可靠性测试才发现——时间滞后2-4周，此时该批芯片可能已分档发货。</p>
+<p><strong>③ 帆软切入方案</strong>：FDL解析各实验室设备输出（DSC/TGA/TMA CSV）→ FineReport IQC自动报表（按供应商/材料编号/日期生成批次合格证）→ FineBI材料批次质量参数与产线CP/FT良率关联分析，发现异常批次立即触发反向追溯。</p>
+<p><strong>④ 参考话术</strong>："你们IQC一个月几百批材料——数据在四五台设备里各自存着。FineReport一键出每个批次的合格报告，FineBI把材料批次参数和你们的CP/FT产线良率拉到一起——哪批Underfill粘度偏高了、是不是带崩了下一批封装良率？现在靠人工排查要两周，FineBI三分钟。"</p>
+<hr />
+<h3 id="2ab">场景2：国产封装材料替代的A/B验证</h3>
+<p><strong>① 客户画像</strong>：正评估国产Underfill/EMC/TIM替代日系物料的封测厂工程部。受出口管制和供应链安全驱动，替代进程正在加速。</p>
+<p><strong>② 痛点</strong>：国产材料价格低30-50%，但性能一致性（批次间CTE/Tg波动）是否稳定？长期可靠性（1000次温度循环后焊点是否开裂、EMC是否分层）是否有差距？验证数据散落在多个Excel和可靠性测试报告中，难以形成有说服力的对比报告。</p>
+<p><strong>③ 帆软切入方案</strong>：FineBI A/B对比看板——同一产品/同一产线条件下，国产材料 vs 进口材料的IQC指标分布对比、CP/FT良率对比、可靠性测试Pass率对比 → 一键生成"国产替代验证报告"。</p>
+<p><strong>④ 参考话术</strong>："你们的国产EMC验证做到第几批了？20批数据散在几个Excel里，领导要一个对比结论，你得手动拼一天表。FineBI把国产和进口材料的IQC/良率/可靠性数据全拉通——哪个指标有差距、差距在缩小还是扩大，一张图交差。"</p>
+<hr />
+<h3 id="3">场景3：封装材料供应商的出厂质量管理</h3>
+<p><strong>① 客户画像</strong>：华海诚科/德邦科技/中石科技等国产封装材料厂商。他们面对的是日月光/长电等要求极严的大型封测客户，每批出货需附带质检报告（COA）、批次追溯数据和SPC控制图。</p>
+<p><strong>② 痛点</strong>：封装材料厂商通常规模不大（几十到几百人），质量管理体系传统（纸质批记录+Excel手工SPC），面对大客户的数字化审核要求时力不从心。"长电说你们的COA报表格式不合规，得改成他们的模板——但你们没有能自动生成客户定制COA的系统。"</p>
+<p><strong>③ 帆软切入方案</strong>：FineReport多客户模板COA自动生成（同一批数据，按不同客户要求输出不同格式的COA报表）+ FineReport SPC控制图（关键参数按客户要求的判异规则自动标记）→ 简道云批次追溯流程（原材料→中间体→成品→客户）。</p>
+<p><strong>④ 参考话术</strong>："你们每批出货给长电、华天，是不是COA报表靠人工填空——客户一换模板就重做一遍。FineReport给你做个COA生成器：同一批货的数据，点一下选'长电格式'还是'华天格式'，自动出对应COA。你们要去拿华海诚科下一个工厂的质量体系认证，FineReport的在线SPC就是加分项。"</p>
+<hr />
+<h2 id="_6">🔗 延伸阅读</h2>
+<ul>
+<li><a href="/kb/02-封装测试/行业动态/先进封装技术深度：CoWoS、3D堆叠与Chiplet的技术路线与产业格局">先进封装技术深度：CoWoS、3D堆叠与Chiplet的技术路线与产业格局</a> — 先进封装对材料的极致要求</li>
+<li><a href="/kb/02-封装测试/传统封装技术深度：从DIP到WLP的演进与工艺对比">传统封装技术深度：从DIP到WLP的演进与工艺对比</a> — 传统封装与先进封装材料体系的差异</li>
+<li><a href="/kb/02-封装测试/行业动态/封装基板与先进封装设备：从ABF到混合键合">封装基板与先进封装设备：从ABF到混合键合</a> — ABF基板材料详细分析</li>
+<li><a href="/kb/02-封装测试/行业动态/Fan-Out封装技术：从InFO到FOPLP">Fan-Out封装技术：从InFO到FOPLP</a> — Fan-Out中的Molding和临时键合材料</li>
+<li><a href="/kb/02-封装测试/行业动态/Hybrid Bonding混合键合：3D堆叠的终极互连技术">Hybrid Bonding混合键合：3D堆叠的终极互连技术</a> — 混合键合对CMP/键合界面的材料要求</li>
+</ul>
+<hr />
+<p><em>创建于 2026-07-13 · 徐文浩 (Lorin) · 帆软上海售前</em></p>
+</div>
+</article>
+<footer class="note-footer">
+  <a href="/kb/02-封装测试/行业动态/index.html">← 返回目录</a>
+</footer>
+</main>
+</body>
+</html>

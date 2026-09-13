@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "description": "三场景演示路径 narrative · 文档 ID 列表引用 poc-chunk-profiles",
+  "paths": {
+    "1": [
+      { "title": "半结构化日志", "desc": "budget_operation JSONL + .log → Agent MCP 现场解析（8000×2）", "type": "semistructured", "query": "BA-2025-015513 超预算金额是多少？" },
+      { "title": "制度知识入库", "desc": "本页入库 BG-2022-001 / BG-2022-005 / BG-2023-012", "doc_ids": ["BG-2022-001", "BG-2022-005", "BG-2023-012"] },
+      { "title": "Agent 结构化问答", "desc": "Dora 查 Doris：Q1 CT研发部差旅申请/驳回/执行统计", "query": "CT研发部2025年Q1国内差旅驳回几次？" },
+      { "title": "Agent 制度问答", "desc": "RAG 检索 BG-2023-012 超预算审批级别", "query": "超预算747.4万需要哪些审批环节？" },
+      { "title": "融合问答", "desc": "结合执行记录 + 制度条款给出拦截建议", "query": "陈思远 BA-2025-015513 为何触发 EXEC_OVER？" }
+    ],
+    "2": [
+      { "title": "五表 FDL 同步", "desc": "crm_lead → … → ads_otd_kpi_di 由 FineDataLink 入 Doris", "type": "structured" },
+      { "title": "FineBI 看板", "desc": "OTD 交付周期、缺料率、OTIF 等指标可视化", "type": "bi" },
+      { "title": "Dora 指标问答", "desc": "自然语言查 ads_otd_kpi_di", "query": "本月 OTD 平均交付周期是多少？" }
+    ],
+    "3": [
+      { "title": "结构化入库", "desc": "hospital_repair_record / dispatch_work_order / device_operation_log → Doris", "type": "structured" },
+      { "title": "核心文档入库", "desc": "RM / EXP / SP 系列（本页一键入库）", "doc_ids": ["RM-2023-001", "EXP-2024-015", "SP-2024-001", "SP-REC-2025-Q1", "SP-2024-025"] },
+      { "title": "诊断链 Step1", "desc": "RAG 查 EXP-2024-015：E1001/E1002 根因与占比", "query": "CT球管 E1001 E1002 分别什么原因？" },
+      { "title": "诊断链 Step2", "desc": "RAG 查 RM-2023-001 SOP 操作步骤", "query": "uCT960 球管更换第一步做什么？" },
+      { "title": "诊断链 Step3", "desc": "备件价格 + Q1 统计 + 供应预警", "query": "UI-CT-TUBE-960 价格和 Q1 更换量？" }
+    ]
+  },
+  "otd_tables": ["crm_lead", "crm_opportunity", "srm_purchase_order", "wms_delivery_order", "ads_otd_kpi_di", "ads_otd_detail_di"]
+}

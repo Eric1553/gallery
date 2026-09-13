@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>半导体 IPD 数字化经营方案 · 帆软行业售前讲稿</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --muted: #64748b;
+      --accent: #4f46e5;
+      --accent-soft: #eef2ff;
+      --teal: #0d9488;
+      --amber: #d97706;
+      --radius: 14px;
+      --shadow: 0 8px 30px -12px rgba(15, 23, 42, 0.15);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+      background: linear-gradient(165deg, #e0e7ff 0%, var(--bg) 35%, #f0fdfa 100%);
+      color: var(--text);
+      line-height: 1.65;
+      font-size: 15px;
+    }
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; flex-wrap: wrap; gap: 12px;
+      padding: 10px 28px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 12px rgba(15,23,42,0.04);
+    }
+    .topbar__brand { font-weight: 800; font-size: 14px; color: var(--accent); }
+    .topbar__brand span { color: var(--muted); font-weight: 500; margin-left: 8px; }
+    .topbar nav { display: flex; flex-wrap: wrap; gap: 4px; margin-left: auto; }
+    .topbar nav a {
+      font-size: 12px; padding: 6px 12px; border-radius: 8px;
+      color: var(--muted); text-decoration: none; font-weight: 500;
+    }
+    .topbar nav a:hover, .topbar nav a.active { background: var(--accent-soft); color: #4338ca; }
+    .hero {
+      max-width: 1080px; margin: 0 auto; padding: 56px 28px 40px;
+    }
+    .hero__badge {
+      display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+      padding: 5px 12px; border-radius: 999px;
+      background: var(--accent-soft); color: #4338ca; border: 1px solid #c7d2fe;
+      margin-bottom: 16px;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 4vw, 38px); font-weight: 800; letter-spacing: -0.03em;
+      line-height: 1.25; margin-bottom: 16px;
+    }
+    .hero__lead { font-size: 17px; color: var(--muted); max-width: 780px; margin-bottom: 28px; }
+    .hero__meta { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
+    .tag {
+      font-size: 12px; padding: 5px 12px; border-radius: 8px;
+      background: #fff; border: 1px solid var(--border); color: var(--muted);
+    }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 12px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 18px; border-radius: 10px; font-size: 14px; font-weight: 600;
+      text-decoration: none; cursor: pointer; border: none; font-family: inherit;
+    }
+    .btn--primary { background: var(--accent); color: #fff; box-shadow: 0 4px 14px rgba(79,70,229,0.35); }
+    .btn--outline { background: #fff; color: var(--accent); border: 1px solid #c7d2fe; }
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 28px 80px; }
+    .chapter {
+      background: var(--card); border-radius: var(--radius); border: 1px solid var(--border);
+      box-shadow: var(--shadow); margin-bottom: 28px; overflow: hidden;
+    }
+    .chapter__head {
+      padding: 22px 28px; border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, #fafbff, #fff);
+    }
+    .chapter__num {
+      font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+    .chapter__title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+    .chapter__sub { font-size: 13px; color: var(--muted); margin-top: 6px; }
+    .chapter__body { padding: 24px 28px 28px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    @media (max-width: 800px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+    .card-lite {
+      padding: 18px; border-radius: 12px; border: 1px solid var(--border);
+      background: linear-gradient(180deg, #fafbff 0%, #fff 60%);
+    }
+    .card-lite h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+    .card-lite p, .card-lite li { font-size: 13px; color: var(--muted); }
+    .card-lite ul { padding-left: 1.2em; margin-top: 8px; }
+    .card-lite--accent { border-left: 4px solid var(--accent); }
+    .card-lite--teal { border-left: 4px solid var(--teal); }
+    .card-lite--amber { border-left: 4px solid var(--amber); }
+    .story-flow {
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+      padding: 18px; background: #f8fafc; border-radius: 12px; border: 1px solid var(--border);
+      margin: 18px 0;
+    }
+    .story-flow .step {
+      padding: 8px 14px; border-radius: 999px; font-size: 12px; font-weight: 600;
+      background: #fff; border: 1px solid var(--border); color: var(--muted);
+    }
+    .story-flow .step.active { background: var(--accent-soft); border-color: #a5b4fc; color: #4338ca; }
+    .story-flow .arrow { color: #cbd5e1; font-size: 14px; }
+    .pain-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
+    .pain-table th, .pain-table td { border: 1px solid var(--border); padding: 10px 12px; text-align: left; vertical-align: top; }
+    .pain-table th { background: #f1f5f9; font-weight: 700; font-size: 12px; }
+    .module-map { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 16px; }
+    @media (max-width: 900px) { .module-map { grid-template-columns: 1fr 1fr; } }
+    .module-item {
+      padding: 14px 12px; border-radius: 10px; border: 1px solid var(--border);
+      background: #fff; text-align: center;
+    }
+    .module-item b { display: block; font-size: 13px; margin-bottom: 4px; }
+    .module-item span { font-size: 11px; color: var(--muted); line-height: 1.4; }
+    .timeline { position: relative; padding-left: 28px; margin: 20px 0; }
+    .timeline::before {
+      content: ""; position: absolute; left: 8px; top: 4px; bottom: 4px;
+      width: 2px; background: linear-gradient(180deg, var(--accent), var(--teal));
+    }
+    .timeline-item { position: relative; margin-bottom: 22px; }
+    .timeline-item::before {
+      content: ""; position: absolute; left: -24px; top: 6px;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: #fff; border: 3px solid var(--accent);
+    }
+    .timeline-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .timeline-item p { font-size: 13px; color: var(--muted); }
+    .quote {
+      padding: 18px 22px; border-radius: 12px; margin: 16px 0;
+      background: linear-gradient(135deg, #eef2ff, #f0fdfa);
+      border-left: 4px solid var(--accent);
+      font-size: 14px; font-style: italic; color: #334155;
+    }
+    .arch-box {
+      padding: 20px; border-radius: 12px; background: #0f172a; color: #e2e8f0;
+      font-size: 12px; line-height: 1.8; font-family: ui-monospace, monospace;
+      overflow-x: auto; margin-top: 16px;
+    }
+    .arch-box .hl { color: #a5b4fc; font-weight: 700; }
+    .value-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    @media (max-width: 800px) { .value-grid { grid-template-columns: 1fr 1fr; } }
+    .value-item {
+      text-align: center; padding: 20px 12px; border-radius: 12px;
+      background: linear-gradient(180deg, var(--accent-soft), #fff);
+      border: 1px solid #c7d2fe;
+    }
+    .value-item b { display: block; font-size: 22px; font-weight: 800; color: #4338ca; }
+    .value-item span { font-size: 12px; color: var(--muted); }
+    .footer {
+      text-align: center; padding: 32px; font-size: 12px; color: var(--muted);
+      border-top: 1px solid var(--border); margin-top: 20px;
+    }
+    .dept-pill {
+      display: inline-block; font-size: 11px; font-weight: 600;
+      padding: 3px 8px; border-radius: 6px; margin: 2px 4px 2px 0;
+      background: #f1f5f9; color: #475569;
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__brand">帆软 · 半导体行业方案 <span>IPD 数字化经营</span></div>
+    <nav>
+      <a href="#c1" class="active">客户画像</a>
+      <a href="#c2">业务诉求</a>
+      <a href="#c3">痛点故事</a>
+      <a href="#c4">故事主线</a>
+      <a href="#c5">原型映射</a>
+      <a href="#c6">帆软实现</a>
+      <a href="#c7">推广价值</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero__badge">内部传播 · 售前讲稿 · 案例脱敏示意</div>
+    <h1>把 IPD 流程跑在数据上：<br>从机会池到项目损益的经营闭环</h1>
+    <p class="hero__lead">
+      本方案以<strong>半导体装备 / 核心零部件</strong>企业的 IPD 实践为参照，说明帆软如何帮助研发密集型组织，
+      将「流程门禁、变更管理、工时归集、项目 P&amp;L」从分散表格拉通为<strong>可汇报、可穿透、可模拟</strong>的数字化经营体系。
+      配套交互原型可直接用于客户沟通与内部方案路演。
+    </p>
+    <div class="hero__meta">
+      <span class="tag">参照案例：隐冠半导体（脱敏）</span>
+      <span class="tag">产品：FineReport / FVS + 数据集成</span>
+      <span class="tag">场景：IPD · 项目经营 · ECN 联动</span>
+    </div>
+    <div class="btn-row">
+      <a class="btn btn--primary" href="隐冠IPD流程蓝图看板.html" target="_blank">打开交互原型 →</a>
+      <a class="btn btn--outline" href="#c4">阅读故事主线</a>
+    </div>
+  </section>
+
+  <div class="container">
+    <!-- Chapter 1 -->
+    <article class="chapter" id="c1">
+      <div class="chapter__head">
+        <div class="chapter__num">CHAPTER 01</div>
+        <h2 class="chapter__title">我们面向什么样的客户？</h2>
+        <p class="chapter__sub">先对齐「谁买单、谁使用、谁推动」——半导体 IPD 数字化的三类典型主体</p>
+      </div>
+      <div class="chapter__body">
+        <div class="grid-3">
+          <div class="card-lite card-lite--accent">
+            <h4>晶圆厂 / IDM 装备采购方延伸</h4>
+            <p>对上游装备、零部件供应商提出 IPD 成熟度与交付可视化要求，倒逼乙方建立项目级经营透明。</p>
+          </div>
+          <div class="card-lite card-lite--teal">
+            <h4>半导体装备 &amp; 核心零部件企业</h4>
+            <p><strong>主战场。</strong>多项目并行、长周期试制、ECN 频繁、跨机械/电气/供应链协同，是 IPD 数字化的核心客群。</p>
+          </div>
+          <div class="card-lite card-lite--amber">
+            <h4>芯片设计 + 模组交付型企业</h4>
+            <p>产品定义到量产交付链条长，需要机会预演 ROI、门禁评审与项目损益一体化管理。</p>
+          </div>
+        </div>
+        <table class="pain-table" style="margin-top:20px">
+          <thead>
+            <tr><th>企业特征</th><th>典型规模</th><th>决策链</th><th>项目触发点</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>研发驱动、项目制交付、BOM/ECN 密集</td>
+              <td>营收 5–50 亿，研发人员占比高</td>
+              <td>CEO/COO → 研发 VP → PMO → 信息化</td>
+              <td>IPD 流程导入二期、经营会「说不清项目赚不赚钱」、客户审厂要求过程可追溯</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <!-- Chapter 2 -->
+    <article class="chapter" id="c2">
+      <div class="chapter__head">
+        <div class="chapter__num">CHAPTER 02</div>
+        <h2 class="chapter__title">哪些业务部门在推动这件事？</h2>
+        <p class="chapter__sub">IPD 数字化不是 IT 单点项目，而是研发经营与财务口径的「组织共识工程」</p>
+      </div>
+      <div class="chapter__body">
+        <div class="grid-2">
+          <div class="card-lite">
+            <h4>研发与 PDT <span class="dept-pill">主用户</span></h4>
+            <ul>
+              <li>需要一页看清项目健康度、门禁 RAG、里程碑偏差</li>
+              <li>ECN 影响要自动关联工时、物料与待办，而非邮件追催</li>
+              <li>周例会材料从「人工拼 PPT」变为「看板拉取 + 异常下钻」</li>
+            </ul>
+          </div>
+          <div class="card-lite">
+            <h4>PMO / 流程与质量 <span class="dept-pill">规则 Owner</span></h4>
+            <ul>
+              <li>统一 IPD 阶段定义、PDR/CDR/TR 门禁矩阵</li>
+              <li>机会池 → 立项的 ROI 预演与假设登记标准化</li>
+              <li>跨项目资源冲突可视化，支撑组合决策</li>
+            </ul>
+          </div>
+          <div class="card-lite">
+            <h4>财务与经营分析 <span class="dept-pill">口径 Owner</span></h4>
+            <ul>
+              <li>项目级收入确认、成本瀑布、毛利敏感性要与 ERP 对齐</li>
+              <li>工时分摊规则需可追溯至 ONES/项目任务</li>
+              <li>经营会要回答「预测毛利会不会被 ECN/售后吃掉」</li>
+            </ul>
+          </div>
+          <div class="card-lite">
+            <h4>供应链 &amp; 售后 <span class="dept-pill">闭环参与者</span></h4>
+            <ul>
+              <li>ECN 触发的物料替代、交期响应对接 SCM</li>
+              <li>售后问题回链至项目档案，影响质保计提与复盘</li>
+              <li>客户现场问题不再与研发项目「两张皮」</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Chapter 3 -->
+    <article class="chapter" id="c3">
+      <div class="chapter__head">
+        <div class="chapter__num">CHAPTER 03</div>
+        <h2 class="chapter__title">客户现场的真实痛点：一个周五的经营会</h2>
+        <p class="chapter__sub">用业务语言讲清楚「为什么要做」——这是我们进入半导体 IPD 议题的切口</p>
+      </div>
+      <div class="chapter__body">
+        <div class="quote">
+          「静电吸盘控制器项目 CDR-2 已经拖了两周，财务说毛利还行，但 PMO 说还有 3 张 ECN 没闭环；
+          供应链抱怨物料账对不上，售后刚登记了一个现场问题——经营会上每人拿一份 Excel，半小时对不齐同一个项目编号。」
+          <br><br>—— 某半导体装备企业研发副总裁（脱敏）
+        </div>
+        <table class="pain-table">
+          <thead>
+            <tr><th>痛点域</th><th>业务表现</th><th>根因（我们帮客户翻译）</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>过程不可见</strong></td>
+              <td>里程碑、泳道、资源负荷分散在 ONES/邮件/会议纪要</td>
+              <td>缺少「项目数字孪生」层，过程数据未沉淀为经营视图</td>
+            </tr>
+            <tr>
+              <td><strong>变更难量化</strong></td>
+              <td>ECN 数量知道，但对工时/物料/交期的联动影响靠人工估算</td>
+              <td>PLM·ERP·项目系统未建立变更事件的标准路由</td>
+            </tr>
+            <tr>
+              <td><strong>损益滞后</strong></td>
+              <td>项目 P&amp;L 月结后才能看，无法做场景压力测试</td>
+              <td>收入确认规则、工时分摊、售后计提未项目化实时归集</td>
+            </tr>
+            <tr>
+              <td><strong>汇报成本高</strong></td>
+              <td>经营会/客户审厂前大量「拼表」，口径争议反复出现</td>
+              <td>没有统一的 IPD 经营看板与门禁叙事框架</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <!-- Chapter 4 -->
+    <article class="chapter" id="c4">
+      <div class="chapter__head">
+        <div class="chapter__num">CHAPTER 04</div>
+        <h2 class="chapter__title">故事主线：五步经营闭环</h2>
+        <p class="chapter__sub">售前讲解建议按此顺序展开——与原型「主线概览」页逐步讲解控件一一对应</p>
+      </div>
+      <div class="chapter__body">
+        <div class="story-flow">
+          <span class="step active">① 机会预演</span><span class="arrow">→</span>
+          <span class="step">② PDR 立项</span><span class="arrow">→</span>
+          <span class="step">③ 试制与 ECN</span><span class="arrow">→</span>
+          <span class="step">④ 交付回款</span><span class="arrow">→</span>
+          <span class="step">⑤ 售后复盘</span>
+        </div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <h4>① 销售机会 → ROI 预演与风险登记</h4>
+            <p>在立项前用统一模板预演毛利区间、关键假设与资源占用，避免「先上马后算账」。对应原型：<strong>从机会到立项</strong>门户、假设 &amp; 风险登记区。</p>
+          </div>
+          <div class="timeline-item">
+            <h4>② PDR 门禁 → 项目画像上线</h4>
+            <p>立项通过后生成项目数字档案：健康度雷达、干系人 RACI、门禁 RAG 矩阵。经营会「一页讲清楚」。对应原型：<strong>项目画像</strong>页。</p>
+          </div>
+          <div class="timeline-item">
+            <h4>③ 执行期 → 泳道 / 甘特 / ECN 联动</h4>
+            <p>以 ECN-2403 为例演示：机械/电气/供应链跨职能联动，量化 CDR 偏差与资源硬冲突。对应原型：<strong>过程与风险</strong>页 + ECN 联动弹窗。</p>
+          </div>
+          <div class="timeline-item">
+            <h4>④ 里程碑 → 收入确认与成本瀑布</h4>
+            <p>按里程碑开票节奏归集 ERP 收入、物料与分摊人力，支持基准/压力/乐观场景切换。对应原型：<strong>经营闭环 / 项目损益</strong>页。</p>
+          </div>
+          <div class="timeline-item">
+            <h4>⑤ 结项后 → 售后回冲与经验沉淀</h4>
+            <p>现场问题回链项目档案，刷新质保计提与毛利预测；事件写入数据湖供审计回溯。对应原型：<strong>售后回链表</strong> + 集成架构页。</p>
+          </div>
+        </div>
+        <p style="font-size:13px;color:var(--muted);margin-top:8px">
+          <strong>讲解技巧：</strong>顶栏切换「静电吸盘控制器 / 真空位移台改型 / 中间报价差」三个项目，
+          展示同一套看板如何服务不同项目类型；切换「压力场景」演示 ECN 叠加对毛利的冲击——这是客户最容易产生共鸣的 3 分钟演示。
+        </p>
+      </div>
+    </article>
+
+    <!-- Chapter 5 -->
+    <article class="chapter" id="c5">
+      <div class="chapter__head">
+        <div class="chapter__num">CHAPTER 05</div>
+        <h2 class="chapter__title">原型能力地图：五个页签在讲什么</h2>
+        <p class="chapter__sub">将交互原型包装为可交付能力模块，避免「演示归演示、实施归实施」的割裂</p>
+      </div>
+      <div class="chapter__body">
+        <div class="module-map">
+          <div class="module-item"><b>① 主线概览</b><span>五步对照 · 投屏讲解 · 纪要对齐</span></div>
+          <div class="module-item"><b>② 项目画像</b><span>健康度 · 门禁 RAG · 干系人</span></div>
+          <div class="module-item"><b>③ 过程与风险</b><span>泳道甘特 · ECN 全表 · 资源冲突</span></div>
+          <div class="module-item"><b>④ 经营闭环</b><span>项目 P&amp;L · 瀑布 · 场景模拟</span></div>
+          <div class="module-item"><b>⑤ 集成架构</b><span>ONES·PLM·ERP·报表·售后</span></div>
+        </div>
+        <table class="pain-table" style="margin-top:20px">
+          <thead>
+            <tr><th>原型模块</th><th>解决的业务问题</th><th>典型数据来源</th><th>帆软承载形态</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>主线概览</td>
+              <td>经营会叙事、客户审厂过程说明</td>
+              <td>PMO 阶段定义 + 项目主数据</td>
+              <td>FVS 故事页 / 逐步讲解组件</td>
+            </tr>
+            <tr>
+              <td>项目画像</td>
+              <td>单项目健康度一屏判断</td>
+              <td>ONES 任务、门禁评审结果</td>
+              <td>FR 模板 + 雷达/趋势图</td>
+            </tr>
+            <tr>
+              <td>过程与风险</td>
+              <td>执行偏差、ECN 与资源可视化</td>
+              <td>PLM ECN、项目计划、负荷模型</td>
+              <td>FVS 联动看板 + 下钻弹窗</td>
+            </tr>
+            <tr>
+              <td>经营闭环</td>
+              <td>项目损益、敏感性、开票节奏</td>
+              <td>ERP 收入/成本、工时归集规则</td>
+              <td>FR 报表 + 场景参数切换</td>
+            </tr>
+            <tr>
+              <td>集成架构</td>
+              <td>跨系统口径一致、异常可追溯</td>
+              <td>MDM、接口日志、同步队列</td>
+              <td>数据开发平台 + 监控看板</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <!-- Chapter 6 -->
+    <article class="chapter" id="c6">
+      <div class="chapter__head">
+        <div class="chapter__num">CHAPTER 06</div>
+        <h2 class="chapter__title">帆软如何实现：不是替代 IPD，而是让 IPD 可经营</h2>
+        <p class="chapter__sub">坚持「流程在业务系统、经营在帆软、主数据在中枢」的实施原则</p>
+      </div>
+      <div class="chapter__body">
+        <div class="grid-2">
+          <div class="card-lite card-lite--accent">
+            <h4>定位：经营分析与应用呈现层</h4>
+            <ul>
+              <li><strong>不替代</strong> ONES（项目执行）、PLM（变更与 BOM）、ERP（财务事实）</li>
+              <li><strong>承接</strong> 跨域指标、门禁视图、项目 P&amp;L、场景模拟与汇报叙事</li>
+              <li><strong>固化</strong> 工时分摊、收入确认、ECN 影响等「口径即代码」</li>
+            </ul>
+          </div>
+          <div class="card-lite card-lite--teal">
+            <h4>产品组合建议</h4>
+            <ul>
+              <li><strong>FineReport</strong>：项目损益表、里程碑开票、门禁矩阵等固定报表</li>
+              <li><strong>FVS</strong>：IPD 经营驾驶舱、ECN 联动分析、投屏讲解主线</li>
+              <li><strong>数据平台</strong>：MDM 项目键、接口编排、T+1h 同步 SLA 监控</li>
+            </ul>
+          </div>
+        </div>
+        <div class="arch-box">
+<span class="hl">[业务系统层]</span>  ONES（任务·工时） ─┬─ PLM（BOM·ECN） ─┬─ ERP（订单·成本） ─┬─ 售后（Q#·日志）
+                              │                      │                      │
+<span class="hl">[集成中枢]</span>    项目 MDM · 事件路由 · 口径规则引擎 · 异常重试队列
+                              │
+<span class="hl">[帆软应用层]</span>  FVS IPD 驾驶舱 ── FR 项目 P&amp;L ── 经营会故事页 ── 审计回溯视图
+                              │
+<span class="hl">[价值输出]</span>    经营会 30 分钟对齐 · ECN 小时级影响可见 · 项目毛利场景可模拟
+        </div>
+        <p style="font-size:13px;color:var(--muted);margin-top:16px">
+          原型中「集成拓扑」页的 5 系统域 + 数据湖设计，即为上述架构的客户沟通版本。
+          实施阶段需单独立项评估接口成熟度、权限模型与历史数据清洗——我们在售前阶段用原型锁定<strong>业务范围与叙事</strong>，而非过度承诺接口细节。
+        </p>
+      </div>
+    </article>
+
+    <!-- Chapter 7 -->
+    <article class="chapter" id="c7">
+      <div class="chapter__head">
+        <div class="chapter__num">CHAPTER 07</div>
+        <h2 class="chapter__title">方案价值与行业推广路径</h2>
+        <p class="chapter__sub">将此案例作为半导体行业「IPD 数字化」标准叙事模板</p>
+      </div>
+      <div class="chapter__body">
+        <div class="value-grid">
+          <div class="value-item"><b>30%</b><span>经营会材料准备工时下降（目标区间）</span></div>
+          <div class="value-item"><b>1 屏</b><span>项目健康度替代多表拼接</span></div>
+          <div class="value-item"><b>小时级</b><span>ECN 影响联动可见</span></div>
+          <div class="value-item"><b>3 场景</b><span>基准/压力/乐观毛利模拟</span></div>
+        </div>
+        <div class="timeline" style="margin-top:24px">
+          <div class="timeline-item">
+            <h4>阶段一：蓝图共识（4–6 周）</h4>
+            <p>IPD 阶段与门禁对齐、指标字典、原型确认（即本原型范围）。产出：经营叙事 + 集成蓝图。</p>
+          </div>
+          <div class="timeline-item">
+            <h4>阶段二：经营看板 MVP（8–12 周）</h4>
+            <p>项目画像 + 过程看板 + 项目 P&amp;L 上线；优先 1–2 个试点项目跑通闭环。</p>
+          </div>
+          <div class="timeline-item">
+            <h4>阶段三：变更联动与规模化（12 周+）</h4>
+            <p>ECN 事件路由、售后回链、多项目组合视图；推广至全产品线的 IPD 经营体系。</p>
+          </div>
+        </div>
+        <div class="btn-row" style="margin-top:24px">
+          <a class="btn btn--primary" href="隐冠IPD流程蓝图看板.html" target="_blank">演示交互原型</a>
+          <a class="btn btn--outline" href="隐冠人效看板-优化版.html" target="_blank">关联：人效看板</a>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <footer class="footer">
+    帆软软件 · 半导体行业售前方案 · IPD 数字化经营 · 内部传播材料<br>
+    配套原型：<a href="隐冠IPD流程蓝图看板.html">隐冠IPD流程蓝图看板.html</a> · 案例要素已脱敏，数据为演示用途
+  </footer>
+
+  <script>
+    document.querySelectorAll('.topbar nav a').forEach(a => {
+      a.addEventListener('click', () => {
+        document.querySelectorAll('.topbar nav a').forEach(x => x.classList.remove('active'));
+        a.classList.add('active');
+      });
+    });
+    const steps = document.querySelectorAll('.story-flow .step');
+    let idx = 0;
+    setInterval(() => {
+      steps.forEach(s => s.classList.remove('active'));
+      steps[idx % steps.length].classList.add('active');
+      idx++;
+    }, 2800);
+  </script>
+</body>
+</html>

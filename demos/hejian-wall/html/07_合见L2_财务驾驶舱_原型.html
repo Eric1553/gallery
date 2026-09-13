@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>合见 · 财务驾驶舱（L2）原型</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { background:#eef3f9; }
+  body { font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif; color:#23314c; -webkit-font-smoothing:antialiased; }
+  .stage { width:1600px; height:986px; position:relative; background:linear-gradient(165deg,#ffffff,#eef4fb); }
+  .ribbon { position:absolute; right:0; top:0; background:#e2574c; color:#fff; font-size:12px; font-weight:700; padding:5px 16px; border-bottom-left-radius:10px; z-index:3; }
+  .top { background:linear-gradient(135deg,#1f7a52,#2faa6e); color:#fff; padding:14px 28px; display:flex; justify-content:space-between; align-items:center; }
+  .top h1 { font-size:21px; font-weight:800; letter-spacing:1px; }
+  .top h1 .en { font-size:12px; opacity:.85; font-weight:600; margin-left:8px; }
+  .top .meta { font-size:12.5px; opacity:.92; }
+  .body { padding:16px 28px 12px; }
+  .lab { font-size:12px; font-weight:800; color:#1f7a52; letter-spacing:1px; margin:2px 0 10px; display:flex; align-items:center; gap:8px; }
+  .lab::before { content:""; width:5px; height:14px; background:#2faa6e; border-radius:2px; }
+  .lab .tg { font-size:10.5px; font-weight:700; color:#8a93a6; background:#eef2f8; padding:1px 8px; border-radius:10px; }
+  .kpis { display:grid; grid-template-columns:repeat(6,1fr); gap:13px; margin-bottom:14px; }
+  .kpi { background:#fff; border:1px solid #e4ebf4; border-radius:11px; padding:12px 16px; box-shadow:0 3px 9px rgba(40,70,120,.05); position:relative; overflow:hidden; }
+  .kpi::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; }
+  .kpi.b::before{background:#3f7fc4;} .kpi.g::before{background:#2e8b57;} .kpi.o::before{background:#e8855a;} .kpi.r::before{background:#e2574c;} .kpi.c::before{background:#2aa3b8;}
+  .kpi .t { font-size:11.5px; color:#7c869a; }
+  .kpi .v { font-size:25px; font-weight:800; color:#1c2c4a; margin-top:3px; }
+  .kpi .v small { font-size:13px; font-weight:700; }
+  .kpi .d { font-size:11px; margin-top:3px; }
+  .kpi .d.up { color:#2e8b57; } .kpi .d.dn { color:#e2574c; }
+  .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:13px; }
+  .panel { background:#fff; border:1px solid #e4ebf4; border-radius:11px; padding:11px 14px 6px; box-shadow:0 3px 10px rgba(40,70,120,.05); }
+  .panel .ph { font-size:13.5px; font-weight:800; color:#1c2c4a; display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+  .panel .ph .sub { font-size:10.5px; color:#9aa3b5; font-weight:600; }
+  .chart { width:100%; height:196px; }
+  .note { background:linear-gradient(90deg,#eaf6ef,#f3fbf6); border:1px dashed #a9dcc0; border-left:4px solid #2faa6e; border-radius:8px; padding:9px 16px; font-size:12.5px; color:#3a4660; line-height:1.5; }
+  .note b { color:#1f7a52; }
+</style>
+  <link rel="stylesheet" href="nav.css">
+</head>
+<body data-page="07">
+<div class="proto-app">
+  <aside id="proto-nav" class="proto-nav"></aside>
+  <div class="proto-main">
+<div class="stage">
+  <div class="ribbon">原型设计稿</div>
+  <div class="top">
+    <h1>合见财务驾驶舱<span class="en">Finance Cockpit · L2 业财一体</span></h1>
+    <div class="meta">主线：收入 → 成本 → 毛利 → DF 预测 → 回款　|　示意数据</div>
+  </div>
+  <div class="body">
+    <div class="lab">财务核心 KPI <span class="tg">财务负责人 / 分管领导</span></div>
+    <div class="kpis">
+      <div class="kpi b"><div class="t">收入（YTD/万元）</div><div class="v">12,860</div><div class="d up">▲ 18.6%</div></div>
+      <div class="kpi o"><div class="t">成本（万元）</div><div class="v">7,820</div><div class="d">硬件+非硬件</div></div>
+      <div class="kpi g"><div class="t">综合毛利率</div><div class="v">39.2<small>%</small></div><div class="d up">▲ 1.4pct</div></div>
+      <div class="kpi c"><div class="t">DF 预测达成</div><div class="v">94<small>%</small></div><div class="d up">偏差 6%</div></div>
+      <div class="kpi g"><div class="t">回款率</div><div class="v">82.7<small>%</small></div><div class="d up">▲ 2.3pct</div></div>
+      <div class="kpi r"><div class="t">逾期应收（万元）</div><div class="v">1,260</div><div class="d">账龄90+</div></div>
+    </div>
+    <div class="grid3">
+      <div class="panel"><div class="ph">收入 / 成本 / 毛利率<span class="sub">业财</span></div><div class="chart" id="e1"></div></div>
+      <div class="panel"><div class="ph">DF 收入预测 vs 实际<span class="sub">预测达成</span></div><div class="chart" id="e2"></div></div>
+      <div class="panel"><div class="ph">收入构成（硬件/非硬件/借转销）<span class="sub">口径</span></div><div class="chart" id="e3"></div></div>
+    </div>
+    <div class="grid3">
+      <div class="panel"><div class="ph">各产品线毛利率<span class="sub">配比</span></div><div class="chart" id="e4"></div></div>
+      <div class="panel"><div class="ph">应收账龄分布<span class="sub">回款风险</span></div><div class="chart" id="e5"></div></div>
+      <div class="panel"><div class="ph">回款 / 现金回流趋势<span class="sub">回款</span></div><div class="chart" id="e6"></div></div>
+    </div>
+    <div class="note"><b>分析思路：</b>以业财一体「收入 → 成本 → 毛利 → DF 预测 → 回款」为主线；合见<b>硬件走金蝶销售订单、非硬件走合同/验收/预测</b>，重点关注<b>收入成本配比、DF 预测达成与应收账龄</b>，将运营结果映射为财务结果。</div>
+  </div>
+</div>
+<script>
+  var BLUE='#3f7fc4',LBLUE='#7bb0e6',GREEN='#2e8b57',ORANGE='#e8855a',RED='#e2574c',CYAN='#2aa3b8',PURPLE='#7e6cc4';
+  var M=['1月','2月','3月','4月','5月','6月'];
+  function init(id,opt){echarts.init(document.getElementById(id)).setOption(opt);}
+  var L={top:0,itemWidth:10,itemHeight:10,textStyle:{fontSize:10,color:'#6b7790'}};
+  init('e1',{animation:false,legend:Object.assign({data:['收入','成本','毛利率']},L),grid:{left:48,right:44,top:26,bottom:22},xAxis:{type:'category',data:M,axisLabel:{fontSize:10,color:'#8a93a6'}},yAxis:[{type:'value',splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:10,color:'#8a93a6'}},{type:'value',max:60,axisLabel:{fontSize:10,color:'#8a93a6',formatter:'{value}%'},splitLine:{show:false}}],series:[{name:'收入',type:'bar',data:[1820,1960,2080,2150,2310,2540],barWidth:13,itemStyle:{color:BLUE,borderRadius:[3,3,0,0]}},{name:'成本',type:'bar',data:[1150,1210,1280,1300,1380,1500],barWidth:13,itemStyle:{color:ORANGE,borderRadius:[3,3,0,0]}},{name:'毛利率',type:'line',yAxisIndex:1,data:[37,38,38.5,39.5,40.3,40.9],smooth:true,itemStyle:{color:GREEN},lineStyle:{width:2.5}}]});
+  init('e2',{animation:false,legend:Object.assign({data:['预测','实际']},L),grid:{left:48,right:16,top:26,bottom:22},xAxis:{type:'category',data:M,axisLabel:{fontSize:10,color:'#8a93a6'}},yAxis:{type:'value',splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:10,color:'#8a93a6'}},series:[{name:'预测',type:'line',data:[1900,2000,2100,2250,2400,2600],smooth:true,lineStyle:{width:2,type:'dashed',color:PURPLE},itemStyle:{color:PURPLE}},{name:'实际',type:'line',data:[1820,1960,2080,2150,2310,2540],smooth:true,areaStyle:{color:'rgba(63,127,196,.12)'},itemStyle:{color:BLUE},lineStyle:{width:2.5}}]});
+  init('e3',{animation:false,legend:{bottom:0,itemWidth:9,itemHeight:9,textStyle:{fontSize:9.5,color:'#6b7790'}},series:[{type:'pie',radius:['40%','64%'],center:['50%','44%'],label:{fontSize:9.5,formatter:'{b}\n{d}%'},data:[{value:54,name:'硬件',itemStyle:{color:BLUE}},{value:28,name:'非硬件',itemStyle:{color:CYAN}},{value:18,name:'借转销',itemStyle:{color:GREEN}}]}]});
+  init('e4',{animation:false,grid:{left:54,right:30,top:14,bottom:22},xAxis:{type:'category',data:['UVHP','UVHS','UV APS','子卡','非硬件'],axisLabel:{fontSize:10,color:'#8a93a6'}},yAxis:{type:'value',max:60,splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:10,color:'#8a93a6',formatter:'{value}%'}},series:[{type:'bar',data:[42,40,38,32,55],barWidth:26,itemStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'#7bd6a8'},{offset:1,color:GREEN}]),borderRadius:[5,5,0,0]},label:{show:true,position:'top',fontSize:11,color:'#1f7a52',formatter:'{c}%'}}]});
+  init('e5',{animation:false,grid:{left:46,right:16,top:18,bottom:22},xAxis:{type:'category',data:['0-30','31-60','61-90','91-180','180+'],axisLabel:{fontSize:10,color:'#8a93a6'}},yAxis:{type:'value',splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:10,color:'#8a93a6'}},series:[{type:'bar',data:[4200,2600,1500,820,440],barWidth:24,itemStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'#9ec6ee'},{offset:1,color:'#e2574c'}]),borderRadius:[4,4,0,0]}}]});
+  init('e6',{animation:false,grid:{left:48,right:16,top:18,bottom:22},xAxis:{type:'category',data:M,axisLabel:{fontSize:10,color:'#8a93a6'}},yAxis:{type:'value',splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:10,color:'#8a93a6'}},series:[{type:'line',data:[1500,1620,1700,1880,2050,2260],smooth:true,areaStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'rgba(47,170,110,.3)'},{offset:1,color:'rgba(47,170,110,.02)'}])},itemStyle:{color:GREEN},lineStyle:{width:2.5}}]});
+</script>
+  </div>
+</div>
+<script src="nav.js"></script>
+</body>
+</html>

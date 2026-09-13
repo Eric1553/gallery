@@ -1,0 +1,3363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>隐冠半导体 · 研发人效与工时分析看板（优化版）</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+  <style>
+    :root {
+      --bg-page: #eef2f7;
+      --bg-card: #ffffff;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-secondary: #64748b;
+      --text-muted: #94a3b8;
+      --accent: #4f46e5;
+      --accent-2: #0ea5e9;
+      --accent-soft: #eef2ff;
+      --danger-bg: #fee2e2;
+      --danger-text: #b91c1c;
+      --shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+      --shadow-lg: 0 12px 40px -12px rgba(30, 41, 59, 0.18);
+      --radius: 12px;
+      --header-h: 52px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: linear-gradient(165deg, #e0e7ff 0%, #f1f5f9 28%, #f8fafc 55%, #ecfeff 100%);
+      color: var(--text);
+      min-height: 100vh;
+      max-width: none;
+      position: relative;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      border-radius: 50%;
+      filter: blur(80px);
+    }
+
+    body::before {
+      width: 480px;
+      height: 480px;
+      top: -120px;
+      right: -80px;
+      background: rgba(99, 102, 241, 0.18);
+    }
+
+    body::after {
+      width: 400px;
+      height: 400px;
+      bottom: 10%;
+      left: -100px;
+      background: rgba(14, 165, 233, 0.12);
+    }
+
+    .app-shell {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: min(1760px, 100%);
+      margin-inline: auto;
+    }
+
+    /* —— 精简顶栏（品牌 + 辅助视图切换 + 工具） —— */
+    .app-header {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      padding: 8px 28px;
+      min-height: var(--header-h);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.97) 0%, rgba(248, 250, 252, 0.98) 100%);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(226, 232, 240, 0.95);
+      box-shadow: 0 2px 12px -4px rgba(15, 23, 42, 0.06);
+    }
+
+    .app-header__brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-right: 14px;
+      margin-right: 4px;
+      border-right: 1px solid var(--border);
+    }
+
+    .app-header__logo-wrap {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      border-radius: 11px;
+      flex-shrink: 0;
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
+      overflow: hidden;
+    }
+
+    /*
+      官网图为 800×133 宽幅，图案在左侧。用 cover 按高度铺满方块，再从左侧取景，
+      等效裁掉右侧白边；data URI 使用完整 yg-logo-src，避免损坏的裁切文件导致全白。
+    */
+    .app-header__mark {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      margin: 0;
+      padding: 0;
+      object-fit: cover;
+      object-position: left center;
+    }
+
+    .app-header__title {
+      line-height: 1.25;
+    }
+
+    .app-header__title strong {
+      display: block;
+      font-size: 13px;
+      letter-spacing: -0.02em;
+    }
+
+    .app-header__title span {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .app-header__mini-tabs {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 0 8px;
+      border-right: 1px solid var(--border);
+    }
+
+    .app-header__mini-tabs .mini-tab-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-right: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .app-header button[data-sheet] {
+      border: none;
+      background: transparent;
+      padding: 6px 10px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .app-header button[data-sheet]:hover {
+      color: var(--accent);
+      background: rgba(99, 102, 241, 0.08);
+    }
+
+    .app-header button[data-sheet].active {
+      color: #4338ca;
+      font-weight: 700;
+      background: rgba(99, 102, 241, 0.12);
+    }
+
+    .app-header__actions {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .month-select.compact span {
+      font-size: 11px;
+    }
+
+    .month-select.compact select {
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+
+    .pill-demo.compact {
+      padding: 4px 8px;
+      font-size: 10px;
+    }
+
+    .btn-outline.compact {
+      padding: 5px 10px;
+      font-size: 11px;
+    }
+
+    .month-select {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .month-select select {
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg-card);
+      font-size: 13px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    .pill-demo {
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #fef2f2, #fee2e2);
+      color: var(--danger-text);
+      font-weight: 600;
+      border: 1px solid #fecaca;
+    }
+
+    .btn-outline {
+      padding: 8px 16px;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: linear-gradient(180deg, #fff, #f8fafc);
+      cursor: pointer;
+      color: var(--text-secondary);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: #fff;
+    }
+
+    /* —— 主内容区 —— */
+    .main-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      padding: 16px min(22px, 2.5vw) 28px;
+      width: 100%;
+    }
+
+    /* 首页：下钻入口（图形/模块） */
+    .portal-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .portal-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .portal-tile {
+      position: relative;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      padding: 16px 18px 14px;
+      border-radius: 14px;
+      color: #fff;
+      font-family: inherit;
+      box-shadow: var(--shadow);
+      transition: transform 0.18s, box-shadow 0.2s;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      min-height: 132px;
+    }
+
+    .portal-tile:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .portal-tile:focus {
+      outline: 2px solid #6366f1;
+      outline-offset: 2px;
+    }
+
+    .portal-tile__icon {
+      font-size: 28px;
+      line-height: 1;
+      margin-bottom: 8px;
+      opacity: 0.95;
+    }
+
+    .portal-tile__t {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+
+    .portal-tile__d {
+      font-size: 11px;
+      opacity: 0.92;
+      line-height: 1.5;
+      flex: 1;
+      padding-right: 4px;
+      max-width: 100%;
+    }
+
+    .portal-tile__go {
+      margin-top: auto;
+      align-self: flex-end;
+      flex-shrink: 0;
+      padding-top: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      opacity: 0.95;
+    }
+
+    .portal-tile--a {
+      background: linear-gradient(135deg, #4f46e5 0%, #6366f1 45%, #818cf8 100%);
+    }
+
+    .portal-tile--b {
+      background: linear-gradient(135deg, #0e7490 0%, #0d9488 50%, #14b8a6 100%);
+    }
+
+    .portal-tile--c {
+      background: linear-gradient(135deg, #b45309 0%, #d97706 50%, #f59e0b 100%);
+    }
+
+    .card--chart-drill {
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s, border-color 0.2s;
+    }
+
+    .card--chart-drill:hover {
+      transform: translateY(-2px);
+      border-color: #a5b4fc;
+    }
+
+    .card--chart-drill:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .card--chart-drill .chart-drill-hint {
+      margin: 10px 0 0;
+      padding: 10px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.5;
+      color: #4f46e5;
+      background: linear-gradient(90deg, rgba(238, 242, 255, 0.95), rgba(224, 231, 255, 0.5));
+      border-radius: 8px;
+      border: 1px dashed #c7d2fe;
+      word-break: break-word;
+    }
+
+    @keyframes sheetFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes jumpTargetPulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.55);
+      }
+      70% {
+        box-shadow: 0 0 0 12px rgba(99, 102, 241, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+      }
+    }
+
+    .is-jump-target {
+      outline: 2px solid #6366f1;
+      outline-offset: 4px;
+      border-radius: 14px;
+      animation: jumpTargetPulse 1.1s ease-out 1;
+    }
+
+    /* —— 页面间联动：可点击跳转 —— */
+    .jump-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin: 0 2px;
+      padding: 2px 8px;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      background: rgba(99, 102, 241, 0.08);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s, transform 0.12s, box-shadow 0.15s;
+    }
+
+    .jump-link:hover {
+      background: rgba(99, 102, 241, 0.16);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+    }
+
+    .jump-link::after {
+      content: "→";
+      font-size: 11px;
+      opacity: 0.8;
+    }
+
+    .jump-link.jump-link--back::after {
+      content: "←";
+      order: -1;
+    }
+
+    .kpi--clickable {
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s, border-color 0.2s;
+    }
+
+    .kpi--clickable:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+      border-color: #a5b4fc;
+    }
+
+    .kpi--clickable:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .kpi--clickable .kpi-hint {
+      font-size: 10px;
+      color: var(--accent);
+      margin-top: 8px;
+      font-weight: 600;
+    }
+
+    .sheet-stack {
+      flex: 1;
+      min-height: 680px;
+    }
+
+    .sheet-panel {
+      display: none;
+      padding-bottom: 8px;
+      overflow: auto;
+      max-height: calc(100vh - 118px);
+    }
+
+    .sheet-panel.active {
+      display: block;
+      animation: sheetFadeIn 0.2s ease-in-out;
+    }
+
+    .sheet-hero {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 20px 24px;
+      margin-bottom: 22px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.98) 50%, rgba(239, 246, 255, 0.5) 100%);
+      border-radius: 16px;
+      border: 1px solid rgba(226, 232, 240, 0.95);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .sheet-hero__badge {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: linear-gradient(145deg, #6366f1, #4f46e5);
+      color: #fff;
+      font-size: 22px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(79, 70, 229, 0.35);
+    }
+
+    .sheet-hero__kicker {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .sheet-hero__title {
+      margin: 0 0 6px;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text);
+    }
+
+    .sheet-hero__desc {
+      margin: 0;
+      font-size: 13px;
+      color: var(--text-secondary);
+      max-width: 720px;
+      line-height: 1.5;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(226, 232, 240, 0.95);
+      padding: 18px 22px 20px;
+      margin-bottom: 18px;
+      transition: box-shadow 0.2s, border-color 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      border-radius: 4px 0 0 4px;
+      background: linear-gradient(180deg, #818cf8, #6366f1);
+      opacity: 0.85;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      border-color: #c7d2fe;
+    }
+
+    .card h3 {
+      margin: 0 0 14px;
+      padding-left: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card h3::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #0ea5e9);
+      flex-shrink: 0;
+    }
+
+    .card--toolbar::before {
+      background: linear-gradient(180deg, #94a3b8, #64748b);
+    }
+
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .kpi {
+      background: linear-gradient(180deg, #ffffff 0%, #fafbff 100%);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      padding: 18px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      border-radius: 3px 3px 0 0;
+    }
+
+    .kpi:nth-child(1)::after {
+      background: linear-gradient(90deg, #3b82f6, #0ea5e9);
+    }
+
+    .kpi:nth-child(2)::after {
+      background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    }
+
+    .kpi:nth-child(3)::after {
+      background: linear-gradient(90deg, #0d9488, #14b8a6);
+    }
+
+    .kpi:nth-child(4)::after {
+      background: linear-gradient(90deg, #d97706, #f59e0b);
+    }
+
+    .kpi:nth-child(5)::after {
+      background: linear-gradient(90deg, #dc2626, #f87171);
+    }
+
+    .kpi--warn .val {
+      color: #b91c1c;
+    }
+
+    .kpi label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .kpi .val {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-top: 6px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .kpi .sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    @media (max-width: 1200px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+      .kpi-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .home-split {
+        grid-template-columns: 1fr !important;
+      }
+
+      .home-split__main > .card.card--feature.card--chart-drill {
+        min-height: 0;
+      }
+
+      .home-split__side.home-donut-panel {
+        min-height: 0;
+      }
+
+      .home-donut-grid {
+        grid-template-columns: 1fr 1fr;
+        min-height: 360px;
+      }
+    }
+
+    .sheet-hero--compact {
+      padding: 16px 20px;
+      margin-bottom: 16px;
+    }
+
+    .sheet-hero--compact .sheet-hero__title {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .story-bullets {
+      margin: 0 0 12px;
+      padding-left: 1.15rem;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      max-width: 900px;
+    }
+
+    .story-bullets li {
+      margin-bottom: 4px;
+    }
+
+    .story-bullets strong {
+      color: var(--text);
+    }
+
+    .dimension-strip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .dimension-strip__label {
+      font-weight: 700;
+      color: var(--accent);
+      margin-right: 4px;
+    }
+
+    .pill-dim {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(99, 102, 241, 0.08);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      color: #4338ca;
+      font-weight: 600;
+    }
+
+    .home-split {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 0.92fr);
+      gap: 16px;
+      align-items: stretch;
+      margin-bottom: 16px;
+    }
+
+    .home-split__main {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .home-split__main > .card.card--feature.card--chart-drill {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: clamp(400px, 50vh, 520px);
+      margin-bottom: 0;
+    }
+
+    .home-split__main > .card.card--feature .chart-toolbar-row,
+    .home-split__main > .card.card--feature .chart-subnote {
+      flex-shrink: 0;
+    }
+
+    .home-split__main > .card.card--feature .chart-box--hero {
+      flex: 1 1 auto;
+      min-height: 240px;
+      height: auto !important;
+      max-height: none;
+    }
+
+    .home-split__main > .card.card--feature .chart-drill-hint {
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+
+    .home-split__side.home-donut-panel {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: clamp(400px, 50vh, 520px);
+    }
+
+    .home-donut-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 10px;
+      min-height: 0;
+    }
+
+    /* 必须盖过 .card { overflow:hidden }，否则圆环外侧标签被裁切 */
+    .card.card--donut-mini {
+      margin: 0;
+      padding: 8px 10px 10px;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      overflow: visible;
+    }
+
+    .card--donut-mini h4 {
+      margin: 0 0 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.01em;
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      word-break: break-word;
+    }
+
+    .card.card--donut-mini .donut-cell__chart.chart-box {
+      flex: 1 1 auto;
+      min-height: 130px;
+      height: auto !important;
+      overflow: visible;
+    }
+
+    .chart-toolbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 6px;
+      padding-left: 8px;
+      padding-right: 4px;
+    }
+
+    .chart-toolbar-row h3 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .btn-sort-group {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .btn-sort {
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #fff;
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-family: inherit;
+    }
+
+    .btn-sort:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: #fafafa;
+    }
+
+    .chart-subnote {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin: 0 0 10px;
+      padding-left: 8px;
+      line-height: 1.45;
+    }
+
+    .person-chart-wrap {
+      max-width: none;
+      margin: 0;
+      width: 100%;
+    }
+
+    .person-deep-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.28fr) minmax(260px, 400px);
+      gap: 16px;
+      align-items: start;
+      margin-bottom: 16px;
+    }
+
+    .person-deep-grid__main {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .person-deep-grid__side {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .card--compact-side {
+      padding: 12px 14px 14px;
+    }
+
+    .card--compact-side h3 {
+      margin: 0 0 6px;
+      padding-left: 6px;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .card--compact-side .chart-subnote {
+      margin-bottom: 8px;
+    }
+
+    .chart-box--side-donut {
+      height: 188px;
+      min-height: 160px;
+      overflow: visible;
+    }
+
+    .side-insight-list {
+      margin: 0;
+      padding-left: 1.15rem;
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    .side-insight-list li {
+      margin-bottom: 4px;
+    }
+
+    @media (max-width: 1100px) {
+      .person-deep-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .chart-box.compact-h {
+      height: 200px;
+    }
+
+    .chart-box.person-compact {
+      height: 260px;
+      min-height: 220px;
+    }
+
+    .exec-note {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin: 0 0 8px;
+      padding: 8px 10px;
+      background: #f8fafc;
+      border-radius: 8px;
+      border-left: 3px solid #94a3b8;
+    }
+
+    .chart-box--wf {
+      height: min(380px, 48vh);
+      min-height: 280px;
+    }
+
+    .bu-wf-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 18px;
+      margin-bottom: 12px;
+    }
+
+    .bu-wf-toolbar label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+    }
+
+    .bu-wf-toolbar select {
+      padding: 7px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 12px;
+      background: #fff;
+    }
+
+    .wf-hint {
+      font-size: 11px;
+      color: var(--text-muted);
+      width: 100%;
+    }
+
+    .kpi-row--4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    @media (max-width: 1100px) {
+      .kpi-row--4 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .chart-box {
+      position: relative;
+      height: 280px;
+    }
+
+    .chart-box.tall {
+      height: 320px;
+    }
+
+    .chart-box.short {
+      height: 220px;
+    }
+
+    .chart-box--hero {
+      height: min(360px, 44vh);
+      min-height: 268px;
+    }
+
+    .card--feature {
+      border: 1px solid rgba(99, 102, 241, 0.22);
+      box-shadow: 0 16px 40px -20px rgba(79, 70, 229, 0.25);
+      background: linear-gradient(165deg, #ffffff 0%, #fafbff 40%, #f8fafc 100%);
+    }
+
+    .card--feature::before {
+      width: 5px;
+      background: linear-gradient(180deg, #4f46e5, #0ea5e9);
+    }
+
+    .read-hint--tight {
+      padding: 6px 10px;
+      margin-bottom: 8px;
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .read-hint--tight strong {
+      display: inline;
+      margin-right: 6px;
+      font-size: 11px;
+    }
+
+    .insight {
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--text-secondary);
+    }
+
+    .insight h4 {
+      margin: 0 0 8px;
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .insight ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .read-hint {
+      margin: 0 0 12px;
+      padding: 10px 12px;
+      font-size: 12px;
+      line-height: 1.55;
+      color: var(--text-secondary);
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5ff 100%);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      border-left: 3px solid #6366f1;
+    }
+
+    .read-hint strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #4338ca;
+      letter-spacing: 0.04em;
+    }
+
+    .read-hint--inline {
+      margin-top: 10px;
+      margin-bottom: 0;
+      font-size: 11px;
+      padding: 8px 10px;
+    }
+
+    .mix-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .mix-toolbar select {
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 12px;
+      background: #fff;
+    }
+
+    .mix-toolbar--wrap {
+      gap: 12px 20px;
+    }
+
+    .mix-toolbar__field {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .mix-toolbar__field span {
+      font-weight: 600;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    table.data {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    table.data th,
+    table.data td {
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      text-align: right;
+    }
+
+    table.data th:first-child,
+    table.data td:first-child {
+      text-align: left;
+      background: #f9fafb;
+      font-weight: 500;
+    }
+
+    table.data thead th {
+      background: linear-gradient(180deg, #f1f5f9, #e2e8f0);
+      color: #334155;
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: none;
+    }
+
+    table.data tbody tr:nth-child(even) td {
+      background: rgba(248, 250, 252, 0.6);
+    }
+
+    .footnote {
+      font-size: 12px;
+      line-height: 1.55;
+      color: #64748b;
+      padding: 14px 18px;
+      background: linear-gradient(90deg, #f8fafc, #f1f5f9);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      border-left: 4px solid #94a3b8;
+    }
+
+    /* 子弹图 */
+    .bullet-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .bullet-row {
+      display: grid;
+      grid-template-columns: 100px 1fr 100px 1fr 48px;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+    }
+
+    .bullet-row .name {
+      color: var(--text-secondary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .bullet-track {
+      height: 10px;
+      background: #e5e7eb;
+      border-radius: 5px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bullet-fill {
+      height: 100%;
+      border-radius: 5px;
+      background: linear-gradient(90deg, #93c5fd, #2563eb);
+    }
+
+    .bullet-val {
+      text-align: right;
+      color: var(--text-muted);
+    }
+
+    .watermark {
+      position: fixed;
+      bottom: 20px;
+      right: 40px;
+      font-size: 10px;
+      color: #cbd5e1;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+  <header class="app-header" role="banner">
+    <div class="app-header__brand">
+      <div class="app-header__logo-wrap">
+        <img
+          class="app-header__mark"
+          src="data:image/png;base64,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"
+          alt="隐冠半导体"
+          decoding="async"
+          referrerpolicy="no-referrer"
+        />
+      </div>
+      <div class="app-header__title">
+        <strong>隐冠半导体</strong>
+        <span>人效导向 · 占比优先 · FineReport</span>
+      </div>
+    </div>
+    <div class="app-header__mini-tabs" role="tablist" aria-label="辅助视图切换（主页推荐点击图形下钻）">
+      <span class="mini-tab-label">视图</span>
+      <button type="button" role="tab" id="tab1" class="active" aria-selected="true" data-sheet="sheet1">总览</button>
+      <button type="button" role="tab" id="tab2" aria-selected="false" data-sheet="sheet2">事业部</button>
+      <button type="button" role="tab" id="tab3" aria-selected="false" data-sheet="sheet3">人员</button>
+    </div>
+    <div class="app-header__actions">
+      <div class="month-select compact">
+        <span>统计月</span>
+        <select id="monthSelect" aria-label="统计月">
+          <option>2026-02</option>
+          <option>2026-01</option>
+          <option>2025-12</option>
+        </select>
+      </div>
+      <span class="pill-demo compact">已脱敏</span>
+      <a href="隐冠IPD流程蓝图看板.html" class="btn-outline compact" style="text-decoration: none; display: inline-flex; align-items: center;">IPD 流程蓝图</a>
+      <button type="button" class="btn-outline compact">PDF</button>
+      <button type="button" class="btn-outline compact">Excel</button>
+    </div>
+  </header>
+
+  <div class="main-wrap">
+    <div class="sheet-stack">
+      <!-- Sheet 1 -->
+      <section id="sheet1" class="sheet-panel active" aria-labelledby="tab1">
+        <header class="sheet-hero sheet-hero--compact">
+          <div class="sheet-hero__badge" aria-hidden="true">①</div>
+          <div>
+            <div class="sheet-hero__kicker">管理驾驶舱 · 总览</div>
+            <h2 class="sheet-hero__title">公司经营总览 — 人效与占比</h2>
+            <ul class="story-bullets" id="storyBullets"></ul>
+            <div class="dimension-strip" aria-label="核心维度（②③ 展开）">
+              <span class="dimension-strip__label">维度</span>
+              <span class="pill-dim">项目归属事业部</span>
+              <span class="pill-dim">项目大类</span>
+              <span class="pill-dim">订单类型</span>
+              <span class="pill-dim">部门</span>
+              <span class="pill-dim">岗位</span>
+              <span class="pill-dim">工龄</span>
+              <span class="pill-dim">学历</span>
+              <span class="pill-dim">职级</span>
+            </div>
+          </div>
+        </header>
+
+        <div class="portal-grid" role="navigation" aria-label="分析模块入口">
+          <button type="button" class="portal-tile portal-tile--a" data-go="sheet2" data-anchor="anchor-bu-waterfall" aria-label="进入事业部结构分析">
+            <div class="portal-tile__icon" aria-hidden="true">▦</div>
+            <div class="portal-tile__t">事业部</div>
+            <div class="portal-tile__d">按<strong>项目归属事业部</strong>下钻；单事业部结构累计；可选项目大类、订单类型、部门。</div>
+            <span class="portal-tile__go">进入 →</span>
+          </button>
+          <button type="button" class="portal-tile portal-tile--b" data-go="sheet3" data-anchor="anchor-person-major" aria-label="进入人员结构分析">
+            <div class="portal-tile__icon" aria-hidden="true">◎</div>
+            <div class="portal-tile__t">人员</div>
+            <div class="portal-tile__d">单人跨项目工时结构；同工作内容下人员精力占比（示意）。</div>
+            <span class="portal-tile__go">进入 →</span>
+          </button>
+          <button type="button" class="portal-tile portal-tile--c" data-go="sheet3" data-anchor="anchor-cost-note" aria-label="进入成本口径说明">
+            <div class="portal-tile__icon" aria-hidden="true">¥</div>
+            <div class="portal-tile__t">成本与口径</div>
+            <div class="portal-tile__d">人力成本表2 · 与底表公式列联动</div>
+            <span class="portal-tile__go">进入 →</span>
+          </button>
+        </div>
+
+        <div class="kpi-row kpi-row--4" id="homeKpiRow">
+          <div class="kpi">
+            <label>研发订单 + 自研（项目大类）</label>
+            <div class="val" id="kpiRdMass">—</div>
+            <div class="sub">底表「项目大类」· Σ项目工时比例（平时）占比</div>
+          </div>
+          <div class="kpi">
+            <label>量产项目（项目大类）</label>
+            <div class="val" id="kpiMass">—</div>
+            <div class="sub">同上口径 · 全表结构%</div>
+          </div>
+          <div
+            class="kpi kpi--clickable"
+            role="button"
+            tabindex="0"
+            data-go="sheet2"
+            data-anchor="anchor-bu-grouped"
+            title="下钻事业部对比"
+          >
+            <label>培训与运营（项目大类）</label>
+            <div class="val" id="kpiTrainMaj">—</div>
+            <div class="sub">主被动填报为考核属性 · 详见右侧环形说明</div>
+            <div class="kpi-hint">点击 → ② 事业部对比</div>
+          </div>
+          <div class="kpi">
+            <label>归集工时（项目2 · 培训报表）</label>
+            <div class="val" id="kpiAgg">—</div>
+            <div class="sub">公司整体五项结构内占比</div>
+          </div>
+        </div>
+
+        <div class="home-split">
+          <div class="home-split__main">
+            <div
+              class="card card--feature card--chart-drill"
+              data-go="sheet2"
+              data-anchor="anchor-bu-grouped"
+              role="link"
+              tabindex="0"
+              aria-label="下钻事业部对比"
+            >
+              <div class="chart-toolbar-row">
+                <h3>全公司六项结构占比</h3>
+                <div class="btn-sort-group" role="group" aria-label="条形排序">
+                  <button type="button" class="btn-sort js-no-nav" id="sortMainDesc">降序</button>
+                  <button type="button" class="btn-sort js-no-nav" id="sortMainAsc">升序</button>
+                </div>
+              </div>
+              <p class="chart-subnote">底表六项管理口径，合计 100%；细分说明见图表悬停。</p>
+              <div class="chart-box chart-box--hero">
+                <canvas id="chartProjectTypesMain"></canvas>
+              </div>
+              <p class="chart-drill-hint">进入 ② 各事业部六柱对比</p>
+            </div>
+          </div>
+          <div class="home-split__side home-donut-panel">
+            <div class="home-donut-grid">
+              <div class="card card--donut-mini">
+                <h4>项目大类分布</h4>
+                <div class="chart-box donut-cell__chart">
+                  <canvas id="chartHomeDonut"></canvas>
+                </div>
+              </div>
+              <div class="card card--donut-mini">
+                <h4>订单类型分布</h4>
+                <div class="chart-box donut-cell__chart">
+                  <canvas id="chartOrderTypeDonut"></canvas>
+                </div>
+              </div>
+              <div class="card card--donut-mini">
+                <h4>研发阶段占比</h4>
+                <div class="chart-box donut-cell__chart">
+                  <canvas id="chartPhase2Donut"></canvas>
+                </div>
+              </div>
+              <div class="card card--donut-mini">
+                <h4>培训填报结构</h4>
+                <div class="chart-box donut-cell__chart">
+                  <canvas id="chartTrainDonut"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div
+            class="card card--chart-drill"
+            data-go="sheet2"
+            data-anchor="anchor-group-bar"
+            role="link"
+            tabindex="0"
+            aria-label="下钻研发与培训分组柱"
+          >
+            <div class="chart-toolbar-row">
+              <h3>培训运营五项结构</h3>
+              <div class="btn-sort-group" role="group" aria-label="条形排序">
+                <button type="button" class="btn-sort js-no-nav" id="sortP2Desc">降序</button>
+                <button type="button" class="btn-sort js-no-nav" id="sortP2Asc">升序</button>
+              </div>
+            </div>
+            <p class="chart-subnote">与培训报表「公司整体」五项工时占比一致，合计 100%。</p>
+            <div class="chart-box">
+              <canvas id="chartProject2Bars"></canvas>
+            </div>
+            <p class="chart-drill-hint">进入 ② 各事业部研发与培训结构</p>
+          </div>
+          <div class="card">
+            <h3>导航说明</h3>
+            <div class="insight">
+              <ul style="padding-left:18px;margin:0;font-size:12px;line-height:1.65;color:var(--text-secondary)">
+                <li><button type="button" class="jump-link" data-go="sheet2" data-anchor="anchor-bu-waterfall">② 事业部</button>：选定「项目归属事业部」后查看结构累计。</li>
+                <li><button type="button" class="jump-link" data-go="sheet3" data-anchor="anchor-person-major">③ 人员</button>：单人跨项目占比与同工作内容人员分解（示意）。</li>
+                <li>岗位、工龄、学历、职级等字段见底表，多维分析建议走 FineReport。</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <p class="footnote">
+          数据来自《【YG】数据底表 2025 0401》样表聚合；明细与多维切片走 FineReport。
+          <button type="button" class="jump-link" data-go="sheet2" data-anchor="anchor-bu-waterfall">② 瀑布</button>
+          <button type="button" class="jump-link" data-go="sheet3" data-anchor="anchor-person-major">③ 人效</button>
+        </p>
+      </section>
+
+      <!-- Sheet 2 -->
+      <section id="sheet2" class="sheet-panel" aria-labelledby="tab2">
+        <header class="sheet-hero sheet-hero--compact">
+          <div class="sheet-hero__badge" aria-hidden="true">②</div>
+          <div>
+            <div class="sheet-hero__kicker">分析层级 · 项目归属事业部</div>
+            <h2 class="sheet-hero__title">事业部结构 — 累计分解与横向参照</h2>
+            <p class="sheet-hero__desc" style="max-width:880px">
+              在选定<strong>项目归属事业部</strong>前提下，按「项目大类 / 订单类型 / 部门」之一对<strong>Σ项目工时比例（平时）</strong>或<strong>填报行数</strong>做累计分解（归一至 100%）。下方提供各事业部同一指标汇总规模的横向参照（低于展示阈值的单元已省略）。
+            </p>
+          </div>
+        </header>
+
+        <div class="card card--toolbar" id="anchor-bu-waterfall" style="padding: 16px 18px">
+          <h3 style="margin:0 0 12px;font-size:14px;width:100%;padding-left:0">单事业部结构累计（瀑布）</h3>
+          <div class="bu-wf-toolbar">
+            <label>事业部
+              <select id="buWaterfallSelect" aria-label="选择事业部"></select>
+            </label>
+            <label>累计维度
+              <select id="wfDimSelect" aria-label="瀑布维度">
+                <option value="项目大类" selected>项目大类</option>
+                <option value="订单类型">订单类型</option>
+                <option value="部门">部门</option>
+              </select>
+            </label>
+            <label>指标
+              <select id="wfMetricSelect" aria-label="瀑布指标">
+                <option value="prop" selected>Σ 项目工时比例（结构）</option>
+                <option value="rows">填报行数（活跃度）</option>
+              </select>
+            </label>
+            <p class="wf-hint" id="wfHint">各段为累计增量；末列为 100% 校验柱。占比过低的明细段已合并为「其他」以便阅览。</p>
+          </div>
+          <div class="chart-box chart-box--wf">
+            <canvas id="chartBuWaterfall"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="chart-toolbar-row">
+            <h3>事业部结构权重对比</h3>
+            <div class="btn-sort-group" role="group" aria-label="条形排序">
+              <button type="button" class="btn-sort js-no-nav" id="sortVolDesc">降序</button>
+              <button type="button" class="btn-sort js-no-nav" id="sortVolAsc">升序</button>
+            </div>
+          </div>
+          <p class="chart-subnote">在所展示事业部集合内将 Σ 项目工时比例归一为 100%，与单事业部瀑布互补；未列出者低于展示阈值。</p>
+          <div class="chart-box tall">
+            <canvas id="chartBuVolumeBar"></canvas>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card" id="anchor-group-bar">
+            <h3>各事业部 · 研发侧与培训运营侧结构（分组柱）</h3>
+            <p class="read-hint read-hint--tight read-hint--inline"><strong>口径</strong>每一事业部两根柱之和为 100%，用于观察研发相关投入与培训运营填报的相对关系。</p>
+            <div class="chart-box">
+              <canvas id="chartGroupBar"></canvas>
+            </div>
+          </div>
+          <div class="card" id="anchor-bu-grouped">
+            <h3>各事业部 · 六项管理口径并列对比（各 BU 内合计 100%）</h3>
+            <p class="read-hint read-hint--tight read-hint--inline"><strong>说明</strong>横轴为占比；同一事业部下六根并列表柱，对应首页六项口径。</p>
+            <div class="chart-box tall">
+              <canvas id="chartBuStack"></canvas>
+            </div>
+            <p style="font-size: 11px; margin-top: 8px;">
+              <button type="button" class="jump-link" data-go="sheet3" data-anchor="anchor-dumbbell">③ 查看 ONES/OA 系数差</button>
+            </p>
+          </div>
+        </div>
+
+        <p class="footnote">
+          与 ① 总览口径一致；事业部全称对齐 Excel「部门×项目2」块。
+          <button type="button" class="jump-link jump-link--back" data-go="sheet1" data-anchor="">回 ① 总览</button>
+          <button type="button" class="jump-link" data-go="sheet3" data-anchor="anchor-person-major">③ 人员集中度</button>
+        </p>
+      </section>
+
+      <!-- Sheet 3 -->
+      <section id="sheet3" class="sheet-panel" aria-labelledby="tab3">
+        <header class="sheet-hero sheet-hero--compact">
+          <div class="sheet-hero__badge" aria-hidden="true">③</div>
+          <div>
+            <div class="sheet-hero__kicker">分析层级 · 人员</div>
+            <h2 class="sheet-hero__title">人员结构 — 同类业务下负荷与投入分解</h2>
+            <p class="sheet-hero__desc" style="max-width:960px">
+              演示页：左侧为单人跨项目与「同工作内容」人员池；右侧为职级/工龄在池内的结构示意，与下方工作内容类型联动；投产后与底表实算对齐。
+            </p>
+          </div>
+        </header>
+        <div class="card card--toolbar" style="padding: 14px 18px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+          <strong style="font-size: 13px;">筛选（示意）</strong>
+          <select style="padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px;">
+            <option>全部部门</option>
+            <option>研发集成部</option>
+            <option>量检测和键合事业部</option>
+          </select>
+          <input type="search" placeholder="姓名关键字" style="padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; width: 160px;" />
+          <span style="font-size: 12px; color: var(--text-secondary);">填报达成率阈值 ≥</span>
+          <input type="range" min="0" max="100" value="80" style="width: 120px;" />
+          <span style="font-size: 12px; color: var(--text-muted);">80%</span>
+        </div>
+
+        <div class="person-deep-grid" id="anchor-person-major">
+          <div class="person-deep-grid__main">
+            <div class="card">
+              <div class="chart-toolbar-row">
+                <h3>单人员 · 跨项目工时占比</h3>
+                <div class="btn-sort-group" role="group" aria-label="条形排序">
+                  <button type="button" class="btn-sort js-no-nav" id="sortPersonDesc">降序</button>
+                  <button type="button" class="btn-sort js-no-nav" id="sortPersonAsc">升序</button>
+                </div>
+              </div>
+              <p class="chart-subnote">选定人员与工作内容范围；展示该范围内各项目口径占比（合计 100%，示意）。</p>
+              <div class="mix-toolbar js-no-nav mix-toolbar--wrap">
+                <label class="mix-toolbar__field"><span>人员</span>
+                  <select id="personSelectOne" aria-label="选择人员"></select>
+                </label>
+                <label class="mix-toolbar__field"><span>工作内容范围</span>
+                  <select id="personWorkScopeSelect" aria-label="筛选工作内容">
+                    <option value="all">全部六项口径</option>
+                    <option value="rd">研发与预研（预研+订单+自研）</option>
+                    <option value="mass">量产 / 生产</option>
+                    <option value="train">培训与运营（主+被动）</option>
+                  </select>
+                </label>
+              </div>
+              <div class="person-chart-wrap">
+                <div class="chart-box tall person-compact">
+                  <canvas id="chartPersonMajorShare"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <div class="card" id="anchor-project-mix">
+              <div class="chart-toolbar-row">
+                <h3>同工作内容 · 人员精力占比</h3>
+                <div class="btn-sort-group" role="group" aria-label="条形排序">
+                  <button type="button" class="btn-sort js-no-nav" id="sortMixDesc">降序</button>
+                  <button type="button" class="btn-sort js-no-nav" id="sortMixAsc">升序</button>
+                </div>
+              </div>
+              <p class="chart-subnote">选定一种工作内容类型，看全公司该池内人员精力分解（合计 100%，示意）。右侧「职级/工龄」图与本下拉联动。</p>
+              <div class="mix-toolbar js-no-nav">
+                <span>工作内容类型</span>
+                <select id="projectMixType" aria-label="切换工作内容类型">
+                  <option value="order">研发订单类</option>
+                  <option value="self">自研类</option>
+                  <option value="pre">培训运营 · 预研相关</option>
+                </select>
+              </div>
+              <div class="person-chart-wrap">
+                <div class="chart-box tall person-compact">
+                  <canvas id="chartProjectMix"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <aside class="person-deep-grid__side" aria-label="职级与工龄辅助分析">
+            <div class="card card--compact-side">
+              <h3>职级 · 池内结构</h3>
+              <p class="chart-subnote">与「工作内容类型」联动；示意该业务池内职级占比。</p>
+              <div class="chart-box chart-box--side-donut">
+                <canvas id="chartPoolByRank"></canvas>
+              </div>
+            </div>
+            <div class="card card--compact-side">
+              <h3>工龄 · 池内结构</h3>
+              <p class="chart-subnote">与「工作内容类型」联动；示意司龄段占比。</p>
+              <div class="chart-box chart-box--side-donut">
+                <canvas id="chartPoolByTenure"></canvas>
+              </div>
+            </div>
+            <div class="card card--compact-side">
+              <h3>当前人员档案（示意）</h3>
+              <p class="chart-subnote" id="personMetaLine">随「人员」切换；正式环境对接人事主数据。</p>
+              <ul class="side-insight-list">
+                <li>左侧条形：同一人在不同<strong>项目口径</strong>上的时间结构。</li>
+                <li>中下图：同一<strong>工作内容类型</strong>下，多人精力分配。</li>
+                <li>右侧环图：在该内容池内，<strong>职级 / 工龄</strong>维度的截面（示意）。</li>
+              </ul>
+            </div>
+          </aside>
+        </div>
+
+        <div class="card" id="anchor-passive-table">
+          <h3>重点关注 — 被动归集占月工时 ≥ 20%（仅占比）</h3>
+          <div class="read-hint read-hint--inline">
+            <strong>读图</strong>
+            与 ① KPI「被动归集占全员月工时」互补：此处看<strong>个体是否突破 20% 经验线</strong>。不展示归集小时数，避免与「只看占比」原则冲突。
+          </div>
+          <table class="data">
+            <thead>
+              <tr>
+                <th>事业部</th>
+                <th>姓名</th>
+                <th>被动归集占月工时</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>量检测和键合事业部</td><td>谢 *</td><td style="background:#fee2e2;font-weight:700;">24.1%</td></tr>
+              <tr><td>总经理室-PM</td><td>姚 *</td><td style="background:#fee2e2;font-weight:700;">22.8%</td></tr>
+              <tr><td>研发集成部</td><td>赵 *</td><td style="background:#fef3c7;">18.5%</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card" id="anchor-dumbbell">
+          <h3>ONES vs OA 加班系数（个人 · 示意）</h3>
+          <div class="read-hint read-hint--inline">
+            <strong>读图</strong>
+            两点为两系数取值，非占比图；用于发现考勤与 ONES 填报脱节。数据未接入时正式报表应显示「待接入」（本 DEMO 仍为示意点）。
+          </div>
+          <p style="font-size: 12px; color: var(--text-secondary); margin-top: 0;">
+            筛选：
+            <select id="dumbbellFilter" style="padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px;">
+              <option value="gt02" selected>仅 |ONES − OA| &gt; 0.2</option>
+              <option value="top10">前 10 名差异（示意）</option>
+            </select>
+          </p>
+          <div class="chart-box">
+            <canvas id="chartDumbbell"></canvas>
+          </div>
+        </div>
+
+        <div class="card" id="anchor-bubble">
+          <h3>填报达成率 vs 项目经历度（气泡 · 均为相对量）</h3>
+          <div class="read-hint read-hint--inline">
+            <strong>读图</strong>
+            横轴：<strong>实填/应填</strong>折算为达成率（%，可超 100% 表示异常）；纵轴：<strong>项目工时/月工时</strong>（精力占比 0–1 示意）；气泡大小 ~ 参与项目数（相对）。不读取绝对工时。
+          </div>
+          <div class="chart-box tall">
+            <canvas id="chartBubble"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>部门周度 — 填报达成率（%，示意趋势）</h3>
+          <div class="read-hint read-hint--inline">
+            <strong>读图</strong>
+            每条线为<strong>实填/应填</strong>的周度达成率，非工时累加。月末点可与 IPD 填报比例互证；正式环境按部门聚合。
+          </div>
+          <div class="chart-box">
+            <canvas id="chartArea"></canvas>
+          </div>
+        </div>
+
+        <p class="footnote" id="anchor-cost-note">
+          <strong>人力成本分析 · 表2</strong>：人工成本与底表公式列（如 BV）联动，实施期锁定口径；本 HTML DEMO 不展示金额绝对数。顶栏 Tab 固定；明细与 IPD 全列请走服务器分页报表。
+          <button type="button" class="jump-link jump-link--back" data-go="sheet1" data-anchor="">回 ① 总览</button>
+          <button type="button" class="jump-link jump-link--back" data-go="sheet2" data-anchor="anchor-bu-waterfall">回 ② 瀑布</button>
+        </p>
+      </section>
+    </div>
+  </div>
+  </div>
+
+  <div class="watermark">隐冠半导体</div>
+
+  <script type="application/json" id="dashboard-extract">{"depts": ["量检测和键合事业部", "真空事业部", "光刻事业部", "压电事业部", "电机事业部", "广东粤极", "隐冠研究院"], "bu_totals_prop": {"量检测和键合事业部": 317.29, "真空事业部": 230.98, "光刻事业部": 484.21, "压电事业部": 689.12, "电机事业部": 286.17, "广东粤极": 0.0, "隐冠研究院": 297.71}, "waterfall_by_bu": {"量检测和键合事业部": {"项目大类": {"labels": ["研发订单项目", "培训与运营", "自研项目", "量产项目", "(未填)", "展品恢复", "平行自研"], "pct": [74.26, 20.11, 3.82, 1.25, 0.48, 0.05, 0.03], "steps": [[0, 74.26], [74.26, 94.37], [94.37, 98.19], [98.19, 99.44], [99.44, 99.92], [99.92, 99.97], [99.97, 100.0]], "total": 100.0, "raw_sum": 317.29}, "订单类型": {"labels": ["(未填)", "市场订单", "内部交付"], "pct": [99.63, 0.33, 0.04], "steps": [[0, 99.63], [99.63, 99.96], [99.96, 100.0]], "total": 100.0, "raw_sum": 317.29}, "部门": {"labels": ["量检测与键合事业部"], "pct": [100.0], "steps": [[0, 100.0]], "total": 100.0, "raw_sum": 317.29}}, "真空事业部": {"项目大类": {"labels": ["研发订单项目", "培训与运营", "自研项目", "量产项目", "(未填)"], "pct": [77.51, 18.17, 4.01, 0.31, 0.0], "steps": [[0, 77.51], [77.51, 95.68], [95.68, 99.69], [99.69, 100.0], [100.0, 100.0]], "total": 100.0, "raw_sum": 230.98}, "订单类型": {"labels": ["(未填)", "市场订单"], "pct": [99.51, 0.49], "steps": [[0, 99.51], [99.51, 100.0]], "total": 100.0, "raw_sum": 230.98}, "部门": {"labels": ["真空事业部"], "pct": [100.0], "steps": [[0, 100.0]], "total": 100.0, "raw_sum": 230.98}}, "光刻事业部": {"项目大类": {"labels": ["研发订单项目", "培训与运营", "自研项目", "量产项目", "(未填)", "平行自研"], "pct": [74.88, 17.86, 5.97, 0.84, 0.34, 0.1], "steps": [[0, 74.88], [74.88, 92.74], [92.74, 98.71], [98.71, 99.55], [99.55, 99.89], [99.89, 99.99]], "total": 99.99, "raw_sum": 484.21}, "订单类型": {"labels": ["(未填)", "市场订单", "内部交付"], "pct": [99.12, 0.88, 0.0], "steps": [[0, 99.12], [99.12, 100.0], [100.0, 100.0]], "total": 100.0, "raw_sum": 484.21}, "部门": {"labels": ["光刻事业部"], "pct": [100.0], "steps": [[0, 100.0]], "total": 100.0, "raw_sum": 484.21}}, "压电事业部": {"项目大类": {"labels": ["量产项目", "自研项目", "研发订单项目", "培训与运营", "(未填)", "平行自研", "实物展品", "展品恢复"], "pct": [33.92, 25.19, 22.85, 17.81, 0.11, 0.07, 0.02, 0.02], "steps": [[0, 33.92], [33.92, 59.11], [59.11, 81.96], [81.96, 99.77], [99.77, 99.88], [99.88, 99.95], [99.95, 99.97], [99.97, 99.99]], "total": 99.99, "raw_sum": 689.12}, "订单类型": {"labels": ["(未填)", "市场订单", "内部交付", "内部"], "pct": [99.64, 0.26, 0.06, 0.04], "steps": [[0, 99.64], [99.64, 99.9], [99.9, 99.96], [99.96, 100.0]], "total": 100.0, "raw_sum": 689.12}, "部门": {"labels": ["压电事业部"], "pct": [100.0], "steps": [[0, 100.0]], "total": 100.0, "raw_sum": 689.12}}, "电机事业部": {"项目大类": {"labels": ["研发订单项目", "培训与运营", "量产项目", "自研项目", "(未填)"], "pct": [77.55, 18.45, 2.07, 1.84, 0.1], "steps": [[0, 77.55], [77.55, 96.0], [96.0, 98.07], [98.07, 99.91], [99.91, 100.01]], "total": 100.01, "raw_sum": 286.17}, "订单类型": {"labels": ["(未填)", "市场订单", "内部", "内部交付"], "pct": [99.17, 0.76, 0.04, 0.03], "steps": [[0, 99.17], [99.17, 99.93], [99.93, 99.97], [99.97, 100.0]], "total": 100.0, "raw_sum": 286.17}, "部门": {"labels": ["电机事业部", "真空电机研发中心"], "pct": [99.15, 0.85], "steps": [[0, 99.15], [99.15, 100.0]], "total": 100.0, "raw_sum": 286.17}}, "广东粤极": {"项目大类": {"labels": [], "pct": [], "steps": [], "total": 0, "raw_sum": 0}, "订单类型": {"labels": [], "pct": [], "steps": [], "total": 0, "raw_sum": 0}, "部门": {"labels": [], "pct": [], "steps": [], "total": 0, "raw_sum": 0}}, "隐冠研究院": {"项目大类": {"labels": ["研发订单项目", "自研项目", "培训与运营", "量产项目", "(未填)"], "pct": [55.5, 26.08, 15.17, 3.23, 0.02], "steps": [[0, 55.5], [55.5, 81.58], [81.58, 96.75], [96.75, 99.98], [99.98, 100.0]], "total": 100.0, "raw_sum": 297.71}, "订单类型": {"labels": ["(未填)", "市场订单"], "pct": [99.87, 0.13], "steps": [[0, 99.87], [99.87, 100.0]], "total": 100.0, "raw_sum": 297.71}, "部门": {"labels": ["隐冠研究院"], "pct": [100.0], "steps": [[0, 100.0]], "total": 100.0, "raw_sum": 297.71}}}, "waterfall_rows_by_bu": {"量检测和键合事业部": {"项目大类": {"labels": ["研发订单项目", "培训与运营", "自研项目", "量产项目", "(未填)", "平行自研", "展品恢复"], "pct": [79.93, 13.3, 4.17, 1.42, 0.94, 0.16, 0.08], "steps": [[0, 79.93], [79.93, 93.23], [93.23, 97.4], [97.4, 98.82], [98.82, 99.76], [99.76, 99.92], [99.92, 100.0]], "total": 100.0, "raw_sum": 3737}, "订单类型": {"labels": ["(未填)", "市场订单", "内部交付"], "pct": [99.49, 0.45, 0.05], "steps": [[0, 99.49], [99.49, 99.94], [99.94, 99.99]], "total": 99.99, "raw_sum": 3737}, "部门": {"labels": ["量检测与键合事业部"], "pct": [100.0], "steps": [[0, 100.0]], "total": 100.0, "raw_sum": 3737}}, "真空事业部": {"项目大类": {"labels": ["研发订单项目", "培训与运营", "自研项目", "量产项目", "(未填)"], "pct": [81.65, 9.38, 7.54, 1.4, 0.03], "steps": [[0, 81.65], [81.65, 91.03], [91.03, 98.57], [98.57, 99.97], [99.97, 100.0]], "total": 100.0, "raw_sum": 3357}, "订单类型": {"labels": ["(未填)", "市场订单"], "pct": [99.7, 0.3], "steps": [[0, 99.7], [99.7, 100.0]], "total": 100.0, "raw_sum": 3357}, "部门": {"labels": ["真空事业部"], "pct": [100.0], "steps": [[0, 100.0]], "total": 100.0, "raw_sum": 3357}}, "光刻事业部": {"项目大类": {"labels": ["研发订单项目", "培训与运营", "自研项目", "(未填)", "量产项目", "平行自研"], "pct": [80.83, 13.66, 3.91, 0.74, 0.69, 0.17], "steps": [[0, 80.83], [80.83, 94.49], [94.49, 98.4], [98.4, 99.14], [99.14, 99.83], [99.83, 100.0]], "total": 100.0, "raw_sum": 3500}, "订单类型": {"labels": ["(未填)", "市场订单", "内部交付"], "pct": [99.26, 0.71, 0.03], "steps": [[0, 99.26], [99.26, 99.97], [99.97, 100.0]], "total": 100.0, "raw_sum": 3500}, "部门": {"labels": ["光刻事业部"], "pct": [100.0], "steps": [[0, 100.0]], "total": 100.0, "raw_sum": 3500}}, "压电事业部": {"项目大类": {"labels": ["量产项目", "自研项目", "研发订单项目", "培训与运营", "(未填)", "展品恢复", "平行自研", "实物展品"], "pct": [49.63, 21.31, 16.33, 12.53, 0.14, 0.02, 0.02, 0.01], "steps": [[0, 49.63], [49.63, 70.94], [70.94, 87.27], [87.27, 99.8], [99.8, 99.94], [99.94, 99.96], [99.96, 99.98], [99.98, 99.99]], "total": 99.99, "raw_sum": 13859}, "订单类型": {"labels": ["(未填)", "市场订单", "内部", "内部交付"], "pct": [99.66, 0.2, 0.07, 0.06], "steps": [[0, 99.66], [99.66, 99.86], [99.86, 99.93], [99.93, 99.99]], "total": 99.99, "raw_sum": 13859}, "部门": {"labels": ["压电事业部"], "pct": [100.0], "steps": [[0, 100.0]], "total": 100.0, "raw_sum": 13859}}, "电机事业部": {"项目大类": {"labels": ["研发订单项目", "培训与运营", "量产项目", "自研项目", "(未填)"], "pct": [90.32, 6.03, 1.96, 1.59, 0.11], "steps": [[0, 90.32], [90.32, 96.35], [96.35, 98.31], [98.31, 99.9], [99.9, 100.01]], "total": 100.01, "raw_sum": 9252}, "订单类型": {"labels": ["(未填)", "市场订单", "内部", "内部交付"], "pct": [99.75, 0.18, 0.04, 0.02], "steps": [[0, 99.75], [99.75, 99.93], [99.93, 99.97], [99.97, 99.99]], "total": 99.99, "raw_sum": 9252}, "部门": {"labels": ["电机事业部", "真空电机研发中心"], "pct": [99.55, 0.45], "steps": [[0, 99.55], [99.55, 100.0]], "total": 100.0, "raw_sum": 9252}}, "广东粤极": {"项目大类": {"labels": [], "pct": [], "steps": [], "total": 0, "raw_sum": 0}, "订单类型": {"labels": [], "pct": [], "steps": [], "total": 0, "raw_sum": 0}, "部门": {"labels": [], "pct": [], "steps": [], "total": 0, "raw_sum": 0}}, "隐冠研究院": {"项目大类": {"labels": ["研发订单项目", "自研项目", "培训与运营", "量产项目", "(未填)"], "pct": [50.6, 34.53, 11.88, 2.77, 0.22], "steps": [[0, 50.6], [50.6, 85.13], [85.13, 97.01], [97.01, 99.78], [99.78, 100.0]], "total": 100.0, "raw_sum": 3577}, "订单类型": {"labels": ["(未填)", "市场订单"], "pct": [99.66, 0.34], "steps": [[0, 99.66], [99.66, 100.0]], "total": 100.0, "raw_sum": 3577}, "部门": {"labels": ["隐冠研究院"], "pct": [100.0], "steps": [[0, 100.0]], "total": 100.0, "raw_sum": 3577}}}, "person_by_major": {"研发订单项目": {"people": ["杨*明", "刘*飞", "杨*林", "常*帅", "孙*翔", "潘*洋", "朱*元", "李*干", "宋*杰", "王*帅", "孟*睿", "李*杰"], "pct_of_major": [0.68, 0.68, 0.68, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.66, 0.66], "pct_within_top": [8.43, 8.43, 8.42, 8.38, 8.34, 8.33, 8.31, 8.31, 8.28, 8.28, 8.24, 8.25], "top_pool_pct": 8.03}, "自研项目": {"people": ["娄*阳", "梁*志", "毕*妍", "李*鹏", "郭*坤", "夏*枕", "陈*阳", "杨*耀", "焦*东", "韩*玺", "杨*宁", "姚*萍"], "pct_of_major": [3.02, 3.01, 2.95, 2.8, 2.76, 2.75, 2.37, 2.37, 2.34, 2.21, 2.16, 2.12], "pct_within_top": [9.8, 9.76, 9.55, 9.07, 8.94, 8.91, 7.69, 7.67, 7.58, 7.16, 7.01, 6.86], "top_pool_pct": 30.87}, "量产项目": {"people": ["潘*冬", "张*络", "许*平", "徐*峰", "闵*", "马*文", "吴*雨", "张*虎", "沈*程", "杜*楠", "王*巍", "王*豆"], "pct_of_major": [2.08, 2.02, 1.95, 1.91, 1.9, 1.9, 1.9, 1.9, 1.89, 1.89, 1.88, 1.88], "pct_within_top": [8.98, 8.73, 8.43, 8.27, 8.23, 8.23, 8.23, 8.23, 8.19, 8.19, 8.15, 8.14], "top_pool_pct": 23.11}, "培训与运营": {"people": ["薛*艳", "江*初", "杨*华", "王*华", "邹*", "吴*亮", "蒋*洋", "黄*雷", "蔡*", "徐*逸", "姚*洪", "杨*茂"], "pct_of_major": [2.2, 2.2, 2.2, 2.2, 2.2, 2.12, 1.65, 1.62, 1.47, 1.45, 1.29, 1.22], "pct_within_top": [10.09, 10.09, 10.09, 10.09, 10.09, 9.71, 7.56, 7.44, 6.72, 6.66, 5.91, 5.55], "top_pool_pct": 21.83}}, "order_type_top_company": ["(未填)", "市场订单", "内部交付", "内部"], "co_major_pct": {"研发订单项目": 54.86, "量产项目": 17.9, "培训与运营": 16.87, "自研项目": 10.16, "(未填)": 0.15, "实物展品": 0.0, "展品恢复": 0.01, "平行自研": 0.04}, "project_mix_order": {"people": ["李*杰", "焦*洋", "刘*祚", "顾*杰", "杨*明", "孟*睿", "项*", "周*扬"], "parts": [{"label": "气浮运动平台（I300-B)", "data": [100.0, 100.0, 100.0, 100.0, 0.0, 86.02, 100.0, 75.86], "bg": "#1e3a8a"}, {"label": "X300-G3", "data": [0.0, 0.0, 0.0, 0.0, 100.0, 0.28, 0.0, 0.0], "bg": "#2563eb"}, {"label": "磁浮二维运动平台(S300）", "data": [0.0, 0.0, 0.0, 0.0, 0.0, 1.66, 0.0, 24.14], "bg": "#3b82f6"}, {"label": "DS300Ⅳ代", "data": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "bg": "#60a5fa"}, {"label": "内部配套执行器", "data": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "bg": "#93c5fd"}, {"label": "POTB-WRS-Gen Ⅰ（大气版）", "data": [0.0, 0.0, 0.0, 0.0, 0.0, 12.03, 0.0, 0.0], "bg": "#4f46e5"}]}, "project_mix_self": {"people": ["梁*志", "夏*枕", "娄*阳", "韩*玺", "杨*午", "岑*凤", "侯*飞", "郭*坤"], "parts": [{"label": "标准控制系统", "data": [0.0, 0.0, 100.0, 0.0, 100.0, 100.0, 0.0, 0.0], "bg": "#1e3a8a"}, {"label": "压电致动器自研", "data": [0.0, 99.42, 0.0, 81.7, 0.0, 0.0, 79.75, 0.0], "bg": "#2563eb"}, {"label": "辐射环境下压电重载精密运动减振技术研究（…", "data": [100.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "bg": "#3b82f6"}, {"label": "Air-Floating运动台", "data": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "bg": "#60a5fa"}, {"label": "一体共烧叠堆", "data": [0.0, 0.58, 0.0, 18.3, 0.0, 0.0, 20.25, 99.18], "bg": "#93c5fd"}, {"label": "微步电机工艺优化及产线改造", "data": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.82], "bg": "#4f46e5"}]}, "project_mix_pre": {"people": ["江*初", "杨*华", "王*华", "吴*亮", "蒋*洋", "姚*洪", "齐*安", "齐*"], "parts": [{"label": "培训与运营", "data": [100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0], "bg": "#1e3a8a"}, {"label": "键合专项（上海市经信委高质量项目）", "data": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "bg": "#2563eb"}]}, "story": {"rd_mass_pct": 68.94, "mass_prod_pct": 17.9, "train_major_pct": 16.87, "largest_bu": "压电事业部"},"rank_bucket_labels": ["总监及以上", "经理/主管", "工程师", "员级及其他"]}</script>
+
+  <script>
+    (function () {
+      const tabs = document.querySelectorAll(".app-header button[data-sheet]");
+      const panels = document.querySelectorAll(".sheet-panel");
+      const allCharts = [];
+
+      var DASH = {};
+      try {
+        DASH = JSON.parse(document.getElementById("dashboard-extract").textContent);
+      } catch (err) {
+        console.warn("dashboard-extract parse failed", err);
+      }
+
+      const depts = DASH.depts || [
+        "量检测和键合事业部",
+        "真空事业部",
+        "光刻事业部",
+        "压电事业部",
+        "电机事业部",
+        "广东粤极",
+        "隐冠研究院",
+      ];
+
+      /* 《【YG】数据底表》工时分析 — 项目大类 / 项目2 列名（对接 Excel 时按列绑定） */
+      const EXCEL_PROJECT_MAJOR_LABELS = [
+        "预研",
+        "研发订单项目",
+        "研发自研项目",
+        "量产/生产",
+        "培训与运营（主动填报）",
+        "培训与运营（被动归集）",
+      ];
+      /* 来源：数据底表样表 Σ项目工时比例（平时）按规则拆六项（未填等不计入分母）；日期：底表 2025-04-01 */
+      const EXCEL_PROJECT_MAJOR_PCT = [12.04, 54.95, 10.23, 17.92, 3.41, 1.44];
+      const EXCEL_PROJECT_MAJOR_COLORS = ["#60a5fa", "#1e40af", "#2563eb", "#93c5fd", "#047857", "#6ee7b7"];
+      const EXCEL_PROJECT2_LABELS = ["预研", "例会和运营", "合作伙伴交流", "自我学习", "归集工时"];
+      /* 来源：培训与运营报表底表「公司整体」五项工时占五项合计 */
+      const EXCEL_PROJECT2_PCT_TRAIN = [13.67, 7.23, 0.36, 13.26, 65.48];
+      const MAIN_SIX_DISPLAY_LABELS = [
+        "预研",
+        "研发订单",
+        "研发自研",
+        "量产/生产",
+        "培训·主动",
+        "培训·被动",
+      ];
+
+      var CHART_COLORS = {
+        text: "#64748b",
+        grid: "#eef1f5",
+        tick: "#64748b",
+        donutBorder: "#ffffff",
+      };
+
+      var CHART_PALETTE = {
+        donut: ["#60a5fa", "#2dd4bf", "#a78bfa", "#fb923c", "#94a3b8", "#f472b6", "#22d3ee", "#fbbf24"],
+        barH: "#818cf8",
+        stack: ["#3b82f6", "#14b8a6", "#a78bfa", "#f59e0b", "#64748b"],
+        groupA: "#6366f1",
+        groupB: "#64748b",
+        dumbbellA: "#818cf8",
+        dumbbellB: "#2dd4bf",
+        bubble: ["rgba(129,140,248,0.65)", "rgba(45,212,191,0.55)", "rgba(251,191,36,0.55)"],
+        areaA: { line: "#94a3b8", fill: "rgba(148,163,184,0.2)" },
+        areaB: { line: "#818cf8", fill: "rgba(129,140,248,0.2)" },
+      };
+
+      function createCharts() {
+        const C = CHART_COLORS;
+        const P = CHART_PALETTE;
+        Chart.defaults.font.family = "'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif";
+        Chart.defaults.color = C.text;
+        (function registerDataLabels() {
+          var Plug = typeof ChartDataLabels !== "undefined" ? ChartDataLabels : typeof window !== "undefined" ? window.ChartDataLabels : null;
+          if (Plug && typeof Chart.register === "function") {
+            try {
+              Chart.register(Plug);
+            } catch (e) {
+              console.warn("chartjs-plugin-datalabels register skipped", e);
+            }
+          }
+        })();
+        if (!Chart.defaults.plugins) {
+          Chart.defaults.plugins = {};
+        }
+        Chart.defaults.plugins.datalabels = Object.assign({}, Chart.defaults.plugins.datalabels || {}, {
+          display: false,
+        });
+
+        const push = function (ch) {
+          allCharts.push(ch);
+        };
+
+        function sortIndexAxisYBar(chart, dir) {
+          var ds = chart.data.datasets[0];
+          if (!ds) return;
+          var labels = chart.data.labels.slice();
+          var data = (ds.data || []).slice();
+          var bg = ds.backgroundColor;
+          var colors = Array.isArray(bg) ? bg.slice() : null;
+          var order = labels.map(function (_, i) {
+            return i;
+          });
+          order.sort(function (a, b) {
+            var va = +data[a] || 0;
+            var vb = +data[b] || 0;
+            return dir === "desc" ? vb - va : va - vb;
+          });
+          chart.data.labels = order.map(function (i) {
+            return labels[i];
+          });
+          ds.data = order.map(function (i) {
+            return data[i];
+          });
+          if (colors) {
+            ds.backgroundColor = order.map(function (i) {
+              return colors[i];
+            });
+          }
+        }
+
+        function bumpXSuggestedMax(chart, cap, opts) {
+          var ds = chart.data.datasets[0];
+          if (!chart.options.scales || !chart.options.scales.x || !ds) return;
+          var maxV = 0;
+          for (var i = 0; i < (ds.data || []).length; i++) {
+            var v = +ds.data[i] || 0;
+            if (v > maxV) maxV = v;
+          }
+          if (opts && opts.axisHeadroom != null) {
+            var head = +opts.axisHeadroom;
+            var sugT = Math.ceil(maxV + (isNaN(head) ? 2 : head));
+            if (!sugT || sugT < 4) sugT = 4;
+            if (cap != null) sugT = Math.min(cap, Math.max(4, sugT));
+            chart.options.scales.x.suggestedMax = sugT;
+            return;
+          }
+          var step = maxV <= 20 ? 2 : maxV <= 45 ? 5 : 5;
+          var pad = maxV <= 22 ? 1.04 : maxV <= 40 ? 1.05 : 1.06;
+          var sug = Math.ceil((maxV * pad) / step) * step;
+          if (!sug || sug < step) sug = step;
+          if (cap != null) sug = Math.min(cap, Math.max(step, sug));
+          chart.options.scales.x.suggestedMax = sug;
+        }
+
+        var DL_BAR_END = {
+          display: true,
+          anchor: "end",
+          align: "end",
+          offset: 2,
+          clamp: true,
+          font: { size: 10, weight: "600" },
+          formatter: function (v) {
+            return (typeof v === "number" ? v.toFixed(1) : v) + "%";
+          },
+          color: function (ctx) {
+            var x = +ctx.dataset.data[ctx.dataIndex];
+            return x < 6 ? "#64748b" : "#0f172a";
+          },
+        };
+
+        var DL_DONUT_OUT = {
+          display: true,
+          color: "#334155",
+          font: { size: 8, weight: "600" },
+          anchor: "end",
+          align: "end",
+          offset: 6,
+          formatter: function (value, ctx) {
+            var lab = ctx.chart.data.labels[ctx.dataIndex];
+            var n = typeof value === "number" ? value : parseFloat(value);
+            return lab + "\n" + (isNaN(n) ? value : n.toFixed(1)) + "%";
+          },
+        };
+
+        var DL_DONUT_COMPACT = {
+          display: true,
+          color: "#475569",
+          font: { size: 7, weight: "600" },
+          anchor: "end",
+          align: "end",
+          offset: 1,
+          formatter: function (value, ctx) {
+            var lab = String(ctx.chart.data.labels[ctx.dataIndex] || "");
+            var n = typeof value === "number" ? value : parseFloat(value);
+            var pct = isNaN(n) ? "" : n.toFixed(0) + "%";
+            var line1 = lab.length > 9 ? lab.slice(0, 8) + "…" : lab;
+            return line1 + "\n" + pct;
+          },
+        };
+
+        /* 首页 2×2 圆环：略大字号 + 外侧留白，减少画布边缘裁切 */
+        var DL_DONUT_HOME = {
+          display: true,
+          color: "#334155",
+          font: { size: 8, weight: "600" },
+          anchor: "end",
+          align: "end",
+          offset: 2,
+          formatter: function (value, ctx) {
+            var lab = String(ctx.chart.data.labels[ctx.dataIndex] || "");
+            var n = typeof value === "number" ? value : parseFloat(value);
+            var pct = isNaN(n) ? "" : n.toFixed(0) + "%";
+            var line1 = lab.length > 8 ? lab.slice(0, 7) + "…" : lab;
+            return line1 + "\n" + pct;
+          },
+        };
+
+        var HOME_DONUT_LAYOUT_PAD = { top: 20, right: 26, bottom: 20, left: 26 };
+
+        function barColorsMainSix(pctArr) {
+          return [
+            "#38bdf8",
+            pctArr[1] > 52 ? "#c2410c" : "#1e3a8a",
+            "#2563eb",
+            "#7dd3fc",
+            "#059669",
+            pctArr[5] > 2.5 ? "#ea580c" : "#6ee7b7",
+          ];
+        }
+
+        function barColorsShareHeat(data) {
+          var mx = Math.max.apply(null, data.length ? data : [0]);
+          return data.map(function (v) {
+            if (mx <= 0) return "#94a3b8";
+            var r = v / mx;
+            if (r >= 0.9) return "#c2410c";
+            if (r >= 0.55) return "#ea580c";
+            if (r >= 0.25) return "#2563eb";
+            return "#0d9488";
+          });
+        }
+
+        function barColorsTrainAggressive(data, labels) {
+          var heat = barColorsShareHeat(data);
+          return data.map(function (v, i) {
+            var lab = (labels[i] || "") + "";
+            if (lab.indexOf("归集工时") >= 0) {
+              return v >= 55 ? "#c2410c" : "#6ee7b7";
+            }
+            return heat[i];
+          });
+        }
+
+        var PERSON_SCOPE_INDICES = {
+          all: [0, 1, 2, 3, 4, 5],
+          rd: [0, 1, 2],
+          mass: [3],
+          train: [4, 5],
+        };
+
+        var cmp = DASH.co_major_pct || {};
+        var rdPair = (cmp["研发订单项目"] || 0) + (cmp["自研项目"] || 0) + (cmp["平行自研"] || 0);
+        var sb = document.getElementById("storyBullets");
+        if (sb && DASH.story) {
+          var lb = DASH.story.largest_bu || "—";
+          var ot = (DASH.order_type_top_company || []).join("、") || "—";
+          sb.innerHTML =
+            "<li><strong>项目大类（底表）</strong>：研发订单项目约占 <strong>" +
+            (cmp["研发订单项目"] != null ? cmp["研发订单项目"].toFixed(1) : "—") +
+            "%</strong>；量产项目约 <strong>" +
+            (cmp["量产项目"] != null ? cmp["量产项目"].toFixed(1) : "—") +
+            "%</strong>；培训与运营约 <strong>" +
+            (cmp["培训与运营"] != null ? cmp["培训与运营"].toFixed(1) : "—") +
+            "%</strong>。左侧条形与右侧环形为同一维度的不同呈现。</li>" +
+            "<li><strong>订单类型（底表）</strong>：主要取值包括 " +
+            ot +
+            "；首页含<strong>示意</strong>环形图，正式环境按实算刷新。</li>" +
+            "<li><strong>项目归属事业部</strong>：当期汇总规模领先者为 <strong>" +
+            lb +
+            "</strong>；请在②中选定事业部查看内部结构累计，并与各事业部汇总条形对照阅读。</li>";
+        }
+        var elK1 = document.getElementById("kpiRdMass");
+        if (elK1) elK1.textContent = rdPair.toFixed(1) + "%";
+        var elK2 = document.getElementById("kpiMass");
+        if (elK2) elK2.textContent = (cmp["量产项目"] != null ? cmp["量产项目"].toFixed(1) : "—") + "%";
+        var elK3 = document.getElementById("kpiTrainMaj");
+        if (elK3) elK3.textContent = (cmp["培训与运营"] != null ? cmp["培训与运营"].toFixed(1) : "—") + "%";
+        var elK4 = document.getElementById("kpiAgg");
+        if (elK4) elK4.textContent = EXCEL_PROJECT2_PCT_TRAIN[4] != null ? EXCEL_PROJECT2_PCT_TRAIN[4].toFixed(1) + "%" : "—";
+
+        var hBarPctX = {
+          min: 0,
+          suggestedMax: 100,
+          grid: { color: C.grid },
+          ticks: { color: C.tick, callback: function (v) { return v + "%"; } },
+        };
+
+        var chartMainTypes = new Chart(document.getElementById("chartProjectTypesMain"), {
+          type: "bar",
+          data: {
+            labels: MAIN_SIX_DISPLAY_LABELS,
+            datasets: [
+              {
+                label: "占全月",
+                data: EXCEL_PROJECT_MAJOR_PCT,
+                backgroundColor: barColorsShareHeat(EXCEL_PROJECT_MAJOR_PCT.slice()),
+                borderRadius: 6,
+                borderSkipped: false,
+              },
+            ],
+          },
+          options: {
+            indexAxis: "y",
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: { padding: { right: 36, top: 4, bottom: 4 } },
+            datasets: { bar: { categoryPercentage: 0.82, barPercentage: 0.9 } },
+            plugins: {
+              legend: { display: false },
+              datalabels: Object.assign({}, DL_BAR_END),
+              tooltip: {
+                callbacks: {
+                  label: function (ctx) {
+                    var ix = MAIN_SIX_DISPLAY_LABELS.indexOf(ctx.label);
+                    var full = ix >= 0 ? EXCEL_PROJECT_MAJOR_LABELS[ix] : ctx.label;
+                    return full + ": " + ctx.parsed.x.toFixed(1) + "%";
+                  },
+                  footer: function () {
+                    return "备注：预研、订单、自研、量产、培训主/被动六项，Σ项目工时比例，合计 100%。";
+                  },
+                },
+              },
+            },
+            scales: {
+              x: Object.assign({}, hBarPctX),
+              y: { grid: { display: false }, ticks: { color: C.tick, font: { size: 10 } } },
+            },
+          },
+        });
+        push(chartMainTypes);
+        bumpXSuggestedMax(chartMainTypes, 100, { axisHeadroom: 2 });
+        chartMainTypes.update();
+        (function bindMainSort() {
+          var d = document.getElementById("sortMainDesc");
+          var a = document.getElementById("sortMainAsc");
+          function go(dir) {
+            sortIndexAxisYBar(chartMainTypes, dir);
+            chartMainTypes.data.datasets[0].backgroundColor = barColorsShareHeat(chartMainTypes.data.datasets[0].data.slice());
+            bumpXSuggestedMax(chartMainTypes, 100, { axisHeadroom: 2 });
+            chartMainTypes.update();
+          }
+          if (d) d.addEventListener("click", function (e) { e.stopPropagation(); go("desc"); });
+          if (a) a.addEventListener("click", function (e) { e.stopPropagation(); go("asc"); });
+        })();
+
+        push(
+          new Chart(document.getElementById("chartHomeDonut"), {
+            type: "doughnut",
+            data: {
+              labels: ["研发订单", "量产", "培训与运营", "自研"],
+              datasets: [
+                {
+                  data: [
+                    cmp["研发订单项目"] || 0,
+                    cmp["量产项目"] || 0,
+                    cmp["培训与运营"] || 0,
+                    (cmp["自研项目"] || 0) + (cmp["平行自研"] || 0),
+                  ],
+                  backgroundColor: ["#1e40af", "#38bdf8", "#059669", "#14b8a6"],
+                  borderWidth: 2,
+                  borderColor: "#fff",
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              clip: false,
+              cutout: "70%",
+              layout: { padding: HOME_DONUT_LAYOUT_PAD },
+              plugins: {
+                legend: { display: false },
+                datalabels: Object.assign({}, DL_DONUT_HOME),
+                tooltip: {
+                  callbacks: {
+                    label: function (ctx) {
+                      var v = ctx.parsed;
+                      if (typeof v === "object" && v !== null) v = v.x != null ? v.x : v;
+                      return ctx.label + ": " + Number(v).toFixed(1) + "%";
+                    },
+                    footer: function () {
+                      return "备注：与左侧条形同一「项目大类」四维聚合（含平行自研并入自研）。";
+                    },
+                  },
+                },
+              },
+            },
+          })
+        );
+
+        push(
+          new Chart(document.getElementById("chartOrderTypeDonut"), {
+            type: "doughnut",
+            data: {
+              labels: ["未填报", "市场订单", "内部交付", "内部"],
+              datasets: [
+                {
+                  data: [71, 16, 9, 4],
+                  backgroundColor: ["#b45309", "#1d4ed8", "#0d9488", "#94a3b8"],
+                  borderWidth: 2,
+                  borderColor: "#fff",
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              clip: false,
+              cutout: "70%",
+              layout: { padding: HOME_DONUT_LAYOUT_PAD },
+              plugins: {
+                legend: { display: false },
+                datalabels: Object.assign({}, DL_DONUT_HOME),
+                tooltip: {
+                  callbacks: {
+                    label: function (ctx) {
+                      var v = ctx.parsed;
+                      if (typeof v === "object" && v !== null) v = v.x != null ? v.x : v;
+                      return ctx.label + ": " + Number(v).toFixed(1) + "%";
+                    },
+                    footer: function () {
+                      return "备注：底表「订单类型」；下图为演示占比，投产按实算刷新。";
+                    },
+                  },
+                },
+              },
+            },
+          })
+        );
+
+        push(
+          new Chart(document.getElementById("chartPhase2Donut"), {
+            type: "doughnut",
+            data: {
+              labels: ["预研", "非预研"],
+              datasets: [
+                {
+                  data: [39.6, 60.4],
+                  backgroundColor: ["#38bdf8", "#cbd5e1"],
+                  borderWidth: 2,
+                  borderColor: "#fff",
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              clip: false,
+              cutout: "70%",
+              layout: { padding: HOME_DONUT_LAYOUT_PAD },
+              plugins: {
+                legend: { display: false },
+                datalabels: Object.assign({}, DL_DONUT_HOME),
+                tooltip: {
+                  callbacks: {
+                    label: function (ctx) {
+                      var v = ctx.parsed;
+                      if (typeof v === "object" && v !== null) v = v.x != null ? v.x : v;
+                      return ctx.label + ": " + Number(v).toFixed(1) + "%";
+                    },
+                    footer: function () {
+                      return "备注：培训报表维度之阶段标注；业务类型以项目大类与六项条形为准。";
+                    },
+                  },
+                },
+              },
+            },
+          })
+        );
+
+        push(
+          new Chart(document.getElementById("chartTrainDonut"), {
+            type: "doughnut",
+            data: {
+              labels: ["主动填报", "被动归集"],
+              datasets: [
+                {
+                  data: [91.45, 8.55],
+                  backgroundColor: ["#059669", 8.55 >= 10 ? "#ea580c" : "#86efac"],
+                  borderWidth: 2,
+                  borderColor: "#fff",
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              clip: false,
+              cutout: "70%",
+              layout: { padding: HOME_DONUT_LAYOUT_PAD },
+              plugins: {
+                legend: { display: false },
+                datalabels: Object.assign({}, DL_DONUT_HOME),
+                tooltip: {
+                  callbacks: {
+                    label: function (ctx) {
+                      var v = ctx.parsed;
+                      if (typeof v === "object" && v !== null) v = v.x != null ? v.x : v;
+                      return ctx.label + ": " + Number(v).toFixed(1) + "%";
+                    },
+                    footer: function () {
+                      return "备注：考核常用填报属性；配合项目大类「培训与运营」使用。";
+                    },
+                  },
+                },
+              },
+            },
+          })
+        );
+
+        var chartProject2 = new Chart(document.getElementById("chartProject2Bars"), {
+          type: "bar",
+          data: {
+            labels: EXCEL_PROJECT2_LABELS,
+            datasets: [
+              {
+                label: "占培训运营视图",
+                data: EXCEL_PROJECT2_PCT_TRAIN,
+                backgroundColor: barColorsTrainAggressive(EXCEL_PROJECT2_PCT_TRAIN, EXCEL_PROJECT2_LABELS),
+                borderRadius: 6,
+                borderSkipped: false,
+              },
+            ],
+          },
+          options: {
+            indexAxis: "y",
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: { padding: { right: 40 } },
+            plugins: {
+              legend: { display: false },
+              datalabels: Object.assign({}, DL_BAR_END),
+              tooltip: {
+                callbacks: {
+                  label: function (ctx) {
+                    return ctx.label + ": " + ctx.parsed.x.toFixed(1) + "%";
+                  },
+                  footer: function () {
+                    return "备注：培训报表公司整体五项，合计 100%。";
+                  },
+                },
+              },
+            },
+            scales: {
+              x: Object.assign({}, hBarPctX),
+              y: { grid: { display: false }, ticks: { color: C.tick, font: { size: 10 } } },
+            },
+          },
+        });
+        push(chartProject2);
+        bumpXSuggestedMax(chartProject2, 100);
+        chartProject2.update();
+        (function bindP2Sort() {
+          var d = document.getElementById("sortP2Desc");
+          var a = document.getElementById("sortP2Asc");
+          function go(dir) {
+            sortIndexAxisYBar(chartProject2, dir);
+            chartProject2.data.datasets[0].backgroundColor = barColorsTrainAggressive(
+              chartProject2.data.datasets[0].data.slice(),
+              chartProject2.data.labels.slice()
+            );
+            bumpXSuggestedMax(chartProject2, 100);
+            chartProject2.update();
+          }
+          if (d) d.addEventListener("click", function (e) { e.stopPropagation(); go("desc"); });
+          if (a) a.addEventListener("click", function (e) { e.stopPropagation(); go("asc"); });
+        })();
+
+        (function () {
+          var vol = depts.map(function (d) {
+            return (DASH.bu_totals_prop && DASH.bu_totals_prop[d]) || 0;
+          });
+          var vmax = Math.max.apply(null, vol.length ? vol : [0]);
+          var thr = Math.max(vmax * 0.035, 28);
+          var fLabels = [];
+          var fVol = [];
+          depts.forEach(function (d, i) {
+            if (vol[i] >= thr) {
+              fLabels.push(d);
+              fVol.push(vol[i]);
+            }
+          });
+          if (fLabels.length === 0) {
+            var pairs = depts
+              .map(function (d, i) {
+                return { d: d, v: vol[i] };
+              })
+              .sort(function (a, b) {
+                return b.v - a.v;
+              });
+            for (var pi = 0; pi < Math.min(4, pairs.length); pi++) {
+              if (pairs[pi].v > 0) {
+                fLabels.push(pairs[pi].d);
+                fVol.push(pairs[pi].v);
+              }
+            }
+          }
+          var sumShow = fVol.reduce(function (a, b) {
+            return a + b;
+          }, 0);
+          var fPct = fVol.map(function (v) {
+            return sumShow ? (v / sumShow) * 100 : 0;
+          });
+          var elVol = document.getElementById("chartBuVolumeBar");
+          if (elVol) {
+            var chartBuVolume = new Chart(elVol, {
+              type: "bar",
+              data: {
+                labels: fLabels,
+                datasets: [
+                  {
+                    label: "占展示集合比重",
+                    data: fPct,
+                    backgroundColor: barColorsShareHeat(fPct),
+                    borderRadius: 6,
+                  },
+                ],
+              },
+              options: {
+                indexAxis: "y",
+                responsive: true,
+                maintainAspectRatio: false,
+                layout: { padding: { right: 44 } },
+                plugins: {
+                  legend: { display: false },
+                  datalabels: Object.assign({}, DL_BAR_END),
+                  tooltip: {
+                    callbacks: {
+                      label: function (ctx) {
+                        return ctx.label + ": " + ctx.parsed.x.toFixed(1) + "%";
+                      },
+                      footer: function () {
+                        return "备注：在所展示事业部内归一合计 100%；低于阈值者已省略。";
+                      },
+                    },
+                  },
+                },
+                scales: {
+                  x: {
+                    min: 0,
+                    suggestedMax: 100,
+                    grid: { color: C.grid },
+                    ticks: {
+                      color: C.tick,
+                      callback: function (v) {
+                        return v + "%";
+                      },
+                    },
+                    title: { display: true, text: "占展示集合比重", color: C.tick, font: { size: 11 } },
+                  },
+                  y: { grid: { display: false }, ticks: { color: C.tick, font: { size: 9 } } },
+                },
+              },
+            });
+            push(chartBuVolume);
+            bumpXSuggestedMax(chartBuVolume, 100);
+            chartBuVolume.update();
+            (function bindVolSort() {
+              var d = document.getElementById("sortVolDesc");
+              var a = document.getElementById("sortVolAsc");
+              function go(dir) {
+                sortIndexAxisYBar(chartBuVolume, dir);
+                chartBuVolume.data.datasets[0].backgroundColor = barColorsShareHeat(chartBuVolume.data.datasets[0].data.slice());
+                bumpXSuggestedMax(chartBuVolume, 100);
+                chartBuVolume.update();
+              }
+              if (d) d.addEventListener("click", function (e) { e.stopPropagation(); go("desc"); });
+              if (a) a.addEventListener("click", function (e) { e.stopPropagation(); go("asc"); });
+            })();
+          }
+
+          var elWf = document.getElementById("chartBuWaterfall");
+          var buSel = document.getElementById("buWaterfallSelect");
+          var dimSel = document.getElementById("wfDimSelect");
+          var metSel = document.getElementById("wfMetricSelect");
+          var wfHint = document.getElementById("wfHint");
+
+          if (buSel) {
+            buSel.innerHTML = "";
+            depts.forEach(function (d) {
+              var o = document.createElement("option");
+              o.value = d;
+              o.textContent = d + ((DASH.bu_totals_prop && DASH.bu_totals_prop[d] === 0) ? "（无数据）" : "");
+              buSel.appendChild(o);
+            });
+            var defBu = (DASH.story && DASH.story.largest_bu) || depts[0];
+            buSel.value = depts.indexOf(defBu) >= 0 ? defBu : depts[0];
+          }
+
+          function wfPack(bu, dim, metricKey) {
+            var root = metricKey === "rows" ? DASH.waterfall_rows_by_bu : DASH.waterfall_by_bu;
+            if (!root || !root[bu] || !root[bu][dim]) {
+              return null;
+            }
+            return root[bu][dim];
+          }
+
+          var WF_MERGE_MIN_PCT = 1.5;
+
+          function mergeSmallWaterfallSegments(pack) {
+            if (!pack || !pack.labels || !pack.pct || !pack.labels.length) {
+              return pack;
+            }
+            var labels = pack.labels.slice();
+            var pcts = pack.pct.slice();
+            var keptL = [];
+            var keptP = [];
+            var other = 0;
+            for (var i = 0; i < pcts.length; i++) {
+              if (pcts[i] < WF_MERGE_MIN_PCT) {
+                other += pcts[i];
+              } else {
+                keptL.push(labels[i]);
+                keptP.push(pcts[i]);
+              }
+            }
+            if (other >= 0.08) {
+              keptL.push("其他（单段<" + WF_MERGE_MIN_PCT + "%）");
+              keptP.push(other);
+            } else if (other > 0 && keptP.length) {
+              keptP[keptP.length - 1] += other;
+            } else if (other > 0 && !keptP.length) {
+              keptL.push("其他");
+              keptP.push(other);
+            }
+            var s = 0;
+            for (var k = 0; k < keptP.length; k++) {
+              s += keptP[k];
+            }
+            if (s <= 0) {
+              return pack;
+            }
+            var norm = keptP.map(function (x) {
+              return (x / s) * 100;
+            });
+            var cum = 0;
+            var steps = [];
+            for (var j = 0; j < norm.length; j++) {
+              var lo = cum;
+              cum += norm[j];
+              steps.push([Math.round(lo * 100) / 100, Math.round(cum * 100) / 100]);
+            }
+            var drift = 100 - cum;
+            if (Math.abs(drift) > 0.03 && norm.length) {
+              norm[norm.length - 1] += drift;
+              steps[steps.length - 1][1] = 100;
+            }
+            return {
+              labels: keptL,
+              pct: norm,
+              steps: steps,
+              total: 100,
+              raw_sum: pack.raw_sum,
+            };
+          }
+
+          function applyWaterfallChart(ch, bu, dim, metricKey) {
+            var rawPack = wfPack(bu, dim, metricKey);
+            var pack = rawPack ? mergeSmallWaterfallSegments(rawPack) : null;
+            var yTitle =
+              metricKey === "rows" ? "累计 %（填报行数）" : "累计 %（Σ 项目工时比例）";
+            if (!pack || !pack.steps || !pack.steps.length) {
+              ch.data.labels = ["（无数据）"];
+              ch.data.datasets[0].data = [[0, 0]];
+              ch.options.scales.y.title.text = yTitle;
+              ch.update();
+              if (wfHint) {
+                wfHint.textContent = "该事业部/维度在当前底表无记录。";
+              }
+              return;
+            }
+            var labels = pack.labels.slice();
+            var wfData = pack.steps.map(function (s) {
+              return [s[0], s[1]];
+            });
+            var tot = pack.total >= 99.5 ? 100 : pack.total;
+            wfData.push([0, Math.round(tot * 100) / 100]);
+            labels.push("累计 100%");
+            ch.data.labels = labels;
+            ch.data.datasets[0].data = wfData;
+            ch.options.scales.y.title.text = yTitle;
+            ch.update();
+            if (wfHint) {
+              wfHint.textContent =
+                "项目归属事业部：" +
+                bu +
+                " · 分解维度：" +
+                dim +
+                " · " +
+                (metricKey === "rows" ? "填报行数累计结构" : "Σ项目工时比例累计结构") +
+                " · 原始汇总 " +
+                (pack.raw_sum != null ? pack.raw_sum : "—") +
+                " · 已合并<" +
+                WF_MERGE_MIN_PCT +
+                "% 的细项";
+            }
+          }
+
+          if (elWf && buSel && dimSel && metSel) {
+            var chartWf = new Chart(elWf, {
+              type: "bar",
+              data: {
+                labels: [],
+                datasets: [
+                  {
+                    label: "累计",
+                    data: [],
+                    backgroundColor: function (ctx) {
+                      var last = ctx.chart.data.labels.length - 1;
+                      return ctx.dataIndex === last ? "#0f766e" : "#818cf8";
+                    },
+                    borderRadius: 6,
+                    borderSkipped: false,
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      label: function (ctx) {
+                        var r = ctx.raw;
+                        if (!Array.isArray(r)) {
+                          return "";
+                        }
+                        var delta = r[1] - r[0];
+                        var isLast = ctx.dataIndex === ctx.chart.data.labels.length - 1;
+                        if (isLast) {
+                          return "累计: " + r[1].toFixed(1) + "%";
+                        }
+                        return "段 +" + delta.toFixed(1) + "% → 累计 " + r[1].toFixed(1) + "%";
+                      },
+                    },
+                  },
+                },
+                scales: {
+                  x: {
+                    grid: { display: false },
+                    ticks: { color: C.tick, maxRotation: 55, minRotation: 0, font: { size: 9 } },
+                  },
+                  y: {
+                    max: 100,
+                    grid: { color: C.grid },
+                    ticks: { color: C.tick, callback: function (v) { return v + "%"; } },
+                    title: { display: true, text: "累计 %", color: C.tick },
+                  },
+                },
+              },
+            });
+            push(chartWf);
+
+            function refreshWf() {
+              applyWaterfallChart(chartWf, buSel.value, dimSel.value, metSel.value);
+            }
+            buSel.addEventListener("change", refreshWf);
+            dimSel.addEventListener("change", refreshWf);
+            metSel.addEventListener("change", refreshWf);
+            refreshWf();
+          }
+        })();
+
+        push(
+          new Chart(document.getElementById("chartGroupBar"), {
+            type: "bar",
+            data: {
+              labels: depts,
+              datasets: [
+                {
+                  label: "研发侧（研发+培训内）",
+                  data: [98.95, 94.73, 100.0, 94.17, 95.65, 50.0, 100.0],
+                  backgroundColor: P.groupA,
+                  borderRadius: 4,
+                },
+                {
+                  label: "培训运营（研发+培训内）",
+                  data: [1.05, 5.27, 0.0, 5.83, 4.35, 50.0, 0.0],
+                  backgroundColor: P.groupB,
+                  borderRadius: 4,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              layout: { padding: { top: 14 } },
+              plugins: {
+                legend: { position: "top", labels: { color: C.text } },
+                datalabels: {
+                  display: true,
+                  anchor: "end",
+                  align: "top",
+                  offset: 2,
+                  color: "#334155",
+                  font: { size: 9, weight: "600" },
+                  formatter: function (v) {
+                    return (typeof v === "number" ? v : parseFloat(v)).toFixed(1) + "%";
+                  },
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function (ctx) {
+                      return ctx.dataset.label + ": " + ctx.parsed.y.toFixed(1) + "%";
+                    },
+                    footer: function () {
+                      return "同一事业部两柱之和为 100%";
+                    },
+                  },
+                },
+              },
+              scales: {
+                x: { stacked: false, grid: { display: false }, ticks: { color: C.tick, maxRotation: 45, minRotation: 0, font: { size: 9 } } },
+                y: {
+                  stacked: false,
+                  max: 100,
+                  grid: { color: C.grid },
+                  ticks: { color: C.tick, callback: function (v) { return v + "%"; } },
+                },
+              },
+            },
+          })
+        );
+
+        push(
+          new Chart(document.getElementById("chartBuStack"), {
+            type: "bar",
+            data: {
+              labels: depts,
+              datasets: [
+                { label: "预研", data: [19.16, 12.91, 17.92, 12.0, 14.11, 0, 15.17], backgroundColor: "#93c5fd", borderRadius: 2 },
+                { label: "研发订单项目", data: [74.62, 77.51, 75.14, 22.87, 77.63, 0, 55.52], backgroundColor: "#1e40af", borderRadius: 2 },
+                { label: "研发自研项目", data: [3.92, 4.01, 6.1, 25.33, 1.84, 0, 26.08], backgroundColor: "#3b82f6", borderRadius: 2 },
+                { label: "量产/生产", data: [1.25, 0.31, 0.84, 33.96, 2.07, 0, 3.23], backgroundColor: "#bfdbfe", borderRadius: 2 },
+                { label: "培训·主动", data: [0.37, 1.78, 0.0, 4.19, 3.9, 0, 0.0], backgroundColor: "#059669", borderRadius: 2 },
+                { label: "培训·被动", data: [0.68, 3.48, 0.0, 1.65, 0.45, 0, 0.0], backgroundColor: "#86efac", borderRadius: 2 },
+              ],
+            },
+            options: {
+              indexAxis: "y",
+              responsive: true,
+              maintainAspectRatio: false,
+              layout: { padding: { right: 28 } },
+              plugins: {
+                legend: { position: "bottom", labels: { boxWidth: 8, font: { size: 8 }, color: C.text } },
+                datalabels: {
+                  display: function (ctx) {
+                    var x = ctx.parsed && typeof ctx.parsed.x === "number" ? ctx.parsed.x : 0;
+                    return x >= 5;
+                  },
+                  anchor: "end",
+                  align: "end",
+                  offset: 0,
+                  color: "#334155",
+                  font: { size: 7, weight: "600" },
+                  formatter: function (_v, ctx) {
+                    return ctx.parsed.x.toFixed(0) + "%";
+                  },
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function (ctx) {
+                      return ctx.dataset.label + ": " + ctx.parsed.x.toFixed(1) + "%";
+                    },
+                    footer: function () {
+                      return "同一事业部六根柱之和 100%";
+                    },
+                  },
+                },
+              },
+              scales: {
+                x: {
+                  stacked: false,
+                  max: 100,
+                  grid: { color: C.grid },
+                  ticks: { color: C.tick, callback: function (v) { return v + "%"; } },
+                },
+                y: { stacked: false, grid: { display: false }, ticks: { color: C.tick, font: { size: 9 } } },
+              },
+            },
+          })
+        );
+
+        var DEMO_PERSON_LIST = ["杨*明", "刘*飞", "陈*华", "王*强", "赵*峰", "周*宇"];
+        var DEMO_PERSON_SIX_WAY = {
+          "杨*明": [11, 44, 14, 18, 9, 4],
+          "刘*飞": [14, 40, 12, 20, 10, 4],
+          "陈*华": [18, 32, 16, 22, 8, 4],
+          "王*强": [9, 48, 11, 19, 9, 4],
+          "赵*峰": [16, 36, 18, 16, 10, 4],
+          "周*宇": [22, 28, 20, 15, 10, 5],
+        };
+
+        function buildPersonScopeSlice(personKey, scopeKey) {
+          var raw = DEMO_PERSON_SIX_WAY[personKey] || DEMO_PERSON_SIX_WAY["杨*明"];
+          var idx = PERSON_SCOPE_INDICES[scopeKey] || PERSON_SCOPE_INDICES.all;
+          var labels = [];
+          var dataRaw = [];
+          for (var i = 0; i < idx.length; i++) {
+            var j = idx[i];
+            labels.push(MAIN_SIX_DISPLAY_LABELS[j]);
+            dataRaw.push(raw[j]);
+          }
+          var sum = dataRaw.reduce(function (a, b) {
+            return a + b;
+          }, 0);
+          var data = sum
+            ? dataRaw.map(function (d) {
+                return (d / sum) * 100;
+              })
+            : dataRaw.slice();
+          var bg = barColorsShareHeat(data);
+          return { labels: labels, data: data, backgroundColor: bg };
+        }
+
+        var DEMO_TYPE_POOL = {
+          order: {
+            labels: ["杨*明", "刘*飞", "陈*华", "王*强", "赵*峰", "周*宇", "吴*杰"],
+            data: [32, 22, 18, 14, 9, 3, 2],
+          },
+          self: {
+            labels: ["娄*阳", "梁*志", "李*鹏", "韩*玺", "郭*坤", "夏*枕"],
+            data: [34, 24, 18, 12, 8, 4],
+          },
+          pre: {
+            labels: ["江*初", "杨*华", "王*华", "吴*亮", "蒋*洋", "姚*洪", "齐*安"],
+            data: [26, 21, 18, 15, 12, 6, 2],
+          },
+        };
+
+        /* 职级分段：优先读底表抽取 rank_bucket_labels；缺省为常见人事文字档位（非 P 序列） */
+        var RANK_BUCKET_LABELS =
+          Array.isArray(DASH.rank_bucket_labels) && DASH.rank_bucket_labels.length
+            ? DASH.rank_bucket_labels.slice()
+            : ["总监及以上", "经理/主管", "工程师", "员级及其他"];
+        var DEMO_POOL_BY_RANK = {
+          order: { labels: RANK_BUCKET_LABELS.slice(), data: [14, 36, 34, 16] },
+          self: { labels: RANK_BUCKET_LABELS.slice(), data: [24, 38, 28, 10] },
+          pre: { labels: RANK_BUCKET_LABELS.slice(), data: [10, 30, 40, 20] },
+        };
+
+        var DEMO_POOL_BY_TENURE = {
+          order: { labels: ["<3年", "3–5年", "5–10年", ">10年"], data: [22, 30, 32, 16] },
+          self: { labels: ["<3年", "3–5年", "5–10年", ">10年"], data: [26, 32, 28, 14] },
+          pre: { labels: ["<3年", "3–5年", "5–10年", ">10年"], data: [18, 24, 36, 22] },
+        };
+
+        var DEMO_PERSON_META = {
+          "杨*明": { rank: "经理/主管", tenure: "5–10 年" },
+          "刘*飞": { rank: "经理/主管", tenure: "3–5 年" },
+          "陈*华": { rank: "工程师", tenure: "5–10 年" },
+          "王*强": { rank: "总监及以上", tenure: ">10 年" },
+          "赵*峰": { rank: "工程师", tenure: "<3 年" },
+          "周*宇": { rank: "经理/主管", tenure: "3–5 年" },
+        };
+
+        function poolDonutOptions(extraFooter) {
+          return {
+            responsive: true,
+            maintainAspectRatio: false,
+            clip: false,
+            cutout: "56%",
+            layout: { padding: { top: 12, right: 22, bottom: 12, left: 22 } },
+            plugins: {
+              legend: { display: false },
+              datalabels: Object.assign({}, DL_DONUT_COMPACT),
+              tooltip: {
+                callbacks: {
+                  label: function (ctx) {
+                    var v = ctx.parsed;
+                    if (typeof v === "object" && v !== null) v = v.x != null ? v.x : v;
+                    return ctx.label + ": " + Number(v).toFixed(1) + "%";
+                  },
+                  footer: function () {
+                    return extraFooter || "";
+                  },
+                },
+              },
+            },
+          };
+        }
+
+        function applyPoolDimCharts(poolKey, chartPoolRank, chartPoolTenure) {
+          if (!chartPoolRank || !chartPoolTenure) return;
+          var rk = DEMO_POOL_BY_RANK[poolKey] || DEMO_POOL_BY_RANK.order;
+          var tn = DEMO_POOL_BY_TENURE[poolKey] || DEMO_POOL_BY_TENURE.order;
+          var colsR = ["#1e3a8a", "#2563eb", "#60a5fa", "#93c5fd"];
+          var colsT = ["#0f766e", "#0d9488", "#2dd4bf", "#99f6e4"];
+          chartPoolRank.data.labels = rk.labels.slice();
+          chartPoolRank.data.datasets[0].data = rk.data.slice();
+          chartPoolRank.data.datasets[0].backgroundColor = rk.labels.map(function (_, i) {
+            return colsR[i % colsR.length];
+          });
+          chartPoolRank.update();
+          chartPoolTenure.data.labels = tn.labels.slice();
+          chartPoolTenure.data.datasets[0].data = tn.data.slice();
+          chartPoolTenure.data.datasets[0].backgroundColor = tn.labels.map(function (_, i) {
+            return colsT[i % colsT.length];
+          });
+          chartPoolTenure.update();
+        }
+
+        var elPersonMaj = document.getElementById("chartPersonMajorShare");
+        var selPersonOne = document.getElementById("personSelectOne");
+        var selWorkScope = document.getElementById("personWorkScopeSelect");
+        var chartPersonMajor = null;
+        if (elPersonMaj && selPersonOne && selWorkScope) {
+          DEMO_PERSON_LIST.forEach(function (name) {
+            var o = document.createElement("option");
+            o.value = name;
+            o.textContent = name;
+            selPersonOne.appendChild(o);
+          });
+          function updatePersonMetaLine() {
+            var elM = document.getElementById("personMetaLine");
+            var sel = document.getElementById("personSelectOne");
+            if (!elM || !sel) return;
+            var m = DEMO_PERSON_META[sel.value];
+            elM.textContent = m
+              ? "示意人事标签：" + m.rank + " · " + m.tenure + "（与左侧结构对照用，非考核口径）"
+              : "—";
+          }
+
+          function applyPersonOneChart() {
+            if (!chartPersonMajor) {
+              return;
+            }
+            var pack = buildPersonScopeSlice(selPersonOne.value, selWorkScope.value);
+            chartPersonMajor.data.labels = pack.labels;
+            chartPersonMajor.data.datasets[0].data = pack.data;
+            chartPersonMajor.data.datasets[0].backgroundColor = pack.backgroundColor;
+            bumpXSuggestedMax(chartPersonMajor, 100);
+            chartPersonMajor.update();
+            updatePersonMetaLine();
+          }
+          var p0 = buildPersonScopeSlice(selPersonOne.value, selWorkScope.value);
+          chartPersonMajor = new Chart(elPersonMaj, {
+            type: "bar",
+            data: {
+              labels: p0.labels,
+              datasets: [
+                {
+                  label: "该范围内占比",
+                  data: p0.data,
+                  backgroundColor: p0.backgroundColor,
+                  borderRadius: 4,
+                },
+              ],
+            },
+            options: {
+              indexAxis: "y",
+              responsive: true,
+              maintainAspectRatio: false,
+              layout: { padding: { right: 44 } },
+              plugins: {
+                legend: { display: false },
+                datalabels: Object.assign({}, DL_BAR_END),
+                tooltip: {
+                  callbacks: {
+                    label: function (ctx) {
+                      var ix = MAIN_SIX_DISPLAY_LABELS.indexOf(ctx.label);
+                      var full = ix >= 0 ? EXCEL_PROJECT_MAJOR_LABELS[ix] : ctx.label;
+                      return full + "：" + ctx.parsed.x.toFixed(1) + "%";
+                    },
+                    footer: function () {
+                      return "备注：示意单人在所选工作内容范围内各项目口径占比，合计 100%。";
+                    },
+                  },
+                },
+              },
+              scales: {
+                x: {
+                  min: 0,
+                  suggestedMax: 100,
+                  grid: { color: C.grid },
+                  ticks: { color: C.tick, callback: function (v) { return v + "%"; } },
+                },
+                y: { grid: { display: false }, ticks: { color: C.tick, font: { size: 10 } } },
+              },
+            },
+          });
+          push(chartPersonMajor);
+          bumpXSuggestedMax(chartPersonMajor, 100);
+          chartPersonMajor.update();
+          (function bindPersonSort() {
+            var d = document.getElementById("sortPersonDesc");
+            var a = document.getElementById("sortPersonAsc");
+            function go(dir) {
+              sortIndexAxisYBar(chartPersonMajor, dir);
+              chartPersonMajor.data.datasets[0].backgroundColor = barColorsShareHeat(chartPersonMajor.data.datasets[0].data.slice());
+              bumpXSuggestedMax(chartPersonMajor, 100);
+              chartPersonMajor.update();
+            }
+            if (d) d.addEventListener("click", function (e) { e.stopPropagation(); go("desc"); });
+            if (a) a.addEventListener("click", function (e) { e.stopPropagation(); go("asc"); });
+          })();
+          selPersonOne.addEventListener("change", applyPersonOneChart);
+          selWorkScope.addEventListener("change", applyPersonOneChart);
+          updatePersonMetaLine();
+        }
+
+        var elPm = document.getElementById("chartProjectMix");
+        var chartProjectMix = null;
+        if (elPm) {
+          function applyTypePoolChart(key) {
+            if (!chartProjectMix) {
+              return;
+            }
+            var d = DEMO_TYPE_POOL[key] || DEMO_TYPE_POOL.order;
+            var dd = d.data.slice();
+            chartProjectMix.data.labels = d.labels.slice();
+            chartProjectMix.data.datasets[0].data = dd;
+            chartProjectMix.data.datasets[0].backgroundColor = barColorsShareHeat(dd);
+            bumpXSuggestedMax(chartProjectMix, null);
+            chartProjectMix.update();
+          }
+          var d0 = DEMO_TYPE_POOL.order;
+          var d0d = d0.data.slice();
+          chartProjectMix = new Chart(elPm, {
+            type: "bar",
+            data: {
+              labels: d0.labels.slice(),
+              datasets: [
+                {
+                  label: "类型内人员占比",
+                  data: d0d,
+                  backgroundColor: barColorsShareHeat(d0d),
+                  borderRadius: 4,
+                },
+              ],
+            },
+            options: {
+              indexAxis: "y",
+              responsive: true,
+              maintainAspectRatio: false,
+              layout: { padding: { right: 44 } },
+              plugins: {
+                legend: { display: false },
+                datalabels: Object.assign({}, DL_BAR_END),
+                tooltip: {
+                  callbacks: {
+                    label: function (ctx) {
+                      return ctx.label + "：" + ctx.parsed.x.toFixed(1) + "%";
+                    },
+                    footer: function () {
+                      return "备注：同种工作内容类型下，全公司该池人员精力分解，合计 100%。";
+                    },
+                  },
+                },
+              },
+              scales: {
+                x: {
+                  min: 0,
+                  suggestedMax: 40,
+                  grid: { color: C.grid },
+                  ticks: { color: C.tick, callback: function (v) { return v + "%"; } },
+                },
+                y: { grid: { display: false }, ticks: { color: C.tick, font: { size: 10 } } },
+              },
+            },
+          });
+          push(chartProjectMix);
+          bumpXSuggestedMax(chartProjectMix, null);
+          chartProjectMix.update();
+          (function bindMixSort() {
+            var d = document.getElementById("sortMixDesc");
+            var a = document.getElementById("sortMixAsc");
+            function go(dir) {
+              sortIndexAxisYBar(chartProjectMix, dir);
+              chartProjectMix.data.datasets[0].backgroundColor = barColorsShareHeat(chartProjectMix.data.datasets[0].data.slice());
+              bumpXSuggestedMax(chartProjectMix, null);
+              chartProjectMix.update();
+            }
+            if (d) d.addEventListener("click", function (e) { e.stopPropagation(); go("desc"); });
+            if (a) a.addEventListener("click", function (e) { e.stopPropagation(); go("asc"); });
+          })();
+        }
+        var chartPoolRank = null;
+        var chartPoolTenure = null;
+        var selMix = document.getElementById("projectMixType");
+        var elPoolR = document.getElementById("chartPoolByRank");
+        var elPoolT = document.getElementById("chartPoolByTenure");
+        if (elPoolR && elPoolT) {
+          var mixKey0 = selMix && selMix.value ? selMix.value : "order";
+          var rkInit = DEMO_POOL_BY_RANK[mixKey0] || DEMO_POOL_BY_RANK.order;
+          var tnInit = DEMO_POOL_BY_TENURE[mixKey0] || DEMO_POOL_BY_TENURE.order;
+          var colsRI = ["#1e3a8a", "#2563eb", "#60a5fa", "#93c5fd"];
+          var colsTI = ["#0f766e", "#0d9488", "#2dd4bf", "#99f6e4"];
+          chartPoolRank = new Chart(elPoolR, {
+            type: "doughnut",
+            data: {
+              labels: rkInit.labels.slice(),
+              datasets: [
+                {
+                  data: rkInit.data.slice(),
+                  backgroundColor: rkInit.labels.map(function (_, i) {
+                    return colsRI[i % colsRI.length];
+                  }),
+                  borderWidth: 2,
+                  borderColor: "#fff",
+                },
+              ],
+            },
+            options: poolDonutOptions("备注：示意当前工作内容池内职级截面，合计 100%。"),
+          });
+          chartPoolTenure = new Chart(elPoolT, {
+            type: "doughnut",
+            data: {
+              labels: tnInit.labels.slice(),
+              datasets: [
+                {
+                  data: tnInit.data.slice(),
+                  backgroundColor: tnInit.labels.map(function (_, i) {
+                    return colsTI[i % colsTI.length];
+                  }),
+                  borderWidth: 2,
+                  borderColor: "#fff",
+                },
+              ],
+            },
+            options: poolDonutOptions("备注：示意当前工作内容池内司龄截面，合计 100%。"),
+          });
+          push(chartPoolRank);
+          push(chartPoolTenure);
+        }
+        if (selMix && chartProjectMix) {
+          selMix.addEventListener("change", function () {
+            applyTypePoolChart(selMix.value);
+            applyPoolDimCharts(selMix.value, chartPoolRank, chartPoolTenure);
+          });
+        }
+
+        push(
+          new Chart(document.getElementById("chartDumbbell"), {
+            type: "line",
+            data: {
+              labels: ["", "周*华", "龚*", "汪*仝", "陈*龙", ""],
+              datasets: [
+                {
+                  label: "ONES 系数",
+                  data: [null, 1.02, 1.05, 1.0, 1.08, null],
+                  borderColor: P.dumbbellA,
+                  backgroundColor: P.dumbbellA,
+                  pointRadius: 8,
+                  pointHoverRadius: 10,
+                  borderWidth: 0,
+                  showLine: false,
+                },
+                {
+                  label: "OA 系数",
+                  data: [null, 1.06, 1.02, 1.04, 1.0, null],
+                  borderColor: P.dumbbellB,
+                  backgroundColor: P.dumbbellB,
+                  pointRadius: 8,
+                  pointHoverRadius: 10,
+                  borderWidth: 0,
+                  showLine: false,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { position: "top", labels: { color: C.text } },
+                tooltip: {
+                  callbacks: {
+                    label: function (ctx) {
+                      return ctx.dataset.label + ": " + ctx.parsed.y;
+                    },
+                  },
+                },
+              },
+              scales: {
+                x: { grid: { display: false }, ticks: { color: C.tick } },
+                y: {
+                  min: 0.9,
+                  max: 1.15,
+                  grid: { color: C.grid },
+                  ticks: { color: C.tick },
+                },
+              },
+            },
+          })
+        );
+
+        push(
+          new Chart(document.getElementById("chartBubble"), {
+            type: "bubble",
+            data: {
+              datasets: [
+                {
+                  label: "量检测和键合事业部",
+                  data: [
+                    { x: 100, y: 0.63, r: 9 },
+                    { x: 911, y: 0.09, r: 18 },
+                    { x: 111, y: 0.34, r: 10 },
+                  ],
+                  backgroundColor: P.bubble[0],
+                },
+                {
+                  label: "研发集成部",
+                  data: [
+                    { x: 117, y: 0.21, r: 8 },
+                    { x: 216, y: 0.35, r: 14 },
+                    { x: 100, y: 0.28, r: 9 },
+                  ],
+                  backgroundColor: P.bubble[1],
+                },
+                {
+                  label: "总经理室-PM",
+                  data: [{ x: 278, y: 0.13, r: 16 }],
+                  backgroundColor: P.bubble[2],
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { position: "top", labels: { color: C.text } },
+                tooltip: {
+                  callbacks: {
+                    label: function (ctx) {
+                      const p = ctx.raw;
+                      return (
+                        ctx.dataset.label +
+                        ": 达成率 " +
+                        p.x +
+                        "%（实填/应填）, 项目精力占比 " +
+                        (p.y * 100).toFixed(0) +
+                        "%, 气泡≈参与项目数 " +
+                        Math.round(p.r)
+                      );
+                    },
+                  },
+                },
+              },
+              scales: {
+                x: {
+                  title: { display: true, text: "填报达成率（实填/应填，%）", color: C.tick },
+                  grid: { color: C.grid },
+                  ticks: { color: C.tick },
+                },
+                y: {
+                  min: 0,
+                  max: 1,
+                  title: { display: true, text: "项目精力占比（项目/月工时，0–1）", color: C.tick },
+                  grid: { color: C.grid },
+                  ticks: {
+                    color: C.tick,
+                    callback: function (v) {
+                      return v * 100 + "%";
+                    },
+                  },
+                },
+              },
+            },
+          })
+        );
+
+        push(
+          new Chart(document.getElementById("chartArea"), {
+            type: "line",
+            data: {
+              labels: ["W1", "W2", "W3", "W4", "月合计"],
+              datasets: [
+                {
+                  label: "填报达成率（实填/应填）",
+                  data: [99.2, 102.0, 101.2, 105.8, 102.1],
+                  borderColor: P.areaB.line,
+                  backgroundColor: P.areaB.fill,
+                  fill: true,
+                  tension: 0.3,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { position: "top", labels: { color: C.text } },
+                tooltip: {
+                  callbacks: {
+                    label: function (ctx) {
+                      return ctx.dataset.label + ": " + ctx.parsed.y.toFixed(1) + "%";
+                    },
+                  },
+                },
+              },
+              scales: {
+                y: {
+                  grid: { color: C.grid },
+                  ticks: {
+                    color: C.tick,
+                    callback: function (v) {
+                      return v + "%";
+                    },
+                  },
+                },
+                x: { grid: { display: false }, ticks: { color: C.tick } },
+              },
+            },
+          })
+        );
+
+        ["chartProjectTypesMain", "chartProject2Bars"].forEach(function (cid) {
+          var node = document.getElementById(cid);
+          if (node) {
+            node.style.cursor = "pointer";
+          }
+        });
+      }
+
+      function showSheet(id, opts) {
+        opts = opts || {};
+        const next = document.getElementById(id);
+        if (!next || !/^sheet[123]$/.test(id)) return;
+
+        panels.forEach(function (p) {
+          p.classList.toggle("active", p.id === id);
+        });
+
+        tabs.forEach(function (btn) {
+          const on = btn.getAttribute("data-sheet") === id;
+          btn.classList.toggle("active", on);
+          btn.setAttribute("aria-selected", on);
+        });
+
+        if (!opts.skipHash) {
+          var h = "#" + id;
+          if (history.replaceState) {
+            history.replaceState(null, "", h);
+          } else {
+            location.hash = h;
+          }
+        }
+
+        var mw = document.querySelector(".main-wrap");
+        if (mw) {
+          mw.scrollTop = 0;
+        }
+      }
+
+      function flashAnchor(el) {
+        if (!el) return;
+        el.classList.remove("is-jump-target");
+        void el.offsetWidth;
+        el.classList.add("is-jump-target");
+        setTimeout(function () {
+          el.classList.remove("is-jump-target");
+        }, 1400);
+      }
+
+      function goToSheet(sheetId, anchorId) {
+        if (!anchorId || anchorId === "") {
+          anchorId = null;
+        }
+        showSheet(sheetId, { skipHash: true });
+        var h = anchorId ? "#" + sheetId + "/" + anchorId : "#" + sheetId;
+        if (history.replaceState) {
+          history.replaceState(null, "", h);
+        } else {
+          location.hash = h;
+        }
+
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            var panel = document.getElementById(sheetId);
+            if (panel) {
+              panel.scrollTop = 0;
+            }
+            var mw = document.querySelector(".main-wrap");
+            if (mw) {
+              mw.scrollTop = 0;
+            }
+            if (anchorId) {
+              var target = document.getElementById(anchorId);
+              if (target) {
+                target.scrollIntoView({ behavior: "smooth", block: "start" });
+                flashAnchor(target);
+              }
+            }
+          });
+        });
+      }
+
+      function parseHash() {
+        var raw = (location.hash || "#sheet1").replace(/^#/, "");
+        var parts = raw.split("/").filter(Boolean);
+        var sheet = parts[0] || "sheet1";
+        if (!/^sheet[123]$/.test(sheet)) {
+          sheet = "sheet1";
+        }
+        var anchor = parts[1] || null;
+        return { sheet: sheet, anchor: anchor };
+      }
+
+      function applyHashFromLocation() {
+        var p = parseHash();
+        showSheet(p.sheet, { skipHash: true });
+        if (p.anchor && document.getElementById(p.anchor)) {
+          requestAnimationFrame(function () {
+            var target = document.getElementById(p.anchor);
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+            flashAnchor(target);
+          });
+        }
+      }
+
+      function bindNavigationClicks() {
+        document.querySelector(".app-shell").addEventListener("click", function (e) {
+          if (e.target.closest(".js-no-nav")) return;
+          var t = e.target.closest("[data-go]");
+          if (!t) return;
+          var sheet = t.getAttribute("data-go");
+          var anchor = t.getAttribute("data-anchor");
+          if (!sheet || !/^sheet[123]$/.test(sheet)) return;
+          e.preventDefault();
+          goToSheet(sheet, anchor && anchor.length ? anchor : null);
+        });
+
+        document.querySelectorAll(".kpi--clickable, .card--chart-drill").forEach(function (el) {
+          el.addEventListener("keydown", function (e) {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              var sheet = el.getAttribute("data-go");
+              var anchor = el.getAttribute("data-anchor");
+              if (sheet && /^sheet[123]$/.test(sheet)) {
+                goToSheet(sheet, anchor && anchor.length ? anchor : null);
+              } else {
+                el.click();
+              }
+            }
+          });
+        });
+      }
+
+      tabs.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          showSheet(btn.getAttribute("data-sheet"));
+        });
+      });
+
+      window.addEventListener("hashchange", applyHashFromLocation);
+
+      bindNavigationClicks();
+      createCharts();
+      applyHashFromLocation();
+    })();
+  </script>
+</body>
+</html>

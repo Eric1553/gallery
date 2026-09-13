@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>知识库看板 - 盛美半导体研发运营看板</title>
+<link rel="stylesheet" href="assets/style.css?v=67">
+<link rel="stylesheet" href="assets/req-spec.css?v=67">
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+    <div class="brand">
+    <div class="brand-logo">ACM</div>
+    <h1>研发运营看板</h1>
+    <p>盛美半导体 · 演示原型 v4.4</p>
+  </div>
+  <nav class="nav">
+    <div class="nav-section">业务模块</div>
+    <a href="index.html" class="" data-page="index">总览</a>
+    <a href="hr.html" class="" data-page="hr">人力资源</a>
+    <a href="site-product.html" class="" data-page="site-product">Site 与产品</a>
+    <a href="case.html" class="" data-page="case">Case 追踪</a>
+    <a href="change.html" class="" data-page="change">变更管理</a>
+    <a href="wet-rd.html" class="" data-page="wet-rd">Wet-RD</a>
+    <a href="lingang.html" class="" data-page="lingang">临港研发线</a>
+    <a href="oa-monitor.html" class="" data-page="oa-monitor">OA 流程监控</a>
+    <a href="knowledge.html" class="active" data-page="knowledge">知识库<span class="nav-badge">预览</span></a>
+  </nav>
+  <div class="footer-note">演示数据，口径以业务确认为准</div>
+</aside>
+<main class="main">
+  <header class="topbar">
+    <div class="breadcrumb"><a href="index.html">总览</a><span class="sep">/</span><span class="current">知识库</span></div>
+    <div class="topbar-actions">
+                  <div class="topbar-period" data-period-mode="month">
+        <span>时间</span>
+    <select data-period-year aria-label="年份">
+      <option value="2025">2025 年</option>
+      <option value="2026" selected>2026 年</option>
+    </select>
+    <select data-period-month aria-label="月份">
+    <option value="all">全年</option>
+    <option value="01">1 月</option>
+    <option value="02">2 月</option>
+    <option value="03">3 月</option>
+    <option value="04">4 月</option>
+    <option value="05">5 月</option>
+    <option value="06" selected>6 月</option>
+    <option value="07">7 月</option>
+    <option value="08">8 月</option>
+    <option value="09">9 月</option>
+    <option value="10">10 月</option>
+    <option value="11">11 月</option>
+    <option value="12">12 月</option>
+    </select>
+      </div>
+      <span class="chip">演示预览</span>
+      <button class="btn" data-action="export"><span class="bi"></span>导出数据</button>
+      <a class="btn btn-primary" href="report.html">月度运营报告</a>
+    </div>
+  </header>
+  <div class="content">
+    <div class="page-header">
+      <div class="ph-titles"><h2>知识库看板</h2><p>知识地图 · Lesson Learn · OA 发布流程演示预览</p></div>
+      <div class="ph-actions"><button class="btn" data-action="req">需求说明</button></div>
+    </div>
+
+<div id="req-spec-data" data-title="知识库看板 · 需求说明" data-sub="数据来源方案评估中 · 当前为可演示演示预览" style="display:none">
+  <div class="req-list">
+    <div class="req-item"><div class="req-idx">1</div><div class="req-body2"><div class="req-item-t">知识地图</div><div class="req-item-d">按数量 / 类型 / 产品 / 组别 / Site / 学习人次；优先 OA 发布流程取数。</div></div></div>
+    <div class="req-item"><div class="req-idx">2</div><div class="req-body2"><div class="req-item-t">Lesson Learn</div><div class="req-item-d">按数量 / 按产品 / 按项目；与 Case 页 LL 入档指标口径待统一。</div></div></div>
+  </div>
+</div>
+
+<div class="alert-box info">
+  <strong>模块状态：演示预览</strong>&nbsp;&nbsp;底层取数方案仍待 IT 确认（弘毅导出加费 vs OA 发布流程）。下方用演示数据演示版式与下钻，<strong>尚未对接生产库</strong>。
+</div>
+
+<div class="kpi-grid fixed3">
+  <div class="kpi-card accent-blue"><div class="kpi-label">知识条目（演示数据）</div><div class="kpi-value">186</div><div class="kpi-sub">OA 发布流程模拟</div></div>
+  <div class="kpi-card accent-green"><div class="kpi-label">本月更新</div><div class="kpi-value">24</div></div>
+  <div class="kpi-card accent-purple"><div class="kpi-label">学习完成人次</div><div class="kpi-value">412</div></div>
+  <div class="kpi-card accent-amber"><div class="kpi-label">Lesson Learn</div><div class="kpi-value">58</div><div class="kpi-sub">可链 Case 入档</div></div>
+</div>
+
+<div class="panel">
+  <div class="panel-head"><h3>知识条目 vs Lesson Learn · 按产品</h3><span class="chip">演示数据</span><a class="link" href="case.html">Case 追踪 →</a></div>
+  <div class="panel-body"><div class="chart-wrap" data-group-bars='{"groups":[{"label":"湿法/CMP","values":[72,32]},{"label":"ECP","values":[48,12]},{"label":"Track","values":[36,8]},{"label":"其他","values":[30,6]}],"series":["知识条目","Lesson Learn"]}'></div>
+    <p class="chart-footnote">Lesson Learn 入档统计</p></div>
+</div>
+
+<div class="grid-2">
+  <div class="panel">
+    <div class="panel-head"><h3>按组别 · 学习人次</h3></div>
+    <div class="panel-body"><div class="chart-wrap" data-hbars='[{"l":"IC1 组","v":128,"c":"#2563eb"},{"l":"IC2 组","v":96,"c":"#4a7ab0"},{"l":"IC3 组","v":110,"c":"#5b7c99"},{"l":"IC4 组","v":78,"c":"#7c3aed"}]'></div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><h3>最近发布（演示数据）</h3><a class="link" href="#" data-action="export">导出 →</a></div>
+    <div class="panel-body flush">
+      <table>
+        <tr><th>标题</th><th>类型</th><th>产品</th><th>组别</th><th>发布日</th><th>明细</th></tr>
+        <tr><td>CMP 浆料切换 Lesson</td><td>LL</td><td>WET-CMP</td><td>IC1</td><td>2026-06-18</td><td><a class="table-link" data-action="drill" data-title="知识明细" data-cols="标题,类型,产品,Site,阅读人次,状态">查看</a></td></tr>
+        <tr><td>ECP 镀液维护 SOP</td><td>SOP</td><td>ECP</td><td>IC3</td><td>2026-06-12</td><td><a class="table-link" data-action="drill" data-title="知识明细" data-cols="标题,类型,产品,Site,阅读人次,状态">查看</a></td></tr>
+        <tr><td>Track 涂胶缺陷案例</td><td>LL</td><td>Track</td><td>IC2</td><td>2026-06-05</td><td><a class="table-link" data-action="drill" data-title="知识明细" data-cols="标题,类型,产品,Site,阅读人次,状态">查看</a></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-head"><h3>接入状态</h3></div>
+  <div class="panel-body">
+    <table>
+      <tr><th>需求</th><th>分析维度</th><th>数据来源方案</th><th>状态</th></tr>
+      <tr><td>知识地图</td><td>按数量 / 类型 / 产品 / 组别 / Site / 学习人次</td><td>OA 发布流程（优先）</td><td><span class="tag tag-open">演示预览</span></td></tr>
+      <tr><td>Lesson Learn</td><td>按数量 / 按产品 / 按项目</td><td>OA / Case 流程</td><td><span class="tag tag-open">演示预览</span></td></tr>
+      <tr><td>生产取数</td><td>—</td><td>IT 确认（弘毅 vs OA）</td><td><span class="tag tag-warn">待确认</span></td></tr>
+    </table>
+  </div>
+</div>
+  </div>
+</main>
+</div>
+<script src="assets/charts.js?v=67"></script>
+<script src="assets/app.js?v=67"></script>
+<script>setActiveNav('knowledge');</script>
+
+<script
+  src="http://120.55.184.234:8787/embed.js?v=20260801acme4"
+  data-demo-id="acme-rd"
+  data-mode="basic"
+  data-api="http://120.55.184.234:8787"
+  async defer></script>
+
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 追踪看板 - 盛美半导体研发运营看板</title>
+<link rel="stylesheet" href="assets/style.css?v=67">
+<link rel="stylesheet" href="assets/req-spec.css?v=67">
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+    <div class="brand">
+    <div class="brand-logo">ACM</div>
+    <h1>研发运营看板</h1>
+    <p>盛美半导体 · 演示原型 v4.4</p>
+  </div>
+  <nav class="nav">
+    <div class="nav-section">业务模块</div>
+    <a href="index.html" class="" data-page="index">总览</a>
+    <a href="hr.html" class="" data-page="hr">人力资源</a>
+    <a href="site-product.html" class="" data-page="site-product">Site 与产品</a>
+    <a href="case.html" class="active" data-page="case">Case 追踪</a>
+    <a href="change.html" class="" data-page="change">变更管理</a>
+    <a href="wet-rd.html" class="" data-page="wet-rd">Wet-RD</a>
+    <a href="lingang.html" class="" data-page="lingang">临港研发线</a>
+    <a href="oa-monitor.html" class="" data-page="oa-monitor">OA 流程监控</a>
+    <a href="knowledge.html" class="" data-page="knowledge">知识库<span class="nav-badge">预览</span></a>
+  </nav>
+  <div class="footer-note">演示数据，口径以业务确认为准</div>
+</aside>
+<main class="main">
+  <header class="topbar">
+    <div class="breadcrumb"><a href="index.html">总览</a><span class="sep">/</span><span class="current">Case追踪</span></div>
+    <div class="topbar-actions">
+                  <div class="topbar-period" data-period-mode="month">
+        <span>时间</span>
+    <select data-period-year aria-label="年份">
+      <option value="2025">2025 年</option>
+      <option value="2026" selected>2026 年</option>
+    </select>
+    <select data-period-month aria-label="月份">
+    <option value="all">全年</option>
+    <option value="01">1 月</option>
+    <option value="02">2 月</option>
+    <option value="03">3 月</option>
+    <option value="04">4 月</option>
+    <option value="05">5 月</option>
+    <option value="06" selected>6 月</option>
+    <option value="07">7 月</option>
+    <option value="08">8 月</option>
+    <option value="09">9 月</option>
+    <option value="10">10 月</option>
+    <option value="11">11 月</option>
+    <option value="12">12 月</option>
+    </select>
+      </div>
+      <span class="chip">演示数据</span>
+      <button class="btn" data-action="export"><span class="bi"></span>导出数据</button>
+      <a class="btn btn-primary" href="report.html">月度运营报告</a>
+    </div>
+  </header>
+  <div class="content">
+    <div class="page-header">
+      <div class="ph-titles"><h2>Case 追踪看板</h2><p>进度 · Defect · 机型分析 · 耗时监控</p></div>
+      <div class="ph-actions"><button class="btn" data-action="req">需求说明</button></div>
+    </div>
+    
+    
+
+<div id="req-spec-data" data-title="Case 追踪看板 · 需求说明" data-sub="对应客户原始需求（ACM Product Case 追踪机制）" style="display:none">
+  <div class="req-list">
+    <div class="req-item"><div class="req-idx">1</div><div class="req-body2"><div class="req-item-t">Case 进度与明细</div><div class="req-item-d">按产品 / 按Site 分析 Case 已有流程数量、归档数量；统计产品经理判断 Case 已 已关闭 的数量及占总流程比例（以 Issue Status 产品字段为准）；明细含项目号、Site、产品类别、Defect、耗时。产品类别按历史与新字段统一映射取全。</div></div></div>
+    <div class="req-item"><div class="req-idx">2</div><div class="req-body2"><div class="req-item-t">机型 Top / Bottom</div><div class="req-item-d">HL 出 已关闭 数量最多和最少的机型（按产品经理判断的 已关闭 状态为准，含海外）；同时统计归档最多 / 最少机型。</div></div></div>
+    <div class="req-item"><div class="req-idx">3</div><div class="req-body2"><div class="req-item-t">Defect Library / Lesson Learn</div><div class="req-item-d">Defect Library 按产品类别 / Site / Defect 类型分类分析 Case 数量与完成率；统计 Lesson Learn 入档数量（一个流程有文件算 1 次）。</div></div></div>
+    <div class="req-item"><div class="req-idx">4</div><div class="req-body2"><div class="req-item-t">耗时与异常监控</div><div class="req-item-d">实时监控流程状态，统计 Case 从发起到结束的全流程耗时，HL 出耗时较长的流程并做原因分析。</div></div></div>
+    <div class="req-item"><div class="req-idx">+</div><div class="req-body2"><div class="req-item-t">补充需求</div><div class="req-item-d">增加入档率低于 50% 的产品类别预警，以及入档率与产品经理判断 已关闭 率 GAP 大于 10% 的产品类型预警。</div></div></div>
+  </div>
+</div>
+<div class="filter-bar">
+  <div class="filter-group"><label>Site</label><select><option>全部</option><option>TSMC</option><option>SMIC</option></select></div>
+  <div class="filter-group"><label>产品类别</label><select><option>全部</option><option>WET</option><option>ECP</option></select></div>
+  <div class="filter-group"><label>Issue Status</label><select><option>全部</option><option>已关闭 (1)</option><option>进行中 (0)</option></select></div>
+  <button class="btn-apply" type="button">应用</button>
+</div>
+
+<div class="kpi-grid fixed3">
+  <div class="kpi-card accent-blue"><div class="kpi-top"><div class="kpi-label">Case 流程总数</div></div><div class="kpi-value">156</div></div>
+  <div class="kpi-card accent-green"><div class="kpi-top"><div class="kpi-label">已归档 (已关闭)</div></div><div class="kpi-value">109</div><div class="kpi-sub">归档率 69.9%</div></div>
+  <div class="kpi-card accent-amber"><div class="kpi-top"><div class="kpi-label">未归档 (进行中)</div></div><div class="kpi-value">47</div></div>
+  <div class="kpi-card"><div class="kpi-top"><div class="kpi-label">PM 判断可关闭</div></div><div class="kpi-value">23</div><div class="kpi-sub">占总流程 14.7%</div></div>
+  <div class="kpi-card accent-purple"><div class="kpi-top"><div class="kpi-label">Lesson Learn 入档</div></div><div class="kpi-value">34</div><div class="kpi-sub">一流程有文件算 1 次</div></div>
+</div>
+
+<div class="panel">
+  <div class="panel-head"><div class="panel-head-left"><h3>Case 进度汇总</h3></div>
+    <div class="segmented" data-panel-seg="case-progress"><button class="active" data-panel-view="product">按产品类别</button><button data-panel-view="site">按Site</button></div>
+  </div>
+  <div class="panel-body" data-panel-group="case-progress" data-panel-view="product">
+    <div class="chart-wrap" data-group-bars='{"groups":[{"label":"WET-CMP","values":[42,31,8]},{"label":"WET-Clean","values":[28,18,6]},{"label":"ECP","values":[24,16,5]},{"label":"Track","values":[18,12,4]}],"series":["流程数","已归档","PM 可关闭"]}'></div>
+  </div>
+  <div class="panel-body" data-panel-group="case-progress" data-panel-view="site" style="display:none">
+    <div class="chart-wrap" data-group-bars='{"groups":[{"label":"TSMC","values":[38,28,8]},{"label":"SMIC","values":[26,19,6]},{"label":"Intel","values":[22,15,5]},{"label":"Samsung","values":[18,12,4]}],"series":["流程数","已归档","PM 可关闭"]}'></div>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-head"><div class="panel-head-left"><h3>Defect 类型 · 数量 vs 已完成</h3></div><span class="chip">完成率见柱顶对比</span></div>
+  <div class="panel-body"><div class="chart-wrap" data-group-bars='{"groups":[{"label":"Pattern","values":[44,32]},{"label":"Particle","values":[31,25]},{"label":"Process","values":[37,23]},{"label":"Other","values":[44,34]}],"series":["Case数","已完成"]}'></div>
+    <p class="chart-footnote">完成率 Pattern 74%｜Particle 82%｜Process 61%｜Other 78%</p></div>
+</div>
+
+<div class="grid-2">
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>已关闭 最多 / 最少机型</h3></div><span class="chip">含海外 · PM 判断 已关闭</span></div>
+    <div class="panel-body">
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;font-weight:600">已关闭数量最高 3 个</p>
+      <ul class="rank-list">
+        <li class="rank-item"><span class="rank-num top">1</span><span class="rank-label">WET-300mm-A</span><div class="rank-bar"><div class="rank-bar-fill" style="width:100%"></div></div><span class="rank-val">18</span></li>
+        <li class="rank-item"><span class="rank-num top">2</span><span class="rank-label">ECP-200mm-B</span><div class="rank-bar"><div class="rank-bar-fill" style="width:78%"></div></div><span class="rank-val">14</span></li>
+        <li class="rank-item"><span class="rank-num top">3</span><span class="rank-label">Track-C (海外)</span><div class="rank-bar"><div class="rank-bar-fill" style="width:61%"></div></div><span class="rank-val">11</span></li>
+      </ul>
+      <p class="chart-footnote" style="text-align:left;margin:16px 0 12px;font-weight:600">已关闭数量最低 3 个</p>
+      <ul class="rank-list">
+        <li class="rank-item"><span class="rank-num">1</span><span class="rank-label">WET-150mm-X</span><span class="rank-val">1</span></li>
+        <li class="rank-item"><span class="rank-num">2</span><span class="rank-label">ECP-300mm-Y</span><span class="rank-val">2</span></li>
+        <li class="rank-item"><span class="rank-num">3</span><span class="rank-label">Track-D (海外)</span><span class="rank-val">2</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>归档最多 / 最少机型</h3></div><span class="chip">已归档 已关闭</span></div>
+    <div class="panel-body">
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;font-weight:600">归档数量最高 3 个</p>
+      <ul class="rank-list">
+        <li class="rank-item"><span class="rank-num top">1</span><span class="rank-label">WET-300mm-A</span><div class="rank-bar"><div class="rank-bar-fill" style="width:100%"></div></div><span class="rank-val">22</span></li>
+        <li class="rank-item"><span class="rank-num top">2</span><span class="rank-label">ECP-200mm-B</span><div class="rank-bar"><div class="rank-bar-fill" style="width:82%"></div></div><span class="rank-val">18</span></li>
+        <li class="rank-item"><span class="rank-num top">3</span><span class="rank-label">WET-Clean-C</span><div class="rank-bar"><div class="rank-bar-fill" style="width:68%"></div></div><span class="rank-val">15</span></li>
+      </ul>
+      <p class="chart-footnote" style="text-align:left;margin:16px 0 12px;font-weight:600">归档数量最低 3 个</p>
+      <ul class="rank-list">
+        <li class="rank-item"><span class="rank-num">1</span><span class="rank-label">WET-150mm-X</span><span class="rank-val">2</span></li>
+        <li class="rank-item"><span class="rank-num">2</span><span class="rank-label">Track-D (海外)</span><span class="rank-val">3</span></li>
+        <li class="rank-item"><span class="rank-num">3</span><span class="rank-label">ECP-300mm-Y</span><span class="rank-val">4</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>Defect Library · 按Site</h3></div></div>
+    <div class="panel-body"><div class="chart-wrap" data-group-bars='{"groups":[{"label":"TSMC","values":[18,14,12]},{"label":"SMIC","values":[12,10,8]},{"label":"Intel","values":[10,8,6]},{"label":"Samsung","values":[8,6,5]}],"series":["Pattern","Process","Particle"]}'></div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>Lesson Learn 入档 (按产品 / 项目)</h3></div></div>
+    <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"湿法产品","v":12},{"l":"湿法化学","v":9},{"l":"ECP","v":7},{"l":"Track","v":6}]'></div>
+      <p class="chart-footnote">有附件计 1 次，累计入档 34</p>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>入档率偏低产品类别 (＜50%)</h3><span class="tag tag-warn">风险预警</span></div></div>
+    <div class="panel-body flush">
+      <table>
+        <tr><th>产品类别</th><th>应入档</th><th>已入档</th><th>入档率</th><th>状态</th></tr>
+        <tr class="highlight-row"><td>ECP-300mm</td><td>24</td><td>9</td><td>38%</td><td><span class="tag tag-warn">偏低</span></td></tr>
+        <tr class="highlight-row"><td>Track-海外</td><td>18</td><td>8</td><td>44%</td><td><span class="tag tag-warn">偏低</span></td></tr>
+        <tr class="highlight-row"><td>WET-150mm</td><td>15</td><td>7</td><td>47%</td><td><span class="tag tag-warn">偏低</span></td></tr>
+        <tr><td>WET-Clean</td><td>32</td><td>17</td><td>53%</td><td><span class="tag tag-open">临界</span></td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>入档率 vs PM 已关闭 率 GAP＞10%</h3><span class="tag tag-warn">风险预警</span></div></div>
+    <div class="panel-body flush">
+      <table>
+        <tr><th>产品类型</th><th>PM 判断 已关闭 率</th><th>实际入档率</th><th>GAP</th><th>状态</th></tr>
+        <tr class="highlight-row"><td>ECP-300mm</td><td>72%</td><td>38%</td><td>34pp</td><td><span class="tag tag-warn">超标</span></td></tr>
+        <tr class="highlight-row"><td>Track-海外</td><td>68%</td><td>44%</td><td>24pp</td><td><span class="tag tag-warn">超标</span></td></tr>
+        <tr class="highlight-row"><td>WET-CMP</td><td>85%</td><td>71%</td><td>14pp</td><td><span class="tag tag-warn">超标</span></td></tr>
+        <tr><td>WET-Clean</td><td>61%</td><td>53%</td><td>8pp</td><td><span class="tag tag-close">正常</span></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="alert-box">入档率＜50% 与「入档率↔PM 已关闭 率 GAP＞10%」的产品类型自动标红 · 反映"判断可 已关闭 但实际未及时入档"的管理缺口</div>
+
+<div class="panel">
+  <div class="panel-head"><h3>Case 流程明细</h3><a class="link" href="#" data-action="export">导出 →</a></div>
+  <div class="panel-body flush">
+    <table>
+      <tr><th>项目号</th><th>Site</th><th>产品类别</th><th>Defect类型</th><th>Issue Status</th><th>耗时(天)</th><th>状态</th></tr>
+      <tr><td>P-2026-0142</td><td>TSMC</td><td>WET-CMP</td><td>Pattern</td><td><span class="tag tag-close">已关闭</span></td><td>12</td><td>已归档</td></tr>
+      <tr class="highlight-row"><td>P-2026-0201</td><td>Intel</td><td>ECP</td><td>Process</td><td><span class="tag tag-open">进行中</span></td><td>45</td><td>进行中</td></tr>
+      <tr><td>P-2025-0887</td><td>SMIC</td><td>Track</td><td>Particle</td><td><span class="tag tag-close">已关闭</span></td><td>8</td><td>已归档</td></tr>
+      <tr><td>P-2026-0098</td><td>TSMC</td><td>WET-Clean</td><td>Other</td><td><span class="tag tag-open">进行中</span></td><td>32</td><td>PM 可关闭</td></tr>
+    </table>
+  </div>
+</div>
+<div class="panel">
+  <div class="panel-head"><div class="panel-head-left"><h3>耗时较长异常流程 HL</h3></div></div>
+  <div class="panel-body flush">
+    <table>
+      <tr><th>流程编号</th><th>项目号</th><th>耗时(天)</th><th>当前节点</th><th>原因摘要</th><th>操作</th></tr>
+      <tr class="highlight-row"><td>CASE-2026-089</td><td>P-2026-0201</td><td>45</td><td>产品验证</td><td>Defect复现待客户确认</td><td><a class="table-link" href="#" data-action="drill">查看</a></td></tr>
+      <tr class="highlight-row"><td>CASE-2026-076</td><td>P-2026-0098</td><td>32</td><td>PM评审</td><td>Issue Status待更新</td><td><a class="table-link" href="#" data-action="drill">查看</a></td></tr>
+      <tr><td>CASE-2025-412</td><td>P-2025-0887</td><td>28</td><td>归档中</td><td>Lesson Learn待上传</td><td><a class="table-link" href="#" data-action="drill">查看</a></td></tr>
+    </table>
+  </div>
+</div>
+<div class="alert-box info">产品类别口径：历史字段与新字段统一映射、两字段合并取全，确保分类完整一致</div>
+  </div>
+</main>
+</div>
+<script src="assets/charts.js?v=67"></script>
+<script src="assets/app.js?v=67"></script>
+<script>setActiveNav('case');</script>
+
+<script
+  src="http://120.55.184.234:8787/embed.js?v=20260801acme4"
+  data-demo-id="acme-rd"
+  data-mode="basic"
+  data-api="http://120.55.184.234:8787"
+  async defer></script>
+
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>收入专题分析 | 财经驾驶舱</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="assets/js/echarts.min.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <div class="logo-area">
+      <div class="logo-mark">SMIC</div>
+      <div class="logo-text"><h1>财经驾驶舱</h1><span>收入 · L2 经营成效</span></div>
+    </div>
+    <nav class="header-nav">
+      <a href="index.html" data-page="overview">总览</a>
+      <a href="revenue.html" data-page="revenue" class="active">收入专题</a>
+      <a href="cost.html" data-page="cost">成本专题</a>
+      <a href="profit.html" data-page="profit">盈利效率</a>
+      <a href="dupont-site.html" data-page="dupont">杜邦分析</a>
+    </nav>
+    <div class="header-meta"><span class="badge-proto">HTML 原型</span></div>
+  </header>
+
+  <div class="app-body">
+    <aside class="sidebar"></aside>
+
+    <main class="main-content">
+      <div class="page-toolbar">
+        <div class="toolbar-head">
+          <div class="page-title">收入达成分析<span class="level-tag">L2 经营成效</span></div>
+          <div class="page-desc">数据来源 BOSS · 含月度/季度 × 实际/预测版本 · 弹窗钻取 · 客户联动出货量/单价</div>
+        </div>
+        <div class="toolbar-controls">
+          <div class="tab-bar" id="main-tabs">
+            <button class="tab-btn active" data-tab="panel-overview">收入总览</button>
+            <button class="tab-btn" data-tab="panel-wafer">晶圆收入</button>
+          </div>
+          <div class="toolbar-divider"></div>
+          <div class="seg-group" data-tab-group="version">
+            <span class="seg-label">版本</span>
+            <button class="sub-tab-btn active" data-value="actual">实际</button>
+            <button class="sub-tab-btn" data-value="forecast">预测</button>
+          </div>
+          <div class="seg-group" data-tab-group="period">
+            <span class="seg-label">周期</span>
+            <button class="sub-tab-btn active" data-value="month">月度</button>
+            <button class="sub-tab-btn" data-value="quarter">季度</button>
+          </div>
+        </div>
+        <div class="filter-bar" id="filter-bar"></div>
+      </div>
+
+      <!-- 收入总览 -->
+      <div data-panel="panel-overview" id="panel-overview">
+        <div class="kpi-row" id="kpi-overview"></div>
+        <div class="panel-grid">
+          <div class="panel col-4">
+            <div class="panel-header">
+              <span class="panel-title">销售收入分业务</span>
+              <div class="panel-actions"><button class="panel-action" onclick="Cockpit.drillDetail('销售收入分业务','业务类型')">跳转明细 ↗</button></div>
+            </div>
+            <div class="panel-body"><div class="chart-box sm" id="chart-biz"></div></div>
+          </div>
+          <div class="panel col-4">
+            <div class="panel-header">
+              <span class="panel-title">销售收入分应用</span>
+              <div class="panel-actions"><button class="panel-action" onclick="Cockpit.drillDetail('销售收入分应用','应用')">跳转明细 ↗</button></div>
+            </div>
+            <div class="panel-body"><div class="chart-box sm" id="chart-app"></div></div>
+          </div>
+          <div class="panel col-4">
+            <div class="panel-header">
+              <span class="panel-title">销售收入分区域</span>
+              <div class="panel-actions"><button class="panel-action" onclick="Cockpit.drillDetail('销售收入分区域','地区')">跳转明细 ↗</button></div>
+            </div>
+            <div class="panel-body"><div class="chart-box sm" id="chart-region"></div></div>
+          </div>
+          <div class="panel col-7">
+            <div class="panel-header"><span class="panel-title">收入对比趋势（结束月前 11 个月 + 实际/环比）</span></div>
+            <div class="panel-body"><div class="chart-box" id="chart-trend"></div></div>
+          </div>
+          <div class="panel col-5">
+            <div class="panel-header"><span class="panel-title">TOP20 客户 · 圆环图</span></div>
+            <div class="panel-body"><div class="chart-box" id="chart-top-pie"></div></div>
+          </div>
+          <div class="panel col-12">
+            <div class="panel-header"><span class="panel-title">TOP20 客户明细（区间模式下上期为等长前移）</span></div>
+            <div class="panel-body">
+              <table class="data-table table-fixed" id="top-table">
+                <thead><tr><th class="num-int">排名</th><th>客户</th><th class="text-right col-num">本期(亿)</th><th class="text-right col-num">上期(亿)</th><th class="text-right col-num">环比</th><th class="text-right col-num">占比</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 晶圆收入 -->
+      <div data-panel="panel-wafer" id="panel-wafer" style="display:none">
+        <div class="kpi-row" id="kpi-wafer"></div>
+        <div class="panel-grid">
+          <div class="panel col-4">
+            <div class="panel-header"><span class="panel-title">分工艺</span><button class="panel-action" onclick="Cockpit.drillDetail('晶圆收入分工艺','工艺')">明细 ↗</button></div>
+            <div class="panel-body"><div class="chart-box sm" id="chart-process"></div></div>
+          </div>
+          <div class="panel col-4">
+            <div class="panel-header"><span class="panel-title">分技术平台</span><button class="panel-action" onclick="Cockpit.drillDetail('晶圆收入分技术平台','技术平台')">明细 ↗</button></div>
+            <div class="panel-body"><div class="chart-box sm" id="chart-platform"></div></div>
+          </div>
+          <div class="panel col-4">
+            <div class="panel-header"><span class="panel-title">分应用 / 区域 / 节点</span><button class="panel-action" onclick="Cockpit.drillDetail('晶圆收入分区域','地区')">明细 ↗</button></div>
+            <div class="panel-body"><div class="chart-box sm" id="chart-wafer-region"></div></div>
+          </div>
+          <div class="panel col-12" data-forecast-only>
+            <div class="panel-header">
+              <span class="panel-title">晶圆收入对比预测（实际实柱 + 预测虚线 · 版本切换）</span>
+              <div class="panel-actions">
+                <select id="forecast-version" class="panel-select">
+                  <option>2025-Forecast-V2</option><option>2025-Forecast-V1</option>
+                </select>
+              </div>
+            </div>
+            <div class="panel-body"><div class="chart-box lg" id="chart-wafer-forecast"></div></div>
+          </div>
+          <div class="panel col-6" data-forecast-only>
+            <div class="panel-header"><span class="panel-title">出货量对比预测</span></div>
+            <div class="panel-body"><div class="chart-box sm" id="chart-qty-forecast"></div></div>
+          </div>
+          <div class="panel col-6" data-forecast-only>
+            <div class="panel-header"><span class="panel-title">单价对比预测</span></div>
+            <div class="panel-body"><div class="chart-box sm" id="chart-price-forecast"></div></div>
+          </div>
+          <div class="panel col-4">
+            <div class="panel-header"><span class="panel-title">分技术节点</span><button class="panel-action" onclick="Cockpit.drillDetail('晶圆收入分技术节点','技术节点')">明细 ↗</button></div>
+            <div class="panel-body"><div class="chart-box sm" id="chart-wafer-node"></div></div>
+          </div>
+          <div class="panel col-6">
+            <div class="panel-header"><span class="panel-title">晶圆 TOP20 客户（点击联动下方图表）</span></div>
+            <div class="panel-body">
+              <table class="data-table table-fixed" id="wafer-customer-table">
+                <thead><tr><th class="num-int">排名</th><th>客户</th><th class="text-right col-num">收入(亿)</th><th class="text-right col-num">占比</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="panel col-6">
+            <div class="panel-header"><span class="panel-title">客户联动 · 出货量 & 单价趋势 <span id="linked-customer" style="color:var(--accent)">—</span></span></div>
+            <div class="panel-body"><div class="chart-box" id="chart-linked"></div></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="assets/js/mock-data.js"></script>
+  <script src="assets/js/levels.js"></script>
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/charts.js"></script>
+  <script>
+    function toggleForecastPanels(show) {
+      document.querySelectorAll('[data-forecast-only]').forEach(el => {
+        el.style.display = show ? '' : 'none';
+      });
+    }
+
+    function initOverviewCharts(mode) {
+      const isForecast = mode === 'forecast';
+      Charts.bar(document.getElementById('chart-biz'), MockData.revenueByBusiness.map(d => d.name),
+        [{ name: '收入(亿)', data: MockData.revenueByBusiness.map(d => d.value), color: '#1890ff' }],
+        { onClick: () => Cockpit.drillDetail('销售收入分业务', '业务') });
+      Charts.pie(document.getElementById('chart-app'), MockData.revenueByApp);
+      Charts.pie(document.getElementById('chart-region'), MockData.revenueByRegion, { donut: true });
+      if (isForecast) {
+        Charts.comboTrend(document.getElementById('chart-trend'), MockData.months.concat(['2026-01', '2026-02']), 9);
+      } else {
+        Charts.line(document.getElementById('chart-trend'), MockData.months, [
+          { name: '实际收入', data: MockData.trendActual, color: '#1890ff', area: true },
+          { name: '目标收入', data: MockData.trendTarget, color: '#91caff', dashed: true }
+        ]);
+      }
+      Charts.pie(document.getElementById('chart-top-pie'), MockData.topCustomers.slice(0, 6).map(c => ({ name: c.name, value: c.value })), { donut: true });
+    }
+
+    function initWaferCharts() {
+      if (document.getElementById('panel-wafer').style.display === 'none') return;
+      Charts.bar(document.getElementById('chart-process'), MockData.waferByProcess.map(d => d.name),
+        [{ name: '收入(亿)', data: MockData.waferByProcess.map(d => d.value), color: '#005293' }],
+        { onClick: p => Cockpit.drillDetail('晶圆收入分工艺', p.name) });
+      Charts.pie(document.getElementById('chart-platform'), MockData.waferByPlatform);
+      Charts.pie(document.getElementById('chart-wafer-region'), MockData.revenueByRegion, { donut: true });
+      Charts.bar(document.getElementById('chart-wafer-node'), ['7nm', '14nm', '28nm', '40nm', '55nm'],
+        [{ name: '收入(亿)', data: [8.2, 6.5, 5.1, 3.2, 2.5], color: '#1a6cb3' }]);
+      const forecastMonths = MockData.months.concat(['2026-01', '2026-02', '2026-03']);
+      Charts.comboTrend(document.getElementById('chart-wafer-forecast'), forecastMonths, 9);
+      Charts.comboTrend(document.getElementById('chart-qty-forecast'), forecastMonths.slice(0, 14), 9);
+      Charts.comboTrend(document.getElementById('chart-price-forecast'), forecastMonths.slice(0, 14), 9);
+
+      const tbody = document.querySelector('#wafer-customer-table tbody');
+      Cockpit.renderCustomerTable(tbody, MockData.topCustomers.slice(0, 8), { clickable: true, linkName: true, ratioOnly: true });
+      tbody.querySelectorAll('tr').forEach(tr => {
+        tr.addEventListener('click', () => {
+          tbody.querySelectorAll('tr').forEach(r => r.classList.remove('selected'));
+          tr.classList.add('selected');
+          document.getElementById('linked-customer').textContent = tr.dataset.name;
+          const rank = Number(tr.dataset.rank) || 1;
+          Charts.line(document.getElementById('chart-linked'), ['03', '04', '05', '06', '07', '08'], [
+            { name: '出货量(万片)', data: [28, 30, 32, 31, 33, 35].map(v => v + rank), color: '#1890ff', type: 'bar' },
+            { name: '单价(元/片)', data: [1420, 1435, 1410, 1445, 1430, 1455].map(v => v + rank * 5), color: '#52c41a', dashed: true }
+          ], { boundaryGap: true });
+          Cockpit.showStatus(`客户联动：${tr.dataset.name} → 出货量 / 单价趋势已更新`);
+          Charts.resizeAll();
+        });
+      });
+      tbody.querySelector('tr')?.click();
+    }
+
+    boot(function () {
+      const sidebarPage = location.hash === '#wafer' ? 'rev-wafer' : location.hash === '#overview' ? 'rev-overview' : 'revenue';
+      Cockpit.initNav('revenue', { sidebarPage });
+      Cockpit.renderFilterBar(document.getElementById('filter-bar'), { showProcess: true });
+      Cockpit.renderKpis(document.getElementById('kpi-overview'), MockData.revenueKpis);
+      Cockpit.renderKpis(document.getElementById('kpi-wafer'), MockData.waferKpis);
+      Cockpit.bindTabs('#main-tabs', tab => {
+        if (tab === 'panel-wafer') initWaferCharts();
+        const page = tab === 'panel-wafer' ? 'rev-wafer' : 'rev-overview';
+        Cockpit.renderSidebar(page);
+      });
+
+      initOverviewCharts('actual');
+      toggleForecastPanels(false);
+      Cockpit.renderCustomerTable(document.querySelector('#top-table tbody'), MockData.topCustomers, { showPrev: true, showMom: true });
+
+      document.addEventListener('cockpit:subtab', e => {
+        if (e.detail.group === 'version') {
+          const forecast = e.detail.value === 'forecast';
+          toggleForecastPanels(forecast);
+          initOverviewCharts(forecast ? 'forecast' : 'actual');
+          if (document.getElementById('panel-wafer').style.display !== 'none') initWaferCharts();
+        }
+      });
+
+      document.getElementById('forecast-version')?.addEventListener('change', e => {
+        Cockpit.showStatus(`预测版本已切换：${e.target.value}`);
+        initWaferCharts();
+      });
+
+      if (location.hash === '#wafer') document.querySelector('[data-tab="panel-wafer"]').click();
+      else if (location.hash === '#overview') document.querySelector('[data-tab="panel-overview"]').click();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>离子注入技术深度 — 半导体知识库</title>
+<meta name="description" content="# 离子注入（Ion Implantation）：掺杂工艺的核心技术与设备格局  ## 离子注入：半导体制造的"精密调色师" - 如果把半导体制造比作建筑，掺杂就是给每一层赋予"电学性格"——决定某块区域是导电的（N型/P型）还是不导电的。离子注入是当代半导体掺杂的绝对主流技术，替代了早期的热扩散法">
+<link rel="stylesheet" href="/kb/assets/style.css">
+</head>
+<body>
+<div class="top-accent"></div>
+<header class="page-header">
+  <a href="/kb/首页.html" class="home-link">🔬 半导体知识库</a>
+</header>
+<main class="container">
+<nav class="breadcrumb"><a href="/kb/首页.html">半导体知识库</a> <span class="sep">›</span> <a href="/kb//01-晶圆制造/index.html">01-晶圆制造</a> <span class="sep">›</span> <a href="/kb//01-晶圆制造/行业动态/index.html">行业动态</a></nav>
+<article class="note">
+<header class="note-header">
+  <h1>离子注入技术深度</h1>
+  <div class="meta-line"><span class="meta-item">📅 2026-07-09</span> · <span class="meta-item">📂 01-晶圆制造</span> · <span class="meta-item" style="color:#059669">⭐ high</span> · <span class="meta-item">🏷️ <span class="tag">晶圆制造</span> <span class="tag">离子注入</span> <span class="tag">掺杂工艺</span> <span class="tag">设备</span> <span class="tag">技术深潜</span></span></div>
+</header>
+<div class="note-body">
+<h1 id="ion-implantation">离子注入（Ion Implantation）：掺杂工艺的核心技术与设备格局</h1>
+<h2 id="_1">离子注入：半导体制造的"精密调色师"</h2>
+<ul>
+<li>如果把半导体制造比作建筑，掺杂就是给每一层赋予"电学性格"——决定某块区域是导电的（N型/P型）还是不导电的。离子注入是当代半导体掺杂的绝对主流技术，替代了早期的热扩散法，因为它提供了三个热扩散不可能做到的能力：<strong>精确的剂量控制、可调的注入深度、以及极高的均匀性</strong>。</li>
+<li>一座先进逻辑晶圆厂在制造一片3nm晶圆的过程中，需要进行<strong>60-80步离子注入</strong>（阱注入、阈值电压调节、源漏注入、轻掺杂漏极LDD、口袋注入Pocket Implant、深埋层等）。注入设备占设备总投资的~5%，是光刻、刻蚀、沉积之外的第四大设备品类。</li>
+</ul>
+<h3 id="_2">为什么不能用热扩散</h3>
+<ul>
+<li>在1970年代之前，半导体掺杂用的是高温扩散炉（把晶圆放进含硼/磷的气体中加热到1000°C以上，杂质原子从表面向体内扩散）。热扩散的问题：</li>
+<li>
+<ul>
+<li>剂量不可控：扩散浓度从表面到内部呈指数衰减，无法实现精确的浓度控制</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>横向扩散严重：杂质向各个方向扩散，无法实现陡峭的掺杂边界（这在FinFET时代是致命的——Fin的宽度只有5-7nm，横向扩散会毁掉整个器件）</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>无法实现复杂掺杂轮廓：现代器件需要"埋层"（Buried Layer）——在表面以下某个深度形成高浓度掺杂区，扩散做不到，注入可以</li>
+</ul>
+</li>
+</ul>
+<h2 id="_3">离子注入的五大工艺环节</h2>
+<ul>
+<li>离子注入机的核心工作流程可以理解为"一台精度达到原子级别的质谱仪 + 粒子加速器"：</li>
+</ul>
+<p><strong>① 离子源（Ion Source）</strong>
+- 将掺杂气体（如BF₃产生B⁺、PH₃产生P⁺、AsH₃产生As⁺）在高温电弧或射频等离子体中电离，产生所需元素的离子。离子源决定了注入机的束流大小和离子种类范围。主流技术：
+- - <strong>Bernas源</strong>（热阴极电弧）：最常见的离子源，产生高束流（可达数十mA），适用于高剂量注入（源漏、阱）
+- - <strong>RF源</strong>（射频等离子体）：寿命更长、维护更少，适用于中等束流场景</p>
+<p><strong>② 质量分析器（Mass Analyzer）</strong>
+- 离子源产生的并非纯净的单一离子——BF₃电离后会产生B⁺、BF₂⁺、F⁺等多种离子。质量分析器是一个<strong>分析磁铁</strong>（Analyzing Magnet），利用洛伦兹力将不同质荷比的离子偏转到不同角度。通过精确的设计，<strong>只有目标离子（如B⁺）能通过分析狭缝进入后续加速段</strong>，其他离子被阻挡。
+- 这个环节决定了注入的"纯度"——如果有BF₂⁺混入，注入能量会变成B⁺的11/49，深度会发生巨大偏差。</p>
+<p><strong>③ 加速管（Acceleration Tube）</strong>
+- 纯净的目标离子经过高压电场加速到所需能量。关键参数：
+- - <strong>低能注入（0.2-10 keV）</strong>：超浅结（USJ），用于FinFET源漏延伸区和LDD
+- - <strong>中能注入（10-200 keV）</strong>：阱注入、阈值电压调节
+- - <strong>高能注入（200 keV - 3 MeV+）</strong>：深埋层、三重阱（Triple Well）、SIMOX（注氧隔离形成SOI结构）
+- 能量精确控制是注入机的核心性能指标之一。能量偏差会导致注入深度的系统性漂移，直接改变器件特性。</p>
+<p><strong>④ 扫描系统（Scan System）</strong>
+- 离子束直径通常只有几毫米到几厘米，而晶圆直径是300mm。需要用磁场或电场将束斑扫过整个晶圆表面，实现剂量均匀性（通常要求&lt;1% σ）。主流扫描方式：
+- - <strong>批量式（Batch）</strong>：多片晶圆放在一个旋转圆盘上，束斑固定，圆盘旋转+往复运动实现扫过（高产能、成本低，但可能有颗粒污染和均匀性略差）
+- - <strong>单晶圆式（Single-Wafer）</strong>：逐片注入，束斑通过电磁场高速扫描（均匀性最佳、颗粒控制好，但产能低于批量式）；先进制程（28nm以下）几乎全部用单晶圆式</p>
+<p><strong>⑤ 退火激活（Annealing）</strong>
+- 注入到晶格中的离子大部分处于"间隙位"（不是晶体格点位置），没有电学活性；而且注入过程破坏了晶格结构，产生大量缺陷。退火的目的：
+- - <strong>激活杂质</strong>：将杂质原子从间隙位移到格点位置（Substitutional），使其成为施主或受主
+- - <strong>修复晶格损伤</strong>：恢复晶体的长程有序
+- 退火的关键挑战是<strong>扩散控制</strong>：高温退火会激活杂质，但也会导致杂质向深处扩散（TED，Transient Enhanced Diffusion），破坏浅结设计。现代工艺使用：
+- - <strong>快速热退火（RTA）</strong>：1000-1100°C，持续数秒（尖峰退火 Spike Anneal 的温度曲线像一根针，停留时间&lt;1秒）
+- - <strong>毫秒退火（MSA，Millisecond Anneal）</strong>：用闪光灯或激光，加热持续仅毫秒级，是2nm/3nm节点实现超浅结的标配技术</p>
+<h2 id="_4">关键工艺参数</h2>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>典型范围</th>
+<th style="text-align: center;">精度要求</th>
+<th>影响</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>注入能量</strong></td>
+<td>0.2 keV - 3 MeV</td>
+<td style="text-align: center;">±2%</td>
+<td>决定注入深度 Rp（投影射程）和深度分布</td>
+</tr>
+<tr>
+<td><strong>注入剂量</strong></td>
+<td>1×10¹¹ - 1×10¹⁶ atoms/cm²</td>
+<td style="text-align: center;">±1-2%</td>
+<td>决定掺杂浓度和方块电阻</td>
+</tr>
+<tr>
+<td><strong>注入角度（Tilt）</strong></td>
+<td>0° - 7°</td>
+<td style="text-align: center;">±0.5°</td>
+<td>抑制沟道效应；先进制程还用大角度倾斜（30-45°）做Pocket Implant</td>
+</tr>
+<tr>
+<td><strong>旋转角度（Twist）</strong></td>
+<td>0° - 360°</td>
+<td style="text-align: center;">±1°</td>
+<td>与Tilt配合避免晶格对称轴方向</td>
+</tr>
+<tr>
+<td><strong>束流（Beam Current）</strong></td>
+<td>μA - mA</td>
+<td style="text-align: center;">—</td>
+<td>决定产能（WPH）</td>
+</tr>
+<tr>
+<td><strong>晶圆温度</strong></td>
+<td>-60°C - 500°C</td>
+<td style="text-align: center;">±5°C</td>
+<td>低温注入可减少损伤扩散；高温注入可原位自退火</td>
+</tr>
+</tbody>
+</table>
+<h3 id="channeling">沟道效应（Channeling）及其抑制</h3>
+<ul>
+<li>当离子束方向恰好与硅晶体的晶轴（如&lt;110&gt;方向）平行时，离子会像进入"管道"一样在晶格间隙中穿行极深的距离——注入深度是正常情况的数倍甚至10倍以上，完全失控。抑制方法：</li>
+<li><strong>Tilt注入</strong>：将晶圆倾斜一个角度（通常7°），使离子束偏离晶轴方向</li>
+<li><strong>预非晶化注入（PAI, Pre-Amorphization Implantation）</strong>：先用大剂量的Ge⁺或Si⁺注入表面，将晶体打成非晶，然后再进行目标杂质注入——非晶层没有晶体管道，完全消除沟道效应</li>
+</ul>
+<h2 id="_5">应用场景全景</h2>
+<table>
+<thead>
+<tr>
+<th>-</th>
+<th>注入类型</th>
+<th>能量</th>
+<th>剂量 (atoms/cm²)</th>
+<th>典型应用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-</td>
+<td>阱注入（Well）</td>
+<td>100-500 keV</td>
+<td>1×10¹² - 1×10¹³</td>
+<td>形成N阱/P阱，建立CMOS基础结构</td>
+</tr>
+<tr>
+<td>-</td>
+<td>阈值电压调节（Vth Adjust）</td>
+<td>5-50 keV</td>
+<td>1×10¹¹ - 1×10¹²</td>
+<td>精确调节MOSFET开启电压，每颗晶体管都需要</td>
+</tr>
+<tr>
+<td>-</td>
+<td>源漏注入（S/D）</td>
+<td>1-50 keV</td>
+<td>1×10¹⁵ - 1×10¹⁶</td>
+<td>源漏区重掺杂以降低接触电阻</td>
+</tr>
+<tr>
+<td>-</td>
+<td>LDD/Halo/Pocket</td>
+<td>0.5-10 keV</td>
+<td>1×10¹² - 1×10¹⁴</td>
+<td>短沟道器件特有的轻掺杂漏极和口袋注入</td>
+</tr>
+<tr>
+<td>-</td>
+<td>深埋层（Buried Layer）</td>
+<td>500 keV - 3 MeV</td>
+<td>1×10¹² - 1×10¹⁵</td>
+<td>IGBT、功率器件、CMOS图像传感器的深掺杂</td>
+</tr>
+<tr>
+<td>-</td>
+<td>SIMOX（注氧隔离）</td>
+<td>150-200 keV</td>
+<td>~1.8×10¹⁸ O⁺/cm²</td>
+<td>在硅体内形成SiO₂埋层，制造SOI晶圆</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_6">设备结构与主流厂商</h2>
+<h3 id="vs">批量式 vs 单晶圆式</h3>
+<table>
+<thead>
+<tr>
+<th>-</th>
+<th>特性</th>
+<th style="text-align: center;">批量式（Batch）</th>
+<th style="text-align: center;">单晶圆式（Single-Wafer）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-</td>
+<td>典型产能</td>
+<td style="text-align: center;">200-300 WPH</td>
+<td style="text-align: center;">100-200 WPH</td>
+</tr>
+<tr>
+<td>-</td>
+<td>均匀性</td>
+<td style="text-align: center;">σ ~1.5%</td>
+<td style="text-align: center;">σ ~0.5%</td>
+</tr>
+<tr>
+<td>-</td>
+<td>颗粒控制</td>
+<td style="text-align: center;">较差（多片旋转产生颗粒）</td>
+<td style="text-align: center;">较好</td>
+</tr>
+<tr>
+<td>-</td>
+<td>适用节点</td>
+<td style="text-align: center;">90nm以上</td>
+<td style="text-align: center;">28nm及以下</td>
+</tr>
+<tr>
+<td>-</td>
+<td>束流范围</td>
+<td style="text-align: center;">中/高束流</td>
+<td style="text-align: center;">全覆盖（含超低能高束流）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_7">主要设备商</h3>
+<table>
+<thead>
+<tr>
+<th>-</th>
+<th>厂商</th>
+<th>国家</th>
+<th>市场地位</th>
+<th>核心产品</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-</td>
+<td><strong>Applied Materials（应用材料）</strong></td>
+<td>美国</td>
+<td>全球第一（~55%份额）</td>
+<td>VIISta系列（单晶圆），已收购Varian注入业务</td>
+</tr>
+<tr>
+<td>-</td>
+<td><strong>Axcelis（亚舍立）</strong></td>
+<td>美国</td>
+<td>全球第二（~25%份额）</td>
+<td>Purion系列（单晶圆+批量式全平台），高能注入机最强</td>
+</tr>
+<tr>
+<td>-</td>
+<td><strong>Sumitomo Heavy Ion（住友重机械离子）</strong></td>
+<td>日本</td>
+<td>全球第三</td>
+<td>高束流批量式，功率器件和8寸线份额高</td>
+</tr>
+<tr>
+<td>-</td>
+<td><strong>Nissin Ion Equipment（日新离子）</strong></td>
+<td>日本</td>
+<td>聚焦中束流</td>
+<td>中等束流注入机，日本市场为主</td>
+</tr>
+<tr>
+<td>-</td>
+<td><strong>北京烁科中科信</strong></td>
+<td>中国</td>
+<td>国产龙头</td>
+<td>中束流+高能注入机，已进入国内主要Fab</td>
+</tr>
+<tr>
+<td>-</td>
+<td><strong>凯世通（Kingstone，万业企业子公司）</strong></td>
+<td>中国</td>
+<td>国产第二</td>
+<td>低能大束流注入机，SiC领域有突破</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>格局要点</strong>：</li>
+<li>
+<ul>
+<li>2011年AMAT以$4.9B收购Varian Semiconductor Equipment Associates，兼并了此前离子注入市场的老大Varian，一举成为绝对龙头</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>Axcelis在高能注入机（&gt;1 MeV）领域有独特优势，Purion H系列是唯一能实现3MeV以上注入的主流平台</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>国产设备在低能大束流和中束流两个方向快速追赶，凯世通2024年在国内某头部Foundry实现批量出货；烁科中科信的高能机已覆盖至2MeV+</li>
+</ul>
+</li>
+</ul>
+<h2 id="_8">技术趋势</h2>
+<h3 id="1-cold-implant">1. 低温注入（Cold Implant）</h3>
+<ul>
+<li>将晶圆冷却至-50°C甚至更低温度进行离子注入。低温下注入过程中产生的缺陷迁移率大幅降低，缺陷团簇更小——退火后残余损伤更少，对超浅结和先进逻辑器件意义重大。AMAT和Axcelis均已推出低温注入选项。</li>
+</ul>
+<h3 id="2-piii-plasma-immersion-ion-implantation">2. 等离子体浸没离子注入（PIII, Plasma Immersion Ion Implantation）</h3>
+<ul>
+<li>传统注入是"束流扫描"，PIII是将晶圆浸没在含掺杂元素的等离子体中，施加脉冲负高压，离子从四面八方同时在晶圆表面注入。优势：<strong>可同时注入3D结构的所有面</strong>（对FinFET的Fin侧面和GAA纳米片的包裹注入意义重大）、无需扫描、设备结构简单。挑战：剂量和能量分布不如束流式精确。</li>
+</ul>
+<h3 id="3-finfet-gaa">3. FinFET → GAA 对注入的新要求</h3>
+<ul>
+<li><strong>FinFET</strong> 要求离子束以特定Tilt角注入Fin的侧壁，需要精确的角度控制和避免对Fin顶部过度注入。</li>
+<li><strong>GAA（Nanosheet）</strong> 的纳米片堆叠结构使得注入更加困难：离子必须穿透硅层到达埋在中间的纳米片。传统的束流注入几乎不可能均匀覆盖所有纳米片表面。这推动了两个方向：</li>
+<li>
+<ul>
+<li><strong>PIII</strong> 成为GAA掺杂的重要候选方案</li>
+</ul>
+</li>
+<li>
+<ul>
+<li><strong>原位掺杂外延</strong>（In-situ Doped Epitaxy）部分替代注入——在生长源漏和沟道外延层时直接掺入杂质，省去后续注入步骤</li>
+</ul>
+</li>
+<li><strong>背面供电（BSPDN）</strong> 引入后，晶圆背面需要做深注入形成背面接触层，对高能注入机提出新需求——Axcelis Purion H的高能能力在此受益。</li>
+</ul>
+<h3 id="4-sic">4. SiC功率器件的注入挑战</h3>
+<ul>
+<li>SiC的注入比硅复杂得多：</li>
+<li>
+<ul>
+<li>SiC是宽禁带半导体，杂质激活需要极高温度（&gt;1600°C），这在退火设备上和工艺集成上都更复杂</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>SiC中的铝（Al）注入是P型掺杂的主要手段（硼在SiC中能级太深），但Al原子很重，注入造成的损伤更大</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>凯世通在SiC注入领域有差异化布局，是国产设备商在第三代半导体的切入点</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="_9">📊 帆软产品关联度分析</h2>
+<table>
+<thead>
+<tr>
+<th>帆软产品线</th>
+<th style="text-align: center;">关联度</th>
+<th>关联说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>FineReport</strong></td>
+<td style="text-align: center;">🟢 高</td>
+<td>注入参数SPC控制图自动生成、校准报告一键输出、客户稽核报表，是注入工序报表自动化的核心工具</td>
+</tr>
+<tr>
+<td><strong>FineBI</strong></td>
+<td style="text-align: center;">🟢 高</td>
+<td>注入后Rs Mapping热力图分析、跨设备匹配度对比、退火工艺窗口响应曲面分析，帮助良率工程师快速定位问题步骤</td>
+</tr>
+<tr>
+<td><strong>FineDataLink</strong></td>
+<td style="text-align: center;">🟢 高</td>
+<td>将不同品牌注入机（AMAT/Axcelis/Sumitomo等）的FDC数据、Rs量测数据、MES批次数据汇聚到统一平台，打通注入全数据链</td>
+</tr>
+<tr>
+<td><strong>简道云 + AI Agent</strong></td>
+<td style="text-align: center;">🟡 中</td>
+<td>注入机离子源灯丝更换登记、异常上报流程、AI Agent监测参数漂移后自动推送企业微信预警</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_10">技术演进带来的数据需求</h2>
+<blockquote>
+<p>这是帆软售前的核心关注点
+离子注入作为Fab中步骤最多、频率最高的工艺环节之一，天然产生大量过程数据</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>数据需求类型</th>
+<th>具体场景</th>
+<th>帆软产品匹配</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>注入参数实时监控</td>
+<td>每步注入的能量/剂量/束流/真空度的实时SPC监控，参数漂移自动告警</td>
+<td>FineReport 自动控制图 + AI Agent 预警</td>
+</tr>
+<tr>
+<td>注入均匀性分析</td>
+<td>每片晶圆注入后的方块电阻（Rs）Mapping，识别注入不均匀的设备和晶圆区域</td>
+<td>FineBI 热力图 + 跨设备Rs分布对比</td>
+</tr>
+<tr>
+<td>剂量/能量校准管理</td>
+<td>注入机定期需用量测晶圆（Monitor Wafer）做剂量校准（Therma-Wave或Rs量测），校准数据管理</td>
+<td>FineReport 校准报告自动生成 + FDL 数据汇聚</td>
+</tr>
+<tr>
+<td>退火工艺匹配分析</td>
+<td>注入参数与退火温度/时间的组合窗口优化——同样的注入参数在不同退火条件下激活率不同</td>
+<td>FineBI 工艺窗口分析（注入能量×退火温度→Rs响应曲面）</td>
+</tr>
+<tr>
+<td>设备OEE与预防性维护</td>
+<td>注入机易损件（离子源灯丝、引出电极、加速管）的寿命管理和更换预警</td>
+<td>FineReport OEE看板 + AI Agent 维护预测</td>
+</tr>
+<tr>
+<td>跨设备匹配</td>
+<td>不同注入机（同一Fab可能有AMAT、Axcelis、Sumitomo多个品牌）之间工艺Recipe的可移植性和匹配度分析</td>
+<td>FineBI 设备偏差分析——识别哪台注入机的Rs系统性偏高/偏低</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_11">🎯 售前话术要点</h2>
+<h3 id="fab">场景一：Fab良率工程师的痛点</h3>
+<blockquote>
+<p><strong>现状</strong>：你们离子注入有60多步，每步都有能量、剂量、角度、束流十几个参数。参数漂移了靠什么发现？Walk-in之后手动查数据？一个批量报废就是几百万。
+<strong>帆软方案</strong>：FineReport自动生成每步注入的SPC控制图，FineBI从最终Rs数据反查是哪个注入步骤的哪台设备出了问题，AI Agent在参数刚刚偏离控制界限就推送到企业微信。</p>
+</blockquote>
+<h3 id="fab_1">场景二：Fab设备主管的痛点</h3>
+<blockquote>
+<p><strong>现状</strong>：你们有AMAT、Axcelis好几家的注入机，同一道工艺在不同机台上的Rs结果不一样，工程师手动做Correlation。要花多长时间？
+<strong>帆软方案</strong>：FDL把不同品牌注入机的数据拉到统一平台，FineBI一键做设备匹配度分析——"这台Axcelis的Rs比AMAT平均高3%，要调哪些参数？"30秒出结论。</p>
+</blockquote>
+<h3 id="_12">场景三：质量部门的客户稽核</h3>
+<blockquote>
+<p><strong>现状</strong>：汽车芯片客户来稽核，要看过去6个月每一片晶圆的离子注入参数是否在spec内。你们能多快出报告？
+<strong>帆软方案</strong>：FineReport一键生成稽核报表——"2026年1月到6月，第12号注入机第38步S/D注入：总量127,430片，125,987片在spec内，1,443片超出（1.13%），超出批次详情如下……" 原来3天的工作，现在3分钟。</p>
+</blockquote>
+<hr />
+<h2 id="_13">🔗 延伸阅读</h2>
+<ul>
+<li><a href="/kb/行业知识体系/01-晶圆制造/基础概念/晶圆制造全流程">晶圆制造全流程</a></li>
+<li><a href="/kb/行业知识体系/03-半导体设备/基础概念/半导体设备分类与市场格局">半导体设备分类与市场格局</a></li>
+<li><a href="/kb/01-晶圆制造/行业动态/晶体管技术演进：从MOSFET到FinFET到GAA">晶体管技术演进：从MOSFET到FinFET到GAA</a></li>
+<li><a href="/kb/01-晶圆制造/行业动态/SiC制造工艺：从衬底生长到器件制造的特殊挑战">SiC制造工艺：从衬底生长到器件制造的特殊挑战</a></li>
+<li><a href="/kb/03-半导体设备/行业动态/应用材料_Applied_Materials">应用材料_Applied_Materials</a></li>
+</ul>
+<h2 id="_14">🔗 来源</h2>
+<ul>
+<li>技术文献综合/设备商公开信息（应用材料、Axcelis、Varian技术资料）</li>
+<li>入库时间：2026-07-09</li>
+</ul>
+</div>
+</article>
+<footer class="note-footer">
+  <a href="/kb/01-晶圆制造/行业动态/index.html">← 返回目录</a>
+</footer>
+</main>
+</body>
+</html>

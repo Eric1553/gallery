@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.stage/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets — never commit
+.env
+.env.*
+*.pem
+data/auth.json
+data/maxkb_token
+**/maxkb_token
+
+# Local IDE (optional on server copy)
+.cursor/
+
+# Large transient artifacts (keep demo HTML/assets; skip bulk archives)
+*.zip
+node_modules/

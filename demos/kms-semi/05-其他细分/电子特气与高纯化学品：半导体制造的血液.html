@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>电子特气与高纯化学品：半导体制造的血液 — 半导体知识库</title>
+<meta name="description" content="# 电子特气与高纯化学品：半导体制造的血液  > 电子特气（Electronic Specialty Gases）被称为半导体制造的"血液"——一座300mm Fab使用超过50种特种气体，从硅外延的硅源气体到离子注入的掺杂气体，从干法刻蚀的卤素气体到ALD/CVD的前驱体。这些气体的纯度从工业级（">
+<link rel="stylesheet" href="/kb/assets/style.css">
+</head>
+<body>
+<div class="top-accent"></div>
+<header class="page-header">
+  <a href="/kb/首页.html" class="home-link">🔬 半导体知识库</a>
+</header>
+<main class="container">
+<nav class="breadcrumb"><a href="/kb/首页.html">半导体知识库</a> <span class="sep">›</span> <a href="/kb//05-其他细分/index.html">05-其他细分</a></nav>
+<article class="note">
+<header class="note-header">
+  <h1>电子特气与高纯化学品：半导体制造的血液</h1>
+  
+</header>
+<div class="note-body">
+<h1 id="_1">电子特气与高纯化学品：半导体制造的血液</h1>
+<blockquote>
+<p>电子特气（Electronic Specialty Gases）被称为半导体制造的"血液"——一座300mm Fab使用超过50种特种气体，从硅外延的硅源气体到离子注入的掺杂气体，从干法刻蚀的卤素气体到ALD/CVD的前驱体。这些气体的纯度从工业级（99.9%）一路攀升至9N级（99.9999999%），任何ppm或ppb级别的杂质都可能导致芯片失效。全球电子特气市场由林德、空气化工、大阳日酸和液化空气四大气体巨头主导，中国虽已涌现华特气体、金宏气体等企业，但总体国产化率仅约20%，且集中在低纯度等级。</p>
+</blockquote>
+<hr />
+<h2 id="_2">📖 技术概述</h2>
+<ul>
+<li><strong>一句话定义</strong>：电子特气是用于半导体制造各工艺环节的超高纯度气体（纯度≥99.999%，5N以上），涵盖硅源气体、掺杂气体、刻蚀气体、清洗气体、CVD/ALD前驱体和保护气体六大类。</li>
+<li><strong>核心技术价值</strong>：</li>
+<li><strong>纯度即生命线</strong>——28nm以下制程要求电子特气金属杂质&lt;0.1ppb（万亿分之一），水分&lt;1ppb。一个50L钢瓶内壁脱落的1微克铁就足以污染整座Fab的气体管道。</li>
+<li><strong>配方决定工艺窗口</strong>——干法刻蚀的选择比（SiO₂:Si）、CVD沉积速率和膜应力、离子注入的剂量精度均依赖于气体组分与流量的精确配比。</li>
+<li><strong>稳定性要求极苛刻</strong>——同一气体供应商的不同批次间，杂质谱必须完全一致，否则Fab工艺工程师无法建立稳定的工艺窗口。</li>
+<li><strong>在制造流程中的位置</strong>：贯穿晶圆制造全流程——外延→氧化→扩散→离子注入→干法刻蚀→CVD/PVD→清洗→退火。Fab通过气体分配系统（Gas Cabinet→VMB→VMP→工艺腔体）将特气从钢瓶/罐车输送到每一台设备。</li>
+<li><strong>下游应用节点</strong>：从成熟制程（0.13μm）到最先进制程（3nm），气体纯度要求随节点缩小呈指数级提升——28nm→7nm的气体金属杂质要求从&lt;1ppb升级到&lt;0.1ppb。</li>
+</ul>
+<hr />
+<h2 id="_3">🔬 电子特气分类与技术原理</h2>
+<h3 id="_4">一、硅源气体</h3>
+<table>
+<thead>
+<tr>
+<th>气体</th>
+<th style="text-align: center;">化学式</th>
+<th style="text-align: center;">纯度要求</th>
+<th>应用工艺</th>
+<th>关键特性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>硅烷（Silane）</strong></td>
+<td style="text-align: center;">SiH₄</td>
+<td style="text-align: center;">&gt;6N</td>
+<td>多晶硅沉积（LPCVD）、Si epitaxy（与H₂混合）</td>
+<td>自燃性（接触空气自燃），储存/输送安全要求极高</td>
+</tr>
+<tr>
+<td><strong>二氯硅烷（DCS）</strong></td>
+<td style="text-align: center;">SiH₂Cl₂</td>
+<td style="text-align: center;">&gt;5N</td>
+<td>氮化硅沉积（LPCVD Si₃N₄）、Si epitaxy</td>
+<td>比SiH₄反应温度更低，台阶覆盖率更好</td>
+</tr>
+<tr>
+<td><strong>三氯氢硅（TCS）</strong></td>
+<td style="text-align: center;">SiHCl₃</td>
+<td style="text-align: center;">&gt;4N（电子级）</td>
+<td>外延硅（Epitaxial Si, 常压CVD）</td>
+<td>液态源，通过bubbler气化输送，沉积速率快</td>
+</tr>
+<tr>
+<td><strong>TEOS（正硅酸乙酯）</strong></td>
+<td style="text-align: center;">Si(OC₂H₅)₄</td>
+<td style="text-align: center;">&gt;4N（电子级）</td>
+<td>二氧化硅沉积（PECVD/LPCVD SiO₂）</td>
+<td>液态源，台阶覆盖率和间隙填充能力优于SiH₄</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_5">二、掺杂气体</h3>
+<p>掺杂气体用于离子注入（Ion Implantation）和原位掺杂（In-situ Doping），将特定杂质原子引入硅晶格以改变电学特性：</p>
+<table>
+<thead>
+<tr>
+<th>气体</th>
+<th style="text-align: center;">掺杂类型</th>
+<th>应用</th>
+<th>关键参数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>磷烷（Phosphine）</strong></td>
+<td style="text-align: center;">PH₃</td>
+<td>n型掺杂（N+源/漏、多晶硅掺杂）</td>
+<td>剧毒（LC50~11ppm），需负压隔离储存</td>
+</tr>
+<tr>
+<td><strong>乙硼烷（Diborane）</strong></td>
+<td style="text-align: center;">B₂H₆</td>
+<td>p型掺杂（P+源/漏、沟道掺杂）</td>
+<td>剧毒+自燃，最危险的特气之一</td>
+</tr>
+<tr>
+<td><strong>砷烷（Arsine）</strong></td>
+<td style="text-align: center;">AsH₃</td>
+<td>n型重掺杂（源/漏、埋层）</td>
+<td>剧毒（LC50~5ppm）+致癌，要求ppb级泄漏监测</td>
+</tr>
+<tr>
+<td><strong>三氟化硼</strong></td>
+<td style="text-align: center;">BF₃</td>
+<td>p型离子注入（BF₂⁺离子束注入）</td>
+<td>腐蚀性强，需特制质量流量计（MFC）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_6">三、刻蚀气体</h3>
+<p>干法刻蚀（等离子体刻蚀）是电子特气消耗量最大的应用场景：</p>
+<table>
+<thead>
+<tr>
+<th>气体</th>
+<th style="text-align: center;">化学式</th>
+<th>刻蚀对象</th>
+<th>刻蚀机制</th>
+<th>关键工艺参数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>四氟化碳</strong></td>
+<td style="text-align: center;">CF₄</td>
+<td>硅、SiO₂、Si₃N₄</td>
+<td>F自由基化学刻蚀</td>
+<td>SiO₂:Si选择比中等（~3:1），需与CHF₃/H₂混合优化选择比</td>
+</tr>
+<tr>
+<td><strong>三氟甲烷</strong></td>
+<td style="text-align: center;">CHF₃</td>
+<td>SiO₂（选择比优化）</td>
+<td>聚合物沉积+化学刻蚀</td>
+<td>产生CF₂聚合物保护Si表面→SiO₂:Si选择比&gt;10:1</td>
+</tr>
+<tr>
+<td><strong>六氟化硫</strong></td>
+<td style="text-align: center;">SF₆</td>
+<td>硅深槽刻蚀（Bosch工艺）</td>
+<td>F自由基快速刻蚀</td>
+<td>各向同性倾向强，需与C₄F₈交替使用（Bosch DRIE）</td>
+</tr>
+<tr>
+<td><strong>氯气</strong></td>
+<td style="text-align: center;">Cl₂</td>
+<td>铝、多晶硅、金属栅极</td>
+<td>Cl自由基化学+物理刻蚀</td>
+<td>金属氯化物挥发性好，但需RF偏压打破表面氧化层</td>
+</tr>
+<tr>
+<td><strong>三氯化硼</strong></td>
+<td style="text-align: center;">BCl₃</td>
+<td>氧化铝、氮化镓（GaN）</td>
+<td>BCl₃提供还原性→打破Al₂O₃表面</td>
+<td>III-V族半导体刻蚀主力气体</td>
+</tr>
+<tr>
+<td><strong>溴化氢</strong></td>
+<td style="text-align: center;">HBr</td>
+<td>多晶硅栅（高选择比）</td>
+<td>Br自由基，SiO₂:Si选择比&gt;100:1</td>
+<td>先进制程多晶硅栅刻蚀的标准气体</td>
+</tr>
+<tr>
+<td><strong>八氟环丁烷</strong></td>
+<td style="text-align: center;">C₄F₈</td>
+<td>SiO₂接触孔（高深宽比刻蚀）</td>
+<td>CF₂聚合物沉积保护侧壁</td>
+<td>Bosch工艺的钝化步骤，产生类特氟龙（Teflon-like）膜</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_7">四、清洗气体</h3>
+<table>
+<thead>
+<tr>
+<th>气体</th>
+<th style="text-align: center;">化学式</th>
+<th>清洗对象</th>
+<th>机制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>三氟化氮</strong></td>
+<td style="text-align: center;">NF₃</td>
+<td>PECVD腔体清洗（去除沉积在腔壁上的Si/SiO₂/Si₃N₄）</td>
+<td>远程等离子体产生F自由基→将固体沉积物气化为SiF₄</td>
+</tr>
+<tr>
+<td><strong>六氟乙烷</strong></td>
+<td style="text-align: center;">C₂F₆</td>
+<td>CVD腔体清洗（替代NF₃但温室效应更高）</td>
+<td>同NF₃机制，但GWP更低（已逐步被NF₃替代）</td>
+</tr>
+<tr>
+<td><strong>氟气</strong></td>
+<td style="text-align: center;">F₂</td>
+<td>原位腔体清洗（无等离子体）</td>
+<td>热F₂直接与沉积物反应，无PFC排放——新一代环保方向</td>
+</tr>
+</tbody>
+</table>
+<p>NF₃是电子特气中用量最大的单一品种——全球年消耗&gt;3万吨，一台Fab的NF₃年消耗可达50-100吨。但其GWP（全球变暖潜势）是CO₂的17,200倍，Fab必须配备&gt;99%的PFC废气处理系统。</p>
+<h3 id="cvdald">五、CVD/ALD前驱体</h3>
+<p>前驱体是沉积工艺中提供薄膜组成元素的挥发性化合物：</p>
+<table>
+<thead>
+<tr>
+<th>前驱体</th>
+<th style="text-align: center;">化学式</th>
+<th>沉积薄膜</th>
+<th>沉积方法</th>
+<th>关键特性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>六氟化钨</strong></td>
+<td style="text-align: center;">WF₆</td>
+<td>钨（W）插塞/通孔</td>
+<td>CVD</td>
+<td>沉积速率快但F对Ti/TiN底层有侵蚀</td>
+</tr>
+<tr>
+<td><strong>三甲基铝（TMA）</strong></td>
+<td style="text-align: center;">Al(CH₃)₃</td>
+<td>Al₂O₃（high-k介电/钝化）</td>
+<td>ALD</td>
+<td>ALD Al₂O₃的标准前驱体，与水（H₂O）交替脉冲</td>
+</tr>
+<tr>
+<td><strong>四(二甲氨基)钛（TDMAT）</strong></td>
+<td style="text-align: center;">Ti[N(CH₃)₂]₄</td>
+<td>TiN（扩散阻挡层/硬掩膜）</td>
+<td>CVD/ALD</td>
+<td>无卤素，避免F/Cl对底层金属的腐蚀</td>
+</tr>
+<tr>
+<td><strong>四(二甲氨基)铪（TDMAHf）</strong></td>
+<td style="text-align: center;">Hf[N(CH₃)₂]₄</td>
+<td>HfO₂（high-k栅介质，45nm以下）</td>
+<td>ALD</td>
+<td>替代SiO₂栅介质的关键材料，k~25 vs SiO₂的k~3.9</td>
+</tr>
+<tr>
+<td><strong>四(甲乙氨基)锆（TEMAZr）</strong></td>
+<td style="text-align: center;">Zr[N(CH₃)(C₂H₅)]₄</td>
+<td>ZrO₂（DRAM电容介质）</td>
+<td>ALD</td>
+<td>DRAM电容的关键high-k材料</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="9n">🔬 提纯技术：从工业级到9N级</h2>
+<p>电子特气的核心制造壁垒不在"合成"而在"提纯"——将工业级气体中的杂质从ppm级降低到ppb乃至ppt级。</p>
+<h3 id="_8">提纯技术体系</h3>
+<div class="codehilite"><pre><span></span><code>工业级原料（99.9%+）→ 吸附纯化 → 精馏纯化 → 终端纯化（Gettering）→ 9N级产品
+</code></pre></div>
+
+<p><strong>1. 吸附纯化（Adsorption）</strong>：利用分子筛（3A/4A/5A/13X型沸石）、活性炭或活性氧化铝选择性吸附H₂O、CO₂和部分烃类杂质。适用于大宗气体（N₂/Ar/H₂）的预纯化。</p>
+<p><strong>2. 精馏纯化（Distillation）</strong>：利用不同气体沸点差异进行低温精馏——如SiH₄（沸点-112°C）中乙烷（沸点-89°C）的分离。电子特气精馏塔的理论塔板数可达200-500级，回流比&gt;100:1——这就是为什么电子级硅烷的价格是工业级的50-100倍。</p>
+<p><strong>3. 终端纯化/Getter（吸气剂）</strong>：在气体使用点（POU: Point of Use）的最后一米进行超纯化——利用金属吸气剂（如锆基合金、Ni纳米颗粒）在高温下与O₂/H₂O/N₂/CO等杂质不可逆反应，将杂质从~1ppb进一步降低到&lt;0.1ppb。Getter纯化器是Fab气体分配系统的标配——即使供应商钢瓶内是6N气体，输送到工艺腔体时也要经过Getter确保达到9N。</p>
+<p><strong>4. 钢瓶内壁处理</strong>：气体储存容器本身是杂质源——不锈钢钢瓶内壁会释放水分、吸附空气。电子特气钢瓶需经过电解抛光（EP: Electropolishing，内表面Ra&lt;0.2μm）+ 真空烘烤（&gt;100°C, 72h）+ 钝化（通入反应性气体在内壁形成钝化层）。部分腐蚀性气体（如HCl、Cl₂）需使用特氟龙（PTFE）内衬钢瓶。</p>
+<h3 id="_9">杂质分析技术</h3>
+<table>
+<thead>
+<tr>
+<th>分析仪器</th>
+<th>检测原理</th>
+<th style="text-align: center;">检测限</th>
+<th>适用对象</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>GC-PDHID（气相色谱-脉冲放电氦离子化检测器）</strong></td>
+<td>He等离子体激发杂质后检测电信号</td>
+<td style="text-align: center;">~10ppb</td>
+<td>H₂/O₂/N₂/CH₄/CO/CO₂等永久气体杂质</td>
+</tr>
+<tr>
+<td><strong>GC-MS</strong></td>
+<td>电子轰击电离+质量分析</td>
+<td style="text-align: center;">~1-10ppb</td>
+<td>挥发性有机物（VOCs）、卤代烃</td>
+</tr>
+<tr>
+<td><strong>ICP-MS（电感耦合等离子体质谱）</strong></td>
+<td>气体通过ICP激发→金属离子质谱分析</td>
+<td style="text-align: center;">~0.1ppt（金属杂质）</td>
+<td>Na/K/Fe/Cr/Ni/Cu等金属杂质</td>
+</tr>
+<tr>
+<td><strong>CRDS（光腔衰荡光谱）</strong></td>
+<td>高精度激光吸收光谱</td>
+<td style="text-align: center;">~10ppt（H₂O）</td>
+<td>水分专测，光刻级N₂要求H₂O&lt;1ppb</td>
+</tr>
+<tr>
+<td><strong>APIMS（大气压离子化质谱）</strong></td>
+<td>大气压离子化+质谱</td>
+<td style="text-align: center;">~0.1ppt（某些杂质）</td>
+<td>超痕量杂质（O₂/H₂O在ppq级），研发和高端品控</td>
+</tr>
+</tbody>
+</table>
+<p>核心壁垒：电子特气不仅要求"提纯到9N"，更重要的是 <strong>"杂质谱的批次一致性"</strong>——Fab工艺工程师将杂质谱视为工艺配方的一部分，供应商切换或批次间杂质谱波动会导致工艺偏移、良率下降。这正是头部气体供应商（林德/AP）与客户之间的"Know-How锁定"。</p>
+<hr />
+<h2 id="_10">🌍 全球市场格局</h2>
+<h3 id="_11">全球格局与主要玩家</h3>
+<table>
+<thead>
+<tr>
+<th>厂商</th>
+<th style="text-align: center;">国家</th>
+<th style="text-align: center;">2025年营收（集团/电子特气板块，估）</th>
+<th style="text-align: center;">全球市占率</th>
+<th>强项领域</th>
+<th>在华布局</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>林德（Linde）</strong></td>
+<td style="text-align: center;">德/美</td>
+<td style="text-align: center;">$330亿（集团）/ ~$25亿（电子特气）</td>
+<td style="text-align: center;">~25%</td>
+<td>大宗气体+特气龙头，全球最大现场制气（On-site）网络</td>
+<td>上海、苏州、西安等多个空分基地，现场制气+管道供气</td>
+</tr>
+<tr>
+<td><strong>空气化工（Air Products, AP）</strong></td>
+<td style="text-align: center;">美国</td>
+<td style="text-align: center;">$130亿（集团）/ ~$15亿（电子特气）</td>
+<td style="text-align: center;">~18%</td>
+<td>NF₃全球第一、SiH₄/NH₃/H₂纯化技术领先</td>
+<td>南京、西安、福建多地投资，在华半导体气体投资&gt;300亿元</td>
+</tr>
+<tr>
+<td><strong>大阳日酸（Nippon Sanso/TNSC）</strong></td>
+<td style="text-align: center;">日本</td>
+<td style="text-align: center;">¥1.2万亿（集团）/ ~¥1,500亿（电子特气）</td>
+<td style="text-align: center;">~15%</td>
+<td>稀有气体（Ne/Kr/Xe）提纯能力突出、刻蚀气体全系列</td>
+<td>上海/大连/天津有合资与独资公司</td>
+</tr>
+<tr>
+<td><strong>液化空气（Air Liquide）</strong></td>
+<td style="text-align: center;">法国</td>
+<td style="text-align: center;">€280亿（集团）/ ~€20亿（电子特气）</td>
+<td style="text-align: center;">~15%</td>
+<td>综合气体服务+化学品协同（Balazs™分析服务）</td>
+<td>上海、天津、无锡等，在华投资规模最大</td>
+</tr>
+<tr>
+<td><strong>SK Specialty</strong></td>
+<td style="text-align: center;">韩国</td>
+<td style="text-align: center;">₩7,000亿（估）</td>
+<td style="text-align: center;">~5%</td>
+<td>NF₃（全球第二大产能）、WF₆、SiH₄</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>其他重要企业</strong>：
+- <strong>关东电化（Kanto Denka）</strong>：日本企业，WF₆全球份额&gt;30%，ClF₃（腔体清洗）技术独有
+- <strong>中央硝子（Central Glass）</strong>：日本企业，C₄F₆/C₄F₈刻蚀气体专业厂家
+- <strong>默克（Merck KGaA, Versum Materials并入）</strong>：德国，ALD/CVD前驱体、CMP浆料
+- <strong>Entegris（英特格）</strong>：美国，气体纯化系统（Getter/Purifier）和输送设备，虽不自产气体但占据特气基础设施核心环节</p>
+<h3 id="_12">竞争态势</h3>
+<ul>
+<li><strong>现场制气（On-site）模式是最高护城河</strong>：林德和AP在Fab旁建设空分装置（ASU: Air Separation Unit），通过管道直接将超高纯N₂/O₂/Ar输送到Fab——这种"工厂套工厂"的模式使得替代供应商几乎不可能，因为重建管道网络的成本是数亿美元级别的。</li>
+<li><strong>特种气体的"配方锁定"</strong>：与光刻胶类似，Fab对刻蚀气体混合比例（如CF₄:CHF₃:Ar=20:5:75sccm）的工艺配方极度敏感，切换供应商后即使纯度相同，微量杂质谱差异也可能导致刻蚀选择比偏移——重新验证一个气体供应商的周期&gt;6个月。</li>
+<li><strong>NF₃的战略地位</strong>：NF₃是电子特气用量的"锚定品种"——全球NF₃产能集中在中国（中船特气/昊华科技）、韩国（SK Specialty）和日本（关东电化）。中国NF₃产能全球占比&gt;50%，但芯片级NF₃（&lt;0.1ppb金属杂质）仍由AP/SK Specialty领跑。</li>
+</ul>
+<hr />
+<h2 id="_13">🇨🇳 中国力量：国产替代现状</h2>
+<table>
+<thead>
+<tr>
+<th>企业</th>
+<th>主攻方向</th>
+<th>量产节点</th>
+<th style="text-align: center;">产品等级</th>
+<th style="text-align: center;">与国际差距</th>
+<th>核心能力评估</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>华特气体</strong></td>
+<td>光刻/刻蚀/清洗特气（高纯CF₄/C₂F₆/CHF₃/SF₆等）</td>
+<td>已量产，覆盖8-12英寸制程</td>
+<td style="text-align: center;">5N-6N</td>
+<td style="text-align: center;">1代（中低端）/ 2代（高端刻蚀气）</td>
+<td><strong>国内品类最全的电子特气企业</strong>，供应中芯国际/华虹/长江存储，超过20个品种进入Fab供应链</td>
+</tr>
+<tr>
+<td><strong>金宏气体</strong></td>
+<td>大宗气体（N₂/O₂/H₂/Ar）+ 特气（NH₃/SiH₄等）</td>
+<td>大宗气体已大规模供应，特气逐步拓展</td>
+<td style="text-align: center;">5N-6N</td>
+<td style="text-align: center;">1-2代</td>
+<td>强项在电子级大宗气体（现场制气），在苏州/无锡/合肥半导体集聚区布局密集</td>
+</tr>
+<tr>
+<td><strong>昊华科技（黎明院/光明院合并）</strong></td>
+<td>NF₃、WF₆、SF₆、CF₄</td>
+<td>NF₃年产5,000吨（全球前列），WF₆已量产</td>
+<td style="text-align: center;">NF₃ 4N-5N</td>
+<td style="text-align: center;">NF₃ 1代，WF₆ 2代</td>
+<td><strong>NF₃产能中国最大</strong>，但芯片级NF₃（&lt;0.1ppb金属）占比尚低</td>
+</tr>
+<tr>
+<td><strong>雅克科技</strong></td>
+<td>SiH₄、DCS、TCS、TMA等前驱体</td>
+<td>SiH₄已量产，前驱体在验证中</td>
+<td style="text-align: center;">SiH₄ 5N-6N</td>
+<td style="text-align: center;">2-3代（前驱体）</td>
+<td>通过收购韩国UP Chemical和江苏先科进入前驱体领域，实现TDMAT/TEMAZr国产化突破</td>
+</tr>
+<tr>
+<td><strong>中船特气（718所）</strong></td>
+<td>NF₃、WF₆、C₂F₆等氟基特气</td>
+<td>NF₃年产12,000吨（全球最大产能之一）</td>
+<td style="text-align: center;">NF₃ 4N-5N</td>
+<td style="text-align: center;">1-2代</td>
+<td>央企背景，NF₃产能规模优势突出，但芯片级品质与良率仍在追赶</td>
+</tr>
+<tr>
+<td><strong>绿菱气体</strong></td>
+<td>高纯SiH₄（硅烷）</td>
+<td>SiH₄年产1,000吨（电子级）</td>
+<td style="text-align: center;">6N</td>
+<td style="text-align: center;">1-2代</td>
+<td>电子级SiH₄纯化技术领先，已进入国内主要Fab供应链</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_14">国产化率现状</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">电子特气品类</th>
+<th style="text-align: center;">国产化率（估）</th>
+<th>国产代表企业</th>
+<th>核心瓶颈</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>大宗气体（N₂/O₂/H₂/Ar）</strong></td>
+<td style="text-align: center;">~50%（现场制气国产化率仍&lt;20%）</td>
+<td>金宏气体/杭氧股份</td>
+<td>现场制气的大型空分设备（ASU）国产化率低，AP/林德在大型空分上占主导（&gt;10,000Nm³/h级别）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>NF₃</strong></td>
+<td style="text-align: center;">~50%（产量占比高，但芯片级占比低）</td>
+<td>中船特气/昊华科技</td>
+<td>芯片级NF₃（金属杂质&lt;0.1ppb）的稳定量产能力</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>SiH₄</strong></td>
+<td style="text-align: center;">~30%</td>
+<td>绿菱气体/硅烷科技</td>
+<td>自燃性气体的安全储运体系和保险覆盖</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>刻蚀气体（CF₄/CHF₃/SF₆/C₄F₈）</strong></td>
+<td style="text-align: center;">~20-30%</td>
+<td>华特气体/昊华科技</td>
+<td>高端刻蚀气的杂质谱一致性（批次CPK）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>CVD/ALD前驱体</strong></td>
+<td style="text-align: center;">&lt;10%</td>
+<td>雅克科技（领先）/南大光电</td>
+<td>前驱体合成中的分子纯度（金属杂质&lt;0.1ppb）和热稳定性</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>稀有气体（Ne/Kr/Xe）</strong></td>
+<td style="text-align: center;">~5-10%</td>
+<td>宝钢气体/杭氧股份</td>
+<td>稀有气体来自大型空分的副产品，中国空分规模虽大但提纯技术差距大</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>掺杂气体（PH₃/B₂H₆/AsH₃）</strong></td>
+<td style="text-align: center;">&lt;5%</td>
+<td>华特气体（少量）</td>
+<td>极度危险（剧毒+自燃+致癌）→安全合规门槛极高，Fab认证极度保守</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_15">出口管制影响</h3>
+<ul>
+<li><strong>稀有气体（Ne/Kr/Xe）的地缘政治风险</strong>：全球约40-50%的半导体级氖气（Ne）由乌克兰企业（Ingas/Cryoin）供应——2022年俄乌战争导致乌克兰氖气停产，全球氖气价格暴涨20倍。中国是粗氖气的最大生产国之一（空分副产品），但提纯到半导体级（&gt;5N）的产能在国内有限——这个"提纯缺口"既是风险也是国产替代机遇。</li>
+<li><strong>氟基特气的出口管制</strong>：中国是全球最大的萤石（CaF₂，氟化工原料）生产国——日系气体企业（关东电化/大阳日酸）的NF₃/WF₆生产部分依赖中国萤石。2023年中国限制萤石出口，反向施压日系气体供应链。</li>
+</ul>
+<hr />
+<h2 id="_16">💼 帆软关联度分析</h2>
+<table>
+<thead>
+<tr>
+<th>产品线</th>
+<th style="text-align: center;">关联度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>FineReport</strong></td>
+<td style="text-align: center;">🟢 高</td>
+<td>电子特气生产涉及钢瓶级质量追溯：每只钢瓶从充装→分析→出厂→客户使用→空瓶回收的全生命周期追溯。CoA（出厂分析证书）自动化生成、钢瓶水压试验到期预警、客户现场气体纯度在线监控看板</td>
+</tr>
+<tr>
+<td><strong>FineBI</strong></td>
+<td style="text-align: center;">🟢 高</td>
+<td>气体分装损耗分析（充装重量vs理论重量差异趋势）、钢瓶周转效率（在途/在客户/待充装/待维修的钢瓶数量与周转天数）、客户消耗预测（基于历史用量的客户补货预警）</td>
+</tr>
+<tr>
+<td><strong>FDL数据底座</strong></td>
+<td style="text-align: center;">🟡 中</td>
+<td>打通特气企业数据流：钢瓶资产管理系统→充装站MES→分析实验室LIMS→物流配送→客户现场TGM（Total Gas Management）系统的数据闭环</td>
+</tr>
+<tr>
+<td><strong>简道云与AI Agent</strong></td>
+<td style="text-align: center;">🟡 中</td>
+<td>钢瓶巡检与维保记录无纸化、客户现场气体用量月结对账（减少对账争议）、AI Agent辅助客户库存预测与自动补货建议</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_17">🎯 售前场景</h2>
+<h3 id="_18">场景一：特气企业——钢瓶资产全生命周期管理</h3>
+<p><strong>客户画像</strong>：华特气体/金宏气体的运营总监。痛点：一家中型特气企业在市场上流通的钢瓶数量多达5-10万只——每只钢瓶位置在哪、下次水压试验什么时候到期、在客户现场滞留了多久。当前依赖Excel+SAP台账，钢瓶丢失率3-5%/年，年损失数百万。</p>
+<p><strong>参考话术</strong>：</p>
+<blockquote>
+<p>"你们在市面上流转的钢瓶有多少——5万只还是10万只？每只钢瓶都是几千块钱的资产。我们帮某气体公司用FDL打通了SAP物料号和钢瓶GPS/二维码，运营总监手机上就能看到'在途钢瓶587只/在客户现场3,214只/待维修42只'的实时看板，钢瓶年周转率从4次提升到6次——相当于少买了2万只钢瓶，省了一个亿。"</p>
+</blockquote>
+<h3 id="fab">场景二：Fab厂务部门——气体供应稳定性与质量管理</h3>
+<p><strong>客户画像</strong>：Fab的厂务（Facility）气体工程师。痛点：大宗气体（N₂/O₂）通过管道从空分装置到Fab，但特气依赖钢瓶/Y-cylinder/Trailer供应——气体纯度波动或供应中断直接导致Fab停产。</p>
+<p><strong>参考话术</strong>：</p>
+<blockquote>
+<p>"你们Fab一个月用多少瓶特气——500瓶还是1,000瓶？上一次因为气体纯度波动导致刻蚀工艺飘移是什么时候？我们用FineReport+FineBI做了一套'气体质量驾驶舱'：每批钢瓶的纯度检测数据自动对接到Fab的SPC系统，纯度偏差超过±2σ立即预警并自动保留样品——上次帮一个Fab发现某批NF₃的CF₄杂质偏高导致腔体清洗效率下降，及时换了批次，避免了两天的非计划停机。"</p>
+</blockquote>
+<h3 id="fabtgm">场景三：Fab采购——特种气体TGM模式的价值分析</h3>
+<p><strong>客户画像</strong>：Fab采购总监，对接多个气体供应商。TGM（Total Gas Management，气体综合管理）模式下，供应商（林德/AP）不仅卖气体还管理Fab的整个气体供应链，但费用不透明。</p>
+<p><strong>参考话术</strong>：</p>
+<blockquote>
+<p>"你们采纳了AP的TGM服务——你知道每Nm³高纯氮气的实际成本是多少吗？我们帮一家Fab把TGM费用的构成拆成了'气费+设备租赁费+运维费+管理服务费'，用FineBI按天/按工序做成本归集和供应商对比——发现某工序的气体成本比行业基准高了15%，重新谈判后年度气体采购节省了700万。"</p>
+</blockquote>
+<hr />
+<h2 id="_19">🔗 延伸阅读</h2>
+<ul>
+<li><a href="/kb/01-晶圆制造/行业动态/半导体材料市场格局与关键品类">半导体材料市场格局与关键品类</a> — 电子特气是半导体材料第二大品类（~13%份额）</li>
+<li><a href="/kb/05-其他细分/硅片制造与全球供应格局：从硅锭到300mm大硅片">硅片制造与全球供应格局：从硅锭到300mm大硅片</a> — 硅源气体（TCS/SiH₄）是多晶硅/硅锭制造的基础</li>
+<li><a href="/kb/05-其他细分/半导体洁净室工程：Fab建设的基础设施与技术标准">半导体洁净室工程：Fab建设的基础设施与技术标准</a> — Fab气体分配系统（Gas Distribution）与洁净室工程紧密耦合</li>
+<li><a href="/kb/05-其他细分/光刻胶技术专题：从g线到EUV">光刻胶技术专题：从g线到EUV</a> — 光刻胶与电子特气同为Fab耗材，供应链风险特征相似</li>
+</ul>
+<hr />
+<p><em>撰写于 2026-07-13 · 徐文浩 (Lorin) · 帆软上海售前</em></p>
+</div>
+</article>
+<footer class="note-footer">
+  <a href="/kb/05-其他细分/index.html">← 返回目录</a>
+</footer>
+</main>
+</body>
+</html>

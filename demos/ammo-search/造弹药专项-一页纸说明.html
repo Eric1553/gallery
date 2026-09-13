@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>上海战区 · 战略客户运营与造弹药 · 一页纸</title>
+  <style>
+    :root {
+      --page-bg: #dce4f4;
+      --paper: #ffffff;
+      --paper-tint: #f7f9ff;
+      --ink: #152238;
+      --ink-soft: #3d4f6f;
+      --muted: #5c6d8c;
+      --line: #c6d2ea;
+      --brand: #3a5fc4;
+      --brand-mid: #5578d4;
+      --brand-soft: #e8eeff;
+      --shadow-doc: 0 22px 70px rgba(24, 42, 86, 0.11), 0 6px 22px rgba(24, 42, 86, 0.05);
+      --shadow-float: 0 12px 36px rgba(24, 42, 86, 0.07);
+      --radius-xl: 20px;
+      --radius-lg: 14px;
+      --radius-md: 11px;
+      --font: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+      --serif: "Songti SC", STSong, "Noto Serif SC", serif;
+      --mono: ui-monospace, "SF Mono", Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: var(--font);
+      font-size: clamp(15px, 0.92vw + 12.8px, 17px);
+      line-height: 1.68;
+      color: var(--ink);
+      background: var(--page-bg);
+      overflow-x: hidden;
+    }
+
+    .fx-root {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    #bg-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.42;
+      mix-blend-mode: multiply;
+    }
+
+    .fx-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.5;
+      animation: blob1 22s ease-in-out infinite alternate;
+    }
+    .fx-blob.n1 {
+      width: 48vmax;
+      height: 48vmax;
+      left: -12%;
+      top: -8%;
+      background: radial-gradient(circle, rgba(120, 160, 255, 0.55), transparent 65%);
+    }
+    .fx-blob.n2 {
+      width: 42vmax;
+      height: 42vmax;
+      right: -10%;
+      top: 20%;
+      background: radial-gradient(circle, rgba(180, 210, 255, 0.45), transparent 60%);
+      animation: blob2 28s ease-in-out infinite alternate;
+    }
+    .fx-blob.n3 {
+      width: 55vmax;
+      height: 40vmax;
+      left: 20%;
+      bottom: -15%;
+      background: radial-gradient(circle, rgba(255, 248, 235, 0.35), rgba(200, 215, 245, 0.25) 50%, transparent 70%);
+      animation: blob3 26s ease-in-out infinite alternate;
+    }
+
+    @keyframes blob1 {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(8vw, 4vh) scale(1.08); }
+    }
+    @keyframes blob2 {
+      0% { transform: translate(0, 0) scale(1.02); }
+      100% { transform: translate(-6vw, 8vh) scale(0.95); }
+    }
+    @keyframes blob3 {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      100% { transform: translate(-4vw, -3vh) rotate(8deg); }
+    }
+
+    .fx-aurora {
+      position: absolute;
+      inset: -30% -20%;
+      background:
+        conic-gradient(from 120deg at 30% 40%, rgba(80, 120, 255, 0.12), transparent 35%, rgba(255, 200, 180, 0.08), transparent 70%, rgba(100, 140, 255, 0.1), transparent 92%);
+      animation: spin-aurora 80s linear infinite;
+      opacity: 0.65;
+    }
+    @keyframes spin-aurora {
+      to { transform: rotate(360deg); }
+    }
+
+    .fx-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(90deg, rgba(58, 95, 196, 0.06) 1px, transparent 1px),
+        linear-gradient(rgba(58, 95, 196, 0.06) 1px, transparent 1px);
+      background-size: 64px 64px;
+      animation: grid-drift 36s linear infinite;
+      mask-image: radial-gradient(ellipse 90% 70% at 50% 35%, #000 15%, transparent 75%);
+      opacity: 0.45;
+    }
+    @keyframes grid-drift {
+      to { background-position: 64px 64px, 64px 64px; }
+    }
+
+    .fx-scan {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        100deg,
+        transparent 42%,
+        rgba(255, 255, 255, 0.09) 50%,
+        transparent 58%
+      );
+      background-size: 280% 100%;
+      animation: scan 18s ease-in-out infinite;
+      opacity: 0.55;
+    }
+    @keyframes scan {
+      0%, 100% { background-position: 100% 0; }
+      50% { background-position: 0% 0; }
+    }
+
+    .fx-vignette {
+      position: absolute;
+      inset: 0;
+      box-shadow: inset 0 0 180px rgba(20, 35, 70, 0.12);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fx-blob, .fx-aurora, .fx-grid, .fx-scan { animation: none !important; }
+      #bg-canvas { display: none !important; }
+    }
+
+    .page-wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: clamp(22px, 4.5vw, 42px) clamp(16px, 3.5vw, 32px) 72px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+    @media (min-width: 1040px) {
+      .page-wrap {
+        grid-template-columns: 188px minmax(0, 1fr);
+        gap: 26px;
+      }
+    }
+
+    .side-toc {
+      display: none;
+    }
+    @media (min-width: 1040px) {
+      .side-toc {
+        display: block;
+        position: sticky;
+        top: 22px;
+        padding: 16px 12px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(247, 249, 255, 0.88));
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-float);
+        backdrop-filter: blur(12px);
+      }
+    }
+    .side-toc .toc-h {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--brand);
+      margin: 0 0 10px;
+      font-weight: 700;
+    }
+    .side-toc nav { display: flex; flex-direction: column; gap: 2px; }
+    .side-toc a {
+      display: block;
+      padding: 6px 9px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      color: var(--ink-soft);
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .side-toc a:hover {
+      background: var(--brand-soft);
+      color: var(--brand);
+      border-color: rgba(58, 95, 196, 0.18);
+    }
+
+    .main-column { min-width: 0; }
+
+    .paper-card {
+      background: var(--paper);
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: var(--shadow-doc);
+      overflow: hidden;
+    }
+    .card-accent {
+      height: 5px;
+      background: linear-gradient(90deg, var(--brand), var(--brand-mid), #8fa8ff);
+    }
+
+    .hero-split {
+      display: grid;
+      gap: 18px;
+      padding: clamp(20px, 3.5vw, 32px) clamp(18px, 3.2vw, 36px);
+      background: linear-gradient(118deg, rgba(232, 238, 255, 0.65) 0%, var(--paper) 52%);
+      border-bottom: 1px solid var(--line);
+    }
+    @media (min-width: 760px) {
+      .hero-split { grid-template-columns: 1fr auto; align-items: center; }
+    }
+    .hero-split h1 {
+      font-family: var(--serif);
+      font-size: clamp(1.45rem, 2.2vw + 0.85rem, 1.95rem);
+      font-weight: 700;
+      margin: 0 0 8px;
+      line-height: 1.28;
+      color: var(--ink);
+    }
+    .hero-lead {
+      margin: 0;
+      font-size: 0.93rem;
+      color: var(--muted);
+      max-width: 52ch;
+    }
+    .hero-actions { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .btn-kms {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 17px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #fff;
+      text-decoration: none;
+      background: linear-gradient(180deg, var(--brand-mid), var(--brand));
+      box-shadow: 0 6px 22px rgba(58, 95, 196, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+    }
+    .btn-kms .mono { font-family: var(--mono); font-size: 0.68rem; opacity: 0.92; }
+    .stamp-date {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--muted);
+      white-space: nowrap;
+      padding: 8px 12px;
+      background: var(--paper-tint);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+
+    .card-inner {
+      padding: clamp(16px, 2.8vw, 28px) clamp(16px, 3vw, 34px) clamp(22px, 3.5vw, 36px);
+      background: linear-gradient(180deg, #fafbfe 0%, #fff 14%, #fff 100%);
+    }
+
+    .section { margin-bottom: clamp(22px, 3vw, 30px); }
+    .section:last-child { margin-bottom: 0; }
+
+    .section-frame {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: clamp(16px, 2.2vw, 22px) clamp(14px, 2.2vw, 20px);
+      box-shadow: 0 6px 26px rgba(24, 42, 86, 0.04);
+      position: relative;
+    }
+    .section-frame::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 16px;
+      bottom: 16px;
+      width: 4px;
+      border-radius: 0 4px 4px 0;
+      background: linear-gradient(180deg, var(--brand), var(--brand-mid));
+    }
+
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+      padding-left: 8px;
+    }
+    .section-num {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(135deg, var(--brand), var(--brand-mid));
+      padding: 5px 11px;
+      border-radius: 999px;
+      letter-spacing: 0.04em;
+    }
+    .section h2 {
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      margin: 0;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .read-list, .check-list, .ol-tight {
+      margin: 8px 0 0;
+      padding-left: 1.2em;
+      font-size: 0.93rem;
+      color: var(--ink-soft);
+    }
+    .read-list li, .check-list li { margin-bottom: 6px; }
+
+    .action-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+      padding-left: 6px;
+    }
+    .chip {
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: #2f4a9e;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #f3f6ff, #e4ecff);
+      border: 1px solid #b8c9ef;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 10px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--line);
+    }
+    table.sheet {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+      background: var(--paper);
+    }
+    table.sheet th,
+    table.sheet td {
+      border: 1px solid var(--line);
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    table.sheet th {
+      background: linear-gradient(180deg, #eef2ff, #e4e9fc);
+      color: var(--brand);
+      font-weight: 700;
+    }
+    table.sheet tbody tr:nth-child(even) td { background: rgba(249, 251, 255, 0.7); }
+
+    .block-title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      font-family: var(--mono);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--brand);
+      margin: 14px 0 6px;
+      padding-left: 8px;
+    }
+    .block-title:first-of-type { margin-top: 6px; }
+    .item-intro {
+      margin: 0 0 8px;
+      padding-left: 8px;
+      font-size: 0.93rem;
+      color: var(--ink-soft);
+      line-height: 1.62;
+    }
+    .ol-tight li { margin-bottom: 5px; }
+    .item-section { margin-top: 18px; padding-top: 16px; border-top: 1px dashed var(--line); }
+    .item-section:first-of-type { margin-top: 10px; padding-top: 0; border-top: none; }
+    .item-h {
+      font-family: var(--serif);
+      font-size: 1rem;
+      font-weight: 700;
+      margin: 0 0 10px;
+      padding-left: 8px;
+      color: var(--ink);
+    }
+
+    .hard-box {
+      margin-top: 12px;
+      padding: 12px 14px;
+      background: var(--brand-soft);
+      border: 1px solid rgba(58, 95, 196, 0.2);
+      border-radius: var(--radius-md);
+      font-size: 0.86rem;
+      color: var(--ink-soft);
+    }
+    .hard-box ul { margin: 6px 0 0; padding-left: 1.1em; }
+    .hard-box li { margin-bottom: 5px; }
+
+    footer.doc-foot {
+      margin-top: 20px;
+      padding: 12px 4px 0;
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    footer.doc-foot a { color: var(--brand); font-weight: 600; }
+
+    .section-frame h3.item-h2 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin: 16px 0 8px;
+      padding-left: 8px;
+      color: var(--ink);
+      font-family: var(--serif);
+    }
+    .kms-meta {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      margin: 0 0 12px;
+      padding-left: 8px;
+    }
+    .eng-stack {
+      margin-top: 16px;
+      display: grid;
+      gap: 12px;
+    }
+    .eng-item {
+      padding: 14px 16px;
+      background: linear-gradient(135deg, rgba(234, 240, 255, 0.45), #fff);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+    }
+    .eng-item h4 {
+      margin: 0 0 8px;
+      font-size: 0.88rem;
+      color: var(--brand);
+    }
+    .eng-item p { margin: 0; font-size: 0.84rem; color: var(--ink-soft); line-height: 1.6; }
+    .eng-item code { font-size: 0.75rem; }
+
+    .focus-grid {
+      display: grid;
+      gap: 14px;
+    }
+    @media (min-width: 700px) {
+      .focus-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .focus-card {
+      padding: 18px 20px;
+      border-radius: var(--radius-md);
+      border: 2px solid var(--brand);
+      background: linear-gradient(155deg, #f2f6ff 0%, #fff 100%);
+      box-shadow: 0 8px 28px rgba(58, 95, 196, 0.1);
+    }
+    .focus-card .tag {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: var(--brand);
+      margin-bottom: 10px;
+    }
+    .focus-card .file-link {
+      display: inline-block;
+      font-size: 1.02rem;
+      font-weight: 800;
+      color: var(--ink);
+      text-decoration: none;
+      font-family: var(--mono);
+      word-break: break-all;
+    }
+    .focus-card .file-link:hover { color: var(--brand); text-decoration: underline; }
+    .focus-card .hint {
+      margin: 10px 0 0;
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .vpp-grid {
+      display: grid;
+      gap: 12px;
+    }
+    @media (min-width: 820px) {
+      .vpp-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    .vpp-card {
+      padding: 14px 16px;
+      background: var(--paper-tint);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      min-height: 100%;
+    }
+    .vpp-card .vpp-label {
+      font-family: var(--font);
+      font-size: 0.82rem;
+      letter-spacing: 0.06em;
+      color: var(--brand);
+      margin: 0 0 10px;
+      font-weight: 800;
+    }
+    .vpp-card p { margin: 0; font-size: 0.93rem; color: var(--ink-soft); line-height: 1.58; }
+
+    .kpi-pillar-grid {
+      display: grid;
+      gap: 18px;
+    }
+    @media (min-width: 820px) {
+      .kpi-pillar-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .kpi-pillar {
+      padding: 18px 20px;
+      background: linear-gradient(165deg, #f5f8ff 0%, #fff 55%);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      border-top: 4px solid var(--brand);
+      box-shadow: 0 6px 20px rgba(24, 42, 86, 0.05);
+    }
+    .kpi-pillar .pillar-idx {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--brand);
+      margin-bottom: 8px;
+    }
+    .kpi-pillar h3 {
+      margin: 0 0 12px;
+      font-size: 1.18rem;
+      font-weight: 800;
+      line-height: 1.35;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+    .kpi-pillar ul {
+      margin: 0;
+      padding-left: 1.15em;
+      font-size: 0.93rem;
+      line-height: 1.65;
+      color: var(--ink-soft);
+    }
+    .kpi-pillar li { margin-bottom: 8px; }
+    .kpi-pillar .pillars-link {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--line);
+      font-size: 0.9rem;
+    }
+    .kpi-pillar .pillars-link a { font-weight: 700; color: var(--brand); }
+
+    @media print {
+      .fx-root { display: none !important; }
+      body { background: #fff; }
+      .paper-card { box-shadow: none; }
+      .side-toc { display: none !important; }
+      .page-wrap { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="fx-root" aria-hidden="true">
+    <canvas id="bg-canvas" width="800" height="600"></canvas>
+    <div class="fx-aurora"></div>
+    <div class="fx-blob n1"></div>
+    <div class="fx-blob n2"></div>
+    <div class="fx-blob n3"></div>
+    <div class="fx-grid"></div>
+    <div class="fx-scan"></div>
+    <div class="fx-vignette"></div>
+  </div>
+
+  <div class="page-wrap">
+    <aside class="side-toc" aria-label="目录">
+      <p class="toc-h">目录</p>
+      <nav>
+        <a href="#vpp">价值 · 痛点 · 做法</a>
+        <a href="#year-plan">全年计划</a>
+        <a href="#focus">四项重点任务</a>
+        <a href="#tools">检索类工具</a>
+        <a href="#cross-spec">跨团队与能力专项协作</a>
+      </nav>
+    </aside>
+
+    <div class="main-column">
+      <article class="paper-card">
+        <div class="card-accent"></div>
+        <header class="hero-split">
+          <div>
+            <h1>上海战区 · 战略客户运营与造弹药</h1>
+            <p class="hero-lead">面向<strong>战略客户经营单元</strong>：把「洞察—方案—证据—传播」打成可检索、可审批、可复用的<strong>客户侧弹药包</strong>；节奏、任务与工具交付见下文。</p>
+            <div class="hero-actions">
+              <a class="btn-kms" href="https://kms.fineres.com/pages/viewpage.action?pageId=1410572496" target="_blank" rel="noopener noreferrer">
+                KMS 正文
+                <span class="mono">1410572496</span>
+              </a>
+              <a class="btn-kms" href="#focus" style="background:linear-gradient(180deg,#2d8a6e,#1f6b52);box-shadow:0 4px 16px rgba(30,100,70,.28);">四项重点任务</a>
+            </div>
+          </div>
+          <div class="stamp-date" id="docDate">—</div>
+        </header>
+
+        <div class="card-inner">
+
+          <section class="section" id="vpp">
+            <div class="section-frame">
+              <div class="section-head"><span class="section-num">1</span><h2>价值 · 痛点 · 做法</h2></div>
+              <div class="vpp-grid">
+                <div class="vpp-card">
+                  <p class="vpp-label">价值</p>
+                  <p>在重点行业与大客经营中，弹药须<strong>可落地、可复用、可宣导、可追踪</strong>：同一战略客户上口径一致，证据链完整；标杆打法可跨<strong>同类战略客户</strong>二次复用，而非一次性材料。</p>
+                </div>
+                <div class="vpp-card">
+                  <p class="vpp-label">痛点</p>
+                  <p>在单客长周期经营里，材料散在 KMS、Knowhow、个人盘与协作记录中；准标杆难转成<strong>可陈述、可论证、可对外发布</strong>的材料单元；需求不绑客户与商机阶段，版本与场景脱节；缺<strong>客户维度</strong>的固定节奏，难以将「造—用—复盘」形成<strong>管理闭环</strong>。</p>
+                </div>
+                <div class="vpp-card">
+                  <p class="vpp-label">做法</p>
+                  <p>以 <strong>2026 BP 里程碑与月度四周运行机制</strong> 为主轴，需求与产出按 <strong>Top5 战略客户 / Top3 核心弹药</strong> 收敛；任务拆为下列四项。检索侧<strong>能力目标</strong>是建设面向大客户场景的<strong>经营多源一体检索</strong>：围绕指定客户与商机，整合 <strong>CRM（客户与商机等经营过程信息）</strong>、<strong>Knowhow</strong>、<strong>KMS</strong> 与<strong>项目/区域及其他文档材料</strong>的<strong>信息综合查询与知识回填</strong>，支撑方案拼装、证据链与会商材料的<strong>同步完备</strong>。<strong>当前阶段交付</strong>以 <strong>Knowhow 单源</strong> 与 <strong>KMS+Knowhow 通用检索</strong> 为抓手，为后续接入更多数据源夯实底座。</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section" id="year-plan">
+            <div class="section-frame">
+              <div class="section-head"><span class="section-num">2</span><h2>全年计划</h2></div>
+              <p class="item-intro" style="margin-bottom:10px;"><strong>固定节奏</strong>：周—按<strong>指定战略客户</strong>跟进推进动作与「本条战线」材料缺口；月—输出<strong>客户维度</strong>需求画像、优先弹药清单与复盘结论。<strong>工作量控制</strong>：聚焦 <strong>Top5</strong> 战略客户、<strong>Top3</strong> 核心弹药。</p>
+              <div class="table-wrap">
+                <table class="sheet">
+                  <thead><tr><th>时间节点</th><th>要做什么</th><th>交付物</th></tr></thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>2026-05-17</strong></td>
+                      <td>与责任售前对齐<strong>战略客户</strong>弹药需求；锁定优先弹药主题与客户名单；明确月度滚动分工</td>
+                      <td>《大客户弹药需求清单》</td>
+                    </tr>
+                    <tr><td>2026-05-22</td><td>完成需求画像采集与优先级排序</td><td>《战略客户弹药需求画像（5家）》</td></tr>
+                    <tr><td>2026-05-29</td><td>确定 5-6 月弹药排期与资源投入</td><td>—</td></tr>
+                    <tr><td>2026-06-26</td><td>首月收口复盘（采用率/命中率/缺口）</td><td>《6月复盘与改版建议》</td></tr>
+                    <tr><td>2026-09-30</td><td>Q3 闭环评估（造-用-复盘-再造）</td><td>《Q3专项评估报告》</td></tr>
+                    <tr><td>2026-12-25</td><td>年度收官复盘</td><td>《2026年度复盘》</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="block-title" style="margin-top:14px;">月度运行（需求—产出—宣导—收口）</p>
+              <div class="table-wrap">
+                <table class="sheet">
+                  <thead><tr><th>周期</th><th>动作</th><th>输出</th></tr></thead>
+                  <tbody>
+                    <tr><td>每月第 1 周</td><td>需求收集（销售/售前/项目经理），<strong>按战略客户与商机阶段</strong>归类</td><td>《本月弹药需求清单》（需求登记）</td></tr>
+                    <tr><td>每月第 2-3 周</td><td>共创产出（服务<strong>推进中战略客户</strong>的空白场景与<strong>客户高层沟通</strong>）</td><td>新模板/新案例</td></tr>
+                    <tr><td>每月第 4 周</td><td>宣导 + 实战反馈（命中率、缺口回到客户清单）</td><td>使用数据、问题清单、改版建议</td></tr>
+                    <tr><td>月底收口</td><td>评审评级 + 上架/下架（标<strong>可复用半径</strong>：单客 / 同类战略客户 / 全区）</td><td>《弹药池版本清单》与复盘结论</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section class="section" id="focus">
+            <div class="section-frame">
+              <div class="section-head"><span class="section-num">3</span><h2>四项重点任务</h2></div>
+              <div class="kpi-pillar-grid">
+                <div class="kpi-pillar" id="p1">
+                  <div class="pillar-idx">任务 ①</div>
+                  <h3>战略客户弹药查询</h3>
+                  <ul>
+                    <li>为<strong>指定战略客户与在谈商机</strong>拉通 <strong>KMS、Knowhow</strong>，形成「按客户语境」快速检索入口；汇总区域标杆材料与协同团队侧散落材料，纳入统一经营视图。</li>
+                    <li>结合 Corevo 与 <strong>Knowhow</strong> 缩短「问题—证据」路径；对暂缺准标杆的优质方案，基于准标杆页面汇总生成<strong>适用于正式汇报、可追溯归档</strong>的结构化传播 PPT。</li>
+                    <li>建设客户侧<strong>场景地图</strong>（经营分析、预算管控、产销协同、供应链预警等串联）；完成标杆价值迁移与传播单元（<strong>1 页故事 + 3 页方案 + 1 页价值</strong>），服务深度经营与<strong>客户高层汇报</strong>。</li>
+                  </ul>
+                  <div class="pillars-link"><strong>工具交付</strong>：<a href="Knowhow快速查询.html">Knowhow快速查询.html</a> · <a href="通用检索工作台.html">通用检索工作台.html</a></div>
+                </div>
+                <div class="kpi-pillar" id="p2">
+                  <div class="pillar-idx">任务 ②</div>
+                  <h3>战略客户弹药滚动</h3>
+                  <ul>
+                    <li><strong>月初</strong>：月会/周会宣导，经<strong>线上需求登记</strong>收集需求；拆分为 <strong>常规弹药</strong>（按优先级填<strong>该客户</strong>场景空白）与 <strong>特殊弹药</strong>（支撑跨角色联合交付在<strong>单客</strong>上的专项攻坚）。</li>
+                    <li><strong>月中</strong>：弹药补充与问题闭环，绑定<strong>商机阶段与决策链</strong>（业务/IT/高管）。</li>
+                    <li><strong>月末</strong>：面向<strong>客户高层沟通</strong>的弹药回收与使用场景确认；沉淀 <strong>战略客户案例卡（可复盘、可传播）</strong>，经<strong>官方协作渠道</strong>在同类型客户网络中推广。</li>
+                  </ul>
+                </div>
+                <div class="kpi-pillar" id="p3">
+                  <div class="pillar-idx">任务 ③</div>
+                  <h3>标杆场景与同类复用</h3>
+                  <ul>
+                    <li>在<strong>存量战略客户</strong>上抓<strong>新场景、新战线</strong>：按优先级投放核心场景弹药，填补空白，形成<strong>单客户深度推荐组合</strong>。</li>
+                    <li>对对账、管报等高价值、跨多战略客户、推进偏慢的场景：做案例整合、价值提炼与<strong>同类客户</strong>推广路径。</li>
+                    <li>参与 <strong>2–3 家</strong>战略客户常态化复盘或工作坊，与售前共建<strong>空白场景地图</strong>与下阶段弹药路线，责任与节奏落到客户单元。</li>
+                  </ul>
+                </div>
+                <div class="kpi-pillar" id="p4">
+                  <div class="pillar-idx">任务 ④</div>
+                  <h3>战略客户案例资产</h3>
+                  <ul>
+                    <li>在<strong>重点客户协作网络</strong>内沉淀可复用案例资产：抽取核心内容，形成附带<strong>授权说明与陈述边界</strong>的传播材料包。</li>
+                    <li>与案例卡、月度「弹药池版本清单」、宣导物料（一页纸、方案卡、演示脚本、Q&amp;A、边界红线、商机打法）及「新弹药上架通知」衔接，标明<strong>适用客户类型与阶段</strong>并完成上架迭代。</li>
+                    <li><strong>Knowhow 快速查询</strong>承接需求结构化与命中提升，使案例沉淀能按客户与场景被二次调用。</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section" id="tools">
+            <div class="section-frame">
+              <div class="section-head"><span class="section-num">4</span><h2>检索类工具</h2></div>
+              <p class="item-intro" style="margin-bottom:10px;"><strong>方向</strong>：大客户经营所需的 <strong>CRM、Knowhow、KMS 与项目/区域及其他文档</strong> 等<strong>多源信息综合检索</strong>；下列为现阶段已落地的检索入口，后续按数据源与权限逐步扩展。</p>
+              <div class="focus-grid">
+                <div class="focus-card">
+                  <div class="tag">Knowhow · 单源</div>
+                  <a class="file-link" href="Knowhow快速查询.html">Knowhow快速查询.html</a>
+                  <p class="hint">将业务语言解析为检索条件，返回与<strong>指定战略客户语境</strong>匹配的 Knowhow 与弹药条目，支撑方案拼装与上会材料。</p>
+                </div>
+                <div class="focus-card">
+                  <div class="tag">KMS + Knowhow · 通用检索</div>
+                  <a class="file-link" href="通用检索工作台.html">通用检索工作台.html</a>
+                  <p class="hint">单次检索并行覆盖 KMS 与 Knowhow，结果区分来源与<strong>对客陈述与授权边界</strong>，并支持面向<strong>单一客户议题</strong>的归纳输出。</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section" id="cross-spec">
+            <div class="section-frame">
+              <div class="section-head"><span class="section-num">5</span><h2>跨团队与能力专项协作</h2></div>
+              <p class="item-intro" style="margin-bottom:10px;">在客户、场景与<strong>对客表述口径</strong>上与相关能力专项保持一致；扩展检索数据源前，先约定<strong>知识目录、分类标签与访问策略</strong>，保证检索结果<strong>来源清晰、权限合规、可被复核</strong>。下文带链接条目为公司<strong>KMS 知识库</strong>索引（需相应访问权限）；其后的协作要点与方向性表述，供各相关方在既有职责框架内参考落实。</p>
+
+              <p class="block-title" style="margin-top:6px;">战略对齐材料索引（KMS · 2025）</p>
+              <ul style="margin:0 0 14px;padding-left:1.15em;font-size:0.93rem;line-height:1.65;color:var(--ink-soft);">
+                <li><a href="https://kms.fineres.com/pages/viewpage.action?pageId=1335146105" target="_blank" rel="noopener noreferrer">十五个战役举措共识会(2025)</a>：收录<strong>十五项关键举措</strong>及会议纪要（内容主线包括：战略客户经营、数据平台与价值深化、咨询与交付能力建设等）。</li>
+                <li>分主题页：<a href="https://kms.fineres.com/pages/viewpage.action?pageId=1340318846" target="_blank" rel="noopener noreferrer">战略客户运营</a>
+                  · <a href="https://kms.fineres.com/pages/viewpage.action?pageId=1356017509" target="_blank" rel="noopener noreferrer">数据平台纵深与客户高层价值突破</a><small style="opacity:.88">（对应 KMS 原归档专题，页面标题以系统显示为准）</small>
+                  · <a href="https://kms.fineres.com/pages/viewpage.action?pageId=1336580143" target="_blank" rel="noopener noreferrer">提升「咨询与交付组织」的产品力</a></li>
+                <li>补充材料：<a href="https://kms.fineres.com/pages/viewpage.action?pageId=1422526237" target="_blank" rel="noopener noreferrer">十五个战役举措通气会</a>
+                  · <a href="https://kms.fineres.com/pages/viewpage.action?pageId=1321880717" target="_blank" rel="noopener noreferrer">上海三年战略规划书(2025-2027)</a>
+                  · 会议纪要等附件自上述共识页之附件区下载</li>
+              </ul>
+
+              <p class="block-title" style="margin-top:6px;">与财务能力专项的协作方式</p>
+              <p style="margin:0 0 10px;font-size:0.93rem;line-height:1.65;color:var(--ink-soft);">在<strong>财务主题高价值场景</strong>、商机阶段与当期优先材料上对齐节奏。<strong>财务类标准内容与模板</strong>由财务能力专项在 KMS <strong>定稿并维护版本</strong>；本专项在 Knowhow 与检索侧补充<strong>客户与场景维度的索引信息</strong>，便于与方案、案例组合呈现。<strong>双周或月度</strong>同步需求与素材计划；面向重大客户的正式汇报材料，在发布前安排<strong>联合校对并形成书面确认</strong>；需求登记时对财务类需求予以<strong>明确分类</strong>，支持后续统计与检索优化。</p>
+              <div class="table-wrap">
+                <table class="sheet">
+                  <thead><tr><th>本专项（造弹药 · 检索）</th><th>财务能力专项</th></tr></thead>
+                  <tbody>
+                    <tr>
+                      <td>Knowhow 单源及 KMS+Knowhow 检索能力；面向客户议题的检索入口与分类；索引标签与可见性规则；将需求结构化并开展<strong>使用效果与内容缺口</strong>回顾；支撑方案与案例材料的组合呈现</td>
+                      <td>财务领域的标准叙事与模板母版、指标与业财口径说明；<strong>对客陈述边界</strong>与授权传播素材；优先级场景清单；重大材料的评审意见与定稿节奏</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <p class="block-title" style="margin-top:14px;">可协同推进的相关方向</p>
+              <ul style="margin:0 0 14px;padding-left:1.15em;font-size:0.93rem;line-height:1.65;color:var(--ink-soft);">
+                <li><strong>数据仓库与数据平台</strong>：与专项共同维护标准架构与场景方案在 KMS 的<strong>权威说明页</strong>及统一分类；检索侧可做<strong>按主题聚合浏览</strong>；版本与适用边界由数据平台专项负责声明，以减少对客材料中技术表述的不一致。</li>
+                <li><strong>从线索到交付回款的全流程（LTC）与组织资产</strong>：关键节点交付物与复盘模板进入 KMS 等知识库后，检索可按商机阶段提示<strong>建议配套材料</strong>；可先与<strong>财务领域试点项目</strong>节奏对齐验证，再逐步推广。</li>
+                <li><strong>高管关切议题与业务拓展</strong>：将标准表述要点与专家沟通提要纳入知识库；对重点客户可提供<strong>按权限区隔的主题检索视图</strong>；访问范围与<strong>对客陈述边界</strong>由业务专项共同参与界定。</li>
+                <li><strong>行业能力组（制造 / 消费 / 金融 / 民生）</strong>：行业指标口径与场景模板在 Knowhow 与 KMS <strong>同步维护、相互引用</strong>；检索侧支持<strong>行业与客户维度组合筛选</strong>，提升同类型战略客户场景下的复用效率。</li>
+              </ul>
+
+              <p class="block-title" style="margin-top:6px;">协作机制与发布前确认（建议，可与上表分工配套）</p>
+              <ul style="margin:0;padding-left:1.15em;font-size:0.93rem;line-height:1.65;color:var(--ink-soft);">
+                <li>就客户、场景、责任方与<strong>对客陈述边界</strong>等字段形成<strong>统一的元数据约定</strong>，并在 KMS 指定目录落位，作为检索与审计的共同依据。</li>
+                <li>各专项<strong>按月</strong>提供少量优先入库条目的摘要与链接；本专项结合检索与使用反馈汇总<strong>覆盖度与缺口</strong>，纳入下轮内容计划。</li>
+                <li>面向重大客户的对外材料，在联合校对并<strong>书面确认</strong>后，再纳入面向销售与客户经理开放的<strong>正式检索范围</strong>。</li>
+                <li>可选：选取<strong>一至两家</strong>战略客户先行试点<strong>联合案例卡</strong>，模式稳定后再向同行业客户及其他专项推广。</li>
+              </ul>
+            </div>
+          </section>
+
+
+        </div>
+      </article>
+
+      <footer class="doc-foot">
+        <a href="https://kms.fineres.com/pages/viewpage.action?pageId=1410572496" target="_blank" rel="noopener noreferrer">https://kms.fineres.com/pages/viewpage.action?pageId=1410572496</a>
+        · v64 · <span id="footDate">—</span>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var d = new Date();
+      var s = d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日";
+      var a = document.getElementById("docDate");
+      var b = document.getElementById("footDate");
+      if (a) a.textContent = s;
+      if (b) b.textContent = s;
+    })();
+
+    (function () {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      var canvas = document.getElementById("bg-canvas");
+      if (!canvas) return;
+      var ctx = canvas.getContext("2d");
+      var particles = [];
+      var n = 56;
+      var w = 0, h = 0;
+      var mouse = { x: 0, y: 0, active: false };
+      var t0 = performance.now();
+
+      function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+        particles.length = 0;
+        for (var i = 0; i < n; i++) {
+          particles.push({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            vx: (Math.random() - 0.5) * 0.35,
+            vy: (Math.random() - 0.5) * 0.35,
+            r: 1.2 + Math.random() * 2.2,
+            ph: Math.random() * Math.PI * 2
+          });
+        }
+      }
+      resize();
+      window.addEventListener("resize", resize);
+
+      document.addEventListener("mousemove", function (e) {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+        mouse.active = true;
+      }, { passive: true });
+
+      function tick(now) {
+        var t = (now - t0) * 0.001;
+        ctx.clearRect(0, 0, w, h);
+        var i, j, p, q, dx, dy, dist, alpha;
+
+        for (i = 0; i < particles.length; i++) {
+          p = particles[i];
+          p.ph += 0.012 + i * 0.0001;
+          p.x += p.vx + Math.sin(p.ph) * 0.15;
+          p.y += p.vy + Math.cos(p.ph * 0.8) * 0.12;
+          if (p.x < -20) p.x = w + 20;
+          if (p.x > w + 20) p.x = -20;
+          if (p.y < -20) p.y = h + 20;
+          if (p.y > h + 20) p.y = -20;
+          if (mouse.active) {
+            dx = mouse.x - p.x;
+            dy = mouse.y - p.y;
+            dist = dx * dx + dy * dy;
+            if (dist < 220 * 220 && dist > 1) {
+              p.x -= (dx / dist) * 180;
+              p.y -= (dy / dist) * 180;
+            }
+          }
+        }
+
+        var linkDist = Math.min(w, h) * 0.09;
+        for (i = 0; i < particles.length; i++) {
+          p = particles[i];
+          for (j = i + 1; j < particles.length; j++) {
+            q = particles[j];
+            dx = p.x - q.x;
+            dy = p.y - q.y;
+            dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < linkDist) {
+              alpha = (1 - dist / linkDist) * 0.22;
+              ctx.strokeStyle = "rgba(58, 95, 196, " + alpha + ")";
+              ctx.lineWidth = 0.85;
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(q.x, q.y);
+              ctx.stroke();
+            }
+          }
+        }
+
+        for (i = 0; i < particles.length; i++) {
+          p = particles[i];
+          var pulse = 0.55 + 0.45 * Math.sin(t * 1.2 + p.ph);
+          var grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 4);
+          grd.addColorStop(0, "rgba(100, 140, 255, " + (0.35 * pulse) + ")");
+          grd.addColorStop(1, "rgba(100, 140, 255, 0)");
+          ctx.fillStyle = grd;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r * 4, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = "rgba(62, 95, 200, " + (0.5 * pulse) + ")";
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    })();
+  </script>
+</body>
+</html>

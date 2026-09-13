@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>检索指引 · FICO 财务弹药库</title>
+  <link rel="stylesheet" href="../assets/css/fico.css" />
+  <link rel="stylesheet" href="../assets/css/search-sidebar.css" />
+</head>
+<body>
+  <canvas id="bgFx"></canvas>
+  <div class="aurora"></div>
+
+  <div class="shell">
+    <header class="page-header">
+      <a class="back" href="../index.html">← 返回首页</a>
+      <h1>检索指引</h1>
+      <p>在 Cursor 中使用 <code style="background:var(--brand-soft);padding:2px 8px;border-radius:6px;font-size:13px;">@fico</code> 触发远程知识库</p>
+    </header>
+
+    <div class="panel">
+      <h3>高频场景</h3>
+
+      <div class="query-item">
+        <div class="sc">客户拜访前 · 行业弹药</div>
+        <code>@fico 半导体行业财务分析框架 核心指标</code>
+      </div>
+      <div class="query-item">
+        <div class="sc">方案撰写 · 合并报表</div>
+        <code>@fico 合并报表 内部交易抵销 IFRS 10</code>
+      </div>
+      <div class="query-item">
+        <div class="sc">税务专题 · 金税四期</div>
+        <code>@fico 金税四期 税务健康自检 递延所得税</code>
+      </div>
+      <div class="query-item">
+        <div class="sc">SAP 实施 · 月结成本</div>
+        <code>@fico SAP FI月结 成本中心分配 CO-OM-CCA</code>
+      </div>
+      <div class="query-item">
+        <div class="sc">交付物 · Board Deck</div>
+        <code>@fico Board Deck 模板 BLUF 咨询交付物写作</code>
+      </div>
+      <div class="query-item">
+        <div class="sc">找标杆 · 同类举证</div>
+        <code>@fico 标杆案例 制造业 集团财务共享</code>
+      </div>
+      <div class="query-item">
+        <div class="sc">预算管理 · 方法论</div>
+        <code>@fico 零基预算 ZBB 滚动预测 BSC</code>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>维护</h3>
+      <p>MCP 端点 <code style="font-size:12px;">http://47.116.68.38:8747/mcp</code> · Cursor Settings → MCP → fico → Reload</p>
+    </div>
+  </div>
+
+  <script src="../assets/js/bg-fx.js"></script>
+  <script src="../assets/js/fico-mcp-client.js"></script>
+  <script src="../assets/js/search-engine.js"></script>
+</body>
+</html>

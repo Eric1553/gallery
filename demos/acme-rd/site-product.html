@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Site 与产品管理 - 盛美半导体研发运营看板</title>
+<link rel="stylesheet" href="assets/style.css?v=67">
+<link rel="stylesheet" href="assets/req-spec.css?v=67">
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+    <div class="brand">
+    <div class="brand-logo">ACM</div>
+    <h1>研发运营看板</h1>
+    <p>盛美半导体 · 演示原型 v4.4</p>
+  </div>
+  <nav class="nav">
+    <div class="nav-section">业务模块</div>
+    <a href="index.html" class="" data-page="index">总览</a>
+    <a href="hr.html" class="" data-page="hr">人力资源</a>
+    <a href="site-product.html" class="active" data-page="site-product">Site 与产品</a>
+    <a href="case.html" class="" data-page="case">Case 追踪</a>
+    <a href="change.html" class="" data-page="change">变更管理</a>
+    <a href="wet-rd.html" class="" data-page="wet-rd">Wet-RD</a>
+    <a href="lingang.html" class="" data-page="lingang">临港研发线</a>
+    <a href="oa-monitor.html" class="" data-page="oa-monitor">OA 流程监控</a>
+    <a href="knowledge.html" class="" data-page="knowledge">知识库<span class="nav-badge">预览</span></a>
+  </nav>
+  <div class="footer-note">演示数据，口径以业务确认为准</div>
+</aside>
+<main class="main">
+  <header class="topbar">
+    <div class="breadcrumb"><a href="index.html">总览</a><span class="sep">/</span><span class="current">Site与产品</span></div>
+    <div class="topbar-actions">
+                  <div class="topbar-period" data-period-mode="month">
+        <span>时间</span>
+    <select data-period-year aria-label="年份">
+      <option value="2025">2025 年</option>
+      <option value="2026" selected>2026 年</option>
+    </select>
+    <select data-period-month aria-label="月份">
+    <option value="all">全年</option>
+    <option value="01">1 月</option>
+    <option value="02">2 月</option>
+    <option value="03">3 月</option>
+    <option value="04">4 月</option>
+    <option value="05">5 月</option>
+    <option value="06" selected>6 月</option>
+    <option value="07">7 月</option>
+    <option value="08">8 月</option>
+    <option value="09">9 月</option>
+    <option value="10">10 月</option>
+    <option value="11">11 月</option>
+    <option value="12">12 月</option>
+    </select>
+      </div>
+      <span class="chip">演示数据</span>
+      <button class="btn" data-action="export"><span class="bi"></span>导出数据</button>
+      <a class="btn btn-primary" href="report.html">月度运营报告</a>
+    </div>
+  </header>
+  <div class="content">
+    <div class="page-header">
+      <div class="ph-titles"><h2>Site 与产品管理</h2><p>立项 · 机台 · Spec · Recipe/WPH · 文档</p></div>
+      <div class="ph-actions"><button class="btn" data-action="req">需求说明</button></div>
+    </div>
+    
+    
+
+<div id="req-spec-data" data-title="Site 与产品管理 · 需求说明" data-sub="对应客户原始需求（立项 / 机台 / Spec / Recipe / 文档）" style="display:none">
+  <div class="req-list">
+    <div class="req-item"><div class="req-idx">1</div><div class="req-body2"><div class="req-item-t">立项管理</div><div class="req-item-d">①不同 Site 立项项目数：取 OA 项目立项流程（客户名称）；②不同产品类别立项数：取 OA 项目启动流程；按成熟 / 量产 / 研发机台分类。Site 约 100+，采用 Top N 排名 + 筛选框，并提供二级明细列表页。</div></div></div>
+    <div class="req-item"><div class="req-idx">2</div><div class="req-body2"><div class="req-item-t">机台状态</div><div class="req-item-d">从 CRM 展示各客户（Site）/ 产品类型的机台数量及装机进度，状态包括 Pre Setup / T0 / T1 / T2 / T3 / RLS 等，支持按月 / 年筛选。</div></div></div>
+    <div class="req-item"><div class="req-idx">3</div><div class="req-body2"><div class="req-item-t">Layer RLS 状况</div><div class="req-item-d">按Site 展示 Layer Release 状况，对标 POR 机台数量；可下钻至每个机台具体 Step 的 RLS 情况（Application 维度）。数据来源 CRM。</div></div></div>
+    <div class="req-item"><div class="req-idx">4</div><div class="req-body2"><div class="req-item-t">Spec 风险前置</div><div class="req-item-d">统计 Spec 风险前置流程发起数占 Spec 总流程（含 Spec 新增变更）比例；展示验证中 / 已归档 / 进行中；计算发起至归档耗时；按 Site 分布。</div></div></div>
+    <div class="req-item"><div class="req-idx">5</div><div class="req-body2"><div class="req-item-t">Recipe / WPH</div><div class="req-item-d">按 IC1~IC4 组别切换，在各 Site 维度展示：Recipe—上传数量、上传完成度、健康度（均值）、修改完成度、入档率；WPH—上传数量、完成度、健康度（排除空值后取均值）。</div></div></div>
+    <div class="req-item"><div class="req-idx">6</div><div class="req-body2"><div class="req-item-t">标准化文件 / 产品文档 / 公司级 Fanout</div><div class="req-item-d">标准化文件需求 / 发布：流程总数、已归档、入档率。产品文档：必传附件完成度，支持按阶段（T1 / T2 / T3 / RLS）、按项目 / Site 筛选。公司级 Fanout：申请发布（公司内/外、工艺/软件/安全/质量/硬件、产品类别关联经理）→ 区域经理选机台 → Site Manager 执行反馈 → 项目经理 / 工艺产品经理 / 设备产品经理定期汇总。</div></div></div>
+    <div class="req-item"><div class="req-idx">7</div><div class="req-body2"><div class="req-item-t">更新动态</div><div class="req-item-d">统计各产品 Case 更新数量、标准化文件更新、Case 流程内结案报告上传数（一流程有文件算 1 次），支持周更新与累计。</div></div></div>
+  </div>
+</div>
+<div class="filter-bar">
+  <div class="filter-group"><label>Site</label><select><option>Top 10</option><option>全部(100+)</option><option>TSMC</option><option>SMIC</option><option>Intel</option></select></div>
+  <div class="filter-group"><label>产品类型</label><select><option>全部</option><option>WET</option><option>ECP</option><option>Track</option></select></div>
+  <div class="filter-group"><label>机台类型</label><select><option>全部</option><option>成熟机台</option><option>量产机台</option><option>研发机台</option></select></div>
+  <button class="btn-apply" type="button">应用</button>
+</div>
+
+<div class="tab-shell">
+<div class="tabs">
+  <button class="tab active" data-target="tab-lixiang" data-group="site" data-hash="lixiang">立项管理</button>
+  <button class="tab" data-target="tab-jitai" data-group="site" data-hash="jitai">机台状态</button>
+  <button class="tab" data-target="tab-layer" data-group="site" data-hash="layer">Layer RLS</button>
+  <button class="tab" data-target="tab-spec" data-group="site" data-hash="spec">Spec风险</button>
+  <button class="tab" data-target="tab-recipe" data-group="site" data-hash="recipe">Recipe/WPH</button>
+  <button class="tab" data-target="tab-doc" data-group="site" data-hash="doc">标准化/产品文档</button>
+  <button class="tab" data-target="tab-fanout" data-group="site" data-hash="fanout">Fanout 管理</button>
+  <button class="tab" data-target="tab-dynamic" data-group="site" data-hash="dynamic">更新动态</button>
+</div>
+<div id="tab-lixiang" class="tab-content active" data-group="site">
+  <div class="sub-tabs">
+    <button class="sub-tab active" data-sub-group="lx" data-sub-target="lx-site">按 Site 立项 (项目立项流程)</button>
+    <button class="sub-tab" data-sub-group="lx" data-sub-target="lx-prod">按产品类别 (项目启动流程)</button>
+  </div>
+  <div class="sub-panel" data-sub-group="lx" data-sub-target="lx-site">
+  <div class="kpi-grid fixed3">
+    <div class="kpi-card accent-blue clickable" data-href="site-detail.html"><div class="kpi-label">Site 立项总数</div><div class="kpi-value">186</div><div class="kpi-sub">OA 项目立项 · 客户名称</div></div>
+    <div class="kpi-card"><div class="kpi-label">覆盖 Site 数</div><div class="kpi-value">102</div><div class="kpi-sub">Top N + 筛选</div></div>
+    <div class="kpi-card accent-green"><div class="kpi-label">本月新增立项</div><div class="kpi-value">12</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-left"><h3>Top Site 立项数量</h3></div><a class="link" href="site-detail.html">二级明细 →</a></div>
+      <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"TSMC","v":38},{"l":"SMIC","v":31},{"l":"Intel","v":26},{"l":"Samsung","v":21},{"l":"Micron","v":18},{"l":"其他","v":52}]'></div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-left"><h3>立项趋势 (近 6 月)</h3></div></div>
+      <div class="panel-body"><div class="chart-wrap" data-line='{"labels":["1月","2月","3月","4月","5月","6月"],"series":[{"name":"立项数","data":[24,28,30,32,34,38],"c":"#1d4e89","area":true},{"name":"结项数","data":[12,14,15,16,18,20],"c":"#5b7c99"},{"name":"变更关联","data":[6,8,9,7,11,10],"c":"#b45309","dashed":true,"area":false}]}'></div></div>
+    </div>
+  </div>
+  </div>
+  <div class="sub-panel" data-sub-group="lx" data-sub-target="lx-prod" style="display:none">
+  <div class="kpi-grid fixed3">
+    <div class="kpi-card accent-blue"><div class="kpi-label">产品类别立项总数</div><div class="kpi-value">186</div><div class="kpi-sub">OA 项目启动流程</div></div>
+    <div class="kpi-card"><div class="kpi-label">成熟机台</div><div class="kpi-value">62</div></div>
+    <div class="kpi-card"><div class="kpi-label">量产机台</div><div class="kpi-value">78</div></div>
+    <div class="kpi-card"><div class="kpi-label">研发机台</div><div class="kpi-value">46</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-left"><h3>产品类别 × 机台类型</h3></div></div>
+      <div class="panel-body"><div class="chart-wrap" data-group-bars='{"groups":[{"label":"WET","values":[28,36,20]},{"label":"ECP","values":[24,32,18]},{"label":"Track","values":[20,28,14]}],"series":["成熟","量产","研发"]}'></div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-left"><h3>各产品类别立项数</h3></div><a class="link" href="site-detail.html">项目明细 →</a></div>
+      <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"WET-CMP","v":48},{"l":"WET-Clean","v":42},{"l":"ECP","v":38},{"l":"Track","v":28}]'></div></div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<div id="tab-jitai" class="tab-content" data-group="site">
+  <div class="kpi-grid">
+    <div class="kpi-card accent-blue"><div class="kpi-label">在管机台总数</div><div class="kpi-value">524</div><div class="kpi-sub">CRM</div></div>
+    <div class="kpi-card"><div class="kpi-label">T2 阶段</div><div class="kpi-value">86</div></div>
+    <div class="kpi-card"><div class="kpi-label">T3 阶段</div><div class="kpi-value">64</div></div>
+    <div class="kpi-card"><div class="kpi-label">RLS 已发布</div><div class="kpi-value">218</div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>机台状态分布 (Pre Setup → RLS)</h3></div></div>
+    <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"Pre","v":30,"c":"#94a3b8"},{"l":"T0","v":45,"c":"#64748b"},{"l":"T1","v":61,"c":"#2563eb"},{"l":"T2","v":86,"c":"#4a7ab0"},{"l":"T3","v":64,"c":"#5b7c99"},{"l":"RLS","v":218,"c":"#7c3aed"}]'></div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>Site × 产品 · 在管机台</h3></div><span class="chip">CRM · 月/年</span></div>
+    <div class="panel-body flush">
+      <table>
+        <tr><th>Site</th><th>WET</th><th>ECP</th><th>Track</th><th>合计</th><th>装机进度</th></tr>
+        <tr><td>TSMC</td><td>86</td><td>42</td><td>28</td><td>156</td><td>T2/T3 占 38%</td></tr>
+        <tr><td>SMIC</td><td>64</td><td>38</td><td>22</td><td>124</td><td>T2/T3 占 42%</td></tr>
+        <tr><td>Intel</td><td>52</td><td>34</td><td>18</td><td>104</td><td>T2/T3 占 35%</td></tr>
+        <tr><td>Samsung</td><td>48</td><td>28</td><td>16</td><td>92</td><td>T2/T3 占 40%</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="alert-box info">Layer RLS 对标 POR 已独立成 Tab，见「Layer RLS」· 数据来源 CRM</div>
+</div>
+
+<div id="tab-layer" class="tab-content" data-group="site">
+  <div class="kpi-grid">
+    <div class="kpi-card accent-blue"><div class="kpi-label">对标 POR 机台</div><div class="kpi-value">26</div><div class="kpi-sub">By Site 汇总</div></div>
+    <div class="kpi-card accent-green"><div class="kpi-label">RLS 完成</div><div class="kpi-value">21</div></div>
+    <div class="kpi-card accent-amber"><div class="kpi-label">待 Release Step</div><div class="kpi-value">6</div></div>
+    <div class="kpi-card"><div class="kpi-label">整体 RLS 完成率</div><div class="kpi-value">81%</div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>By Site · Layer RLS 对标 POR</h3></div><span class="chip">点击行展开机台 Step 明细</span></div>
+    <div class="panel-body flush">
+      <table>
+        <tr><th>Site</th><th>POR 机台数</th><th>RLS 完成</th><th>RLS 完成率</th><th>待 Release Step</th><th>机台 Step/Application 明细</th></tr>
+        <tr class="expand-row"><td><span class="exp-caret">▶</span>TSMC-N28</td><td>12</td><td>10</td><td>83%</td><td>2</td><td><a class="table-link" data-action="drill" data-title="TSMC-N28 · 机台 Step RLS 明细" data-sub="每台机台各 Step(Application) 的 RLS 状况（CRM）" data-cols="机台号,Step(Application),POR对标,RLS状态,完成日期,负责人">查看 Step →</a></td></tr>
+        <tr class="detail-row" style="display:none"><td colspan="6"><div class="detail-inner"><div class="detail-grid">
+          <div class="detail-kv"><div class="k">机台 EQP-2201 · CMP</div><div class="v" style="color:var(--success)">RLS 已发布</div></div>
+          <div class="detail-kv"><div class="k">机台 EQP-2202 · Clean</div><div class="v" style="color:var(--success)">RLS 已发布</div></div>
+          <div class="detail-kv"><div class="k">机台 EQP-2208 · Etch</div><div class="v" style="color:var(--warning)">待 Release (Step 06)</div></div>
+          <div class="detail-kv"><div class="k">机台 EQP-2210 · Plating</div><div class="v" style="color:var(--warning)">待 Release (Step 04)</div></div>
+        </div></div></td></tr>
+        <tr class="expand-row"><td><span class="exp-caret">▶</span>SMIC-14</td><td>8</td><td>7</td><td>88%</td><td>1</td><td><a class="table-link" data-action="drill" data-title="SMIC-14 · 机台 Step RLS 明细" data-sub="每台机台各 Step(Application) 的 RLS 状况（CRM）" data-cols="机台号,Step(Application),POR对标,RLS状态,完成日期,负责人">查看 Step →</a></td></tr>
+        <tr class="detail-row" style="display:none"><td colspan="6"><div class="detail-inner"><div class="detail-grid">
+          <div class="detail-kv"><div class="k">机台 EQP-1401 · CMP</div><div class="v" style="color:var(--success)">RLS 已发布</div></div>
+          <div class="detail-kv"><div class="k">机台 EQP-1407 · Clean</div><div class="v" style="color:var(--warning)">待 Release (Step 03)</div></div>
+        </div></div></td></tr>
+        <tr class="expand-row"><td><span class="exp-caret">▶</span>Intel-A16</td><td>6</td><td>4</td><td>67%</td><td>3</td><td><a class="table-link" data-action="drill" data-title="Intel-A16 · 机台 Step RLS 明细" data-sub="每台机台各 Step(Application) 的 RLS 状况（CRM）" data-cols="机台号,Step(Application),POR对标,RLS状态,完成日期,负责人">查看 Step →</a></td></tr>
+        <tr class="detail-row" style="display:none"><td colspan="6"><div class="detail-inner"><div class="detail-grid">
+          <div class="detail-kv"><div class="k">机台 EQP-A161 · Etch</div><div class="v" style="color:var(--success)">RLS 已发布</div></div>
+          <div class="detail-kv"><div class="k">机台 EQP-A163 · Clean</div><div class="v" style="color:var(--warning)">待 Release (Step 05)</div></div>
+          <div class="detail-kv"><div class="k">机台 EQP-A165 · CMP</div><div class="v" style="color:var(--warning)">待 Release (Step 02)</div></div>
+        </div></div></td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="alert-box info">By Site 显示 Layer RLS 状况，对标 POR 机台数量，可下钻每台机台具体 Step 的 RLS 情况（Application / CRM）</div>
+</div>
+
+<div id="tab-spec" class="tab-content" data-group="site">
+  <div class="kpi-grid">
+    <div class="kpi-card accent-amber"><div class="kpi-label">Spec 总流程</div><div class="kpi-value">312</div></div>
+    <div class="kpi-card accent-purple"><div class="kpi-label">风险前置发起</div><div class="kpi-value">47</div><div class="kpi-sub">占比 15.1%</div></div>
+    <div class="kpi-card"><div class="kpi-label">验证中</div><div class="kpi-value">23</div></div>
+    <div class="kpi-card accent-green"><div class="kpi-label">已归档</div><div class="kpi-value">256</div></div>
+    <div class="kpi-card accent-blue"><div class="kpi-label">平均处理耗时</div><div class="kpi-value">18<small>天</small></div></div>
+  </div>
+  <div class="grid-2">
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>各 Site 风险前置占比</h3></div></div>
+    <div class="panel-body"><div class="chart-wrap" data-percent="true" data-bars='[{"l":"TSMC","v":18,"unit":"%"},{"l":"SMIC","v":14,"unit":"%"},{"l":"Intel","v":12,"unit":"%"},{"l":"Samsung","v":16,"unit":"%"},{"l":"Micron","v":10,"unit":"%"}]'></div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>Spec 流程耗时分布</h3></div></div>
+    <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"<7天","v":128,"c":"#5b7c99"},{"l":"7-14天","v":98,"c":"#2563eb"},{"l":"14-30天","v":62,"c":"#d97706"},{"l":">30天","v":24,"c":"#dc2626"}]'></div></div>
+  </div>
+  </div>
+  <div class="panel" style="margin-top:22px">
+    <div class="panel-head"><div class="panel-head-left"><h3>风险前置 → 项目需求导入（联动 OA）</h3></div>
+      <a class="link" href="oa-monitor.html#spec-import">打开 OA 监控 →</a>
+    </div>
+    <div class="panel-body">
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:0">
+        <div class="kpi-card accent-purple"><div class="kpi-label">本周期风险触发</div><div class="kpi-value">47</div></div>
+        <div class="kpi-card accent-blue"><div class="kpi-label">已发起导入</div><div class="kpi-value">31</div></div>
+        <div class="kpi-card accent-green"><div class="kpi-label">导入完成率</div><div class="kpi-value">71%</div></div>
+        <div class="kpi-card accent-amber"><div class="kpi-label">未闭环</div><div class="kpi-value">9</div></div>
+      </div>
+      <p class="chart-footnote" style="text-align:left;margin-top:12px">风险前置关联项目需求导入；明细见 OA「风险→导入」</p>
+    </div>
+  </div>
+</div>
+
+<div id="tab-recipe" class="tab-content" data-group="site">
+  <div class="sub-tabs">
+    <button class="sub-tab active" data-sub-group="ic" data-sub-target="ic1">IC1 组</button>
+    <button class="sub-tab" data-sub-group="ic" data-sub-target="ic2">IC2 组</button>
+    <button class="sub-tab" data-sub-group="ic" data-sub-target="ic3">IC3 组</button>
+    <button class="sub-tab" data-sub-group="ic" data-sub-target="ic4">IC4 组</button>
+  </div>
+  <div class="sub-panel" data-sub-group="ic" data-sub-target="ic1">
+  <div class="kpi-grid fixed3">
+    <div class="kpi-card accent-blue"><div class="kpi-label">Recipe 上传数量</div><div class="kpi-value">1,248</div><div class="kpi-sub">IC1 组 · 按Site</div></div>
+    <div class="kpi-card accent-blue"><div class="kpi-label">Recipe 上传完成度</div><div class="kpi-value">86%</div></div>
+    <div class="kpi-card accent-green"><div class="kpi-label">Recipe 入档率</div><div class="kpi-value">79%</div></div>
+    <div class="kpi-card accent-purple"><div class="kpi-label">WPH 上传数量</div><div class="kpi-value">986</div></div>
+    <div class="kpi-card accent-purple"><div class="kpi-label">WPH 完成度</div><div class="kpi-value">84%</div></div>
+    <div class="kpi-card accent-amber"><div class="kpi-label">WPH 健康度</div><div class="kpi-value">82%</div><div class="kpi-sub">排除空值取均值</div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>WPH 指标 (by Site)</h3></div><span class="chip">IC1 · 百分比</span></div>
+    <div class="panel-body"><div class="chart-wrap" data-percent="true" data-show-values="true" data-tall="true" data-group-bars='{"groups":[{"label":"Site A","values":[88,90]},{"label":"Site B","values":[82,85]},{"label":"Site C","values":[76,80]},{"label":"Site D","values":[85,87]}],"series":["WPH 健康度","WPH 完成度"]}'></div>
+      <p class="chart-footnote">健康度按非空样本均值</p></div>
+  </div>
+  </div>
+  <div class="sub-panel" data-sub-group="ic" data-sub-target="ic2" style="display:none">
+  <div class="kpi-grid fixed3">
+    <div class="kpi-card accent-blue"><div class="kpi-label">Recipe 上传数量</div><div class="kpi-value">986</div><div class="kpi-sub">IC2 组 · 按Site</div></div>
+    <div class="kpi-card accent-blue"><div class="kpi-label">Recipe 上传完成度</div><div class="kpi-value">81%</div></div>
+    <div class="kpi-card accent-green"><div class="kpi-label">Recipe 入档率</div><div class="kpi-value">74%</div></div>
+    <div class="kpi-card accent-purple"><div class="kpi-label">WPH 上传数量</div><div class="kpi-value">812</div></div>
+    <div class="kpi-card accent-purple"><div class="kpi-label">WPH 完成度</div><div class="kpi-value">79%</div></div>
+    <div class="kpi-card accent-amber"><div class="kpi-label">WPH 健康度</div><div class="kpi-value">78%</div><div class="kpi-sub">排除空值取均值</div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>WPH 指标 (by Site)</h3></div><span class="chip">IC2 · 百分比</span></div>
+    <div class="panel-body"><div class="chart-wrap" data-percent="true" data-show-values="true" data-tall="true" data-group-bars='{"groups":[{"label":"Site A","values":[80,83]},{"label":"Site B","values":[78,81]},{"label":"Site C","values":[75,78]}],"series":["WPH 健康度","WPH 完成度"]}'></div></div>
+  </div>
+  </div>
+  <div class="sub-panel" data-sub-group="ic" data-sub-target="ic3" style="display:none">
+  <div class="kpi-grid fixed3">
+    <div class="kpi-card accent-blue"><div class="kpi-label">Recipe 上传数量</div><div class="kpi-value">1,102</div><div class="kpi-sub">IC3 组 · 按Site</div></div>
+    <div class="kpi-card accent-blue"><div class="kpi-label">Recipe 上传完成度</div><div class="kpi-value">90%</div></div>
+    <div class="kpi-card accent-green"><div class="kpi-label">Recipe 入档率</div><div class="kpi-value">85%</div></div>
+    <div class="kpi-card accent-purple"><div class="kpi-label">WPH 上传数量</div><div class="kpi-value">934</div></div>
+    <div class="kpi-card accent-purple"><div class="kpi-label">WPH 完成度</div><div class="kpi-value">88%</div></div>
+    <div class="kpi-card accent-amber"><div class="kpi-label">WPH 健康度</div><div class="kpi-value">87%</div><div class="kpi-sub">排除空值取均值</div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>WPH 指标 (by Site)</h3></div><span class="chip">IC3 · 百分比</span></div>
+    <div class="panel-body"><div class="chart-wrap" data-percent="true" data-show-values="true" data-tall="true" data-group-bars='{"groups":[{"label":"Site A","values":[90,92]},{"label":"Site B","values":[86,89]},{"label":"Site C","values":[85,87]}],"series":["WPH 健康度","WPH 完成度"]}'></div></div>
+  </div>
+  </div>
+  <div class="sub-panel" data-sub-group="ic" data-sub-target="ic4" style="display:none">
+  <div class="kpi-grid fixed3">
+    <div class="kpi-card accent-blue"><div class="kpi-label">Recipe 上传数量</div><div class="kpi-value">764</div><div class="kpi-sub">IC4 组 · 按Site</div></div>
+    <div class="kpi-card accent-blue"><div class="kpi-label">Recipe 上传完成度</div><div class="kpi-value">76%</div></div>
+    <div class="kpi-card accent-green"><div class="kpi-label">Recipe 入档率</div><div class="kpi-value">70%</div></div>
+    <div class="kpi-card accent-purple"><div class="kpi-label">WPH 上传数量</div><div class="kpi-value">628</div></div>
+    <div class="kpi-card accent-purple"><div class="kpi-label">WPH 完成度</div><div class="kpi-value">72%</div></div>
+    <div class="kpi-card accent-amber"><div class="kpi-label">WPH 健康度</div><div class="kpi-value">73%</div><div class="kpi-sub">排除空值取均值</div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>WPH 指标 (by Site)</h3></div><span class="chip">IC4 · 百分比</span></div>
+    <div class="panel-body"><div class="chart-wrap" data-percent="true" data-show-values="true" data-tall="true" data-group-bars='{"groups":[{"label":"Site A","values":[76,78]},{"label":"Site B","values":[72,74]},{"label":"Site C","values":[70,72]}],"series":["WPH 健康度","WPH 完成度"]}'></div></div>
+  </div>
+  </div>
+</div>
+
+<div id="tab-doc" class="tab-content" data-group="site">
+  <div class="grid-3">
+    <div class="panel">
+      <div class="panel-head"><h3>标准化文件 · 需求流程</h3></div>
+      <div class="panel-body flush">
+        <table>
+          <tr><th>产品类型</th><th>需求总数</th><th>已归档</th><th>进行中</th><th>入档率</th></tr>
+          <tr><td>湿法产品类</td><td>52</td><td>41</td><td>11</td><td>79%</td></tr>
+          <tr><td>湿法化学类</td><td>38</td><td>32</td><td>6</td><td>84%</td></tr>
+          <tr><td>ECP</td><td>34</td><td>27</td><td>7</td><td>79%</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h3>标准化文件 · 发布流程 (按产品)</h3></div>
+      <div class="panel-body flush">
+        <table>
+          <tr><th>产品类型</th><th>总数</th><th>已发布</th><th>未发布</th><th>入档率</th></tr>
+          <tr><td>湿法产品类</td><td>45</td><td>38</td><td>7</td><td>84%</td></tr>
+          <tr><td>湿法化学类</td><td>32</td><td>28</td><td>4</td><td>88%</td></tr>
+          <tr><td>ECP</td><td>28</td><td>22</td><td>6</td><td>79%</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-left"><h3>产品文档完成度 (按组)</h3></div></div>
+      <div class="panel-body"><div class="chart-wrap" data-short="true" data-percent="true" data-bars='[{"l":"IC1","v":92,"unit":"%"},{"l":"IC2","v":78,"unit":"%"},{"l":"IC3","v":85,"unit":"%"},{"l":"IC4","v":70,"unit":"%"}]'></div>
+        <p class="chart-footnote">完成度 = 必传附件齐套率；可对照 CRM T2/T3</p>
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>产品文档完成度 (按阶段 × 按项目)</h3></div>
+      <div class="toolbar">
+        <div class="filter-group" style="display:flex;align-items:center;gap:6px"><label style="font-size:12px;color:var(--text-muted);font-weight:500">Site</label><select id="doc-site-filter" style="padding:6px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:var(--font)"><option>全部</option><option>TSMC</option><option>SMIC</option><option>Intel</option></select></div>
+        <div class="segmented" id="doc-stage-filter"><button class="active" data-stage="全部">全部阶段</button><button data-stage="T1">T1</button><button data-stage="T2">T2</button><button data-stage="T3">T3</button><button data-stage="RLS">RLS</button></div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="chart-wrap" data-percent="true" data-group-bars='{"groups":[{"label":"TSMC","values":[88,82,76]},{"label":"SMIC","values":[84,79,72]},{"label":"Intel","values":[80,74,68]},{"label":"Samsung","values":[86,80,74]}],"series":["T1 阶段","T2 阶段","T3 阶段"]}'></div>
+    </div>
+    <div class="panel-body flush" style="border-top:1px solid var(--border-light)">
+      <table id="doc-project-table">
+        <tr><th>项目号</th><th>Site</th><th>产品类别</th><th>T1</th><th>T2</th><th>T3</th><th>RLS</th><th>整体完成度</th><th>明细</th></tr>
+        <tr class="expand-row" data-site="TSMC" data-stages="T1,T2,T3,RLS"><td><span class="exp-caret">▶</span>P-2026-0142</td><td>TSMC</td><td>WET-CMP</td><td>100%</td><td>92%</td><td>80%</td><td>64%</td><td>84%</td><td><a class="table-link" data-action="drill" data-title="P-2026-0142 · 产品文档明细" data-sub="各阶段必传附件完成状态" data-cols="阶段,文档类型,必传附件,已上传,完成度,更新日期">查看</a></td></tr>
+        <tr class="detail-row" style="display:none"><td colspan="9"><div class="detail-inner"><div class="detail-grid">
+          <div class="detail-kv"><div class="k">T1 · 规格书/Checklist</div><div class="v" style="color:var(--success)">100% (8/8)</div></div>
+          <div class="detail-kv"><div class="k">T2 · 验证报告</div><div class="v" style="color:var(--warning)">92% (11/12)</div></div>
+          <div class="detail-kv"><div class="k">T3 · 结案文档</div><div class="v" style="color:var(--warning)">80% (4/5)</div></div>
+          <div class="detail-kv"><div class="k">RLS · 发布包</div><div class="v" style="color:var(--warning)">64% (Link CRM RLS)</div></div>
+        </div></div></td></tr>
+        <tr class="expand-row" data-site="Intel" data-stages="T1,T2"><td><span class="exp-caret">▶</span>P-2026-0201</td><td>Intel</td><td>ECP</td><td>90%</td><td>74%</td><td>—</td><td>—</td><td>76%</td><td><a class="table-link" data-action="drill" data-title="P-2026-0201 · 产品文档明细" data-sub="各阶段必传附件完成状态" data-cols="阶段,文档类型,必传附件,已上传,完成度,更新日期">查看</a></td></tr>
+        <tr class="detail-row" style="display:none"><td colspan="9"><div class="detail-inner"><div class="detail-grid">
+          <div class="detail-kv"><div class="k">T1 · 规格书</div><div class="v" style="color:var(--success)">90% (9/10)</div></div>
+          <div class="detail-kv"><div class="k">T2 · 验证报告</div><div class="v" style="color:var(--warning)">74% (Link CRM T2)</div></div>
+          <div class="detail-kv"><div class="k">T3 · 结案文档</div><div class="v" style="color:var(--text-muted)">未启动</div></div>
+        </div></div></td></tr>
+        <tr data-site="SMIC" data-stages="T1,T2,T3,RLS"><td>P-2025-0887</td><td>SMIC</td><td>Track</td><td>100%</td><td>88%</td><td>95%</td><td>90%</td><td>93%</td><td><a class="table-link" data-action="drill" data-title="P-2025-0887 · 产品文档明细" data-cols="阶段,文档类型,必传附件,已上传,完成度,更新日期">查看</a></td></tr>
+      </table>
+    </div>
+    <div class="panel-body" style="padding-top:0"><p class="chart-footnote" style="text-align:left">完成度 = 必传附件齐套率；支持按 Site / 阶段（T1–T3 / RLS）筛选，并可对照 CRM T2/T3/RLS</p></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>Fanout 发布状态（按产品）</h3></div><a class="link" href="site-product.html#fanout">打开公司级 Fanout 流程 →</a></div>
+    <div class="panel-body flush">
+      <table>
+        <tr><th>产品</th><th>部门4·标准化后已发布</th><th>部门5·确认后已发布</th><th>待发布</th><th>规则说明</th></tr>
+        <tr><td>湿法产品类</td><td>32</td><td>28</td><td>5</td><td>部门4→标准化节点后；部门5→申请人确认后</td></tr>
+        <tr><td>湿法化学类</td><td>24</td><td>21</td><td>3</td><td>同上</td></tr>
+        <tr><td>ECP</td><td>18</td><td>16</td><td>4</td><td>同上</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="tab-fanout" class="tab-content" data-group="site">
+  <section id="fanout-workbench" class="fanout-control" aria-label="公司级 Fanout 流程">
+    <div class="workbench-head">
+      <div><p class="eyebrow">COMPANY FANOUT</p><h3>公司级 Fanout / 标准化文件发布</h3><p>申请人填报 → 区域经理选机台 → Site Manager 执行反馈 → 角色定期汇总。帆软实现段与流程图对齐。</p></div>
+      <span class="chip">演示 12 单 · 2026 Q2</span>
+    </div>
+    <div class="story-bar fanout-story" aria-label="流程节点">
+      <div class="story-step active"><span class="num">1</span><span>申请人申请</span></div>
+      <div class="story-step active"><span class="num">2</span><span>填写内容 / 范围 / 区域 / 附件</span></div>
+      <div class="story-step"><span class="num">3</span><span>区域经理选机台</span></div>
+      <div class="story-step"><span class="num">4</span><span>Site 执行反馈</span></div>
+      <div class="story-step"><span class="num">5</span><span>角色定期汇总</span></div>
+    </div>
+    <div class="fanout-duty-grid fanout-duty-4" aria-label="帆软实现职责">
+      <div class="fanout-duty"><span class="duty-index">01</span><div><strong>申请人</strong><p>公司内 / 公司外发布；产品类别自动关联工艺 / 硬件 / 项目经理。</p></div></div>
+      <div class="fanout-duty"><span class="duty-index">02</span><div><strong>区域经理</strong><p>内外发布到达后，在帆软勾选本区域执行机台。</p></div></div>
+      <div class="fanout-duty"><span class="duty-index">03</span><div><strong>Site Manager</strong><p>按机台填写是否执行与执行效果。</p></div></div>
+      <div class="fanout-duty"><span class="duty-index">04</span><div><strong>产品 / 项目经理</strong><p>工艺+软件 / 安全质量硬件 / 公司内 分别汇总。</p></div></div>
+    </div>
+    <div class="sub-tabs">
+      <button class="sub-tab active" data-sub-group="fo" data-sub-target="fo-apply">申请发布</button>
+      <button class="sub-tab" data-sub-group="fo" data-sub-target="fo-region">区域选机</button>
+      <button class="sub-tab" data-sub-group="fo" data-sub-target="fo-site">现场反馈</button>
+      <button class="sub-tab" data-sub-group="fo" data-sub-target="fo-summary">定期汇总</button>
+    </div>
+
+    <div class="sub-panel" data-sub-group="fo" data-sub-target="fo-apply">
+      <div class="kpi-grid">
+        <div class="kpi-card accent-blue"><div class="kpi-label">本周期申请</div><div class="kpi-value">12</div></div>
+        <div class="kpi-card"><div class="kpi-label">公司内发布</div><div class="kpi-value">5</div></div>
+        <div class="kpi-card accent-purple"><div class="kpi-label">公司外发布</div><div class="kpi-value">7</div></div>
+        <div class="kpi-card accent-amber"><div class="kpi-label">待区域经理选机</div><div class="kpi-value">4</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-head-left"><h3>申请单字段（演示填报）</h3></div><span class="chip">产品类别自动带出经理</span></div>
+        <div class="panel-body">
+          <div class="fanout-form-grid" id="fanout-apply-form">
+            <label>发布类型<select id="fo-scope"><option value="外部">公司外发布</option><option value="内部">公司内发布</option></select></label>
+            <label>Fanout 分类<select id="fo-class"><option>工艺类</option><option>软件类</option><option>安全类</option><option>质量类</option><option>硬件类</option></select></label>
+            <label>产品大类<select><option>湿法产品</option><option>湿法化学</option><option>ECP</option><option>Track</option></select></label>
+            <label>产品小类<select><option>CMP</option><option>Clean</option><option>Bevel</option><option>Plating</option></select></label>
+            <label>产品类别<select id="fo-category"><option value="工艺">工艺产品</option><option value="硬件">硬件产品</option><option value="项目">项目制（内部）</option></select></label>
+            <label>发布区域<select><option>亚太</option><option>中国区</option><option>北美</option><option>欧洲</option></select></label>
+            <label class="span-2">发布内容<input type="text" value="CMP Recipe 基线升版与 POR 对齐"></label>
+            <label class="span-2">附件<input type="text" value="FO-2026-021_标准文件.pdf · 已上传" readonly></label>
+            <div class="span-2 fanout-auto-role" id="fo-auto-role">关联：工艺产品经理 周** · 执行汇总归工艺产品经理（工艺类 + 软件类）</div>
+          </div>
+          <div class="fanout-form-actions"><button class="btn btn-primary" type="button" id="fo-submit">提交申请（演示）</button></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-head-left"><h3>申请清单</h3></div><button class="btn" type="button" data-action="export">导出 CSV</button></div>
+        <div class="panel-body flush table-scroll">
+          <table class="fanout-table">
+            <thead><tr><th>单号</th><th>发布类型</th><th>分类</th><th>产品类别</th><th>关联经理</th><th>区域</th><th>当前节点</th><th>附件</th></tr></thead>
+            <tbody>
+              <tr><td>FO-2026-021</td><td>公司外</td><td>工艺类</td><td>工艺产品</td><td>工艺产品经理 周**</td><td>亚太</td><td><span class="tag tag-open">区域选机</span></td><td>2</td></tr>
+              <tr><td>FO-2026-020</td><td>公司外</td><td>硬件类</td><td>硬件产品</td><td>设备产品经理 吴**</td><td>北美</td><td><span class="tag tag-warn">现场反馈</span></td><td>1</td></tr>
+              <tr><td>FO-2026-019</td><td>公司内</td><td>软件类</td><td>工艺产品</td><td>工艺产品经理 周** / 项目经理 陈**</td><td>中国区</td><td><span class="tag tag-close">已汇总</span></td><td>3</td></tr>
+              <tr><td>FO-2026-018</td><td>公司外</td><td>安全类</td><td>硬件产品</td><td>设备产品经理 吴**</td><td>欧洲</td><td><span class="tag tag-open">区域选机</span></td><td>1</td></tr>
+              <tr><td>FO-2026-017</td><td>公司内</td><td>质量类</td><td>硬件产品</td><td>设备产品经理 吴** / 项目经理 陈**</td><td>中国区</td><td><span class="tag tag-warn">现场反馈</span></td><td>2</td></tr>
+              <tr><td>FO-2026-016</td><td>公司外</td><td>工艺类</td><td>工艺产品</td><td>工艺产品经理 周**</td><td>亚太</td><td><span class="tag tag-close">已汇总</span></td><td>2</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-panel" data-sub-group="fo" data-sub-target="fo-region" style="display:none">
+      <div class="alert-box info">公司外内容发布至对应区域经理后、公司内发布至对应人员后，均由区域经理在帆软勾选执行机台。</div>
+      <div class="fanout-filters" data-filter-live="true">
+        <label>发布类型<select id="fo-region-scope"><option value="">全部</option><option>公司外</option><option>公司内</option></select></label>
+        <label>分类<select id="fo-region-class"><option value="">全部</option><option>工艺类</option><option>软件类</option><option>安全类</option><option>质量类</option><option>硬件类</option></select></label>
+        <label>区域<select id="fo-region-area"><option value="">全部</option><option>亚太</option><option>中国区</option><option>北美</option><option>欧洲</option></select></label>
+        <span class="result-count" id="fo-region-count">当前 4 单待选机</span>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-head-left"><h3>区域经理 · 执行机台</h3></div><span class="chip">勾选即写入演示清单</span></div>
+        <div class="panel-body flush table-scroll">
+          <table class="fanout-table" id="fo-region-table">
+            <thead><tr><th>单号</th><th>类型</th><th>分类</th><th>区域经理</th><th>Site</th><th>候选机台</th><th>已选</th></tr></thead>
+            <tbody>
+              <tr data-scope="公司外" data-class="工艺类" data-area="亚太"><td>FO-2026-021</td><td>公司外</td><td>工艺类</td><td>郑**</td><td>TSMC-N28</td><td><label class="fo-chk"><input type="checkbox" checked> WET-CMP-2201</label> <label class="fo-chk"><input type="checkbox" checked> WET-CMP-2210</label> <label class="fo-chk"><input type="checkbox"> WET-CLEAN-0304</label></td><td>2</td></tr>
+              <tr data-scope="公司外" data-class="硬件类" data-area="北美"><td>FO-2026-020</td><td>公司外</td><td>硬件类</td><td>钱**</td><td>Intel-A16</td><td><label class="fo-chk"><input type="checkbox" checked> EQP-A161</label> <label class="fo-chk"><input type="checkbox"> EQP-A163</label> <label class="fo-chk"><input type="checkbox" checked> EQP-A165</label></td><td>2</td></tr>
+              <tr data-scope="公司内" data-class="软件类" data-area="中国区"><td>FO-2026-019</td><td>公司内</td><td>软件类</td><td>冯**</td><td>临港 / 张江</td><td><label class="fo-chk"><input type="checkbox" checked> LG-RD-04</label> <label class="fo-chk"><input type="checkbox" checked> ZJ-LAB-02</label></td><td>2</td></tr>
+              <tr data-scope="公司外" data-class="安全类" data-area="欧洲"><td>FO-2026-018</td><td>公司外</td><td>安全类</td><td>韩**</td><td>Infineon-Dresden</td><td><label class="fo-chk"><input type="checkbox"> ECP-1407</label> <label class="fo-chk"><input type="checkbox"> ECP-2208</label></td><td>0</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-panel" data-sub-group="fo" data-sub-target="fo-site" style="display:none">
+      <div class="fanout-filters" data-filter-live="true" aria-label="现场反馈筛选">
+        <label>是否执行<select id="fanout-exec-filter"><option value="">全部</option><option>已执行</option><option>执行中</option><option>未执行</option></select></label>
+        <label>检查情况<select id="fanout-check-filter"><option value="">全部</option><option>已检查</option><option>检查中</option><option>待检查</option></select></label>
+        <label>快速查找<input id="fanout-query" type="search" placeholder="单号 / Tool ID / 责任人"></label>
+        <span class="result-count" id="fanout-result-count" aria-live="polite">当前显示 8 条</span>
+      </div>
+      <div class="panel fanout-table-panel">
+        <div class="panel-head"><h3>Site Manager · 机台执行与效果</h3><button class="btn" type="button" data-action="export">下载当前结果 CSV</button></div>
+        <div class="panel-body flush table-scroll">
+          <table class="fanout-table">
+            <thead><tr><th>单号</th><th>Tool ID</th><th>分类</th><th>Fanout 要求</th><th>Site 责任人</th><th>是否执行</th><th>执行效果</th><th>检查</th><th>备注</th></tr></thead>
+            <tbody id="fanout-table-body">
+              <tr data-check="已检查" data-exec="执行中" data-search="FO-2026-021 WET-CMP-2201 张 工艺"><td>FO-2026-021</td><td>WET-CMP-2201</td><td>工艺类</td><td>核对 Recipe 与 WPH 基线，确认发布版本一致。</td><td>张**</td><td><span class="tag tag-open">执行中</span></td><td>WPH 偏差 −1.2%</td><td><span class="tag tag-close">已检查</span></td><td>WPH 参数复核中</td></tr>
+              <tr data-check="检查中" data-exec="未执行" data-search="FO-2026-020 ECP-1407 李 硬件"><td>FO-2026-020</td><td>ECP-1407</td><td>硬件类</td><td>核对 Layer Release 与 POR 清单一致性。</td><td>李**</td><td><span class="tag tag-warn">未执行</span></td><td>—</td><td><span class="tag tag-open">检查中</span></td><td>等待现场窗口</td></tr>
+              <tr data-check="已检查" data-exec="已执行" data-search="FO-2026-019 TRK-A165 王 软件"><td>FO-2026-019</td><td>LG-RD-04</td><td>软件类</td><td>确认标准化文件已发布并完成 Site 侧签收。</td><td>王**</td><td><span class="tag tag-close">已执行</span></td><td>签收完成，无差异</td><td><span class="tag tag-close">已检查</span></td><td>附件清单已核对</td></tr>
+              <tr data-check="已检查" data-exec="已执行" data-search="FO-2026-016 WET-CLEAN-0304 刘 工艺"><td>FO-2026-016</td><td>WET-CLEAN-0304</td><td>工艺类</td><td>确认变更通知与现场使用版本一致。</td><td>刘**</td><td><span class="tag tag-close">已执行</span></td><td>现场版本一致</td><td><span class="tag tag-close">已检查</span></td><td>已关闭</td></tr>
+              <tr data-check="待检查" data-exec="未执行" data-search="FO-2026-021 WET-CMP-2210 赵 工艺"><td>FO-2026-021</td><td>WET-CMP-2210</td><td>工艺类</td><td>完成 Step 04 发布前检查并记录差异。</td><td>赵**</td><td><span class="tag tag-warn">未执行</span></td><td>—</td><td><span class="tag tag-warn">待检查</span></td><td>计划本周确认</td></tr>
+              <tr data-check="检查中" data-exec="执行中" data-search="FO-2026-018 ECP-2208 陈 安全"><td>FO-2026-018</td><td>ECP-2208</td><td>安全类</td><td>核对联锁与安全 Checklist。</td><td>陈**</td><td><span class="tag tag-open">执行中</span></td><td>缺 1 项联锁记录</td><td><span class="tag tag-open">检查中</span></td><td>参数清单核对中</td></tr>
+              <tr data-check="已检查" data-exec="已执行" data-search="FO-2026-017 TRK-B207 周 质量"><td>FO-2026-017</td><td>TRK-B207</td><td>质量类</td><td>确认客户现场文件版本与发布清单匹配。</td><td>周**</td><td><span class="tag tag-close">已执行</span></td><td>无差异</td><td><span class="tag tag-close">已检查</span></td><td>内部发布</td></tr>
+              <tr data-check="待检查" data-exec="未执行" data-search="FO-2026-018 WET-CLEAN-0412 孙 安全"><td>FO-2026-018</td><td>WET-CLEAN-0412</td><td>安全类</td><td>复核维护窗口后的配置与文档记录。</td><td>孙**</td><td><span class="tag tag-warn">未执行</span></td><td>—</td><td><span class="tag tag-warn">待检查</span></td><td>待 Site 确认时间</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-panel" data-sub-group="fo" data-sub-target="fo-summary" style="display:none">
+      <div class="panel">
+        <div class="panel-head"><div class="panel-head-left"><h3>按角色定期汇总</h3></div>
+          <div class="segmented" data-panel-seg="fo-sum">
+            <button class="active" data-panel-view="pm">项目经理 · 公司内</button>
+            <button data-panel-view="process">工艺产品经理 · 工艺/软件</button>
+            <button data-panel-view="equip">设备产品经理 · 安全/质量/硬件</button>
+          </div>
+        </div>
+        <div class="panel-body" data-panel-group="fo-sum" data-panel-view="pm">
+          <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:12px">
+            <div class="kpi-card accent-blue"><div class="kpi-label">公司内 Fanout</div><div class="kpi-value">5</div></div>
+            <div class="kpi-card accent-green"><div class="kpi-label">已执行机台</div><div class="kpi-value">9</div></div>
+            <div class="kpi-card accent-amber"><div class="kpi-label">未闭环</div><div class="kpi-value">2</div></div>
+            <div class="kpi-card"><div class="kpi-label">执行完成率</div><div class="kpi-value">82%</div></div>
+          </div>
+          <div class="chart-wrap" data-group-bars='{"groups":[{"label":"软件类","values":[4,3]},{"label":"质量类","values":[3,2]},{"label":"工艺类","values":[2,2]}],"series":["发布单","已闭环"]}'></div>
+          <p class="chart-footnote">项目经理定期汇总公司内 Fanout（含内部人员签收）</p>
+        </div>
+        <div class="panel-body" data-panel-group="fo-sum" data-panel-view="process" style="display:none">
+          <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:12px">
+            <div class="kpi-card accent-blue"><div class="kpi-label">工艺类</div><div class="kpi-value">6</div></div>
+            <div class="kpi-card accent-purple"><div class="kpi-label">软件类</div><div class="kpi-value">3</div></div>
+            <div class="kpi-card accent-green"><div class="kpi-label">机台已执行</div><div class="kpi-value">11</div></div>
+            <div class="kpi-card"><div class="kpi-label">效果达标</div><div class="kpi-value">8</div></div>
+          </div>
+          <div class="chart-wrap" data-percent="true" data-bars='[{"l":"亚太","v":86,"unit":"%"},{"l":"中国区","v":78,"unit":"%"},{"l":"北美","v":72,"unit":"%"}]'></div>
+          <p class="chart-footnote">工艺产品经理定期汇总工艺类、软件类 Fanout 执行率</p>
+        </div>
+        <div class="panel-body" data-panel-group="fo-sum" data-panel-view="equip" style="display:none">
+          <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:12px">
+            <div class="kpi-card accent-amber"><div class="kpi-label">安全类</div><div class="kpi-value">2</div></div>
+            <div class="kpi-card"><div class="kpi-label">质量类</div><div class="kpi-value">2</div></div>
+            <div class="kpi-card accent-purple"><div class="kpi-label">硬件类</div><div class="kpi-value">2</div></div>
+            <div class="kpi-card accent-green"><div class="kpi-label">现场闭环率</div><div class="kpi-value">67%</div></div>
+          </div>
+          <div class="chart-wrap" data-group-bars='{"groups":[{"label":"安全类","values":[4,1]},{"label":"质量类","values":[3,2]},{"label":"硬件类","values":[3,2]}],"series":["机台数","已执行"]}'></div>
+          <p class="chart-footnote">设备产品经理定期汇总安全、质量、硬件类 Fanout</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div id="tab-dynamic" class="tab-content" data-group="site">
+  <div class="kpi-grid">
+    <div class="kpi-card accent-blue"><div class="kpi-label">Case 本周更新</div><div class="kpi-value">23</div></div>
+    <div class="kpi-card accent-green"><div class="kpi-label">标准化文件更新</div><div class="kpi-value">15</div></div>
+    <div class="kpi-card"><div class="kpi-label">结案报告上传</div><div class="kpi-value">8</div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>各产品 Case/标准化更新 (本周 vs 累计)</h3></div></div>
+    <div class="panel-body"><div class="chart-wrap" data-group-bars='{"groups":[{"label":"湿法产品","values":[12,86]},{"label":"湿法化学","values":[8,64]},{"label":"ECP","values":[6,52]},{"label":"Track","values":[4,38]}],"series":["本周更新","累计更新"]}'></div></div>
+  </div>
+</div>
+</div>
+  </div>
+</main>
+</div>
+<script src="assets/charts.js?v=67"></script>
+<script src="assets/app.js?v=67"></script>
+<script>setActiveNav('site-product');</script>
+
+<script
+  src="http://120.55.184.234:8787/embed.js?v=20260801acme4"
+  data-demo-id="acme-rd"
+  data-mode="basic"
+  data-api="http://120.55.184.234:8787"
+  async defer></script>
+
+</body>
+</html>

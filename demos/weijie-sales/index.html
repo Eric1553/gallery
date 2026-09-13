@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>唯捷创芯 · 销售BI看板门户</title>
+<link rel="stylesheet" href="assets/style.css" />
+<script src="assets/echarts.min.js"></script>
+</head>
+<body>
+<div id="content">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="ht">SALES BUSINESS INTELLIGENCE · V5 · 2026-07（二次会议标注已同步）</div>
+    <h1>销售BI看板体系 · 经营决策一站式门户</h1>
+    <p>围绕「看结果 → 拆结构 → 管供需 → 保交付 → 促转化 → 控异常」的经营管理主线，
+       将销售预测、规模结构、客户产品渠道、库存履约与异常监控统一编排，支撑月度经营会与日常运营决策。</p>
+    <div class="hstats">
+      <div class="hs"><b>6</b><span>经营主题章节</span></div>
+      <div class="hs"><b>11</b><span>看板 / 报表页面</span></div>
+      <div class="hs"><b>31</b><span>本期建设需求</span></div>
+      <div class="hs"><b>4</b><span>交付批次 (一期P0/P1 · 二期P1/P2)</span></div>
+    </div>
+  </section>
+
+  <!-- 故事线 -->
+  <div class="section-head" style="margin-top:22px">
+    <span class="bar"></span><h2>经营分析故事线</h2>
+    <span class="desc">从经营结果到异常控制的闭环视角</span><span class="line"></span>
+  </div>
+  <div class="card"><div class="card-b" style="padding:16px">
+    <div class="flow">
+      <div class="step"><span class="sn">1</span>看经营结果</div><span class="arrow">→</span>
+      <div class="step"><span class="sn">2</span>拆经营结构</div><span class="arrow">→</span>
+      <div class="step"><span class="sn">3</span>管库存与供需</div><span class="arrow">→</span>
+      <div class="step"><span class="sn">4</span>保交付与促销</div><span class="arrow">→</span>
+      <div class="step"><span class="sn">5</span>促样品转化</div><span class="arrow">→</span>
+      <div class="step"><span class="sn">6</span>控异常</div>
+    </div>
+  </div></div>
+
+  <!-- 集团 KPI -->
+  <div class="section-head"><span class="bar"></span><h2>集团经营概览</h2>
+    <span class="desc">2026年6月 · 全公司</span><span class="line"></span></div>
+  <div class="grid g6" id="kpiGrid"></div>
+  <div class="grid r-23" style="margin-top:14px">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>销售额走势 vs 预测达成</div>
+        <span class="cx">单位：万元</span></div>
+      <div class="card-b"><div id="cTrend" class="chart" style="height:248px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>各销售组销售贡献</div>
+        <span class="cx">销售额占比</span></div>
+      <div class="card-b"><div id="cContrib" class="chart" style="height:248px"></div></div>
+    </div>
+  </div>
+
+  <!-- 按章节的看板入口 -->
+  <div id="chapters"></div>
+
+  <div class="footer-note">唯捷创芯 · 销售BI看板原型 ｜ 本原型用于需求评审与交互演示，页面数据均为示例数据，非真实业务值</div>
+
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+renderLayout("home", {
+  crumb: "看板门户首页",
+  title: "看板门户首页",
+  sub: "面向销售管理层、运营及各大区的统一经营分析入口。按经营管理故事线组织 11 个看板。",
+  filters: false,
+  actions: '<span class="tag tag-gold">示例数据 · 仅用于需求评审演示</span><span class="tag tag-gray">V5 · 2026-07</span>'
+});
+
+/* KPI — 对齐二次会议口径：弱化同比、突出大客户与销售组BP */
+const kpis = [
+  { t:"销售总额", v:"38,642", u:"万元", f:'<span class="trend-up">环比 +3.1%</span>', c:"", sp:[31,33,32,35,34,36,38], sc:"#2468f2" },
+  { t:"销售量", v:"1.86", u:"亿颗", f:'<span class="trend-up">环比 +2.4%</span>', c:"k-cyan", sp:[1.5,1.6,1.62,1.7,1.74,1.8,1.86], sc:"#16b8c8" },
+  { t:"预测达成率", v:"96.8", u:"%", f:'<span class="trend-up">▲ 2.3pct</span><span class="lbl">BP达成 94.1%</span>', c:"k-green", sp:[88,90,92,91,94,95,96.8], sc:"#25a36c" },
+  { t:"大客户销售额", v:"24,860", u:"万元", f:'<span class="lbl">占总盘 64.3%</span>', c:"k-violet", sp:[20,21,22,23,23.5,24,24.8], sc:"#7a6ff0" },
+  { t:"销售组BP达成", v:"94.1", u:"%", f:'<span class="trend-flat">目标到销售组</span>', c:"k-gold", sp:[90,91,92,93,93.5,94,94.1], sc:"#e0a106" },
+  { t:"产品退货率", v:"1.12", u:"%", f:'<span class="trend-down">▲ 0.18pct</span><span class="lbl">需关注</span>', c:"k-red", sp:[0.9,0.95,1.0,1.05,1.0,1.08,1.12], sc:"#e2544a" },
+];
+document.getElementById("kpiGrid").innerHTML = kpis.map((k,i)=>`
+  <div class="kpi ${k.c}">
+    <div class="kt"><span class="dot" style="background:${k.sc}"></span>${k.t}</div>
+    <div class="kv">${k.v}<small>${k.u}</small></div>
+    <div class="kf">${k.f}</div>
+    <div class="spark" id="sp${i}"></div>
+  </div>`).join("");
+kpis.forEach((k,i)=>spark("sp"+i, k.sp, k.sc));
+
+/* 走势 */
+mk("cTrend", {
+  tooltip: tip(), legend: legend({data:["实际销售额","年度预测","BP目标","达成率"]}),
+  grid: baseGrid({top:34,right:46}),
+  xAxis: catAxis(["1月","2月","3月","4月","5月","6月","7月","8月","9月"]),
+  yAxis: [valAxis({name:"万元"}), valAxis({name:"达成%",max:120,splitLine:{show:false}})],
+  series: [
+    { name:"实际销售额", type:"bar", barWidth:14, itemStyle:{borderRadius:[4,4,0,0], color:gradient("#5b9bff","#2468f2")},
+      data:[5200,5600,6100,5900,6400,6800,null,null,null] },
+    { name:"年度预测", type:"line", smooth:true, symbol:"circle", symbolSize:6, lineStyle:{width:2.5,color:"#f07a1d"},
+      itemStyle:{color:"#f07a1d"}, data:[5300,5500,6000,6100,6300,6600,6900,7100,7300] },
+    { name:"BP目标", type:"line", smooth:true, symbol:"none", lineStyle:{width:2,type:"dashed",color:"#aab6c5"},
+      data:[5500,5700,6200,6200,6500,6700,7000,7200,7400] },
+    { name:"达成率", type:"line", yAxisIndex:1, smooth:true, symbol:"circle", symbolSize:5,
+      lineStyle:{width:2,color:"#25a36c"}, itemStyle:{color:"#25a36c"},
+      data:[98,101,98,96,98,103,null,null,null] },
+  ],
+});
+
+/* 贡献 */
+mk("cContrib", {
+  tooltip: { trigger:"item", backgroundColor:"rgba(255,255,255,.97)", borderColor:"#e4ecf5",
+    textStyle:{color:"#1f2d3d"}, formatter:"{b}<br/>占比 {d}%　{c} 万元" },
+  legend: legend({orient:"vertical", right:0, top:"center", icon:"circle"}),
+  series: [{ type:"pie", radius:["46%","72%"], center:["38%","52%"], avoidLabelOverlap:true,
+    itemStyle:{borderColor:"#fff", borderWidth:2, borderRadius:4},
+    label:{show:false}, emphasis:{label:{show:true, fontSize:13, fontWeight:700, formatter:"{b}\n{d}%"}},
+    data:[
+      {value:7200,name:"华东一组"},{value:4980,name:"华南一组"},
+      {value:4380,name:"华北一组"},{value:2650,name:"西南一组"},{value:2520,name:"海外一组"},{value:2280,name:"华东二组"}] }],
+});
+
+/* 章节卡片 */
+let html = "";
+CHAPTERS.filter(c=>c.key!=="cs").forEach((ch,ci)=>{
+  html += `<div class="chapter-band">
+    <div class="cnum" style="background:${ch.color}">${ci+1}</div>
+    <h2>${ch.title}</h2><span class="cq">${ch.q}</span><span class="line"></span></div>
+    <div class="grid g3">`;
+  ch.items.forEach(k=>{
+    const d = DASH[k];
+    html += `<a class="dash-card" href="pages/${d.file}">
+      <span class="arrow-go">➔</span>
+      <div class="dc-top"><div class="dc-ic" style="background:${d.color}">${d.icon}</div>
+        <div><div class="dc-id">${d.id}</div><div class="dc-name">${d.name}</div></div></div>
+      <div class="dc-q">${d.q}</div>
+      <div class="dc-foot">${d.batch.map(b=>`<span class="tag ${batchTag(b)}">${b}</span>`).join("")}</div>
+    </a>`;
+  });
+  html += `</div>`;
+});
+// 支撑层
+const cs = CHAPTERS.find(c=>c.key==="cs");
+html += `<div class="chapter-band">
+  <div class="cnum" style="background:${cs.color}">底</div>
+  <h2>${cs.title}</h2><span class="cq">${cs.q}</span><span class="line"></span></div><div class="grid g3">`;
+cs.items.forEach(k=>{const d=DASH[k];
+  html += `<a class="dash-card" href="pages/${d.file}">
+    <span class="arrow-go">➔</span>
+    <div class="dc-top"><div class="dc-ic" style="background:${d.color}">${d.icon}</div>
+      <div><div class="dc-id">${d.id}</div><div class="dc-name">${d.name}</div></div></div>
+    <div class="dc-q">${d.q}</div>
+    <div class="dc-foot">${d.batch.map(b=>`<span class="tag ${batchTag(b)}">${b}</span>`).join("")}</div></a>`;});
+html += `</div>`;
+document.getElementById("chapters").innerHTML = html;
+
+function batchTag(b){
+  if(b.includes("P0")) return "tag-green";
+  if(b.includes("二期 P2") || b.includes("二期P2")) return "tag-orange";
+  if(b.includes("二期")) return "tag-gold";
+  if(b.includes("P1")) return "tag-blue";
+  return "tag-gray";
+}
+</script>
+</body>
+</html>

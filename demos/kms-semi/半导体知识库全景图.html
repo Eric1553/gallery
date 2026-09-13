@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>半导体行业知识库 · 全景地图</title>
+<style>
+:root{
+  --primary:#4F46E5;--primary2:#6366F1;--accent:#06B6D4;--emerald:#059669;--amber:#D97706;--rose:#E11D48;--sky:#0284C7;--violet:#7C3AED;
+  --text:#0F172A;--muted:#64748B;--bg:#FAFBFE;--card:#FFFFFF;--border:rgba(0,0,0,0.06);
+  --wafer:#4F46E5;--pkg:#7C3AED;--equip:#059669;--ic:#D97706;--other:#64748B;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:radial-gradient(circle at 88% 18%,rgba(6,182,212,.08),transparent 30%),linear-gradient(135deg,#FAFBFE 0%,#F5F7FF 50%,#F0FDF8 100%);color:var(--text);line-height:1.5}
+.top-accent{height:5px;background:linear-gradient(90deg,var(--wafer),var(--pkg),var(--equip),var(--ic),var(--accent))}
+.page{max-width:1680px;margin:0 auto;padding:18px 24px 30px}
+/* Header */
+.topbar{display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:center;margin-bottom:18px}
+.logo-group{display:flex;align-items:center;gap:14px}
+.logo-mark{width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 10px 24px rgba(79,70,229,.20)}
+.fanruan-mark{width:72px;height:72px;border-radius:16px;background:#fff;border:1px solid #E6EEFF;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 22px rgba(0,56,184,.10);overflow:hidden}
+.fanruan-mark img{width:60px}
+.logo-text h1{font-size:28px;letter-spacing:-1px}.logo-text h1 span{color:var(--primary)}.logo-text .sub{font-size:12px;color:var(--muted);font-weight:700;margin-top:4px}
+.title-center{text-align:center}.title-center .big{font-size:26px;font-weight:900;letter-spacing:-.5px}.title-center .big strong{color:var(--primary)}.title-center .desc{font-size:12px;color:var(--muted);margin-top:5px}
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 8px;text-align:center;box-shadow:0 4px 16px rgba(15,23,42,.04)}.stat b{display:block;font-size:20px;color:var(--primary);font-weight:900}.stat span{font-size:10px;color:var(--muted);font-weight:700}
+/* Search */
+.search-bar{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:10px 14px;margin-bottom:16px;box-shadow:0 4px 16px rgba(15,23,42,.04);position:relative}
+.search-input-wrap{display:flex;align-items:center;gap:10px}
+.search-icon{font-size:20px;flex:none}
+.search-input{flex:1;border:none;outline:none;font-size:15px;color:var(--text);background:transparent}.search-input::placeholder{color:var(--muted)}.search-hotkey{font-size:10px;color:var(--muted);background:#F1F5F9;border:1px solid #E2E8F0;border-radius:6px;padding:3px 6px;font-weight:800;flex:none;white-space:nowrap}
+.search-results{display:none;position:absolute;top:100%;left:0;right:0;background:var(--card);border:1px solid var(--border);border-radius:0 0 14px 14px;max-height:420px;overflow-y:auto;z-index:100;box-shadow:0 12px 32px rgba(15,23,42,.12);margin-top:-1px}.search-results.active{display:block}.result-item{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid #F1F5F9;cursor:pointer;font-size:13px;transition:.1s}.result-item:hover{background:#F5F7FF}.result-item:last-child{border-bottom:none}.result-path{font-size:10px;color:var(--muted);min-width:100px}.result-title{font-weight:600;flex:1}.result-tag{font-size:10px;padding:2px 6px;border-radius:4px;font-weight:700}.tag-high{background:#DCFCE7;color:#166534}.tag-med{background:#FEF3C7;color:#92400E}.tag-low{background:#F1F5F9;color:#475569}.no-results{padding:14px 16px;text-align:center;color:var(--muted);font-size:13px}
+.result-badge{font-size:10px;padding:2px 6px;border-radius:4px;font-weight:700;background:#EEF2FF;color:var(--primary);white-space:nowrap}
+/* Main layout */
+.main{display:grid;grid-template-columns:1.05fr 1.55fr 1.05fr;gap:16px;align-items:start}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:0 6px 24px rgba(15,23,42,.05)}
+.card-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}.card-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff}.card h3{font-size:17px;font-weight:900}.en{font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.5px}
+.icon-purple{background:linear-gradient(135deg,var(--primary),var(--primary2))}.icon-accent{background:linear-gradient(135deg,var(--accent),#22D3EE)}.icon-emerald{background:linear-gradient(135deg,var(--emerald),#34D399)}.icon-amber{background:linear-gradient(135deg,var(--amber),#F59E0B)}.icon-rose{background:linear-gradient(135deg,var(--rose),#FB7185)}.icon-violet{background:linear-gradient(135deg,var(--violet),#A78BFA)}.icon-sky{background:linear-gradient(135deg,var(--sky),#38BDF8)}
+.section-divider{height:1px;background:var(--border);margin:14px 0}
+.sub-title{font-size:13px;font-weight:900;color:var(--text);margin-bottom:9px}
+/* Domain coverage */
+.cov-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.cov-item{display:grid;grid-template-columns:100px 1fr auto;gap:10px;align-items:center;padding:8px 12px;background:#F8FAFC;border:1px solid #EEF2F7;border-radius:10px}.cov-name{font-size:13px;font-weight:800}.cov-track{height:8px;border-radius:4px;overflow:hidden;background:#E2E8F0}.cov-fill{height:100%;border-radius:4px}.fill-green{background:linear-gradient(90deg,var(--emerald),#34D399)}.fill-yellow{background:linear-gradient(90deg,var(--amber),#F59E0B)}.fill-red{background:linear-gradient(90deg,var(--rose),#FB7185)}.cov-pct{font-size:11px;font-weight:800;color:var(--muted)}
+/* Modules */
+.module-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.module-card{display:block;text-decoration:none;color:inherit;background:rgba(255,255,255,.88);border:1px solid rgba(79,70,229,.10);border-radius:14px;padding:10px;position:relative;overflow:hidden;min-height:130px;transition:.2s;cursor:pointer}.module-card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(79,70,229,.10)}
+.module-card:before{content:"";position:absolute;top:0;left:0;right:0;height:4px}.mc-wafer:before{background:var(--wafer)}.mc-pkg:before{background:var(--pkg)}.mc-equip:before{background:var(--emerald)}.mc-ic:before{background:var(--amber)}.mc-other:before{background:#94A3B8}
+.module-top{display:flex;gap:8px;align-items:center}.module-ico{font-size:20px}.module-name{font-size:13px;font-weight:900}.module-en{font-size:9px;color:var(--muted);font-weight:800}
+.module-count{font-size:10px;color:var(--primary);font-weight:900;background:#EEF2FF;border:1px solid #DBE4FF;border-radius:6px;padding:2px 6px;margin:5px 0}.mini-scenes{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}.mini-scene{font-size:9px;color:#334155;background:#F8FAFC;border:1px solid #EEF2F7;border-radius:5px;padding:2px 5px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mini-scene.core{background:#EEF2FF;color:var(--primary);border-color:#C7D2FE;font-weight:900}
+/* Enterprise chips */
+.ent-chips{display:flex;flex-wrap:wrap;gap:6px}.ent-chip{font-size:11px;font-weight:700;padding:4px 8px;border-radius:999px;background:#F1F5F9;color:#475569}.ent-chip.cn{background:#EEF2FF;color:var(--primary)}.ent-chip.us{background:#FFF7ED;color:#C2410C}.ent-chip.tw{background:#F0FDF4;color:#166534}.ent-chip.kr{background:#FFF1F2;color:#BE123C}.ent-chip.nl{background:#FFF7ED;color:#C2410C}.ent-chip.jp{background:#FFF1F2;color:#BE123C}
+/* Fold */
+.fold{border:1px solid #E8EEF8;background:linear-gradient(135deg,#FFFFFF,#F8FBFF);border-radius:12px;margin-top:10px;overflow:hidden}.fold summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;font-size:12px;font-weight:950;color:#0F172A}.fold summary::-webkit-details-marker{display:none}.fold summary:after{content:"展开";font-size:9px;color:var(--primary);background:#EEF6FF;border:1px solid #D8E7FF;border-radius:999px;padding:2px 7px;font-weight:900}.fold[open] summary:after{content:"收起"}.fold-body{padding:0 12px 12px}
+/* FanRuan section */
+.product-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}.product-chip{font-size:10px;font-weight:900;padding:4px 8px;border-radius:999px}.pchip-purple{background:#EEF2FF;color:var(--primary);border:1px solid #C7D2FE}.pchip-accent{background:#ECFEFF;color:var(--accent);border:1px solid #CFFAFE}.pchip-emerald{background:#ECFDF5;color:var(--emerald);border:1px solid #A7F3D0}.pchip-amber{background:#FFFBEB;color:var(--amber);border:1px solid #FDE68A}.pchip-rose{background:#FFF1F2;color:var(--rose);border:1px solid #FECDD3}
+.scene-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.scene-card{background:#F8FAFC;border:1px solid #EEF2F7;border-radius:10px;padding:10px}.scene-card b{display:block;font-size:12px;color:var(--text)}.scene-card span{display:block;font-size:10px;color:var(--muted);margin-top:3px;line-height:1.4}
+/* Info lines */
+.info-line{display:flex;gap:8px;font-size:12px;color:#334155;margin:7px 0;line-height:1.5}.info-dot{width:7px;height:7px;border-radius:50%;background:var(--primary);margin-top:5px;flex:none}.info-dot.amber{background:var(--amber)}.info-dot.emerald{background:var(--emerald)}
+/* Tactic */
+.tactic-stack{display:grid;gap:8px}.tactic-item{display:grid;grid-template-columns:28px 1fr;gap:8px;align-items:start;background:#F8FAFC;border:1px solid #EEF2F7;border-radius:10px;padding:9px}.tactic-num{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:950}.tactic-copy b{display:block;font-size:12px}.tactic-copy span{display:block;font-size:10px;color:var(--muted);margin-top:3px;line-height:1.4}
+/* Roadmap */
+.road-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.road-item{background:#F8FAFC;border:1px solid #EEF2F7;border-radius:10px;padding:10px;text-align:center}.road-num{font-size:16px;font-weight:950;color:var(--primary)}.road-title{font-size:11px;font-weight:900;margin:4px 0 2px}.road-desc{font-size:10px;color:var(--muted);line-height:1.35}
+/* Footer */
+.footer{display:flex;justify-content:space-between;align-items:center;margin-top:16px;color:var(--muted);font-size:11px}
+/* Bottom strips */
+.strip{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-top:14px;box-shadow:0 4px 16px rgba(15,23,42,.04)}.strip-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.strip-left{display:flex;gap:12px;align-items:center}.strip-right{font-size:12px;color:var(--muted);font-weight:800}
+.matrix-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.matrix-card{background:#F8FAFC;border:1px solid #EEF2F7;border-radius:12px;padding:11px}.matrix-name{font-size:12px;font-weight:950;color:#0F172A}.matrix-role{font-size:9px;color:var(--muted);font-weight:800;margin:3px 0 6px}.matrix-list{display:flex;flex-wrap:wrap;gap:4px}.matrix-list span{font-size:9px;color:#334155;background:#fff;border:1px solid #E2E8F0;border-radius:5px;padding:2px 5px}
+/* Gaps */
+.gap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.gap-card{padding:10px;border-radius:10px;font-size:10px}.gap-red{background:#FFF5F5;border:1px solid #FECACA}.gap-yellow{background:#FFFBEB;border:1px solid #FDE68A}.gap-orange{background:#FFF7ED;border:1px solid #FED7AA}.gap-card b{display:block;font-size:11px;margin-bottom:3px}.gap-card span{color:var(--muted);line-height:1.35}
+@media(max-width:1200px){.main{grid-template-columns:1fr}.module-grid{grid-template-columns:repeat(2,1fr)}.matrix-grid{grid-template-columns:repeat(3,1fr)}.stats{grid-template-columns:repeat(3,1fr)}.road-grid{grid-template-columns:repeat(3,1fr)}.gap-grid{grid-template-columns:1fr}.topbar{grid-template-columns:1fr}}
+@media(max-width:760px){.page{padding:12px}.module-grid,.scene-grid,.road-grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="top-accent"></div>
+<div class="page">
+<!-- ═══════ HEADER ═══════ -->
+<header class="topbar">
+  <div class="logo-group">
+    <div class="fanruan-mark"><img src="data:image/png;base64,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" alt="帆软"></div>
+    <div class="logo-text"><h1>半导体<span>知识库</span></h1><div class="sub">帆软上海 · 半导体行业全景地图</div></div>
+  </div>
+  <div class="title-center"><div class="big">半导体行业 · <strong>知识库全景图</strong></div><div class="desc">晶圆制造 · 封装测试 · 半导体设备 · IC设计 · 帆软售前引擎 · 86篇知识笔记</div></div>
+  <div class="stats"><div class="stat"><b>86</b><span>知识笔记</span></div><div class="stat"><b>5</b><span>覆盖领域</span></div><div class="stat"><b>39</b><span>核心笔记</span></div><div class="stat"><b>15</b><span>企业档案</span></div><div class="stat"><b>33</b><span>帆软关联</span></div><div class="stat"><b>10</b><span>售前方案</span></div></div>
+</header>
+
+<!-- ═══════ SEARCH ═══════ -->
+<div class="search-bar">
+  <div class="search-input-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" id="search" type="text" placeholder="搜索86篇笔记 — 输入标题、关键词、企业名、技术名..." autocomplete="off">
+    <span class="search-hotkey">⌘K</span>
+  </div>
+  <div class="search-results" id="results"></div>
+</div>
+
+<!-- ═══════ MAIN ═══════ -->
+<div class="main">
+  <!-- LEFT: Industry Overview -->
+  <div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon icon-purple">🏭</div><div><h3>产业链全景</h3><div class="en">Industry Chain Overview</div></div></div>
+      <div class="info-line"><div class="info-dot"></div><div><strong>晶圆制造：</strong>台积电、中芯国际、华虹、三星 — 最完整覆盖领域（18篇）</div></div>
+      <div class="info-line"><div class="info-dot"></div><div><strong>半导体设备：</strong>ASML、应用材料、泛林、东京电子、科磊、北方华创、中微 — 五大国际+国产新锐</div></div>
+      <div class="info-line"><div class="info-dot emerald"></div><div><strong>封装测试：</strong>日月光、长电、通富、华天 — 先进封装趋势追踪</div></div>
+      <div class="info-line"><div class="info-dot emerald"></div><div><strong>IC设计：</strong>NVIDIA、AMD、高通、海思、寒武纪、地平线 — AI芯片+车规+EDA</div></div>
+      <div class="section-divider"></div>
+      <div class="sub-title">领域覆盖度</div>
+      <div class="cov-grid">
+        <div class="cov-item"><div class="cov-name">🏭 晶圆制造</div><div class="cov-track"><div class="cov-fill fill-green" style="width:95%"></div></div><div class="cov-pct">18篇 🟢</div></div>
+        <div class="cov-item"><div class="cov-name">🔬 半导体设备</div><div class="cov-track"><div class="cov-fill fill-green" style="width:90%"></div></div><div class="cov-pct">12篇 🟢</div></div>
+        <div class="cov-item"><div class="cov-name">💻 IC设计</div><div class="cov-track"><div class="cov-fill fill-green" style="width:85%"></div></div><div class="cov-pct">10篇 🟢</div></div>
+        <div class="cov-item"><div class="cov-name">📦 封装测试</div><div class="cov-track"><div class="cov-fill fill-yellow" style="width:50%"></div></div><div class="cov-pct">6篇 🟡</div></div>
+        <div class="cov-item"><div class="cov-name">🔗 其他细分</div><div class="cov-track"><div class="cov-fill fill-red" style="width:25%"></div></div><div class="cov-pct">2篇 🔴</div></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <div class="card-head"><div class="card-icon icon-amber">🎯</div><div><h3>售前切入策略</h3><div class="en">Sales Entry Strategy</div></div></div>
+      <div class="tactic-stack">
+        <div class="tactic-item"><div class="tactic-num">1</div><div class="tactic-copy"><b>用设备行业打开局面</b><span>设备商MES/EAP/FDC/SPC数据孤岛 → FDL数据集成最直接切入，设备行业方案最完整。</span></div></div>
+        <div class="tactic-item"><div class="tactic-num">2</div><div class="tactic-copy"><b>用良率分析展示价值</b><span>SPC+FineBI根因分析 → 晶圆制造/封测的痛点场景，数据量大、价值显性。</span></div></div>
+        <div class="tactic-item"><div class="tactic-num">3</div><div class="tactic-copy"><b>用AI Agent做差异化</b><span>设备预测性维护 + 质量预警 + 智能问数 → 超越传统BI的竞争壁垒。</span></div></div>
+        <div class="tactic-item"><div class="tactic-num">4</div><div class="tactic-copy"><b>用简道云补现场</b><span>设备巡检、备件管理、工单流程 → 非核心但高频，轻量级切入。</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CENTER: Knowledge Architecture -->
+  <div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon icon-accent">🗺️</div><div><h3>五大领域知识架构</h3><div class="en">Knowledge Architecture Map</div></div></div>
+      <div class="module-grid">
+        <div class="module-card mc-wafer">
+          <div class="module-top"><div class="module-ico">🏭</div><div><div class="module-name">晶圆制造</div><div class="module-en">Wafer Fab</div></div></div>
+          <div class="module-count">18篇笔记 · 🟢 完整覆盖</div>
+          <div class="mini-scenes"><span class="mini-scene core">EUV光刻技术</span><span class="mini-scene core">SPC良率管理</span><span class="mini-scene core">OEE设备效率</span><span class="mini-scene">晶体管演进</span><span class="mini-scene">晶圆厂经济学</span><span class="mini-scene">存储芯片全景</span></div>
+        </div>
+        <div class="module-card mc-equip">
+          <div class="module-top"><div class="module-ico">🔬</div><div><div class="module-name">半导体设备</div><div class="module-en">Equipment</div></div></div>
+          <div class="module-count">12篇笔记 · 🟢 完整覆盖</div>
+          <div class="mini-scenes"><span class="mini-scene core">ASML光刻机</span><span class="mini-scene core">北方华创</span><span class="mini-scene core">ALD/ALE技术</span><span class="mini-scene">MES系统</span><span class="mini-scene">产业政策</span><span class="mini-scene">国产新锐</span></div>
+        </div>
+        <div class="module-card mc-ic">
+          <div class="module-top"><div class="module-ico">💻</div><div><div class="module-name">IC设计</div><div class="module-en">IC Design</div></div></div>
+          <div class="module-count">10篇笔记 · 🟢 完整覆盖</div>
+          <div class="mini-scenes"><span class="mini-scene core">NVIDIA GPU</span><span class="mini-scene core">RISC-V架构</span><span class="mini-scene core">EDA工具</span><span class="mini-scene">汽车半导体</span><span class="mini-scene">Chiplet技术</span></div>
+        </div>
+        <div class="module-card mc-pkg">
+          <div class="module-top"><div class="module-ico">📦</div><div><div class="module-name">封装测试</div><div class="module-en">Packaging & Test</div></div></div>
+          <div class="module-count">6篇笔记 · 🟡 基础覆盖</div>
+          <div class="mini-scenes"><span class="mini-scene core">先进封装趋势</span><span class="mini-scene">CP/FT/ATE</span><span class="mini-scene">日月光/长电</span><span class="mini-scene">通富/华天</span></div>
+        </div>
+        <!-- Row 2 -->
+        <div class="module-card mc-other" style="grid-column:1/3">
+          <div class="module-top"><div class="module-ico">🔗</div><div><div class="module-name">其他细分 + 产业全景</div><div class="module-en">Others & Overview</div></div></div>
+          <div class="module-count">5篇笔记 · 全球格局 + 中国现状 + 产业链 + 分销 + 材料</div>
+          <div class="mini-scenes"><span class="mini-scene core">全球格局</span><span class="mini-scene core">中国产业现状</span><span class="mini-scene">半导体材料</span><span class="mini-scene">分销角色</span><span class="mini-scene">第三代半导体</span></div>
+        </div>
+        <div class="module-card" style="--mc:var(--rose);background:linear-gradient(135deg,#FFF5F5,#FFF1F2);border-color:#FECACA">
+          <div class="module-top"><div class="module-ico">🎯</div><div><div class="module-name">帆软售前引擎</div><div class="module-en">Sales Engine</div></div></div>
+          <div class="module-count">10篇方案 · 🟢 完整</div>
+          <div class="mini-scenes"><span class="mini-scene core">四产品矩阵</span><span class="mini-scene core">16场景应答</span><span class="mini-scene">AI场景</span><span class="mini-scene">数据底座</span></div>
+        </div>
+      </div>
+      <div class="section-divider"></div>
+      <div class="sub-title">知识库数据流</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;font-size:10px">
+        <div style="background:#F8FAFC;border:1px solid #EEF2F7;border-radius:10px;padding:10px"><b style="color:var(--primary)">信息采集</b><div style="color:var(--muted);margin-top:3px">RSS源+媒体清单+KMS官方文献+行业报告</div></div>
+        <div style="background:#F8FAFC;border:1px solid #EEF2F7;border-radius:10px;padding:10px"><b style="color:var(--primary)">模板标准化</b><div style="color:var(--muted);margin-top:3px">T-行业动态 / T-企业档案 / T-技术专题</div></div>
+        <div style="background:#F8FAFC;border:1px solid #EEF2F7;border-radius:10px;padding:10px"><b style="color:var(--primary)">MOC索引</b><div style="color:var(--muted);margin-top:3px">五领域×六维度结构化知识体系</div></div>
+        <div style="background:#EEF2FF;border:1px solid #C7D2FE;border-radius:10px;padding:10px"><b style="color:var(--primary)">售前转化</b><div style="color:var(--muted);margin-top:3px">场景矩阵→话术库→客户应答→方案交付</div></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <div class="card-head"><div class="card-icon icon-violet">📐</div><div><h3>知识库结构</h3><div class="en">Repository Structure</div></div></div>
+      <div class="scene-grid">
+        <div class="scene-card"><b>🌐 产业全景</b><span>3篇 — 全球格局 + 中国现状 + 产业链</span></div>
+        <div class="scene-card"><b>📚 行业知识体系</b><span>31篇 — 5领域×MOC/企业/概念/产业/技术/动态</span></div>
+        <div class="scene-card"><b>📰 深度分析层</b><span>28篇 — 01-05领域行业动态+技术+企业</span></div>
+        <div class="scene-card"><b>💼 售前引擎</b><span>10篇 — 四产品线场景矩阵+话术+竞品</span></div>
+        <div class="scene-card"><b>🧭 索引导航</b><span>3篇 — 知识地图+速查手册+产品矩阵</span></div>
+        <div class="scene-card"><b>📋 日报/模板/来源</b><span>14篇 — 模板3+日报4+知识来源7</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Enterprise + Quick Access -->
+  <div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon icon-emerald">🏢</div><div><h3>企业档案速查</h3><div class="en">Enterprise Profiles</div></div></div>
+      <div class="sub-title">晶圆制造</div>
+      <div class="ent-chips"><span class="ent-chip tw">台积电</span><span class="ent-chip cn">中芯国际</span><span class="ent-chip cn">华虹</span><span class="ent-chip kr">三星</span></div>
+      <div class="sub-title" style="margin-top:10px">半导体设备</div>
+      <div class="ent-chips"><span class="ent-chip nl">ASML</span><span class="ent-chip us">应用材料</span><span class="ent-chip us">泛林</span><span class="ent-chip jp">东京电子</span><span class="ent-chip us">科磊</span><span class="ent-chip cn">北方华创</span><span class="ent-chip cn">中微</span></div>
+      <div class="sub-title" style="margin-top:10px">IC设计</div>
+      <div class="ent-chips"><span class="ent-chip us">NVIDIA</span><span class="ent-chip us">AMD</span><span class="ent-chip us">高通</span><span class="ent-chip cn">海思</span></div>
+      <div class="sub-title" style="margin-top:10px">封装测试</div>
+      <div class="ent-chips"><span class="ent-chip tw">日月光</span><span class="ent-chip cn">长电</span><span class="ent-chip cn">通富</span><span class="ent-chip cn">华天</span></div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <div class="card-head"><div class="card-icon icon-rose">📝</div><div><h3>核心笔记 TOP 8</h3><div class="en">Key Notes</div></div></div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div class="tactic-item"><div class="tactic-num" style="background:var(--primary)">1</div><div class="tactic-copy"><b>SPC与良率管理</b><span>117行 · 晶圆制造 · 质量控制体系</span></div></div>
+        <div class="tactic-item"><div class="tactic-num" style="background:var(--wafer)">2</div><div class="tactic-copy"><b>中国半导体产业政策</b><span>117行 · 大基金+出口管制</span></div></div>
+        <div class="tactic-item"><div class="tactic-num" style="background:var(--emerald)">3</div><div class="tactic-copy"><b>OEE与设备效率管理</b><span>105行 · 晶圆制造 · 产能管理</span></div></div>
+        <div class="tactic-item"><div class="tactic-num" style="background:var(--amber)">4</div><div class="tactic-copy"><b>2026H1封测动态</b><span>102行 · 先进封装趋势</span></div></div>
+        <div class="tactic-item"><div class="tactic-num" style="background:var(--violet)">5</div><div class="tactic-copy"><b>第三代半导体 SiC/GaN</b><span>95行 · 技术+市场+产业链</span></div></div>
+        <div class="tactic-item"><div class="tactic-num" style="background:var(--accent)">6</div><div class="tactic-copy"><b>存储芯片行业全景</b><span>94行 · DRAM/NAND/HBM</span></div></div>
+        <div class="tactic-item"><div class="tactic-num" style="background:var(--wafer)">7</div><div class="tactic-copy"><b>台积电 TSMC</b><span>92行 · 晶圆制造 · 企业深度</span></div></div>
+        <div class="tactic-item"><div class="tactic-num" style="background:var(--emerald)">8</div><div class="tactic-copy"><b>晶体管技术演进</b><span>85行 · MOSFET→FinFET→GAA</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ FANRUAN SALES ENGINE ═══════ -->
+<section class="strip">
+  <div class="strip-head">
+    <div class="strip-left"><div class="card-icon icon-amber">🎯</div><div><h3>帆软售前引擎 · 场景矩阵</h3><div class="en" style="font-size:10px">FanRuan Sales Scenarios</div></div></div>
+    <div class="strip-right">四产品线 × 四行业 × 方案+话术+竞品</div>
+  </div>
+  <div class="product-row">
+    <span class="product-chip pchip-purple">FineReport 定稿报表</span>
+    <span class="product-chip pchip-accent">FineBI 经营分析</span>
+    <span class="product-chip pchip-emerald">FDL 数据集成</span>
+    <span class="product-chip pchip-amber">AI Agent 智能问数</span>
+    <span class="product-chip pchip-rose">简道云 零代码</span>
+  </div>
+  <div class="matrix-grid">
+    <div class="matrix-card" style="background:#EEF2FF;border-color:#C7D2FE"><div class="matrix-name">半导体设备 ⭐</div><div class="matrix-role">最强关联 · 四产品场景方案</div><div class="matrix-list"><span>FR设备报表</span><span>FBI经营驾驶舱</span><span>FDL数据集成</span><span>简道云现场补录</span><span>AI预测性维护</span></div></div>
+    <div class="matrix-card"><div class="matrix-name">晶圆制造</div><div class="matrix-role">强关联 · 良率+产能+SPC</div><div class="matrix-list"><span>FR定稿+报表</span><span>FBI良率分析</span><span>FDL多源集成</span><span>AI质量预警</span></div></div>
+    <div class="matrix-card"><div class="matrix-name">封装测试 🔶</div><div class="matrix-role">强关联 · 测试数据+质量追溯</div><div class="matrix-list"><span>FR测试报告</span><span>FBI SPC分析</span><span>FDL数据整合</span><span>简道云工单</span></div></div>
+    <div class="matrix-card"><div class="matrix-name">IC设计 🔶</div><div class="matrix-role">中等关联 · 研发效能+项目管理</div><div class="matrix-list"><span>FR项目报表</span><span>FBI研发分析</span><span>缺话术·案例·竞品</span></div></div>
+    <div class="matrix-card" style="background:#FFF5F5;border-color:#FECACA"><div class="matrix-name">⚠️ 待建设</div><div class="matrix-role">封测话术·IC设计话术案例·材料细分</div><div class="matrix-list"><span>封测客户应答库</span><span>IC设计场景方案</span><span>材料行业拓展</span></div></div>
+  </div>
+</section>
+
+<!-- ═══════ GAPS ═══════ -->
+<section class="strip">
+  <div class="strip-head">
+    <div class="strip-left"><div class="card-icon icon-rose">🔍</div><div><h3>知识库短板与规划</h3><div class="en" style="font-size:10px">Gaps & Roadmap</div></div></div>
+    <div class="strip-right">持续迭代中，10个空目录待填充</div>
+  </div>
+  <div class="gap-grid">
+    <div class="gap-card gap-red"><b>🔴 封测深度不足</b><span>仅1篇技术笔记 vs 晶圆14篇。需补充CoWoS/InFO/EMIB等先进封装技术拆解。</span></div>
+    <div class="gap-card gap-red"><b>🔴 EDA工具链缺失</b><span>仅1篇市场格局。缺Synopsys/Cadence/华大九天深度对比。</span></div>
+    <div class="gap-card gap-yellow"><b>🟡 材料细分待建</b><span>仅有全景概览。缺光刻胶/硅片/电子特气/CMP独立笔记。</span></div>
+    <div class="gap-card gap-yellow"><b>🟡 IP核与设计服务</b><span>完全空白领域。ARM/RISC-V IP生态未覆盖。</span></div>
+    <div class="gap-card gap-orange"><b>🟠 10个空目录</b><span>产业链×5 + 技术路线×4 预建未填充。需评估保留/清理。</span></div>
+    <div class="gap-card gap-red"><b>🔴 封测/IC设计话术</b><span>售前话术库仅有设备行业。缺封测和IC设计的客户应答。</span></div>
+  </div>
+</section>
+
+<!-- ═══════ ROADMAP ═══════ -->
+<section class="strip">
+  <div class="strip-head">
+    <div class="strip-left"><div class="card-icon icon-purple">🧭</div><div><h3>知识库建设路线图</h3><div class="en" style="font-size:10px">Implementation Roadmap</div></div></div>
+    <div class="strip-right">从基础搭建到持续运营</div>
+  </div>
+  <div class="road-grid">
+    <div class="road-item"><div class="road-num">01</div><div class="road-title">基础搭建 ✅</div><div class="road-desc">86篇笔记 · 5领域 · 15家企业档案 · 模板体系</div></div>
+    <div class="road-item"><div class="road-num">02</div><div class="road-title">售前引擎 ✅</div><div class="road-desc">四产品矩阵 · 16场景 · 话术库 · 竞品动态</div></div>
+    <div class="road-item"><div class="road-num">03</div><div class="road-title">帆软整合 ✅</div><div class="road-desc">33篇关联分类 · 4行业桥接 · 产品速查矩阵</div></div>
+    <div class="road-item"><div class="road-num">04</div><div class="road-title">首页建设 ✅</div><div class="road-desc">全景HTML · MD首页 · Obsidian配置</div></div>
+    <div class="road-item"><div class="road-num">05</div><div class="road-title">深度加固 🔜</div><div class="road-desc">封测深度 · EDA工具 · 材料细分 · IP核</div></div>
+    <div class="road-item"><div class="road-num">06</div><div class="road-title">售前补全 🔜</div><div class="road-desc">封测话术 · IC设计应答 · 材料行业拓展</div></div>
+    <div class="road-item"><div class="road-num">07</div><div class="road-title">持续更新 🔜</div><div class="road-desc">周度行业动态 · 企业跟踪 · 政策追踪</div></div>
+    <div class="road-item"><div class="road-num">08</div><div class="road-title">案例积累 🔜</div><div class="road-desc">华南运营计划落地 · 客户拜访实录</div></div>
+    <div class="road-item"><div class="road-num">09</div><div class="road-title">结构优化 🔜</div><div class="road-desc">01-05与知识体系合并 · 空目录清理</div></div>
+    <div class="road-item"><div class="road-num">10</div><div class="road-title">体系运营 🔜</div><div class="road-desc">周报自动化 · KMS同步 · 质量巡检</div></div>
+  </div>
+</section>
+
+<div class="footer"><div>FRSH半导体知识库 · 帆软上海售前团队 · 徐文浩 (Lorin)</div><div>晶圆制造 · 封装测试 · 半导体设备 · IC设计 · FineReport/FineBI/FDL/简道云/AI Agent</div></div>
+</div>
+
+<!-- ═══════ SEARCH ENGINE ═══════ -->
+<script>
+// === SEARCH INDEX ===
+const notesIndex = [{"path":"首页.html","title":"首页","category":"根目录","tags":[],"importance":"low"},{"path":"帆软售前引擎/数据底座场景/数据底座-半导体场景矩阵.html","title":"数据底座-半导体场景矩阵","category":"帆软售前引擎","tags":["MOC","售前","FDL","数据底座","数仓"],"importance":"high"},{"path":"帆软售前引擎/零代码场景/零代码-半导体场景矩阵.html","title":"零代码-半导体场景矩阵","category":"帆软售前引擎","tags":["MOC","售前","简道云","零代码"],"importance":"medium"},{"path":"帆软售前引擎/话术方案/售前话术与方案库.html","title":"售前话术与方案库","category":"帆软售前引擎","tags":["MOC","话术","售前"],"importance":"high"},{"path":"帆软售前引擎/话术方案/客户场景与应答库-半导体设备.html","title":"客户场景与应答库-半导体设备","category":"帆软售前引擎","tags":["KMS","半导体设备","客户场景","应答话术","售前"],"importance":"high"},{"path":"帆软售前引擎/AI场景/AI-半导体场景矩阵.html","title":"AI-半导体场景矩阵","category":"帆软售前引擎","tags":["MOC","售前","AI","Agent","智能问数"],"importance":"high"},{"path":"帆软售前引擎/数据分析场景/半导体设备-四产品场景方案.html","title":"半导体设备-四产品场景方案","category":"帆软售前引擎","tags":["KMS","半导体设备","FineReport","FineBI","FDL","简道云","售前方案"],"importance":"high"},{"path":"帆软售前引擎/数据分析场景/封装测试-四产品场景方案.html","title":"封装测试-四产品场景方案","category":"帆软售前引擎","tags":["KMS","封装测试","FineReport","FineBI","FDL","简道云","售前方案"],"importance":"high"},{"path":"帆软售前引擎/数据分析场景/数据分析-半导体场景矩阵.html","title":"数据分析-半导体场景矩阵","category":"帆软售前引擎","tags":["MOC","售前","数据分析","FineReport","FineBI"],"importance":"high"},{"path":"帆软售前引擎/客户案例/半导体体系客户梳理.html","title":"半导体体系客户梳理","category":"帆软售前引擎","tags":["KMS","客户梳理","半导体生态","售前"],"importance":"high"},{"path":"帆软售前引擎/竞品动态/竞品动态追踪.html","title":"竞品动态追踪","category":"帆软售前引擎","tags":["MOC","竞品"],"importance":"medium"},{"path":"导航/半导体行业知识地图.html","title":"半导体行业知识地图","category":"导航","tags":["导航","MOC"],"importance":"low"},{"path":"导航/售前速查手册.html","title":"售前速查手册","category":"导航","tags":["导航","售前核心","上海战区"],"importance":"low"},{"path":"导航/帆软产品x半导体行业矩阵.html","title":"帆软产品x半导体行业矩阵","category":"导航","tags":["导航","MOC","售前核心","上海战区"],"importance":"low"},{"path":"02-封装测试/行业动态/2026年H1全球封测行业动态与先进封装趋势.html","title":"2026年H1全球封测行业动态与先进封装趋势","category":"02-封装测试","tags":["封装测试","先进封装","CoWoS","Chiplet","混合键合","面板级封装"],"importance":"high"},{"path":"02-封装测试/行业动态/封装基板与先进封装设备：从ABF到混合键合.html","title":"封装基板与先进封装设备：从ABF到混合键合","category":"02-封装测试","tags":["封装测试","封装基板","ABF","混合键合","先进封装设备"],"importance":"high"},{"path":"02-封装测试/行业动态/更多中国半导体企业：粤芯-晶合-鹏新旭-华润微-甬矽.html","title":"更多中国半导体企业：粤芯-晶合-鹏新旭-华润微-甬矽","category":"02-封装测试","tags":["封装测试","行业报告"],"importance":"medium"},{"path":"03-半导体设备/行业动态/2026年H1全球半导体设备市场回顾.html","title":"2026年H1全球半导体设备市场回顾","category":"03-半导体设备","tags":["半导体设备","市场分析","ASML","北方华创","出口管制"],"importance":"high"},{"path":"03-半导体设备/行业动态/ALD-ALE：原子层沉积与刻蚀技术.html","title":"ALD-ALE：原子层沉积与刻蚀技术","category":"03-半导体设备","tags":["半导体设备","ALD","ALE","薄膜沉积","技术深潜"],"importance":"medium"},{"path":"03-半导体设备/行业动态/东京电子_Tokyo_Electron.html","title":"东京电子_Tokyo_Electron","category":"03-半导体设备","tags":["半导体设备","企业档案","Tokyo Electron","TEL","日本"],"importance":"high"},{"path":"03-半导体设备/行业动态/中国半导体产业政策与大基金体系.html","title":"中国半导体产业政策与大基金体系","category":"03-半导体设备","tags":["产业政策","大基金","国产替代","半导体投资"],"importance":"high"},{"path":"03-半导体设备/行业动态/半导体制造的IT系统：MES、EAP、FDC、SPC与YMS.html","title":"半导体制造的IT系统：MES、EAP、FDC、SPC与YMS","category":"03-半导体设备","tags":["半导体设备","半导体制造","MES","EAP","FDC","YMS","IT系统"],"importance":"high"},{"path":"03-半导体设备/行业动态/国产半导体设备新锐企业概览.html","title":"国产半导体设备新锐企业概览","category":"03-半导体设备","tags":["半导体设备","国产替代","盛美半导体","拓荆科技","华海清科"],"importance":"medium"},{"path":"03-半导体设备/行业动态/射频前端（RFFE）：滤波器、PA与全球格局.html","title":"射频前端（RFFE）：滤波器、PA与全球格局","category":"03-半导体设备","tags":["半导体设备","行业报告"],"importance":"medium"},{"path":"03-半导体设备/行业动态/应用材料_Applied_Materials.html","title":"应用材料_Applied_Materials","category":"03-半导体设备","tags":["半导体设备","企业档案","Applied Materials","AMAT","美国"],"importance":"high"},{"path":"03-半导体设备/行业动态/泛林集团_Lam_Research.html","title":"泛林集团_Lam_Research","category":"03-半导体设备","tags":["半导体设备","企业档案","Lam Research","泛林","美国"],"importance":"high"},{"path":"03-半导体设备/行业动态/长江存储（YMTC）：Xtacking架构与3D NAND的自主之路.html","title":"长江存储（YMTC）：Xtacking架构与3D NAND的自主之路","category":"03-半导体设备","tags":["存储芯片","3D NAND","长江存储","YMTC","Xtacking"],"importance":"high"},{"path":"产业全景/中国半导体产业现状.html","title":"中国半导体产业现状","category":"产业全景","tags":["中国半导体","国产替代","政策","产业全景"],"importance":"high"},{"path":"产业全景/全球半导体产业格局.html","title":"全球半导体产业格局","category":"产业全景","tags":["MOC","产业全景"],"importance":"low"},{"path":"产业全景/半导体产业链上下游关系.html","title":"半导体产业链上下游关系","category":"产业全景","tags":["产业全景","产业链"],"importance":"high"},{"path":"模板/T-企业档案.html","title":"T-企业档案","category":"模板","tags":["模板"],"importance":"low"},{"path":"模板/T-技术专题.html","title":"T-技术专题","category":"模板","tags":["模板"],"importance":"low"},{"path":"模板/T-行业动态.html","title":"T-行业动态","category":"模板","tags":["模板"],"importance":"low"},{"path":"04-IC设计/行业动态/2026年H1全球IC设计行业动态.html","title":"2026年H1全球IC设计行业动态","category":"04-IC设计","tags":["IC设计","AI芯片","GPU","手机芯片","FPGA","国产芯片"],"importance":"high"},{"path":"04-IC设计/行业动态/Chiplet与先进封装技术趋势.html","title":"Chiplet与先进封装技术趋势","category":"04-IC设计","tags":["先进封装","Chiplet","UCIe","芯片设计","2.5D封装","3D封装"],"importance":"medium"},{"path":"04-IC设计/行业动态/EDA工具市场格局.html","title":"EDA工具市场格局","category":"04-IC设计","tags":["EDA","芯片设计","Synopsys","Cadence","华大九天"],"importance":"medium"},{"path":"04-IC设计/行业动态/FPGA芯片：架构、格局与中国替代.html","title":"FPGA芯片：架构、格局与中国替代","category":"04-IC设计","tags":["IC设计","行业报告"],"importance":"medium"},{"path":"04-IC设计/行业动态/IoT-WiFi-蓝牙芯片：乐鑫、泰凌微、恒玄与中国IoT芯片生态.html","title":"IoT-WiFi-蓝牙芯片：乐鑫、泰凌微、恒玄与中国IoT芯片生态","category":"04-IC设计","tags":["IC设计","IoT芯片","WiFi","BLE","乐鑫","恒玄","RISC-V"],"importance":"medium"},{"path":"04-IC设计/行业动态/RISC-V：开源指令集架构的崛起与产业影响.html","title":"RISC-V：开源指令集架构的崛起与产业影响","category":"04-IC设计","tags":["IC设计","RISC-V","CPU架构","开源硬件"],"importance":"medium"},{"path":"04-IC设计/行业动态/地平线（Horizon Robotics）：中国智能驾驶芯片的领跑者.html","title":"地平线（Horizon Robotics）：中国智能驾驶芯片的领跑者","category":"04-IC设计","tags":["IC设计","企业公告","FineReport/FineBI","AI Agent/智能问数"],"importance":"medium"},{"path":"04-IC设计/行业动态/汽车半导体行业全景.html","title":"汽车半导体行业全景","category":"04-IC设计","tags":["IC设计","汽车半导体","MCU","SiC","ADAS"],"importance":"medium"},{"path":"知识来源/官方文献/12-06 半导体行业知识——Crisp.html","title":"12-06 半导体行业知识——Crisp","category":"知识来源","tags":["KMS","PQLX"],"importance":"low"},{"path":"知识来源/官方文献/2026华南半导体（泛半导体）运营计划.html","title":"2026华南半导体（泛半导体）运营计划","category":"知识来源","tags":["KMS","PQLX"],"importance":"low"},{"path":"知识来源/官方文献/专精特新客户调研-1205-富芯半导体-模拟芯片IDM.html","title":"专精特新客户调研-1205-富芯半导体-模拟芯片IDM","category":"知识来源","tags":["KMS","FRBI"],"importance":"low"},{"path":"知识来源/官方文献/半导体分销-深圳市恒森微电子有限公司.html","title":"半导体分销-深圳市恒森微电子有限公司","category":"知识来源","tags":["KMS","pangu"],"importance":"low"},{"path":"知识来源/官方文献/半导体行业通识.html","title":"半导体行业通识","category":"知识来源","tags":["KMS","xingxiao"],"importance":"low"},{"path":"知识来源/RSS与媒体/RSS源与媒体清单.html","title":"RSS源与媒体清单","category":"知识来源","tags":["知识来源","RSS"],"importance":"medium"},{"path":"知识来源/RSS与媒体/信息获取策略.html","title":"信息获取策略","category":"知识来源","tags":["知识来源","策略"],"importance":"medium"},{"path":"05-其他细分/行业动态/半导体分销商在产业链中的角色.html","title":"半导体分销商在产业链中的角色","category":"05-其他细分","tags":["半导体分销","供应链","Arrow","Avnet","大联大","中电港"],"importance":"medium"},{"path":"行业知识体系/02-封装测试/02-封装测试-MOC.html","title":"02-封装测试-MOC","category":"02-封装测试","tags":["MOC","封装测试"],"importance":"low"},{"path":"行业知识体系/02-封装测试/封装测试-细分板块.html","title":"封装测试-细分板块","category":"02-封装测试","tags":["KMS","封装测试","细分板块"],"importance":"medium"},{"path":"行业知识体系/02-封装测试/关键企业/华天科技.html","title":"华天科技","category":"02-封装测试","tags":["企业","封装测试","中国大陆","天水"],"importance":"medium"},{"path":"行业知识体系/02-封装测试/关键企业/日月光_ASE.html","title":"日月光_ASE","category":"02-封装测试","tags":["企业","封装测试","台湾","先进封装"],"importance":"medium"},{"path":"行业知识体系/02-封装测试/关键企业/通富微电_TFME.html","title":"通富微电_TFME","category":"02-封装测试","tags":["企业","封装测试","中国大陆","AMD"],"importance":"medium"},{"path":"行业知识体系/02-封装测试/关键企业/长电科技_JCET.html","title":"长电科技_JCET","category":"02-封装测试","tags":["企业","封装测试","中国大陆","先进封装"],"importance":"medium"},{"path":"行业知识体系/02-封装测试/基础概念/封装技术概述.html","title":"封装技术概述","category":"02-封装测试","tags":["封装测试","基础概念"],"importance":"high"},{"path":"行业知识体系/02-封装测试/行业动态/行业动态存档.html","title":"行业动态存档","category":"02-封装测试","tags":["MOC","封装测试","行业动态"],"importance":"low"},{"path":"行业知识体系/03-半导体设备/03-半导体设备-MOC.html","title":"03-半导体设备-MOC","category":"03-半导体设备","tags":["MOC","半导体设备"],"importance":"low"},{"path":"行业知识体系/03-半导体设备/关键企业/ASML.html","title":"ASML","category":"03-半导体设备","tags":["企业","半导体设备","光刻机","荷兰","EUV"],"importance":"high"},{"path":"行业知识体系/03-半导体设备/关键企业/中微公司_AMEC.html","title":"中微公司_AMEC","category":"03-半导体设备","tags":["企业","半导体设备","刻蚀","中国大陆","国产替代"],"importance":"high"},{"path":"行业知识体系/03-半导体设备/关键企业/北方华创_NAURA.html","title":"北方华创_NAURA","category":"03-半导体设备","tags":["企业","半导体设备","中国大陆","国产替代"],"importance":"high"},{"path":"行业知识体系/03-半导体设备/基础概念/半导体设备分类与市场格局.html","title":"半导体设备分类与市场格局","category":"03-半导体设备","tags":["半导体设备","基础概念","市场格局"],"importance":"high"},{"path":"行业知识体系/03-半导体设备/行业动态/行业动态存档.html","title":"行业动态存档","category":"03-半导体设备","tags":["MOC","半导体设备","行业动态"],"importance":"low"},{"path":"行业知识体系/04-IC设计/04-IC设计-MOC.html","title":"04-IC设计-MOC","category":"04-IC设计","tags":["MOC","IC设计"],"importance":"low"},{"path":"行业知识体系/04-IC设计/关键企业/AMD.html","title":"AMD","category":"04-IC设计","tags":["企业","IC设计","CPU","GPU","美国","Chiplet"],"importance":"high"},{"path":"行业知识体系/04-IC设计/关键企业/NVIDIA.html","title":"NVIDIA","category":"04-IC设计","tags":["企业","IC设计","AI芯片","GPU","美国"],"importance":"high"},{"path":"行业知识体系/04-IC设计/关键企业/海思_HiSilicon.html","title":"海思_HiSilicon","category":"04-IC设计","tags":["企业","IC设计","中国大陆","华为","AI芯片"],"importance":"high"},{"path":"行业知识体系/04-IC设计/关键企业/高通_Qualcomm.html","title":"高通_Qualcomm","category":"04-IC设计","tags":["企业","IC设计","移动芯片","通信","美国","5G"],"importance":"medium"},{"path":"行业知识体系/04-IC设计/基础概念/IC设计流程与产业模式.html","title":"IC设计流程与产业模式","category":"04-IC设计","tags":["IC设计","基础概念","Fabless","EDA"],"importance":"high"},{"path":"行业知识体系/04-IC设计/行业动态/行业动态存档.html","title":"行业动态存档","category":"04-IC设计","tags":["MOC","IC设计","行业动态"],"importance":"low"},{"path":"行业知识体系/05-其他细分/05-其他细分-MOC.html","title":"05-其他细分-MOC","category":"05-其他细分","tags":["MOC","其他细分"],"importance":"low"},{"path":"行业知识体系/05-其他细分/行业动态/行业动态存档.html","title":"行业动态存档","category":"05-其他细分","tags":["MOC","其他细分","行业动态"],"importance":"low"},{"path":"行业知识体系/01-晶圆制造/01-晶圆制造-MOC.html","title":"01-晶圆制造-MOC","category":"01-晶圆制造","tags":["MOC","晶圆制造"],"importance":"low"},{"path":"行业知识体系/01-晶圆制造/关键企业/三星半导体_Samsung.html","title":"三星半导体_Samsung","category":"01-晶圆制造","tags":["企业","晶圆制造","IDM","存储","韩国"],"importance":"high"},{"path":"行业知识体系/01-晶圆制造/关键企业/中芯国际_SMIC.html","title":"中芯国际_SMIC","category":"01-晶圆制造","tags":["企业","晶圆制造","中国大陆","国产替代","晶圆代工"],"importance":"high"},{"path":"行业知识体系/01-晶圆制造/关键企业/华虹半导体.html","title":"华虹半导体","category":"01-晶圆制造","tags":["企业","晶圆制造","中国大陆","特色工艺","华虹"],"importance":"medium"},{"path":"行业知识体系/01-晶圆制造/关键企业/台积电_TSMC.html","title":"台积电_TSMC","category":"01-晶圆制造","tags":["企业","晶圆制造","晶圆代工","台湾"],"importance":"high"},{"path":"行业知识体系/01-晶圆制造/基础概念/先进制程vs成熟制程.html","title":"先进制程vs成熟制程","category":"01-晶圆制造","tags":["晶圆制造","技术路线","市场分析"],"importance":"high"},{"path":"行业知识体系/01-晶圆制造/基础概念/晶圆制造全流程.html","title":"晶圆制造全流程","category":"01-晶圆制造","tags":["晶圆制造","基础概念"],"importance":"high"},{"path":"行业知识体系/01-晶圆制造/行业动态/行业动态存档.html","title":"行业动态存档","category":"01-晶圆制造","tags":["MOC","晶圆制造","行业动态"],"importance":"low"},{"path":"日报周报/2026-07-08-第一轮知识入库总结.html","title":"2026-07-08-第一轮知识入库总结","category":"日报周报","tags":["周报","总结"],"importance":"low"},{"path":"日报周报/2026-07-09-第三轮知识入库总结.html","title":"2026-07-09-第三轮知识入库总结","category":"日报周报","tags":["周报","总结"],"importance":"low"},{"path":"日报周报/2026-07-09-第二轮知识入库总结.html","title":"2026-07-09-第二轮知识入库总结","category":"日报周报","tags":["周报","总结"],"importance":"low"},{"path":"日报周报/2026-07-09-第四轮知识入库总结.html","title":"2026-07-09-第四轮知识入库总结","category":"日报周报","tags":["周报","总结"],"importance":"low"},{"path":"01-晶圆制造/行业动态/2026年H1全球晶圆代工行业动态.html","title":"2026年H1全球晶圆代工行业动态","category":"01-晶圆制造","tags":["晶圆制造","晶圆代工","台积电","中芯国际","先进制程","成熟制程"],"importance":"high"},{"path":"01-晶圆制造/行业动态/EUV光刻技术深度解析.html","title":"EUV光刻技术深度解析","category":"01-晶圆制造","tags":["晶圆制造","光刻","EUV","ASML","技术深潜"],"importance":"high"},{"path":"01-晶圆制造/行业动态/IDM、Fabless与Foundry：半导体商业模式的三种形态.html","title":"IDM、Fabless与Foundry：半导体商业模式的三种形态","category":"01-晶圆制造","tags":["产业分析","IDM","Fabless","Foundry","商业模式"],"importance":"medium"},{"path":"01-晶圆制造/行业动态/OEE与设备效率管理：半导体制造的产能管理.html","title":"OEE与设备效率管理：半导体制造的产能管理","category":"01-晶圆制造","tags":["晶圆制造","半导体设备","产能管理","OEE","设备效率"],"importance":"high"},{"path":"01-晶圆制造/行业动态/SPC与良率管理：半导体制造的质量控制体系.html","title":"SPC与良率管理：半导体制造的质量控制体系","category":"01-晶圆制造","tags":["晶圆制造","封装测试","质量控制","SPC","良率管理"],"importance":"high"},{"path":"01-晶圆制造/行业动态/SiC制造工艺：从衬底生长到器件制造的特殊挑战.html","title":"SiC制造工艺：从衬底生长到器件制造的特殊挑战","category":"01-晶圆制造","tags":["晶圆制造","SiC","碳化硅","衬底","制造工艺"],"importance":"medium"},{"path":"01-晶圆制造/行业动态/上海微电子（SMEE）：中国光刻机的长征.html","title":"上海微电子（SMEE）：中国光刻机的长征","category":"01-晶圆制造","tags":["晶圆制造","企业公告"],"importance":"high"},{"path":"01-晶圆制造/行业动态/中国IC设计企业矩阵：韦尔、兆易、卓胜微及更多.html","title":"中国IC设计企业矩阵：韦尔、兆易、卓胜微及更多","category":"01-晶圆制造","tags":["IC设计","中国企业","韦尔股份","兆易创新","卓胜微"],"importance":"medium"},{"path":"01-晶圆制造/行业动态/中国半导体材料头部企业：沪硅、安集、江丰、鼎龙.html","title":"中国半导体材料头部企业：沪硅、安集、江丰、鼎龙","category":"01-晶圆制造","tags":["晶圆制造","企业公告"],"importance":"medium"},{"path":"01-晶圆制造/行业动态/半导体材料市场格局与关键品类.html","title":"半导体材料市场格局与关键品类","category":"05-其他细分","tags":["半导体材料","硅片","光刻胶","电子特气","CMP","溅射靶材"],"importance":"medium"},{"path":"01-晶圆制造/行业动态/半导体测试技术：CP、FT与ATE体系.html","title":"半导体测试技术：CP、FT与ATE体系","category":"01-晶圆制造","tags":["晶圆制造","封装测试","半导体测试","CP测试","FT测试","ATE"],"importance":"high"},{"path":"01-晶圆制造/行业动态/半导体行业周期：理解硅周期的逻辑与历史.html","title":"半导体行业周期：理解硅周期的逻辑与历史","category":"01-晶圆制造","tags":["晶圆制造","行业报告"],"importance":"medium"},{"path":"01-晶圆制造/行业动态/存储芯片行业全景：DRAM、NAND与HBM.html","title":"存储芯片行业全景：DRAM、NAND与HBM","category":"01-晶圆制造","tags":["晶圆制造","存储芯片","DRAM","NAND","HBM"],"importance":"high"},{"path":"01-晶圆制造/行业动态/寒武纪（Cambricon）：中国AI芯片的先驱与挑战.html","title":"寒武纪（Cambricon）：中国AI芯片的先驱与挑战","category":"01-晶圆制造","tags":["晶圆制造","企业公告","FineReport/FineBI","AI Agent/智能问数"],"importance":"medium"},{"path":"01-晶圆制造/行业动态/晶体管技术演进：从MOSFET到FinFET到GAA.html","title":"晶体管技术演进：从MOSFET到FinFET到GAA","category":"01-晶圆制造","tags":["晶圆制造","晶体管","FinFET","GAA","器件物理"],"importance":"high"},{"path":"01-晶圆制造/行业动态/晶圆厂经济学：建设成本、运营结构与行业壁垒.html","title":"晶圆厂经济学：建设成本、运营结构与行业壁垒","category":"01-晶圆制造","tags":["晶圆制造","Fab经济学","CAPEX","行业壁垒"],"importance":"medium"},{"path":"01-晶圆制造/行业动态/模拟芯片行业：品类、格局与IDM壁垒.html","title":"模拟芯片行业：品类、格局与IDM壁垒","category":"01-晶圆制造","tags":["晶圆制造","模拟芯片","IDM","TI","ADI"],"importance":"medium"},{"path":"01-晶圆制造/行业动态/比亚迪半导体：车规级功率器件的垂直整合样本.html","title":"比亚迪半导体：车规级功率器件的垂直整合样本","category":"01-晶圆制造","tags":["晶圆制造","企业公告","AI Agent/智能问数"],"importance":"medium"},{"path":"01-晶圆制造/行业动态/科磊_KLA.html","title":"科磊_KLA","category":"03-半导体设备","tags":["半导体设备","企业档案","KLA","科磊","美国","量测检测"],"importance":"medium"},{"path":"01-晶圆制造/行业动态/第三代半导体：SiC与GaN的技术、市场与产业链.html","title":"第三代半导体：SiC与GaN的技术、市场与产业链","category":"01-晶圆制造","tags":["晶圆制造","第三代半导体","SiC","GaN","功率半导体"],"importance":"high"},{"path":"01-晶圆制造/行业动态/美国对华半导体出口管制体系演变（2022-2026）.html","title":"美国对华半导体出口管制体系演变（2022-2026）","category":"01-晶圆制造","tags":["出口管制","美国BIS","地缘政治","芯片管制"],"importance":"high"},{"path":"01-晶圆制造/行业动态/长鑫存储（CXMT）：中国DRAM从零到一的突破.html","title":"长鑫存储（CXMT）：中国DRAM从零到一的突破","category":"01-晶圆制造","tags":["晶圆制造","企业公告","AI Agent/智能问数"],"importance":"high"},{"path":"帆软售前整合/IC设计.html","title":"IC设计","category":"帆软售前整合","tags":["桥接页","IC设计","售前整合"],"importance":"high"},{"path":"帆软售前整合/README.html","title":"README","category":"帆软售前整合","tags":["索引","MOC","售前整合","帆软"],"importance":"high"},{"path":"帆软售前整合/产品线速查矩阵.html","title":"产品线速查矩阵","category":"帆软售前整合","tags":["速查","产品线","矩阵","售前整合"],"importance":"high"},{"path":"帆软售前整合/半导体设备.html","title":"半导体设备","category":"帆软售前整合","tags":["桥接页","半导体设备","售前整合"],"importance":"high"},{"path":"帆软售前整合/封装测试.html","title":"封装测试","category":"帆软售前整合","tags":["桥接页","封装测试","售前整合"],"importance":"high"},{"path":"帆软售前整合/晶圆制造.html","title":"晶圆制造","category":"帆软售前整合","tags":["桥接页","晶圆制造","售前整合"],"importance":"high"}];
+
+// === SEARCH ENGINE ===
+(function(){
+  const input = document.getElementById('search');
+  const results = document.getElementById('results');
+  let idx = -1;
+
+  function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function badge(imp){
+    if(imp==='high') return '<span class="result-tag tag-high">high</span>';
+    if(imp==='medium') return '<span class="result-tag tag-med">medium</span>';
+    return '<span class="result-tag tag-low">low</span>';
+  }
+
+  function search(q){
+    if(!q||q.length<1){results.classList.remove('active');results.innerHTML='';return;}
+    const t = q.toLowerCase();
+    const hits = notesIndex.filter(n=>{
+      return (n.title||'').toLowerCase().includes(t)||(n.path||'').toLowerCase().includes(t)||(n.tags||[]).some(tag=>tag.toLowerCase().includes(t))||(n.category||'').toLowerCase().includes(t);
+    });
+    if(!hits.length){
+      results.innerHTML='<div class="no-results">🔍 未找到匹配笔记，试试其他关键词</div>';
+      results.classList.add('active');
+      return;
+    }
+    const max = Math.min(hits.length,20);
+    let html='';
+    for(let i=0;i<max;i++){
+      const n=hits[i];
+      html+='<div class="result-item" data-idx="'+i+'" data-path="'+escapeHtml(n.path+'')+'"><span class="result-path">'+escapeHtml(n.path||'').split('/').slice(0,-1).join(' › ')+'</span><span class="result-title">'+escapeHtml(n.title||'')+'</span>'+badge(n.importance)+'<span class="result-badge">'+(n.category||'')+'</span></div>';
+    }
+    if(hits.length>max) html+='<div class="no-results">... 还有 '+(hits.length-max)+' 条结果，请细化搜索词</div>';
+    results.innerHTML=html;
+    results.classList.add('active');
+    idx=-1;
+  }
+
+  input.addEventListener('input',function(){search(this.value);});
+  input.addEventListener('keydown',function(e){
+    const items=results.querySelectorAll('.result-item');
+    if(e.key==='ArrowDown'){e.preventDefault();idx=Math.min(idx+1,items.length-1);updateHighlight(items);}
+    else if(e.key==='ArrowUp'){e.preventDefault();idx=Math.max(idx-1,0);updateHighlight(items);}
+    else if(e.key==='Enter'){
+      e.preventDefault();
+      if(idx>=0&&items[idx]){
+        const p=items[idx].dataset.path;
+        if(p) window.open('/kb/'+encodeURIComponent(p.replace('.html','.html')),'_self');
+      }
+    }
+    else if(e.key==='Escape'){results.classList.remove('active');input.blur();}
+  });
+  function updateHighlight(items){
+    items.forEach(function(it,i){it.style.background=i===idx?'#EEF2FF':'transparent';});
+    if(idx>=0&&items[idx]) items[idx].scrollIntoView({block:'nearest'});
+  }
+
+  // Click to open in Obsidian
+  results.addEventListener('click',function(e){
+    const item=e.target.closest('.result-item');
+    if(item){
+      const p=item.dataset.path;
+      if(p) window.open('/kb/'+encodeURIComponent(p.replace('.html','.html')),'_self');
+    }
+  });
+
+  // Close on outside click
+  document.addEventListener('click',function(e){
+    if(!e.target.closest('.search-bar')) results.classList.remove('active');
+  });
+
+  // Cmd+K / Ctrl+K shortcut
+  document.addEventListener('keydown',function(e){
+    if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();input.focus();input.select();}
+  });
+})();
+</script>
+</body>
+</html>

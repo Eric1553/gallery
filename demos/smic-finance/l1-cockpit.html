@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>财经驾驶舱总览 | L1 公司总览 · 中芯国际</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/l1-cockpit.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="logo-area">
+      <div class="logo-mark">SMIC</div>
+      <div class="logo-text">
+        <h1>财经驾驶舱</h1>
+        <span>管理报告 · 财务经分会二期</span>
+      </div>
+    </div>
+    <nav class="header-nav">
+      <a href="index.html" data-page="overview">总览</a>
+      <a href="revenue.html" data-page="revenue">收入专题</a>
+      <a href="cost.html" data-page="cost">成本专题</a>
+      <a href="profit.html" data-page="profit">盈利效率</a>
+      <a href="dupont-site.html" data-page="dupont">杜邦分析</a>
+    </nav>
+    <div class="header-meta">
+      <span class="badge-proto">HTML 原型</span>
+      <span>2025-07 · 月度</span>
+    </div>
+  </header>
+
+  <div class="app-body">
+    <aside class="sidebar"></aside>
+
+    <main class="main-content">
+      <div class="l1-hero">
+        <h2>财经驾驶舱总览<span>L1 公司总览</span></h2>
+        <div class="meta">期间：2025 YTD（1–7 月）<br>主体：集团合并 · BOSS 管报 · 示意数据</div>
+      </div>
+
+      <div class="page-toolbar">
+        <div class="toolbar-controls">
+          <div class="seg-group" data-tab-group="period">
+            <span class="seg-label">周期</span>
+            <button class="sub-tab-btn active" data-value="month">月度</button>
+            <button class="sub-tab-btn" data-value="quarter">季度</button>
+          </div>
+          <div class="seg-group" data-tab-group="version">
+            <span class="seg-label">版本</span>
+            <button class="sub-tab-btn active" data-value="actual">实际</button>
+            <button class="sub-tab-btn" data-value="forecast">预测</button>
+          </div>
+        </div>
+        <div class="filter-bar" id="filter-bar"></div>
+      </div>
+
+      <div class="l1-section-label">核心经营 KPI <span class="tag">CFO / 经分会</span></div>
+      <div class="l1-kpi-grid" id="l1-kpis"></div>
+
+      <div class="l1-grid-3">
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">四大主题趋势（近 12 月）</span><span class="panel-sub">收入 / 成本 / 毛利</span></div>
+          <div class="panel-body"><div class="chart-box sm" id="chart-l1-trend"></div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">收入结构</span><span class="panel-sub">晶圆 / 光罩 / MPW</span></div>
+          <div class="panel-body"><div class="chart-box sm" id="chart-l1-revenue-pie"></div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">四大专题预算达成率</span><span class="panel-sub">YTD</span></div>
+          <div class="panel-body"><div class="chart-box sm" id="chart-l1-achievement"></div></div>
+        </div>
+      </div>
+
+      <div class="l1-grid-3">
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">盈利效率 · BU 对比</span><span class="panel-sub">毛利率</span></div>
+          <div class="panel-body"><div class="chart-box sm" id="chart-l1-margin"></div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">现金制造费用 · 组织分布</span><span class="panel-sub">BU</span></div>
+          <div class="panel-body"><div class="chart-box sm" id="chart-l1-cost-pie"></div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">杜邦 ROE 分解</span><span class="panel-sub">当期 vs 同期</span></div>
+          <div class="panel-body"><div class="chart-box sm" id="chart-l1-dupont"></div></div>
+        </div>
+      </div>
+
+      <div class="l1-section-label">经营成效入口 <span class="tag">L2</span></div>
+      <div class="l1-topic-row">
+        <a class="l1-topic-card dup" href="dupont-site.html">
+          <div class="nm">杜邦 · ROE 经营分解</div>
+          <div class="desc">Site 视图 · 四层固定展开 · 比上期 / 比上年同期</div>
+          <div class="go">进入 L2 →</div>
+        </a>
+        <a class="l1-topic-card prof" href="profit.html">
+          <div class="nm">盈利效率分析</div>
+          <div class="desc">标准毛利 · Variance · 毛利率 · 组织盈利对比</div>
+          <div class="go">进入 L2 →</div>
+        </a>
+        <a class="l1-topic-card rev" href="revenue.html">
+          <div class="nm">收入达成分析</div>
+          <div class="desc">收入总览 · 晶圆收入 · 客户 TOP · 弹窗钻取 · 出货量/单价联动</div>
+          <div class="go">进入 L2 →</div>
+        </a>
+        <a class="l1-topic-card cost" href="cost.html">
+          <div class="nm">成本管控分析</div>
+          <div class="desc">总成本 · Layer 成本 · BU→FAB 圆环 · 组织/科目联动</div>
+          <div class="go">进入 L2 →</div>
+        </a>
+      </div>
+
+      <div class="l1-note">
+        <b>穿透路径：</b>公司总览 → 经营成效 → 业务结果 → 专题分析 → 下钻穿透。
+        从 L2 进入 <a href="revenue.html#wafer">晶圆收入</a>、<a href="cost.html#layer">Layer 成本</a> 等业务结果，
+        再至 <a href="dupont-tree.html">杜邦树状图</a>（L4）与 <a href="dupont-table.html">108 项填报</a>（L5）。
+        返回 <a href="index.html">原型总览墙</a> 查看完整五层地图。
+      </div>
+
+      <div class="footer-note">中芯国际 × 帆软 FVS · L1 公司总览</div>
+    </main>
+  </div>
+
+  <script src="assets/js/echarts.min.js"></script>
+  <script src="assets/js/mock-data.js"></script>
+  <script src="assets/js/levels.js"></script>
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/charts.js"></script>
+  <script>
+    boot(function () {
+      Cockpit.initNav('overview', { sidebarPage: 'l1' });
+      Cockpit.renderFilterBar(document.getElementById('filter-bar'), { showScope: true });
+
+      const o = MockData.overview;
+      const kpis = [
+        { cls: 'c-blue', t: '年累计销售收入', v: Cockpit.fmt.num(o.revenue.value), u: '亿元', d: `▲ ${o.revenue.yoy}% 同比`, up: true },
+        { cls: 'c-green', t: '年累计晶圆收入', v: Cockpit.fmt.num(o.wafer.value), u: '亿元', d: `▲ ${o.wafer.yoy}% 同比`, up: true },
+        { cls: 'c-orange', t: '现金制造费用', v: Cockpit.fmt.num(o.cost.value), u: '亿元', d: `▲ ${o.cost.yoy}% 同比`, up: true },
+        { cls: 'c-cyan', t: '毛利 / 毛利率', v: Cockpit.fmt.num(o.profit.value), u: '亿元', d: `毛利率 ${o.profit.margin}%`, up: true },
+        { cls: 'c-purple', t: '净资产收益率 ROE', v: Cockpit.fmt.num(o.dupont.roe, 2), u: '%', d: `▲ ${o.dupont.yoy}pp 同比`, up: true },
+        { cls: 'c-red', t: '销售收入达成率', v: Cockpit.fmt.num(o.revenue.rate, 1), u: '%', d: '预算 YTD', up: o.revenue.rate >= 90 }
+      ];
+      document.getElementById('l1-kpis').innerHTML = kpis.map(k => `
+        <div class="l1-kpi ${k.cls}">
+          <div class="t">${k.t}</div>
+          <div class="v">${k.v}<small>${k.u}</small></div>
+          <div class="d ${k.up ? 'up' : 'dn'}">${k.d}</div>
+        </div>
+      `).join('');
+
+      const months = MockData.months.map(m => m.slice(5) + '月');
+      Charts.line(document.getElementById('chart-l1-trend'), months, [
+        { name: '销售收入', data: MockData.trendActual, color: '#1890ff', area: true },
+        { name: '现金制造费用', data: MockData.trendActual.map(v => +(v * 0.58).toFixed(1)), color: '#fa8c16' },
+        { name: '毛利', data: MockData.trendActual.map(v => +(v * 0.28).toFixed(1)), color: '#52c41a' }
+      ]);
+
+      Charts.pie(document.getElementById('chart-l1-revenue-pie'), MockData.revenueByBusiness, { donut: true });
+
+      Charts.bar(document.getElementById('chart-l1-achievement'),
+        ['销售收入', '晶圆收入', '现金制造费用', 'ROE'],
+        [{ name: '达成率', data: [94.8, 96.2, 97.1, 92.3], color: '#005293' }],
+        { yName: '%' }
+      );
+
+      Charts.bar(document.getElementById('chart-l1-margin'),
+        ['SMIC', 'SMIC-N', 'SMIC-S'],
+        [{ name: '毛利率', data: [24.5, 22.8, 21.2], color: '#52c41a' }],
+        { yName: '%' }
+      );
+
+      Charts.pie(document.getElementById('chart-l1-cost-pie'), MockData.costByOrg.inner);
+
+      Charts.bar(document.getElementById('chart-l1-dupont'),
+        MockData.dupontIndicators.map(d => d.name.replace('净资产收益率', 'ROE')),
+        [
+          { name: '当期', data: MockData.dupontIndicators.map(d => d.current), color: '#005293' },
+          { name: '同期', data: MockData.dupontIndicators.map(d => d.yoyPrev), color: '#91caff' }
+        ]
+      );
+    });
+  </script>
+</body>
+</html>

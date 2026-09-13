@@ -1,0 +1,170 @@
+/* L1 财经驾驶舱总览 */
+.l1-hero {
+  background: linear-gradient(135deg, #003d6b 0%, #005293 55%, #1a6cb3 100%);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 16px 22px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 16px rgba(0, 82, 147, 0.22);
+}
+
+.l1-hero h2 {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.l1-hero h2 span {
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.88;
+  margin-left: 10px;
+}
+
+.l1-hero .meta {
+  font-size: 12px;
+  opacity: 0.92;
+  text-align: right;
+  line-height: 1.6;
+}
+
+.l1-section-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: 0.5px;
+  margin: 4px 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.l1-section-label::before {
+  content: '';
+  width: 4px;
+  height: 14px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+.l1-section-label .tag {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: #eef2f8;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.l1-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.l1-kpi {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 13px 14px;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.l1-kpi::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+}
+
+.l1-kpi.c-blue::before { background: #005293; }
+.l1-kpi.c-green::before { background: #52c41a; }
+.l1-kpi.c-orange::before { background: #fa8c16; }
+.l1-kpi.c-purple::before { background: #722ed1; }
+.l1-kpi.c-cyan::before { background: #13c2c2; }
+.l1-kpi.c-red::before { background: #f5222d; }
+
+.l1-kpi .t { font-size: 11px; color: var(--text-muted); }
+.l1-kpi .v {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-top: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.l1-kpi .v small { font-size: 13px; font-weight: 700; }
+.l1-kpi .d { font-size: 11px; margin-top: 4px; }
+.l1-kpi .d.up { color: var(--success); }
+.l1-kpi .d.dn { color: var(--danger); }
+
+.l1-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.l1-topic-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.l1-topic-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+  border-top: 3px solid var(--primary);
+}
+
+.l1-topic-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 82, 147, 0.12);
+  border-color: #91caff;
+}
+
+.l1-topic-card .nm { font-size: 14px; font-weight: 800; color: var(--primary-dark); }
+.l1-topic-card .desc { font-size: 11px; color: var(--text-muted); margin-top: 4px; line-height: 1.4; }
+.l1-topic-card .go { font-size: 11px; color: var(--primary); font-weight: 700; margin-top: 8px; }
+
+.l1-topic-card.rev { border-top-color: #1890ff; }
+.l1-topic-card.cost { border-top-color: #fa8c16; }
+.l1-topic-card.prof { border-top-color: #52c41a; }
+.l1-topic-card.dup { border-top-color: #722ed1; }
+
+.l1-note {
+  background: linear-gradient(90deg, #eef4fb, #f6f9fd);
+  border: 1px dashed #b9cce4;
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius);
+  padding: 10px 16px;
+  font-size: 12px;
+  color: #3a4660;
+  line-height: 1.55;
+}
+
+.l1-note b { color: var(--primary); }
+.l1-note a { color: var(--primary); font-weight: 700; text-decoration: none; }
+.l1-note a:hover { text-decoration: underline; }
+
+@media (max-width: 1400px) {
+  .l1-kpi-grid { grid-template-columns: repeat(3, 1fr); }
+  .l1-grid-3 { grid-template-columns: 1fr; }
+  .l1-topic-row { grid-template-columns: repeat(2, 1fr); }
+}

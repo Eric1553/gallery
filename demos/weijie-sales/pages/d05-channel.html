@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>D-05 渠道经营分析 · 唯捷创芯</title>
+<link rel="stylesheet" href="../assets/style.css" />
+<script src="../assets/echarts.min.js"></script>
+</head>
+<body>
+<div id="content">
+
+  <div class="grid r-23" style="margin-bottom:4px">
+    <div class="card"><div class="card-b" style="padding:12px 16px">
+      <div class="flow">
+        <div class="step"><span class="sn">1</span>总览</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">2</span>直供 vs 经销</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">3</span>趋势</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">4</span>明细</div>
+      </div>
+    </div></div>
+    <div class="card"><div class="card-b" style="padding:12px 16px">
+      <div class="meta-strip">
+        <span class="ms">经销商 <b>SAP 客户分类</b></span>
+        <span class="ms">动销率 <b>本期不管</b></span>
+        <span class="ms">趋势切换 <b>年 / 季 / 月</b></span>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="grid g4" id="kpi"></div>
+
+  <div class="section-head"><span class="bar"></span><h2>渠道总览 · 直供 vs 经销</h2>
+    <span class="desc">销售规模对比与占比</span><span class="line"></span></div>
+  <div class="grid g3">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>渠道销售额占比</div></div>
+      <div class="card-b"><div id="c1" class="chart" style="height:230px"></div></div>
+    </div>
+    <div class="card span2">
+      <div class="card-h"><div class="ct"><span class="ci"></span>直供 vs 经销 走势</div>
+        <div class="card-tools"><div class="seg" id="periodSeg"><span data-p="y">年</span><span data-p="q" class="on">季</span><span data-p="m">月</span></div></div></div>
+      <div class="card-b"><div id="c2" class="chart" style="height:230px"></div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>渠道结构对比</h2>
+    <span class="desc">销量 / 销售额 / 占比</span><span class="line"></span></div>
+  <div class="grid g2">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>直供 vs 经销 多指标对比</div></div>
+      <div class="card-b"><div id="c3" class="chart" style="height:240px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>各产品大类渠道结构</div></div>
+      <div class="card-b"><div id="c4" class="chart" style="height:240px"></div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>经销商明细</h2>
+    <span class="desc">基于 SAP 客户分类，可下钻至终端</span><span class="line"></span></div>
+  <div class="card"><div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl" id="tbl"></table></div></div></div>
+
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+renderLayout("d05",{chapter:"第二章 · 拆经营结构",
+ sub:"面向销售管理及渠道管理：对比直供与经销商经营表现，支持年/季/月趋势切换（动销率本期不做）。",
+ batchTags:'<span class="tag tag-blue" style="margin-left:8px">一期 P1</span>'});
+
+const kpi=[
+ {t:"直供销售额",v:"22,180",u:"万元",f:'<span class="trend-up">环比 +2.8%</span>',c:"",sc:"#2468f2",sp:[18,19,20,20.5,21,21.6,22.1]},
+ {t:"经销销售额",v:"16,462",u:"万元",f:'<span class="trend-up">环比 +4.1%</span>',c:"k-cyan",sc:"#16b8c8",sp:[12,13,13.8,14.5,15,15.8,16.4]},
+ {t:"直供占比",v:"57.4",u:"%",f:'<span class="trend-down">▼1.6pct</span>',c:"k-green",sc:"#25a36c",sp:[60,59.5,59,58.5,58,57.6,57.4]},
+ {t:"经销商数量",v:"36",u:"家",f:'<span class="trend-up">▲4</span>',c:"k-violet",sc:"#7a6ff0",sp:[30,31,32,33,34,35,36]},
+];
+document.getElementById("kpi").innerHTML=kpi.map((k,i)=>`
+ <div class="kpi ${k.c}"><div class="kt"><span class="dot" style="background:${k.sc}"></span>${k.t}</div>
+ <div class="kv">${k.v}<small>${k.u}</small></div><div class="kf">${k.f}</div><div class="spark" id="s${i}"></div></div>`).join("");
+kpi.forEach((k,i)=>spark("s"+i,k.sp,k.sc));
+
+mk("c1",{tooltip:{trigger:"item",formatter:"{b}<br/>{c} 万元 ({d}%)"},legend:legend({bottom:0,icon:"circle"}),
+ series:[{type:"pie",radius:["48%","72%"],center:["50%","44%"],itemStyle:{borderColor:"#fff",borderWidth:3,borderRadius:6},
+  label:{show:true,formatter:"{b}\n{d}%",fontSize:12,fontWeight:700},
+  data:[{value:22180,name:"直供"},{value:16462,name:"经销商"}]}]});
+
+const PERIOD={
+ m:{cats:["1月","2月","3月","4月","5月","6月"],
+  z:[3400,3500,3700,3650,3900,4030],j:[2300,2500,2700,2650,2900,3170],r:[40,41,42,42,42.6,44]},
+ q:{cats:["2025Q3","2025Q4","2026Q1","2026Q2"],
+  z:[9800,10200,10800,11680],j:[6800,7200,7800,8470],r:[41,41.4,41.9,42]},
+ y:{cats:["2023","2024","2025","2026YTD"],
+  z:[16800,18600,20500,22180],j:[11200,12800,14600,16462],r:[40,41,42,42.6]},
+};
+let c2=null;
+function renderTrend(p){
+ const d=PERIOD[p];
+ const opt={tooltip:tip(),legend:legend({data:["直供","经销商","经销占比"]}),grid:baseGrid({top:30,right:46}),
+  xAxis:catAxis(d.cats),yAxis:[valAxis({name:"万元"}),valAxis({name:"占比%",max:60,splitLine:{show:false}})],
+  series:[
+   {name:"直供",type:"bar",stack:"a",barWidth:p==="y"?28:24,itemStyle:{color:gradient("#5b9bff","#2468f2")},data:d.z},
+   {name:"经销商",type:"bar",stack:"a",barWidth:p==="y"?28:24,itemStyle:{borderRadius:[4,4,0,0],color:gradient("#5fd4dc","#16b8c8")},data:d.j},
+   {name:"经销占比",type:"line",yAxisIndex:1,smooth:true,symbol:"circle",symbolSize:5,lineStyle:{width:2,color:"#f07a1d"},itemStyle:{color:"#f07a1d"},data:d.r},
+  ]};
+ if(!c2){c2=mk("c2",opt);} else {c2.setOption(opt,true);}
+}
+renderTrend("q");
+document.getElementById("periodSeg").addEventListener("click",function(e){
+ const el=e.target.closest("span[data-p]"); if(!el) return;
+ [...this.querySelectorAll("span")].forEach(s=>s.classList.remove("on"));
+ el.classList.add("on"); renderTrend(el.dataset.p);
+});
+
+mk("c3",{tooltip:tip(),legend:legend({data:["直供","经销商"]}),
+ radar:{indicator:[{name:"销售额",max:100},{name:"销量",max:100},{name:"经销商数",max:100},{name:"环比增长",max:100},{name:"毛利率",max:100}],
+  radius:"66%",center:["50%","54%"],axisName:{color:"#46586c",fontSize:11},splitLine:{lineStyle:{color:"#eef2f8"}},splitArea:{areaStyle:{color:["#fafcff","#f3f7fd"]}}},
+ series:[{type:"radar",data:[
+  {value:[90,75,40,70,85],name:"直供",areaStyle:{color:"rgba(36,104,242,.2)"},lineStyle:{color:"#2468f2"},itemStyle:{color:"#2468f2"}},
+  {value:[70,85,90,88,72],name:"经销商",areaStyle:{color:"rgba(22,184,200,.18)"},lineStyle:{color:"#16b8c8"},itemStyle:{color:"#16b8c8"}}]}]});
+
+mk("c4",{tooltip:tip(),legend:legend({data:["直供","经销商"]}),grid:baseGrid({top:30}),
+ xAxis:catAxis(["消费电子","工业控制","汽车电子","通信","其他"]),yAxis:valAxis({name:"万元"}),
+ series:[
+  {name:"直供",type:"bar",stack:"a",barWidth:24,itemStyle:{color:"#2468f2"},data:[7200,5800,4600,3200,1380]},
+  {name:"经销商",type:"bar",stack:"a",barWidth:24,itemStyle:{color:"#16b8c8",borderRadius:[4,4,0,0]},data:[6600,3800,2600,1900,1562]},
+ ]});
+
+const rows=[
+ ["华东电子","华东","消费电子","6,820","+3.1%","直供为主"],
+ ["南方科技","华南","工业控制","4,510","+4.2%","经销为主"],
+ ["北方半导","华北","汽车电子","3,260","+5.0%","经销为主"],
+ ["西部芯联","西南","通信","2,140","-1.2%","直供为主"],
+ ["环球贸易","海外","消费电子","1,120","+2.4%","直供"],
+];
+const head=["经销商/客户","区域","主营大类","销售额(万元)","环比","渠道结构"];
+document.getElementById("tbl").innerHTML=
+ "<thead><tr>"+head.map((h,i)=>`<th class="${i>=3&&i<=4?'num':''}">${h}</th>`).join("")+"</tr></thead><tbody>"+
+ rows.map(r=>"<tr>"+r.map((c,i)=>{let v=c;if(i===4)v=`<span class="${c.startsWith('-')?'trend-down':'trend-up'}">${c}</span>`;
+  return `<td class="${i>=3&&i<=4?'num':''} ${i===0?'strong':''}">${v}</td>`;}).join("")+"</tr>").join("")+"</tbody>";
+</script>
+</body>
+</html>

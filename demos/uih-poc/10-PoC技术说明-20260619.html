@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>联影 PoC · 技术说明（2026-06-19）</title>
+  <style>
+    :root {
+      --navy:#0f2952; --blue:#1f55cc; --teal:#0d9488; --purple:#5a3fd4;
+      --done:#0d7a3e; --done-bg:#e8f5ee;
+      --wip:#b8860b; --wip-bg:#fef8e8;
+      --pending:#64748b; --pending-bg:#f1f5f9;
+      --line:#d7e1ef; --muted:#63748b; --text:#1b2940;
+      --shadow:0 8px 24px rgba(22,52,95,.07);
+    }
+    *{box-sizing:border-box;margin:0}
+    body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:var(--text);background:#f4f8fc;line-height:1.65;font-size:14px}
+    .wrap{max-width:1180px;margin:0 auto;padding:24px 24px 56px}
+    .hero{background:linear-gradient(135deg,var(--navy),#1a4a85);color:#fff;border-radius:16px;padding:28px 32px;box-shadow:var(--shadow);margin-bottom:24px}
+    .hero h1{font-size:24px;font-weight:700;margin-bottom:8px}
+    .hero .lead{font-size:14px;opacity:.92;max-width:920px}
+    .hero-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+    .hero-meta span{font-size:11px;padding:4px 12px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18)}
+    .nav-top{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;font-size:12px}
+    .nav-top a{color:var(--blue);text-decoration:none;padding:6px 12px;background:#fff;border:1px solid var(--line);border-radius:8px}
+    .nav-top a:hover{background:#eef3f9}
+    h2{font-size:17px;color:var(--navy);margin:32px 0 14px;padding-left:12px;border-left:4px solid var(--blue);font-weight:700}
+    h3{font-size:14px;color:var(--navy);margin:18px 0 10px;font-weight:700}
+    h4{font-size:13px;color:var(--navy);margin:14px 0 8px;font-weight:700}
+    p,li{font-size:13px}
+    ul,ol{margin:6px 0 6px 20px} li{margin:4px 0}
+    .panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow)}
+    .panel-accent{border-left:4px solid var(--blue)}
+    .panel-done{border-left:4px solid var(--done)}
+    .panel-wip{border-left:4px solid var(--wip)}
+    .panel-pending{border-left:4px solid var(--pending);background:#fafbfc}
+    .badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;vertical-align:middle}
+    .b-done{background:var(--done-bg);color:var(--done)}
+    .b-wip{background:var(--wip-bg);color:var(--wip)}
+    .b-pending{background:var(--pending-bg);color:var(--pending)}
+    .b-ok{background:#dbeafe;color:#1e40af}
+    table{width:100%;border-collapse:collapse;font-size:12px;margin:10px 0}
+    th,td{border:1px solid var(--line);padding:8px 10px;vertical-align:top;text-align:left}
+    th{background:#eef3f9;color:var(--navy);font-weight:700}
+    tr:nth-child(even) td{background:#fafcff}
+    .arch{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;line-height:1.75;background:#0d1117;color:#e6edf3;padding:16px 20px;border-radius:10px;margin:12px 0;overflow-x:auto;white-space:pre}
+    .arch .p{color:#58a6ff;font-weight:700}.arch .u{color:#3fb950}.arch .b{color:#a371f7}.arch .c{color:#8b949e}
+    code{font-size:11px;background:#eef3f9;padding:1px 5px;border-radius:3px;font-family:ui-monospace,Menlo,monospace}
+    pre.cmd{font-size:11px;background:#1e293b;color:#e2e8f0;padding:14px 16px;border-radius:8px;overflow-x:auto;line-height:1.55;margin:10px 0}
+    .callout{padding:12px 16px;border-radius:8px;font-size:13px;margin:12px 0;line-height:1.65}
+    .callout-ok{background:var(--done-bg);border:1px solid #a7d9b8}
+    .callout-warn{background:var(--wip-bg);border:1px solid #f0d78c}
+    .callout-gray{background:var(--pending-bg);border:1px solid #cbd5e1;color:#475569}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:800px){.grid2{grid-template-columns:1fr}}
+    .stack-card{border:1px solid var(--line);border-radius:10px;padding:14px;background:#fafbfc}
+    .stack-card h4{margin-top:0}
+    .footer{text-align:center;font-size:11px;color:var(--muted);margin-top:36px;padding-top:16px;border-top:1px solid var(--line)}
+    a{color:var(--blue);text-decoration:none}
+    a:hover{text-decoration:underline}
+  </style>
+  <script src="poc-paths.js"></script>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="nav-top">
+    <a href="scene-front.html" data-page="hub">← 页面导航</a>
+    <a href="index.html" data-page="workbench">工作台</a>
+    <a href="poc-status.html" data-page="status">进展汇总</a>
+    <a href="poc-demo-runbook.html" data-page="demoRunbook">汇报 Runbook</a>
+    <a href="poc-architecture.html" data-page="architecture">技术架构</a>
+    <a href="knowledge-deliverables.html" data-page="deliverables">知识产出</a>
+    <a href="#ssot">文档清单</a>
+    <a href="#dual">双入口</a>
+    <a href="#stack">四场景</a>
+    <a href="#ops">部署验证</a>
+    <a href="#glossary">术语表</a>
+  </nav>
+
+  <header class="hero">
+    <h1>联影 PoC · 技术说明（2026-06-19）</h1>
+    <p class="lead">
+      本文档用尽量直白的话，汇总 <strong>2026-06-19</strong> 当天完成的工程工作：
+      文档只维护一份清单、各页面自动跟着变、文档检索能看「怎么搜到的」、
+      Dora 智能体联调、知识产出展示页，以及云服务器和本机两套访问方式。
+      不含资料文件夹整理的内容。
+    </p>
+    <div class="hero-meta">
+      <span>云服务器 · 47.99.198.211:8890</span>
+      <span>本机备用 · 127.0.0.1:8890</span>
+      <span>已入库 11 篇文档 · 285 个切片</span>
+      <span>场景一/三 Dora 已联调</span>
+      <span>场景二/四 待确认</span>
+    </div>
+  </header>
+
+  <!-- 1 -->
+  <h2>01 · 今天完成了什么</h2>
+  <div class="panel panel-done">
+    <table>
+      <tr><th>交付项</th><th>状态</th><th>通俗说明</th></tr>
+      <tr>
+        <td>统一文档清单</td>
+        <td><span class="badge b-done">完成</span></td>
+        <td>所有「有哪些文档、怎么切片」的信息，集中写在一份 JSON 里；各页面用同一个 JS 脚本读取，改一处即可</td>
+      </tr>
+      <tr>
+        <td>页面自动读清单</td>
+        <td><span class="badge b-done">完成</span></td>
+        <td>演示工作台、知识产出页、附件下载接口，都从同一份清单取数据，不会出现各写各的、对不上的情况</td>
+      </tr>
+      <tr>
+        <td>进展汇总页</td>
+        <td><span class="badge b-done">完成</span></td>
+        <td>更新了当天进展；场景二、场景四统一标为「待确认」；演示步骤手册也一并更新</td>
+      </tr>
+      <tr>
+        <td>知识产出展示页</td>
+        <td><span class="badge b-done">完成</span></td>
+        <td>新页面 <a href="knowledge-deliverables.html">knowledge-deliverables.html</a>，把本体、故障图谱、SOP、经验四类成果放在一处查看</td>
+      </tr>
+      <tr>
+        <td>检索过程可查</td>
+        <td><span class="badge b-done">完成</span></td>
+        <td>问文档时，除了返回答案片段，还能看「先筛了哪些文档 → 关键词和语义各搜了什么 → 最终怎么合并排序」</td>
+      </tr>
+      <tr>
+        <td>Dora 联调</td>
+        <td><span class="badge b-done">完成</span></td>
+        <td>场景一接财务工具、场景三接售后工具，在 Dora 里能正常调用；前端页面也验证通过</td>
+      </tr>
+      <tr>
+        <td>上传云服务器脚本</td>
+        <td><span class="badge b-done">完成</span></td>
+        <td>新增脚本，一键把附件文件和文档清单同步到 ECS，不用手工拷</td>
+      </tr>
+      <tr>
+        <td>本机备用访问</td>
+        <td><span class="badge b-done">完成</span></td>
+        <td>本机也能开 8890 端口演示：网页在本地，查库和 Agent 工具仍走云服务器；附带自检脚本</td>
+      </tr>
+      <tr>
+        <td>两套入口复测</td>
+        <td><span class="badge b-done">完成</span></td>
+        <td>云服务器和本机各跑一遍检查，主要页面和接口均正常（2026-06-19 末次）</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- 2 -->
+  <h2 id="dual">02 · 为什么有两个访问地址</h2>
+  <div class="panel panel-accent">
+    <p style="margin-bottom:12px">演示统一走 <strong>8890 端口</strong>。平时用云上的地址；若网络或演示环境需要，可在本机起一个「代理」，页面本地打开，数据仍来自云上。</p>
+    <div class="grid2">
+      <div class="stack-card">
+        <h4>主入口 · 云服务器（演示用这个）</h4>
+        <p><a href="http://47.99.198.211:8890/scene-front.html">http://47.99.198.211:8890/</a></p>
+        <p>网页、查文档、Agent 工具都在同一台 ECS 上。对外演示和 Dora 云端配置，都填这个地址。</p>
+      </div>
+      <div class="stack-card">
+        <h4>备用 · 本机 127.0.0.1</h4>
+        <p><code>http://127.0.0.1:8890/</code></p>
+        <p>HTML/清单在本地；查 Doris、调 Agent 工具时，通过 SSH 自动转到 ECS。启动命令：<code>bash deploy/start-poc-local.sh</code></p>
+      </div>
+    </div>
+    <div class="arch"><span class="p">浏览器打开 8890</span>
+  ├─ <span class="u">47.99.198.211:8890</span>   <span class="c">主入口 · 全部在云上</span>
+  └─ <span class="u">127.0.0.1:8890</span>       <span class="c">备用 · 页面本地 + 数据走 SSH 到云</span>
+
+<span class="p">云上 8890 大致分工</span>
+├── 静态网页（工作台、进展页、本说明页…）
+├── 文档清单 JSON / 公共 JS
+├── <span class="u">/api/v1/*</span>     → 入库与检索服务（8790）
+├── <span class="u">/mcp</span>          → 场景一财务 Agent 工具（8791）
+├── <span class="u">/service-mcp</span>  → 场景三售后 Agent 工具（8793）
+└── <span class="u">/feishu-mcp</span>   → 飞书 Wiki 工具（8792）</div>
+    <table>
+      <tr><th>访问内容</th><th>本机 127.0.0.1</th><th>云 47.x</th></tr>
+      <tr><td>网页、文档清单</td><td>读本地 deploy/web</td><td>网页服务器直接提供</td></tr>
+      <tr><td>附件列表 / 下载</td><td>读本地清单和附件目录</td><td>后端读 ECS 上的文件</td></tr>
+      <tr><td>健康检查、文档检索、Doris 查询</td><td>SSH 转到 ECS</td><td>后端直连</td></tr>
+      <tr><td>Agent 工具（MCP）</td><td>SSH 转到 ECS</td><td>网页服务器转发</td></tr>
+    </table>
+  </div>
+
+  <!-- 3 -->
+  <h2 id="ssot">03 · 文档清单：只改一处，处处生效</h2>
+  <div class="panel">
+    <p><strong>清单文件：</strong><code>POC测试执行/01-数据资产/catalog/poc-chunk-profiles.json</code>（当前 v2.0）</p>
+    <p>里面记录：每个场景有哪些文档、文件名、切片方式、对应附件路径等。其它地方<strong>不要重复手写</strong>，都从这里读。</p>
+    <table>
+      <tr><th>谁在用</th><th>怎么用</th></tr>
+      <tr><td>演示工作台</td><td>打开页面时加载清单，展示可入库的文档列表</td></tr>
+      <tr><td>知识产出页</td><td>同一份清单，自动生成 SOP 表、经验表</td></tr>
+      <tr><td>附件接口</td><td>按清单校验附件是否存在，再提供下载</td></tr>
+      <tr><td>云上的网页目录</td><td>运行同步脚本，把 JSON 和 JS 复制到 deploy/web 再上传</td></tr>
+    </table>
+    <h4>新增一篇待入库文档（推荐步骤）</h4>
+    <ol>
+      <li>把 Word/PDF 等文件放到 <code>01-数据资产/attachments/</code></li>
+      <li>在清单 JSON 里，对应场景的 <code>documents</code> 数组加一条记录</li>
+      <li>运行 <code>bash deploy/sync_web_from_scene.sh</code> 同步到 deploy/web</li>
+      <li>运行 <code>python3 deploy/upload_web_to_ecs.py</code> 上传到云</li>
+      <li>若有新附件文件，再运行 <code>python3 deploy/upload_data_assets_to_ecs.py</code></li>
+      <li>在工作台点「加载附件」→「场景一键入库」</li>
+      <li>（场景三）若与故障码有关，按需改 <code>service-fault-graph.json</code></li>
+      <li>（Dora）按需改 <code>03-Dora-Agent/.../02-knowledge-rules.txt</code> 里的问答路由说明</li>
+    </ol>
+    <div class="callout callout-gray">
+      <strong>不会跟着清单自动变的：</strong>故障图谱里的跳转关系、Dora 里的业务话术、验收用的标准答案 JSON——这些需要人工改对应文件。
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <h2>04 · 有哪些网页、各自干什么</h2>
+  <div class="panel">
+    <table>
+      <tr><th>访问地址</th><th>源文件</th><th>干什么用</th></tr>
+      <tr><td><code>/</code></td><td>01-联影PoC演示工作台.html</td><td>上传文档、切片、写入 Doris、按场景演示</td></tr>
+      <tr><td><code>/scene-front.html</code></td><td>00-PoC前端入口.html</td><td>所有页面的导航入口</td></tr>
+      <tr><td><a href="/poc-status.html" data-page="status"><code>/poc-status.html</code></a></td><td>08-PoC演示思路与进展汇总.html</td><td>四场景进展、演示步骤、完成度</td></tr>
+      <tr><td><a href="/poc-tech-brief.html" data-page="techBrief"><code>/poc-tech-brief.html</code></a></td><td>10-PoC技术说明-20260619.html</td><td>本文档</td></tr>
+      <tr><td><a href="/poc-demo-runbook.html" data-page="demoRunbook"><code>/poc-demo-runbook.html</code></a></td><td>11-PoC汇报演示Runbook.html</td><td>现场演示顺序、节奏、重复能力对照</td></tr>
+      <tr><td><a href="/poc-architecture.html" data-page="architecture"><code>/poc-architecture.html</code></a></td><td>12-PoC技术架构与栈说明.html</td><td>总架构、分场景栈、MCP 矩阵、工程交付</td></tr>
+      <tr><td><code>/knowledge-deliverables.html</code></td><td>09-知识产出交付视图.html</td><td>场景三四类知识成果展示</td></tr>
+      <tr><td><code>/knowledge-graph.html</code></td><td>07-故障知识图谱.html</td><td>故障码→原因→方案，可与工作台联动</td></tr>
+      <tr><td><code>/doris-data.html</code></td><td>02-Doris入库数据查看.html</td><td>只读查看库里有哪些文档、多少切片</td></tr>
+    </table>
+    <h4>三个公共脚本（不用单独打开，被页面引用）</h4>
+    <ul>
+      <li><code>poc-catalog.js</code> — 读取文档清单，整理成页面需要的格式</li>
+      <li><code>poc-paths.js</code> — 判断当前是云地址还是本机地址，链接自动对齐</li>
+      <li><code>poc-sync.js</code> — 工作台和故障图谱页之间同步选中状态</li>
+    </ul>
+  </div>
+
+  <!-- 5 -->
+  <h2>05 · 文档怎么搜、怎么说明「搜的过程」</h2>
+  <div class="panel panel-accent">
+    <p style="margin-bottom:10px">场景一、三的「问制度/问手册」，底层都是：先把问题变成向量，再在 Doris 里做<strong>关键词 + 语义</strong>两路检索，合并后返回最相关的段落。</p>
+    <table>
+      <tr><th>功能</th><th>接口 / 工具名</th><th>说明</th></tr>
+      <tr>
+        <td>普通检索</td>
+        <td><code>POST /api/v1/retrieve</code></td>
+        <td>输入问题，返回最相关的文档片段列表</td>
+      </tr>
+      <tr>
+        <td>带过程说明的检索</td>
+        <td><code>POST /api/v1/retrieve/explain</code></td>
+        <td>除结果外，还返回：筛了哪个场景、两路各命中什么、怎么合并、一段中文摘要说明</td>
+      </tr>
+      <tr>
+        <td>场景一 Agent 工具</td>
+        <td><code>finance_policy_retrieve_trace</code></td>
+        <td>Dora 调财务检索时，可一并拿到上述过程说明</td>
+      </tr>
+      <tr>
+        <td>场景三 Agent 工具</td>
+        <td><code>service_manual_retrieve_trace</code></td>
+        <td>Dora 调售后手册检索时，同上</td>
+      </tr>
+    </table>
+    <p>建议在 Dora 规则里要求：需要引用文档时，回答里附带「检索说明」，方便验收时核对依据。</p>
+    <p>当前库内：<strong>11</strong> 篇文档已入库，共 <strong>285</strong> 个切片（财务 85 + 售后 200）。</p>
+  </div>
+
+  <!-- 6 -->
+  <h2>06 · Dora 智能体怎么接</h2>
+  <div class="panel">
+    <table>
+      <tr><th>场景</th><th>工具地址（填在 Dora 里）</th><th>还能查什么结构化数据</th></tr>
+      <tr>
+        <td>场景一 · 财务</td>
+        <td><code>http://47.99.198.211:8890/mcp</code></td>
+        <td>FineBI 预算分析主题（表格数据）</td>
+      </tr>
+      <tr>
+        <td>场景三 · 售后</td>
+        <td><code>http://47.99.198.211:8890/service-mcp</code></td>
+        <td>MySQL 工单/报修表 + FineBI 售后主题</td>
+      </tr>
+    </table>
+    <p>配置文案、提示词、推荐问题等，在目录 <code>03-Dora-Agent/scene1-finance/</code> 和 <code>scene3-service/</code> 里。</p>
+    <ul>
+      <li>验收用的问答样例在 <code>04-验收与演示/demo-scripts/</code>，<strong>不要</strong>直接贴进 Agent 配置</li>
+      <li>Dora 在云端运行时，MCP 地址必须写公网 <code>47.99.198.211:8890</code>，不能写 <code>127.0.0.1</code></li>
+      <li>场景一、三今日联调已通过；场景二、四尚未做同等验收</li>
+    </ul>
+  </div>
+
+  <!-- 7 -->
+  <h2 id="stack">07 · 四个场景分别用了什么</h2>
+  <div class="grid2">
+    <div class="panel stack-card" style="border-top:3px solid var(--blue)">
+      <h4>场景一 · 财务问数 + 问制度 <span class="badge b-done">已联调</span></h4>
+      <ul>
+        <li>表格数据：FineBI + Dora 查数</li>
+        <li>制度文档：Doris 里 3 篇财务制度，85 个切片</li>
+        <li>智能体：Dora，工具走 <code>/mcp</code></li>
+        <li>典型问法：既查预算数字，也查制度条款，两路证据一起答</li>
+      </ul>
+    </div>
+    <div class="panel stack-card panel-pending" style="border-top:3px solid var(--teal)">
+      <h4>场景二 · OTD 看板 <span class="badge b-pending">待确认</span></h4>
+      <ul>
+        <li>数据集成：FineDataLink（方案阶段）</li>
+        <li>展示：FineBI 两层 OTD 看板</li>
+        <li>关心指标：达成率、延期率、血缘等</li>
+        <li>尚无正式验收脚本和完成认定</li>
+      </ul>
+    </div>
+    <div class="panel stack-card" style="border-top:3px solid var(--purple)">
+      <h4>场景三 · 售后问工单 + 问手册 <span class="badge b-done">已联调</span></h4>
+      <ul>
+        <li>表格数据：MySQL 工单 + FineBI 售后主题</li>
+        <li>手册文档：8 篇，200 个切片</li>
+        <li>故障图谱：E1001、E1002 等，JSON 配置</li>
+        <li>智能体：Dora，工具走 <code>/service-mcp</code></li>
+        <li>成果展示：本体 / SOP / 经验 / 图谱四个 Tab</li>
+      </ul>
+    </div>
+    <div class="panel stack-card panel-pending" style="border-top:3px solid #c27803">
+      <h4>场景四 · 存储与检索底座 <span class="badge b-pending">待确认</span></h4>
+      <ul>
+        <li>向量检索：Doris 4.x，512 维向量</li>
+        <li>全文检索：中文分词 + BM25</li>
+        <li>场景一、三的实际问答，已经在用这套能力</li>
+        <li>正式压测指标（QPS、TPC 等）尚未作为验收项完成</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>各场景共用的底层组件（了解即可）</h3>
+    <table>
+      <tr><th>组件</th><th>是什么</th></tr>
+      <tr><td>向量模型 bge-small-zh</td><td>把中文句子变成 512 维数字，用于「语义相似」检索</td></tr>
+      <tr><td>Doris / SelectDB</td><td>存文档切片和向量，表名 <code>kb.uih_doc_chunks</code></td></tr>
+      <tr><td>入库服务 Worker</td><td>Python 写的后台，负责切片、写向量、提供检索 API</td></tr>
+      <tr><td>MCP</td><td>给 Dora 用的「工具接口」标准，这里用 HTTP 暴露检索、查数等能力</td></tr>
+      <tr><td>前端</td><td>纯 HTML + JS，无框架；清单和页面都从 8890 同源加载</td></tr>
+      <tr><td>Dora</td><td>帆软智能体平台，接 MCP 工具和 FineBI 主题</td></tr>
+    </table>
+  </div>
+
+  <!-- 8 -->
+  <h2 id="ops">08 · 改完代码后怎么发布、怎么自测</h2>
+  <div class="panel panel-accent">
+    <h4>常用命令</h4>
+    <pre class="cmd"># 1. 把前端页面和文档清单复制到 deploy/web
+bash deploy/sync_web_from_scene.sh
+
+# 2. 上传到云上的网页目录
+python3 deploy/upload_web_to_ecs.py
+
+# 3. 上传附件和清单到云上的 Worker 目录（有新文件时）
+python3 deploy/upload_data_assets_to_ecs.py
+
+# 4. 若改了入库服务或 MCP 代码
+python3 deploy/upload_worker_to_ecs.py
+python3 deploy/upload_mcp_to_ecs.py</pre>
+    <h4>本机备用入口</h4>
+    <pre class="cmd">bash deploy/start-poc-local.sh          # 启动本机 8890
+bash deploy/test_local_routes.sh        # 一键检查主要页面和接口</pre>
+    <h4>2026-06-19 检查结果</h4>
+    <table>
+      <tr><th>检查项</th><th>云服务器</th><th>本机</th></tr>
+      <tr><td>主要页面能打开</td><td>✅</td><td>✅ 读本地文件</td></tr>
+      <tr><td>健康检查（285 切片）</td><td>✅</td><td>✅ 经 SSH 到云</td></tr>
+      <tr><td>文档检索接口</td><td>✅</td><td>✅ 经 SSH 到云</td></tr>
+      <tr><td>Agent 检索工具</td><td>✅</td><td>✅ 经 SSH 到云</td></tr>
+      <tr><td>场景三 8 个附件</td><td>✅</td><td>✅ 读本地清单</td></tr>
+    </table>
+  </div>
+
+  <!-- 9 -->
+  <h2>09 · 重要文件在哪</h2>
+  <div class="panel">
+    <table>
+      <tr><th>内容</th><th>路径</th></tr>
+      <tr><td>文档清单（改文档列表改这个）</td><td><code>01-数据资产/catalog/poc-chunk-profiles.json</code></td></tr>
+      <tr><td>清单加载脚本</td><td><code>02-前端/js/poc-catalog.js</code></td></tr>
+      <tr><td>同步到 deploy/web</td><td><code>deploy/sync_web_from_scene.sh</code></td></tr>
+      <tr><td>入库与检索后端</td><td><code>二轮POC技术参数/doris-ingest/server.py</code></td></tr>
+      <tr><td>Agent 工具后端</td><td><code>deploy/mcp_rag_server.py</code></td></tr>
+      <tr><td>场景一 Dora 配置素材</td><td><code>03-Dora-Agent/scene1-finance/</code></td></tr>
+      <tr><td>场景三 Dora 配置素材</td><td><code>03-Dora-Agent/scene3-service/</code></td></tr>
+      <tr><td>进展与演示步骤</td><td>网页 <code>/poc-status.html</code></td></tr>
+      <tr><td>本机代理程序</td><td><code>deploy/poc_local_server.py</code></td></tr>
+    </table>
+  </div>
+
+  <h2 id="glossary">附录 · 术语速查</h2>
+  <div class="panel panel-accent">
+    <p style="font-size:13px;margin-bottom:12px">
+      文中 <span style="border-bottom:1px dotted #64748b;cursor:help">带下划点</span> 的术语可<strong>鼠标悬停</strong>查看释义；下表为完整索引。
+    </p>
+    <div id="poc-glossary-table"></div>
+  </div>
+
+  <div class="footer">
+    联影 PoC 技术说明 · 2026-06-19 ·
+    <a href="poc-status.html" data-page="status">进展汇总</a> ·
+    <a href="poc-demo-runbook.html" data-page="demoRunbook">汇报 Runbook</a> ·
+    <a href="poc-architecture.html" data-page="architecture">技术架构</a> ·
+    <a href="scene-front.html" data-page="hub">页面导航</a>
+  </div>
+</div>
+<script>
+  if (window.POC_PATHS) POC_PATHS.bindPageLinks();
+</script>
+<script src="poc-glossary.js"></script>
+<script>POC_GLOSSARY.init({ table: '#poc-glossary-table' });</script>
+</body>
+</html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IC设计 — 半导体知识库</title>
+<meta name="description" content="# 💻 IC设计 · 帆软售前桥接  > 桥接页定位：连接「行业笔记中的知识点」与「帆软产品的售前切入点」。 > 本页不修改原笔记，仅提取映射关系。 > > ⚠️ IC 设计是四个行业中帆软覆盖度最低的，现阶段以「行业认知 + 场景探索」为主。  ---  ## 🏭 行业画像  IC 设计（Fabl">
+<link rel="stylesheet" href="/kb/assets/style.css">
+</head>
+<body>
+<div class="top-accent"></div>
+<header class="page-header">
+  <a href="/kb/首页.html" class="home-link">🔬 半导体知识库</a>
+</header>
+<main class="container">
+<nav class="breadcrumb"><a href="/kb/首页.html">半导体知识库</a> <span class="sep">›</span> <a href="/kb//帆软售前整合/index.html">帆软售前整合</a></nav>
+<article class="note">
+<header class="note-header">
+  <h1>IC设计</h1>
+  <div class="meta-line"><span class="meta-item">📅 2026-07-09</span> · <span class="meta-item" style="color:#059669">⭐ high</span> · <span class="meta-item">🏷️ <span class="tag">桥接页</span> <span class="tag">IC设计</span> <span class="tag">售前整合</span></span></div>
+</header>
+<div class="note-body">
+<h1 id="ic">💻 IC设计 · 帆软售前桥接</h1>
+<blockquote>
+<p>桥接页定位：连接「行业笔记中的知识点」与「帆软产品的售前切入点」。
+本页不修改原笔记，仅提取映射关系。</p>
+<p>⚠️ IC 设计是四个行业中帆软覆盖度最低的，现阶段以「行业认知 + 场景探索」为主。</p>
+</blockquote>
+<hr />
+<h2 id="_1">🏭 行业画像</h2>
+<p>IC 设计（Fabless）是半导体产业链中"最轻资产、最重智力"的环节。中国有超过 3,000 家 IC 设计企业，但营收过亿的不超过 50 家。不同于晶圆厂对 MES/SPC 等系统的强依赖，IC 设计公司的主要系统是 EDA 工具 + ERP + 项目管理，数据化需求更偏向研发效能和经营分析。</p>
+<p><strong>IC 设计公司典型特征：</strong>
+- 轻资产，核心成本是人（芯片设计工程师年薪 50-100 万+）
+- 强依赖 EDA 工具（Synopsys/Cadence/Mentor，年 License 费数百万到数千万）
+- 多项目并行（不同芯片产品处于设计/验证/流片/量产的不同阶段）
+- 流片（Tape-out）是最高风险里程碑——一次流片失败损失数百万美元 + 数月时间</p>
+<hr />
+<h2 id="_2">📋 笔记 → 帆软切入点映射</h2>
+<h3 id="_3">🟢 核心方案（通用方案复用 + 行业适配）</h3>
+<h4 id="1-x-ic">1. <a href="/kb/导航/帆软产品x半导体行业矩阵">导航/帆软产品x半导体行业矩阵</a> · IC设计部分</h4>
+<p>当前产品矩阵对 IC 设计的覆盖评级为 🟡 中等。以下为已验证和待探索的场景：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>帆软产品</th>
+<th>售前场景描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>研发项目管理（多芯片并行开发、里程碑追踪）</td>
+<td>FineReport</td>
+<td><strong>项目进度看板</strong>：按芯片产品/Milestone/负责人展示各项目的 RTL 冻结→综合→布局布线→Tape-out 进度。售前话术："你们同时在跑几个芯片项目？哪个快 Tape-out 了、哪个卡在验证？FineReport 让 PMO 一眼看清全局"</td>
+</tr>
+<tr>
+<td>研发效能分析</td>
+<td>FineBI</td>
+<td><strong>工程师效能看板</strong>：按项目/模块分析 Bug 密度、验证覆盖率、设计迭代周期。售前场景：一个 50 人芯片设计团队，FineBI 量化"谁在 Debug，谁在写新 RTL"，识别效能瓶颈</td>
+</tr>
+<tr>
+<td>EDA License 使用效率</td>
+<td>FineBI</td>
+<td><strong>License 利用率分析</strong>：EDA 工具 License 是芯片公司的大额支出，FineBI 分析各工具的 License 占用率/排队时间/使用峰值，优化 License 采购。售前话术："你们的 EDA License 一年花多少？利用率有没有 60%？FineBI 帮你们算清楚"</td>
+</tr>
+<tr>
+<td>供应链分析（投片量预测 vs 实际产出）</td>
+<td>FineReport + FineBI</td>
+<td><strong>代工供应链看板</strong>：Fabless 公司向台积电/中芯国际下单投片，FineReport 做 WIP 投片追踪 + 晶圆交付计划；FineBI 做预测 vs 实际偏差分析</td>
+</tr>
+<tr>
+<td>销售预测与价格管理</td>
+<td>FineBI</td>
+<td><strong>芯片价格生命周期分析</strong>：芯片价格随生命周期快速下降（消费电子芯片 12 个月内单价可能腰斩），FineBI 做不同产品/客户/渠道的价格趋势和利润分析</td>
+</tr>
+</tbody>
+</table>
+<h4 id="2-ic">2. <a href="/kb/帆软售前引擎/数据分析场景/数据分析-半导体场景矩阵">帆软售前引擎/数据分析场景/数据分析-半导体场景矩阵</a> · IC设计部分</h4>
+<table>
+<thead>
+<tr>
+<th>知识点</th>
+<th>帆软产品</th>
+<th>售前场景描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>项目进度看板</td>
+<td>FineReport</td>
+<td>FineReport 做项目甘特图/里程碑报表，定时推送给 PMO 和研发 VP</td>
+</tr>
+<tr>
+<td>研发效能分析</td>
+<td>FineBI</td>
+<td>FineBI 做 Bug 趋势/验证覆盖率/迭代周期等研发指标的趋势和对比分析</td>
+</tr>
+<tr>
+<td>EDA License 效率</td>
+<td>FineBI</td>
+<td>FineBI 做 EDA 工具的 License 利用率/等待时间/各项目消耗分析</td>
+</tr>
+</tbody>
+</table>
+<h4 id="3-">3. <a href="/kb/帆软售前引擎/数据底座场景/数据底座-半导体场景矩阵">帆软售前引擎/数据底座场景/数据底座-半导体场景矩阵</a></h4>
+<table>
+<thead>
+<tr>
+<th>知识点</th>
+<th>帆软产品</th>
+<th>售前场景描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EDA 数据集成</td>
+<td>FineDataLink</td>
+<td><strong>FDL 连接 EDA 数据</strong>：EDA 工具产生大量设计数据（时序报告/功耗报告/DRC 违规报告），FDL 对接后 → FineBI 做设计质量趋势分析</td>
+</tr>
+<tr>
+<td>ERP + 代工系统对接</td>
+<td>FineDataLink</td>
+<td><strong>供应链数据中台</strong>：FDL 对接 ERP + 代工厂 WIP 数据 → FineReport 做投片→交付的全链路看板</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="_4">🟡 行业笔记支撑</h3>
+<h4 id="4-04-ichorizon-robotics">4. <a href="/kb/04-IC设计/行业动态/地平线（Horizon Robotics）：中国智能驾驶芯片的领跑者">04-IC设计/行业动态/地平线（Horizon Robotics）：中国智能驾驶芯片的领跑者</a></h4>
+<table>
+<thead>
+<tr>
+<th>知识点</th>
+<th>帆软产品</th>
+<th>售前场景描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>征程系列芯片三代迭代（征程2→3→5→6），设计团队需管理多代产品并行开发</td>
+<td>FineReport + FineBI</td>
+<td><strong>多代产品管理</strong>：FineReport 做芯片产品 Roadmap 看板（各代产品的阶段/资源/风险）；FineBI 做代际间的设计复用率分析（RTL/IP 复用→降低开发成本）</td>
+</tr>
+<tr>
+<td>商业模式三层：芯片硬件 → 工具链（OpenExplorer）→ 全栈方案（SuperDrive）</td>
+<td>FineBI</td>
+<td><strong>三层收入分析</strong>：FineBI 按芯片/工具链/方案拆分营收和毛利，分析各层的增长贡献。售前场景：向地平线这样的"芯片+软件"公司展示帆软时，强调帆软也能支撑多业务线的经营分析</td>
+</tr>
+<tr>
+<td>白盒模式 vs Mobileye 黑盒 → 车企可以在地平线芯片上叠加自研算法实现差异化</td>
+<td>FineBI</td>
+<td><strong>差异化竞争分析</strong>：FineBI 做地平线 vs Mobileye vs NVIDIA 的客户定点/市占率/ASP 对比分析，辅助售前向客户展示行业洞察</td>
+</tr>
+<tr>
+<td>地平线芯片累计出货超 500 万颗，定点车型超 200 款</td>
+<td>FineReport + FineBI</td>
+<td><strong>量产业绩看板</strong>：FineReport 做出货量/定点车型 Dashboard；FineBI 做按月/按车型/按车企的出货趋势和预测</td>
+</tr>
+<tr>
+<td>汽车芯片认证周期长（2-3 年从定点到量产），项目管理复杂度高</td>
+<td>FineReport</td>
+<td><strong>定点→量产全生命周期追踪</strong>：FineReport 做从 Design Win → 工程样片 → PPAP → SOP 的里程碑追踪报表</td>
+</tr>
+</tbody>
+</table>
+<h4 id="5-04-ic2026h1ic">5. <a href="/kb/04-IC设计/行业动态/2026年H1全球IC设计行业动态">04-IC设计/行业动态/2026年H1全球IC设计行业动态</a></h4>
+<table>
+<thead>
+<tr>
+<th>知识点</th>
+<th>帆软产品</th>
+<th>售前场景描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>全球 IC 设计市场格局（NVIDIA/AMD/高通/博通/联发科 Top 5）</td>
+<td>FineBI</td>
+<td><strong>IC 设计行业市场看板</strong>：FineBI 做全球 Top IC 设计公司的营收/增速/市占率对标，用于向客户展示行业认知</td>
+</tr>
+<tr>
+<td>Fabless 模式 vs IDM 模式的公司运营指标差异</td>
+<td>FineBI</td>
+<td><strong>经营模式对标</strong>：FineBI 做 Fabless vs IDM 的毛利率/研发费用率/人均产出对标分析</td>
+</tr>
+</tbody>
+</table>
+<h4 id="6-04-icrisc-v">6. <a href="/kb/04-IC设计/行业动态/RISC-V：开源指令集架构的崛起与产业影响">04-IC设计/行业动态/RISC-V：开源指令集架构的崛起与产业影响</a></h4>
+<table>
+<thead>
+<tr>
+<th>知识点</th>
+<th>帆软产品</th>
+<th>售前场景描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RISC-V 生态正在追赶 ARM/x86，中国企业在 RISC-V 领域投入巨大</td>
+<td>FineBI</td>
+<td><strong>技术路线追踪</strong>：FineBI 做 RISC-V vs ARM 的 IP 核数量/芯片出货量/生态成熟度趋势分析。售前场景：向 RISC-V 芯片设计公司展示帆软时，体现对技术路线的理解</td>
+</tr>
+</tbody>
+</table>
+<h4 id="7-04-iceda">7. <a href="/kb/04-IC设计/行业动态/EDA工具市场格局">04-IC设计/行业动态/EDA工具市场格局</a></h4>
+<table>
+<thead>
+<tr>
+<th>知识点</th>
+<th>帆软产品</th>
+<th>售前场景描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EDA 三巨头（Synopsys/Cadence/Siemens EDA）垄断，国产 EDA 在点工具追赶</td>
+<td>FineBI + FDL</td>
+<td><strong>EDA 国产替代数据支撑</strong>：FDL 对接 EDA 工具使用数据 → FineBI 做国产 EDA 工具覆盖率/替代率分析。售前场景：向国产 EDA 公司卖帆软（国产 EDA 公司也是帆软潜在客户）</td>
+</tr>
+</tbody>
+</table>
+<h4 id="8-01-cambriconai">8. <a href="/kb/04-IC设计/行业动态/寒武纪（Cambricon）：中国AI芯片的先驱与挑战">01-晶圆制造/行业动态/寒武纪（Cambricon）：中国AI芯片的先驱与挑战</a></h4>
+<table>
+<thead>
+<tr>
+<th>知识点</th>
+<th>帆软产品</th>
+<th>售前场景描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>寒武纪从 IP 授权转向自研芯片，华为分手后客户集中度风险暴露</td>
+<td>FineBI</td>
+<td><strong>客户/产品集中度分析</strong>：FineBI 做客户收入占比/产品线收入占比的趋势分析。售前话术："你们前三大客户占多少营收？华为当年是寒武纪的唯一大客户——FineBI 帮你们监控客户集中度风险"</td>
+</tr>
+<tr>
+<td>BANG 软件栈的生态建设投入巨大但收效慢</td>
+<td>FineBI</td>
+<td><strong>研发 ROI 分析</strong>：FineBI 做各研发项目的投入/产出/里程碑达成率分析。售前场景：IC 设计公司研发投入动辄数亿——FineBI 帮CTO看到每块钱研发投入的回报</td>
+</tr>
+<tr>
+<td>思元 370 对标 NVIDIA A100 的 60-70% 性能，但大模型训练实际效率差距更大</td>
+<td>FineBI</td>
+<td><strong>产品竞争力对标</strong>：FineBI 做自研芯片 vs 竞品的性能/功耗/面积（PPA）+ 生态成熟度多维对标分析</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_5">🏢 该行业关键企业（知识库内）</h2>
+<table>
+<thead>
+<tr>
+<th>企业</th>
+<th>路径</th>
+<th>与帆软关联</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NVIDIA</td>
+<td><a href="/kb/行业知识体系/04-IC设计/关键企业/NVIDIA">行业知识体系/04-IC设计/关键企业/NVIDIA</a></td>
+<td>AI 芯片霸主，CUDA 护城河</td>
+</tr>
+<tr>
+<td>AMD</td>
+<td><a href="/kb/行业知识体系/04-IC设计/关键企业/AMD">行业知识体系/04-IC设计/关键企业/AMD</a></td>
+<td>CPU+GPU 双线，Chiplet 先驱</td>
+</tr>
+<tr>
+<td>高通</td>
+<td><a href="/kb/行业知识体系/04-IC设计/关键企业/高通_Qualcomm">行业知识体系/04-IC设计/关键企业/高通_Qualcomm</a></td>
+<td>手机 SoC 王者，专利授权</td>
+</tr>
+<tr>
+<td><strong>联发科</strong></td>
+<td><a href="/kb/行业知识体系/04-IC设计/关键企业/联发科_MediaTek">行业知识体系/04-IC设计/关键企业/联发科_MediaTek</a></td>
+<td><strong>手机 SoC 出货量第一</strong>，天玑全大核架构，IoT/车用/ASIC 多线扩张</td>
+</tr>
+<tr>
+<td>海思</td>
+<td><a href="/kb/行业知识体系/04-IC设计/关键企业/海思_HiSilicon">行业知识体系/04-IC设计/关键企业/海思_HiSilicon</a></td>
+<td>中国 IC 设计标杆（受制裁）</td>
+</tr>
+<tr>
+<td>地平线</td>
+<td><a href="/kb/04-IC设计/行业动态/地平线（Horizon Robotics）：中国智能驾驶芯片的领跑者">04-IC设计/行业动态/地平线（Horizon Robotics）：中国智能驾驶芯片的领跑者</a></td>
+<td>智能驾驶芯片，白盒模式</td>
+</tr>
+<tr>
+<td>寒武纪</td>
+<td><a href="/kb/04-IC设计/行业动态/寒武纪（Cambricon）：中国AI芯片的先驱与挑战">01-晶圆制造/行业动态/寒武纪（Cambricon）：中国AI芯片的先驱与挑战</a></td>
+<td>AI 芯片先驱，软件生态挑战</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="ic_1">📊 产品 × 场景速查（IC设计专属）</h2>
+<table>
+<thead>
+<tr>
+<th>产品线</th>
+<th>场景</th>
+<th style="text-align: center;">优先级</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FineReport</td>
+<td>项目进度看板、Tape-out 里程碑报表、芯片 Roadmap 看板、定点→量产追踪</td>
+<td style="text-align: center;">🟡 中</td>
+</tr>
+<tr>
+<td>FineBI</td>
+<td>研发效能分析、EDA License 效率、三层收入分析、客户/产品集中度、PPA 对标</td>
+<td style="text-align: center;">🟡 中</td>
+</tr>
+<tr>
+<td>FDL</td>
+<td>EDA 数据集成、ERP+代工系统对接、供应链数据中台</td>
+<td style="text-align: center;">🟡 中</td>
+</tr>
+<tr>
+<td>AI Agent</td>
+<td>设计辅助（待探索）、智能问数</td>
+<td style="text-align: center;">🔶 待建</td>
+</tr>
+<tr>
+<td>简道云</td>
+<td>项目管理轻流程、设计 Review 流程</td>
+<td style="text-align: center;">🔶 待建</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_6">📊 覆盖度自评</h2>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th style="text-align: center;">状态</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🎯 方案</td>
+<td style="text-align: center;">✅ 有</td>
+<td>通用方案可复用（研发效能 + 经营分析），行业专属方案待深化</td>
+</tr>
+<tr>
+<td>🎤 话术</td>
+<td style="text-align: center;">⚪ 缺</td>
+<td>未建立 IC 设计专属的客户场景应答库</td>
+</tr>
+<tr>
+<td>📋 案例</td>
+<td style="text-align: center;">⚪ 缺</td>
+<td>纳芯微（研发分析 66W + 全面预算 85W）、紫光体系（多项目），但案例材料待整理</td>
+</tr>
+<tr>
+<td>⚔️ 竞品</td>
+<td style="text-align: center;">⚪ 缺</td>
+<td>竞品在 IC 设计行业暂无系统追踪</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_7">🔗 关联</h2>
+<ul>
+<li>产品线速查：<a href="/kb/帆软售前整合/产品线速查矩阵">帆软售前整合/产品线速查矩阵</a></li>
+<li>总索引：<a href="/kb/帆软售前整合/README">帆软售前整合/README</a></li>
+<li>行业矩阵：<a href="/kb/导航/帆软产品x半导体行业矩阵">导航/帆软产品x半导体行业矩阵</a></li>
+<li>行业知识体系：<a href="/kb/行业知识体系/04-IC设计/04-IC设计-MOC">行业知识体系/04-IC设计/04-IC设计-MOC</a></li>
+</ul>
+<hr />
+<p><em>创建于 2026-07-09 · 桥接内容不修改原笔记</em></p>
+</div>
+</article>
+<footer class="note-footer">
+  <a href="/kb/帆软售前整合/index.html">← 返回目录</a>
+</footer>
+</main>
+</body>
+</html>

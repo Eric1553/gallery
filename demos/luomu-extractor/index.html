@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>矿业标杆报告提取台</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">FBN POC · PEER BENCHMARK EXTRACTOR</p>
+        <h1>矿业标杆报告提取台</h1>
+        <p class="subtitle">上传紫金矿业年度报告或季度报告，自动定位成本、产量、单位销售成本及毛利率数据表，并生成可供 FBN 使用的 Excel。</p>
+      </div>
+      <div class="output-tag">
+        <span>本地输出</span>
+        <strong>data/outputs</strong>
+      </div>
+    </header>
+
+    <section class="workflow">
+      <div class="step active"><b>01</b><span>上传PDF</span></div>
+      <div class="line"></div>
+      <div class="step"><b>02</b><span>定位数据表</span></div>
+      <div class="line"></div>
+      <div class="step"><b>03</b><span>确认预览</span></div>
+      <div class="line"></div>
+      <div class="step"><b>04</b><span>生成Excel</span></div>
+    </section>
+
+    <section class="panel upload-panel">
+      <div id="dropzone" class="dropzone" tabindex="0">
+        <input id="fileInput" type="file" accept=".pdf,application/pdf" hidden />
+        <div class="upload-icon">⇧</div>
+        <h2>拖入报告，或点击选择文件</h2>
+        <p>支持PDF；年度报告约需10—40秒，处理期间无需保持文件打开</p>
+        <button id="chooseBtn" class="secondary">选择PDF</button>
+      </div>
+      <div id="fileBar" class="file-bar hidden">
+        <div>
+          <span class="pdf-badge">PDF</span>
+          <strong id="fileName"></strong>
+          <small id="fileSize"></small>
+        </div>
+        <button id="extractBtn" class="primary">开始提取</button>
+      </div>
+    </section>
+
+    <section id="statusPanel" class="panel status-panel hidden">
+      <div class="status-head">
+        <div>
+          <p class="eyebrow">EXTRACTION STATUS</p>
+          <h2 id="statusTitle">正在处理</h2>
+        </div>
+        <span id="progressText">0%</span>
+      </div>
+      <div class="progress"><i id="progressBar"></i></div>
+      <p id="statusMessage" class="muted"></p>
+    </section>
+
+    <section id="resultPanel" class="hidden">
+      <div class="result-summary">
+        <article><span>报告类型</span><strong id="reportType">—</strong></article>
+        <article><span>命中页数</span><strong id="pageCount">—</strong></article>
+        <article><span>提取表格</span><strong id="tableCount">—</strong></article>
+        <article class="download-card">
+          <span>结构化结果</span>
+          <a id="downloadBtn" class="primary" href="#">下载 Excel</a>
+        </article>
+      </div>
+
+      <section class="panel">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">DATA PREVIEW</p>
+            <h2>已识别数据表</h2>
+          </div>
+          <span id="resultFile" class="file-path"></span>
+        </div>
+        <div id="warnings" class="warnings hidden"></div>
+        <div id="tableList" class="table-list"></div>
+      </section>
+    </section>
+
+    <section class="targets">
+      <p class="eyebrow">PRESET TARGETS</p>
+      <h2>本项目预置提取范围</h2>
+      <div class="target-grid">
+        <article><b>01</b><h3>成本与费用</h3><p>营业成本、税费、管理费用、财务费用及同比变动。</p></article>
+        <article><b>02</b><h3>单位成本</h3><p>铜精矿、电积铜、电解铜单位销售成本及毛利率。</p></article>
+        <article><b>03</b><h3>产量与规模</h3><p>矿产铜、矿山项目产量、产销存及季度变化。</p></article>
+        <article><b>04</b><h3>成本结构</h3><p>原材料、人工、折旧、能耗及其他成本构成。</p></article>
+      </div>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>联影 PoC · 验证目标与方案说明</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root{--navy:#0f2952;--blue:#1f55cc;--teal:#0d9488;--purple:#5a3fd4;--orange:#c27803;
+      --done:#0d7a3e;--done-bg:#e8f5ee;--wip:#b8860b;--wip-bg:#fef8e8;--pending:#64748b;--pending-bg:#f1f5f9;
+      --line:#d7e1ef;--muted:#63748b;--text:#1b2940;--shadow:0 6px 20px rgba(22,52,95,.06)}
+    *{box-sizing:border-box;margin:0}
+    body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:var(--text);background:#f4f8fc;line-height:1.8;font-size:14px}
+    .wrap{max-width:1180px;margin:0 auto;padding:24px 24px 48px}
+    .hero{background:var(--navy);color:#fff;border-radius:12px;padding:24px 28px;margin-bottom:20px}
+    .hero h1{font-size:22px;font-weight:700;margin-bottom:6px}
+    .hero .lead{font-size:13px;opacity:.9;max-width:920px;line-height:1.75}
+    h2{font-size:16px;color:var(--navy);margin:28px 0 12px;padding-bottom:6px;border-bottom:2px solid var(--line);font-weight:700}
+    h3{font-size:14px;color:var(--navy);margin:16px 0 8px;font-weight:700}
+    h4{font-size:13px;color:var(--navy);margin:12px 0 6px;font-weight:600}
+    p{font-size:13px;margin:0 0 12px;text-align:justify}
+    .panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:12px}
+    .prose p{margin-bottom:14px}
+    .prose p:last-child{margin-bottom:0}
+    .badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;margin-right:4px}
+    .b-done{background:var(--done-bg);color:var(--done)}
+    .b-poc{background:var(--wip-bg);color:var(--wip)}
+    .b-future{background:#dbeafe;color:#1e40af}
+    .b-out{background:var(--pending-bg);color:var(--pending)}
+    table{width:100%;border-collapse:collapse;font-size:12px;margin:10px 0}
+    th,td{border:1px solid var(--line);padding:7px 9px;vertical-align:top;text-align:left}
+    th{background:#f0f4f9;color:var(--navy);font-weight:600}
+    .mermaid{margin:12px 0;background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px;overflow-x:auto;font-size:12px}
+    .legend{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;margin:10px 0 14px;color:var(--muted)}
+    .legend span{display:flex;align-items:center;gap:5px}
+    .dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+    .dot-done{background:#0d7a3e}.dot-poc{background:#b8860b}.dot-future{background:#1f55cc;border:1px dashed #1f55cc;background:transparent}
+    .dot-out{background:#94a3b8}.dot-ai{background:#cbd5e1}.dot-in{background:#16a34a}
+    .scope-tag{font-size:10px;font-weight:600;padding:1px 6px;border-radius:3px;margin-left:4px}
+    .scope-in{background:var(--done-bg);color:var(--done)}
+    .scope-out{background:var(--pending-bg);color:var(--pending)}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media(max-width:860px){.grid2{grid-template-columns:1fr}}
+    .adv-item{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+    .adv-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+    .adv-item h4{margin:0 0 4px;font-size:13px}
+    .adv-item p{margin:0;font-size:13px;color:var(--text)}
+    .scene-tag{font-size:11px;color:var(--muted);margin-bottom:8px}
+    a{color:var(--blue);text-decoration:none}
+    .footer{text-align:center;font-size:11px;color:var(--muted);margin-top:32px;padding-top:12px;border-top:1px solid var(--line)}
+    .note{font-size:12px;color:var(--muted);background:#f8fafc;border-left:3px solid var(--line);padding:8px 12px;margin:10px 0}
+    .key{color:#c0392b;font-weight:600}
+    table.poc-matrix td{font-size:13px;line-height:1.75;padding:10px 12px}
+    table.poc-matrix th{font-size:12px;white-space:nowrap}
+    table.poc-matrix .col-scene{width:11%;background:#f8fafc;font-weight:600;color:var(--navy)}
+    table.poc-matrix tr:nth-child(even) td{background:#fafcff}
+    table.poc-matrix tr:nth-child(even) td.col-scene{background:#f0f4f9}
+    ul.points{margin:0;padding-left:1.1em}
+    ul.points li{margin:5px 0;font-size:13px;line-height:1.65}
+    ul.points li:last-child{margin-bottom:0}
+    .scene-section{margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+    .scene-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+    .scene-section h4{font-size:13px;color:var(--navy);margin:0 0 8px;font-weight:700}
+    .scene-section ul.points{margin-top:4px}
+    /* ── 悬浮侧边导航 ── */
+    .sidebar-toggle{position:fixed;left:16px;bottom:24px;z-index:1001;display:flex;align-items:center;gap:6px;
+      padding:10px 14px;font-size:13px;font-weight:600;color:#fff;background:var(--navy);border:none;border-radius:24px;
+      cursor:pointer;box-shadow:0 4px 16px rgba(15,41,82,.28);transition:transform .2s,box-shadow .2s}
+    .sidebar-toggle:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(15,41,82,.35)}
+    .sidebar-toggle svg{width:16px;height:16px;flex-shrink:0}
+    .sidebar-backdrop{position:fixed;inset:0;background:rgba(15,41,82,.18);z-index:1002;opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
+    .sidebar-backdrop.show{opacity:1;visibility:visible}
+    .sidebar-nav{position:fixed;top:0;left:0;z-index:1003;width:min(280px,88vw);height:100vh;
+      background:#fff;border-right:1px solid var(--line);box-shadow:4px 0 24px rgba(22,52,95,.12);
+      transform:translateX(-105%);transition:transform .28s cubic-bezier(.4,0,.2,1);
+      display:flex;flex-direction:column;overflow:hidden}
+    .sidebar-nav.open{transform:translateX(0)}
+    .sidebar-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;
+      border-bottom:1px solid var(--line);background:#f8fafc;flex-shrink:0}
+    .sidebar-header span{font-size:14px;font-weight:700;color:var(--navy)}
+    .sidebar-close{width:28px;height:28px;border:none;background:transparent;color:var(--muted);font-size:20px;
+      line-height:1;cursor:pointer;border-radius:6px;display:flex;align-items:center;justify-content:center}
+    .sidebar-close:hover{background:var(--pending-bg);color:var(--navy)}
+    .sidebar-body{flex:1;overflow-y:auto;padding:10px 0 20px;-webkit-overflow-scrolling:touch}
+    .sidebar-group{padding:6px 0}
+    .sidebar-group-title{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;
+      padding:8px 16px 4px}
+    .sidebar-link{display:block;padding:7px 16px 7px 20px;font-size:13px;color:var(--text);text-decoration:none;
+      border-left:3px solid transparent;transition:background .15s,border-color .15s,color .15s}
+    .sidebar-link:hover{background:#f0f4f9;color:var(--blue)}
+    .sidebar-link.active{background:#eef3fb;color:var(--blue);border-left-color:var(--blue);font-weight:600}
+    .sidebar-link.nav-ext{color:var(--muted);font-size:12px}
+    .sidebar-link.nav-ext:hover{color:var(--blue)}
+    .sidebar-link.sub{padding-left:28px;font-size:12px;color:var(--muted)}
+    .sidebar-link.sub.active{color:var(--blue)}
+    body.sidebar-open{overflow:hidden}
+    @media(min-width:1200px){
+      .sidebar-toggle{left:auto;right:20px;top:50%;bottom:auto;transform:translateY(-50%)}
+      .sidebar-toggle:hover{transform:translateY(calc(-50% - 1px))}
+    }
+    .arch-ref-panel{text-align:center;padding:20px 24px 16px}
+    .arch-ref-wrap{width:100%;max-width:1040px;margin:0 auto;border:1px solid var(--line);border-radius:8px;background:#fff;overflow:hidden;line-height:0}
+    .arch-ref-wrap object,.arch-ref-wrap img,.arch-ref-wrap svg.arch-ref-inline{width:100%;height:auto;display:block;min-height:420px}
+    .grid2 .mermaid{min-height:300px;font-size:11px}
+    .grid2 h3{font-size:13px}
+    h3[id]{scroll-margin-top:20px}
+    h2[id]{scroll-margin-top:20px}
+  </style>
+  <script src="poc-paths.js"></script>
+</head>
+<body>
+
+<button type="button" class="sidebar-toggle" id="sidebarToggle" aria-label="打开目录导航" aria-expanded="false">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  目录
+</button>
+<div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+<aside class="sidebar-nav" id="sidebarNav" aria-label="页面目录">
+  <div class="sidebar-header">
+    <span>目录导航</span>
+    <button type="button" class="sidebar-close" id="sidebarClose" aria-label="关闭">×</button>
+  </div>
+  <nav class="sidebar-body">
+    <div class="sidebar-group">
+      <div class="sidebar-group-title">页面</div>
+      <a href="scene-front.html" class="sidebar-link nav-ext" data-page="hub">← 页面导航</a>
+      <a href="poc-architecture.html" class="sidebar-link nav-ext" data-page="architecture">技术架构详页</a>
+      <a href="poc-status.html" class="sidebar-link nav-ext" data-page="status">进展汇总</a>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-group-title">章节</div>
+      <a href="#ch1" class="sidebar-link" data-nav>一 验证目标</a>
+      <a href="#ch2" class="sidebar-link" data-nav>二 方案优势</a>
+      <a href="#ch3" class="sidebar-link" data-nav>三 技术架构</a>
+      <a href="#ch4" class="sidebar-link" data-nav>四 场景一</a>
+      <a href="#ch5" class="sidebar-link" data-nav>五 场景二</a>
+      <a href="#ch6" class="sidebar-link" data-nav>六 场景三</a>
+      <a href="#ch7" class="sidebar-link" data-nav>七 场景四</a>
+      <a href="#ch9" class="sidebar-link" data-nav>八 环境说明</a>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-group-title">架构</div>
+      <a href="#ch3-scope" class="sidebar-link sub" data-nav>交付范围</a>
+      <a href="#ch3-ref" class="sidebar-link sub" data-nav>参考架构图</a>
+      <a href="#ch3-ab" class="sidebar-link sub" data-nav>PoC / 工程对比</a>
+      <a href="#ch3-diff" class="sidebar-link sub" data-nav>差异对照</a>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-group-title">环境</div>
+      <a href="#ch9-overview" class="sidebar-link sub" data-nav>基础设施</a>
+      <a href="#ch9-ecs" class="sidebar-link sub" data-nav>PoC ECS</a>
+      <a href="#ch9-bi" class="sidebar-link sub" data-nav>FineBI</a>
+      <a href="#ch9-fdl" class="sidebar-link sub" data-nav>FDL</a>
+      <a href="#ch9-db" class="sidebar-link sub" data-nav>数据库</a>
+      <a href="#ch9-dora" class="sidebar-link sub" data-nav>Dora/MCP</a>
+    </div>
+  </nav>
+</aside>
+
+<div class="wrap">
+
+<header class="hero">
+  <h1>联影数据平台 PoC · 验证目标与方案说明</h1>
+  <p class="lead">依据 PoC 计划，分四个场景说明验证目标与方案响应，并明确本期已实现能力与后续工程化交付边界。本期重点为底层平台选型：知识检索、结构化存储与数据治理。</p>
+</header>
+
+<!-- 第一章 -->
+<h2 id="ch1">一、PoC 验证目标与方案响应</h2>
+
+<div class="panel" style="padding:0;overflow:hidden">
+  <table class="poc-matrix">
+    <tr>
+      <th>PoC 场景</th>
+      <th>验证目标</th>
+      <th>方案响应</th>
+    </tr>
+    <tr>
+      <td class="col-scene">场景一<br>财务 Data for AI<br><span class="badge b-done">现场验收</span></td>
+      <td>
+        <ul class="points">
+          <li>同一对话理解三类数据：预算宽表、制度文档、JSON/LOG 操作日志</li>
+          <li>完成制度检索、指标问数、日志明细查询</li>
+          <li>输出可追溯到具体文档或记录的融合回答（事实 + 制度依据）</li>
+        </ul>
+      </td>
+      <td>
+        <ul class="points">
+          <li><span class="key">SelectDB/Doris</span> 统一承载制度向量索引与预算结构化宽表</li>
+          <li>三类数据分治接入：制度 RAG 入库、半结构化日志解析、<span class="key">FineBI 分析主题</span> 问数</li>
+          <li>混合检索 + trace 溯源，结论可对应 document_id / app_no</li>
+          <li>已完成 <span class="key">10 项验收用例</span>，覆盖超预算审批制度至差旅拦截归因全链路</li>
+          <li><span class="scope-tag scope-out">不含</span> Dora / MCP 仅作 PoC 对话演示接入，非帆软交付项</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td class="col-scene">场景二<br>营销 OTD BI<br><span class="badge b-poc">BI 验收</span></td>
+      <td>
+        <ul class="points">
+          <li>CRM 线索、商机、采购、发运、签收五段数据集成入仓</li>
+          <li>形成 OTD 指标语义层与管理层 / 业务层 BI 看板</li>
+          <li>支撑达成率、延期率、平均交付周期等 KPI 下钻</li>
+          <li>体现基础数据质量与血缘治理能力</li>
+        </ul>
+      </td>
+      <td>
+        <ul class="points">
+          <li><span class="key">FineDataLink</span> 多源入仓与治理编排</li>
+          <li><span class="key">Doris</span> 构建 OTD 主题宽表 + <span class="key">FineBI 指标中心</span></li>
+          <li><span class="key">FineBI 故事看板</span> 承载管理层总览与订单明细下钻</li>
+          <li>侧重 <span class="key">BI 全链路验证</span>；数据资产与看板素材已就绪</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td class="col-scene">场景三<br>售后维修助手<br><span class="badge b-done">现场验收</span></td>
+      <td>
+        <ul class="points">
+          <li>融合报修工单、IoT 日志与维修手册 / 经验 / 备件文档</li>
+          <li>形成诊断链：现象 → 根因 → SOP → 备件 → 工单数据 → 运维指标</li>
+          <li>支持故障图谱导航与 MTTR / MTBF 等指标问数</li>
+        </ul>
+      </td>
+      <td>
+        <ul class="points">
+          <li><span class="key">MySQL ODS</span>（报修 / 派工 / 日志）+ <span class="key">Doris 知识索引</span>（8 类文档 · 200 chunks）</li>
+          <li>混合检索打通结构化与知识文档；<span class="key">FineBI 售后主题</span> 支撑 MTTR / MTBF 等指标</li>
+          <li>已完成 <span class="key">11 项验收用例</span>，uCT960 · E1001/E1002 故事线</li>
+          <li><span class="scope-tag scope-out">不含</span> 知识图谱、Dora、MCP 非交付项（PoC 页面可演示图谱导航）</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td class="col-scene">场景四<br>存储检索底座<br><span class="badge b-poc">分散验证</span></td>
+      <td>
+        <ul class="points">
+          <li>TP/AP 一体、高并发查询、列存效率</li>
+          <li>全文 + 向量 + 结构化过滤的组合检索</li>
+          <li>满足企业级数据平台与 AI 底座要求</li>
+        </ul>
+      </td>
+      <td>
+        <ul class="points">
+          <li><span class="key">Doris</span> 在场景一、三承载宽表、向量 chunk 索引与 <span class="key">BM25 + HNSW 混合检索</span></li>
+          <li><span class="key">retrieve_trace</span> 验证组合检索路径；存储与索引解耦已在业务场景落地</li>
+          <li><span class="key">TPC/QPS 专项压测</span> 与入库 SLA 可作为独立验收项</li>
+        </ul>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<!-- 第二章 优势 -->
+<h2 id="ch2">二、方案优势</h2>
+<div class="panel">
+  <div class="adv-item">
+    <h4>统一底座，减少重复建设</h4>
+    <p>结构化宽表、向量/全文索引、半结构化日志解析均汇聚在 Doris 与统一检索服务之上，多业务域共用同一套入库与混合检索机制，扩展时主要增加数据域配置，而非重建平台。</p>
+  </div>
+  <div class="adv-item">
+    <h4>存储与索引解耦，原文与检索分层</h4>
+    <p>制度与手册原文与检索索引分层管理，检索层维护 chunk 索引表。索引可独立更新，查询结果可审计至 document_id 与 chunk，满足知识资产版本管理与合规留痕。</p>
+  </div>
+  <div class="adv-item">
+    <h4>结构化与知识并行检索</h4>
+    <p>对结构化事实与知识文档并行发起查询，在应用层合并 evidence。财务拦截与制度处理、售后更换量与备件手册等场景均按此模式实现。</p>
+  </div>
+  <div class="adv-item">
+    <h4>检索可溯源，结论可解释</h4>
+    <p>制度与手册检索支持展示预筛、双通道得分与融合路径，便于内控与业务人员理解「答案从何而来」，而不仅给出结论文本。</p>
+  </div>
+  <div class="adv-item">
+    <h4>指标有口径，BI 与分析主题分工明确</h4>
+    <p>执行率、超预算金额、MTTR/MTBF 等纳入指标目录，FineBI 分析主题负责结构化聚合与口径统一，检索服务负责知识文档召回，职责清晰。</p>
+  </div>
+  <div class="adv-item">
+    <h4>工程化验收，可复现可交付</h4>
+    <p>文档清单单点维护，验收用例独立维护；PoC 环境、检索服务与数据集成均可复现，结论可衔接后续项目实施。</p>
+  </div>
+</div>
+
+<!-- 第三章 架构对比 -->
+<h2 id="ch3">三、总体技术架构</h2>
+
+<div class="legend">
+  <span><i class="dot dot-in"></i><strong>本次交付范围</strong>（PoC 已实现 → 工程化交付）</span>
+  <span><i class="dot dot-poc"></i>本期 PoC 简化实现，工程化增强</span>
+  <span><i class="dot dot-out"></i><strong>不含</strong>：OSS · 知识图谱 · Dora · MCP 等</span>
+</div>
+
+<div class="panel" id="ch3-scope">
+  <h3 id="ch3-scope-h">交付范围界定</h3>
+  <table>
+    <tr><th>模块</th><th>本期 PoC</th><th>工程化交付</th><th>边界说明</th></tr>
+    <tr>
+      <td>SelectDB / Doris 数仓</td>
+      <td><span class="badge b-done">交付</span></td>
+      <td><span class="badge b-done">交付</span></td>
+      <td>宽表、AP 查询、向量/全文索引、chunk 入库</td>
+    </tr>
+    <tr>
+      <td>FineDataLink 集成与治理</td>
+      <td><span class="badge b-done">交付</span></td>
+      <td><span class="badge b-done">交付</span></td>
+      <td>多源入仓、ODS/DWD、质量规则、血缘（工程化增强）</td>
+    </tr>
+    <tr>
+      <td>FineBI 指标中心 / 看板</td>
+      <td><span class="badge b-done">交付</span></td>
+      <td><span class="badge b-done">交付</span></td>
+      <td>分析主题、OTD 看板、指标口径</td>
+    </tr>
+    <tr>
+      <td>知识检索服务（Worker）</td>
+      <td><span class="badge b-done">交付</span></td>
+      <td><span class="badge b-done">交付</span></td>
+      <td>混合检索、trace、入库 API；工程化集群化</td>
+    </tr>
+    <tr>
+      <td>文档接入 / RAG 流水线</td>
+      <td><span class="badge b-poc">交付</span> PoC 工作台入库</td>
+      <td><span class="badge b-done">交付</span> 服务端调度流水线</td>
+      <td>解析、切片、向量化写入 Doris</td>
+    </tr>
+    <tr>
+      <td>半结构化日志解析</td>
+      <td><span class="badge b-done">交付</span></td>
+      <td><span class="badge b-done">交付</span></td>
+      <td>JSONL/LOG 解析与指标计算（平台能力）</td>
+    </tr>
+    <tr>
+      <td>MySQL ODS 样例</td>
+      <td><span class="badge b-done">交付</span></td>
+      <td><span class="badge b-future">扩展</span></td>
+      <td>场景三结构化数据源；可同步 Doris</td>
+    </tr>
+    <tr>
+      <td>对象存储 OSS</td>
+      <td><span class="badge b-out">不含</span></td>
+      <td><span class="badge b-out">不含</span></td>
+      <td>原文托管由联影侧基础设施承担，帆软不建设 OSS</td>
+    </tr>
+    <tr>
+      <td>知识图谱</td>
+      <td><span class="badge b-out">不含</span></td>
+      <td><span class="badge b-out">不含</span></td>
+      <td>PoC 演示页仅作导航参考，非交付建设范围</td>
+    </tr>
+    <tr>
+      <td>Dora 平台</td>
+      <td><span class="badge b-out">不含</span></td>
+      <td><span class="badge b-out">不含</span></td>
+      <td>对话 Agent 为验收演示接入，非帆软产品交付</td>
+    </tr>
+    <tr>
+      <td>MCP 接入层</td>
+      <td><span class="badge b-out">不含</span></td>
+      <td><span class="badge b-out">不含</span></td>
+      <td>工具协议层为 PoC 联调演示，平台能力经 Worker/API 交付</td>
+    </tr>
+  </table>
+</div>
+
+<div class="panel arch-ref-panel" id="ch3-ref">
+  <h3 id="ch3-ref-h">图 C · AI Agent 统一检索编排架构（总体参考）</h3>
+  <div class="arch-ref-wrap">
+    <object type="image/svg+xml" data="/poc-agent-orchestration-arch.svg?v=3" aria-label="AI Agent 统一检索编排架构">
+      <img src="/poc-agent-orchestration-arch.svg?v=3" alt="AI Agent 接入多源数据的统一检索编排架构"/>
+    </object>
+  </div>
+  <p class="note" style="text-align:left;margin-top:14px">总体参考架构展示多源数据经<strong>统一检索编排层</strong>与 Skill 分治接入的路径。本次 PoC / 工程化<strong>交付</strong>聚焦数仓（Doris）、FDL 集成治理、FineBI、知识检索 Worker 与 RAG 流水线；<span class="scope-tag scope-out">不含</span> OSS、知识图谱、Dora 平台、MCP（虚线标注部分仅作验收演示或联影侧基础设施）。</p>
+</div>
+
+<div class="grid2" id="ch3-ab">
+  <div class="panel">
+    <h3>图 A · 本期 PoC 架构</h3>
+    <div class="mermaid">
+flowchart TB
+  subgraph deliver["本次交付范围"]
+    FDL[FineDataLink 同步]:::inScope
+    WK[Worker 8790<br/>混合检索+trace+入库]:::inScope
+    FE[文档解析/切片/Embedding]:::inScope
+    WB[PoC 工作台 8890]:::inScope
+    Doris[(SelectDB/Doris<br/>宽表+chunk索引)]:::inScope
+    MySQL[(MySQL ODS)]:::inScope
+    FBI[FineBI 分析主题/看板]:::inScope
+    LOG[半结构化日志解析]:::inScope
+  end
+  subgraph excluded["不含 · 非本次交付"]
+    Dora[Dora 平台]:::outScope
+    MCP[MCP 接入层]:::outScope
+    OSS[对象存储 OSS]:::outScope
+    KG[知识图谱]:::outScope
+  end
+
+  FDL --> Doris & MySQL & FBI
+  WB --> FE --> WK --> Doris
+  LOG --> Doris
+  Dora -.PoC演示.-> MCP
+  MCP -.-> WK
+  FE -.原文.-> OSS
+
+  classDef inScope fill:#f0fdf4,stroke:#16a34a,color:#1b2940
+  classDef outScope fill:#eef2f6,stroke:#94a3b8,color:#64748b,stroke-dasharray:5 5
+    </div>
+    <p class="note"><span class="scope-tag scope-in">交付</span> 知识入库本期经 PoC 工作台 + Worker 写入 Doris；工程化升级为服务端流水线。<span class="scope-tag scope-out">不含</span> OSS 由联影侧承担原文托管。</p>
+  </div>
+
+  <div class="panel">
+    <h3>图 B · 工程化目标架构</h3>
+    <div class="mermaid">
+flowchart TB
+  subgraph deliverB["本次交付范围 · 工程化"]
+    ING[统一文档接入平台<br/>解析/切片/向量化]:::inScope
+    WK2[检索服务集群<br/>混合检索+ACL+血缘]:::inScope
+    Doris2[(Doris 数仓+索引表)]:::inScope
+    FDL2[FDL 集成+质量规则]:::inScope
+    META[元数据/血缘/权限]:::inScope
+    FBI2[FineBI 指标中心+看板]:::inScope
+    LOG2[半结构化解析服务]:::inScope
+  end
+  subgraph excludedB["不含 · 非本次交付"]
+    Dora2[Dora 平台]:::outScope
+    OSS2[对象存储 OSS]:::outScope
+    KG2[知识图谱]:::outScope
+    MCP2[MCP 接入层]:::outScope
+  end
+
+  ING --> WK2 --> Doris2
+  FDL2 --> Doris2 --> FBI2
+  LOG2 --> Doris2
+  META --- FDL2 & WK2
+  ING -.原文.-> OSS2
+  Dora2 -.-> MCP2
+  MCP2 -.-> WK2
+
+  classDef inScope fill:#f0fdf4,stroke:#16a34a,color:#1b2940
+  classDef outScope fill:#eef2f6,stroke:#94a3b8,color:#64748b,stroke-dasharray:5 5
+    </div>
+    <p class="note"><span class="scope-tag scope-in">交付</span> 知识引擎升级为服务端 RAG 流水线，并与 FDL 治理、元数据血缘打通。<span class="scope-tag scope-out">不含</span> OSS / 图谱 / Dora / MCP。</p>
+  </div>
+</div>
+
+<div class="panel" id="ch3-diff">
+  <h3 id="ch3-diff-h">PoC 与工程化差异（交付范围内）</h3>
+  <table>
+    <tr><th>模块</th><th>本期 PoC</th><th>工程化交付</th></tr>
+    <tr>
+      <td>文档接入 / RAG 流水线</td>
+      <td><span class="badge b-poc">简化</span> PoC 工作台 + 人工触发入库</td>
+      <td><span class="badge b-done">交付</span> 服务端调度，增量与批量</td>
+    </tr>
+    <tr>
+      <td>混合检索与 trace</td>
+      <td><span class="badge b-done">交付</span> Worker API</td>
+      <td><span class="badge b-done">交付</span> 集群化、ACL、审计日志</td>
+    </tr>
+    <tr>
+      <td>FDL 数据集成与治理</td>
+      <td><span class="badge b-done">交付</span> 样例表同步 + 基础规则</td>
+      <td><span class="badge b-done">交付</span> 生产源、流批一体、血缘全量</td>
+    </tr>
+    <tr>
+      <td>FineBI 指标与看板</td>
+      <td><span class="badge b-done">交付</span> 分析主题 + OTD 看板</td>
+      <td><span class="badge b-done">交付</span> 指标中心治理、权限完整落地</td>
+    </tr>
+    <tr>
+      <td>半结构化日志解析</td>
+      <td><span class="badge b-done">交付</span> 预算 JSONL/LOG</td>
+      <td><span class="badge b-done">交付</span> 按业务域扩展</td>
+    </tr>
+  </table>
+</div>
+
+<!-- 场景一 -->
+<h2 id="ch4">四、场景一 · 财务 Data for AI</h2>
+<div class="panel prose">
+  <div class="scene-section">
+    <h4>1 · Demo 效果（场景）</h4>
+    <p>研发部门在 Q1 集中提交国内差旅预算：部分申请被系统自动驳回，另有个别单据出现超预算执行（如 BA-2025-015513，超预算约 747 万）。财务复核时往往要同时查三类信息——预算宽表里的执行率与汇总、操作日志里的 trace 与拦截原因、制度文档里的审批流程与处理规则。传统做法需要在 BI、日志平台和文档系统之间来回切换，且难以把「事实」和「制度依据」在一次答复中对齐。</p>
+  </div>
+  <div class="scene-section">
+    <h4>2 · 实施路径</h4>
+    <ul class="points">
+      <li><span class="key">FineDataLink</span> 同步预算宽表入 <span class="key">SelectDB/Doris</span>，<span class="key">FineBI 分析主题</span> 承载结构化问数与指标聚合</li>
+      <li>制度文档经 PoC 工作台解析、切片、向量化，Stream Load 写入 Doris chunk 索引；<span class="key">Worker</span> 提供 BM25 + 向量混合检索与 trace 溯源</li>
+      <li>预算操作 JSONL/LOG 由半结构化解析服务入库索引，支持按 app_no、trace_id、部门等查询与指标计算（执行率、超预算金额等）</li>
+      <li>三类数据分治接入、统一底座；对话演示经 Dora/MCP 调用上述能力（<span class="scope-tag scope-out">不含</span> 非交付项）</li>
+    </ul>
+    <div class="mermaid">
+flowchart LR
+  subgraph deliver1["本次交付"]
+    FDL1[FDL]:::inScope --> T1[预算宽表/FineBI]:::inScope
+    PARSE[日志解析]:::inScope --> T2[JSONL+LOG]:::inScope
+    WB1[工作台入库]:::inScope --> T3[制度文档索引]:::inScope
+    WK1[Worker 混合检索]:::inScope
+    T3 --> WK1
+    T1 & T2 & WK1 --> API1[检索+问数 API]:::inScope
+  end
+  subgraph excluded1["不含"]
+    Dora1[Dora]:::outScope
+    MCP1[MCP]:::outScope
+  end
+  Dora1 -.演示.-> MCP1 -.-> API1
+  classDef inScope fill:#f0fdf4,stroke:#16a34a,color:#1b2940
+  classDef outScope fill:#eef2f6,stroke:#94a3b8,color:#64748b,stroke-dasharray:5 5
+    </div>
+  </div>
+  <div class="scene-section">
+    <h4>3 · 实现效果</h4>
+    <ul class="points">
+      <li><strong>一库融合三类数据</strong>：宽表、制度索引、操作日志在同一 Doris 底座分域管理，避免多库拼凑</li>
+      <li><strong>结论可溯源</strong>：检索 trace 展示预筛、双通道得分与融合路径；结构化结果可对应 app_no、document_id</li>
+      <li><strong>制度与事实并行</strong>：超预算金额来自日志/宽表，审批流程来自制度 RAG，融合回答而非硬编码 Prompt</li>
+      <li><strong>可验收</strong>：已完成 <span class="key">10 项验收用例</span>，覆盖日志双格式、执行率、747.4 万、制度 BG-2023-012 等锚点</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 场景二 OTD -->
+<h2 id="ch5">五、场景二 · 营销 OTD 全链路 BI</h2>
+<div class="panel prose">
+  <div class="scene-section">
+    <h4>1 · Demo 效果（场景）</h4>
+    <p>销售运营需要看清「从 CRM 线索到客户签收」的订单交付全链路：哪些商机转化滞后、哪些订单发运延期、本月 OTD 达成率是否达标。现实中 CRM、ERP、WMS 各有一套报表，延期率、达成率口径在会议里常常对不齐，管理层看不到可下钻的统一视图，也缺少指标定义与数据来源的说明。</p>
+  </div>
+  <div class="scene-section">
+    <h4>2 · 实施路径</h4>
+    <ul class="points">
+      <li><span class="key">FineDataLink</span> 集成 CRM 线索/商机、ERP 采购订单、WMS 发运/签收等五段数据源，标准化入仓并做 ODS/DWD 分层与基础质量规则</li>
+      <li>在 <span class="key">Doris</span> 构建 OTD 主题宽表与 KPI/明细汇总表（如 <code>ads_otd_kpi_di</code>、<code>ads_otd_detail_di</code>）</li>
+      <li><span class="key">FineBI 指标中心</span> 统一 OTD 达成率、延期率、平均延期天数等口径；<span class="key">故事看板</span> 分管理层总览与业务层订单明细两层</li>
+      <li>典型验收路径：从看板 KPI 下钻到延期订单，再对照 FDL 同步的五段表还原全链路</li>
+    </ul>
+    <div class="mermaid">
+flowchart TB
+  CRM[CRM 线索/商机] --> FDL2[FineDataLink]
+  ERP[ERP 订单] --> FDL2
+  WMS[WMS 发运/签收] --> FDL2
+  FDL2 --> DorisOTD[(Doris OTD 宽表)]
+  DorisOTD --> IC[FineBI 指标中心]
+  IC --> BI[FineBI 故事看板]
+  BI --> Case[订单下钻]
+    </div>
+  </div>
+  <div class="scene-section">
+    <h4>3 · 实现效果</h4>
+    <ul class="points">
+      <li><strong>全链路一张数仓</strong>：五段业务数据在 Doris 关联成可分析宽表，告别跨系统拼表</li>
+      <li><strong>指标有中心、口径可解释</strong>：指标中心定义与 Doris 物理表绑定，看板数字「怎么算」有据可查</li>
+      <li><strong>治理从 PoC 起步</strong>：FDL 同步 + 字段标准化 + 基础质量规则，为后续血缘与生产扩展打基础</li>
+      <li><strong>两层看板讲清故事</strong>：管理层看达成与趋势，业务层下钻到单笔订单，适合 OTD 案例验收</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 场景三 -->
+<h2 id="ch6">六、场景三 · 售后维修智能助手</h2>
+<div class="panel prose">
+  <div class="scene-section">
+    <h4>1 · Demo 效果（场景）</h4>
+    <p>uCT960 设备出现 E1002 类报警（如旋转阳极达不到额定转速）时，售后工程师需要在一段时间内完成一连串动作：根据现象判断可能根因、查阅更换 SOP 与备件型号、结合近期派工与 IoT 日志看该部件是否频繁更换，并向团队说明本季度 MTTR/MTBF 水平。这些信息分散在报修工单、设备日志和多份 PDF/Word 手册里，现场排查效率低、经验难以复用。</p>
+  </div>
+  <div class="scene-section">
+    <h4>2 · 实施路径</h4>
+    <ul class="points">
+      <li><span class="key">FineDataLink</span> 同步报修、派工、设备运行日志至 <span class="key">MySQL ODS</span>；<span class="key">FineBI 售后维修主题</span> 聚合 MTTR、更换频次等结构化指标</li>
+      <li>八类售后文档（手册/经验/备件/SOP 等）切片入库 Doris，共 <span class="key">200 chunks</span>；<span class="key">Worker</span> 按 domain=service 做混合检索</li>
+      <li>诊断链路径：现象 → 经验/根因文档 → SOP 步骤 → 备件与预警 → 工单统计 → 运维指标；对话演示经 Dora/MCP 串联（<span class="scope-tag scope-out">不含</span>）</li>
+    </ul>
+    <div class="mermaid">
+flowchart TB
+  subgraph ods["结构化 · MySQL ODS"]
+    RPR[报修记录]
+    DSP[派工单]
+    IOT[设备运行日志]
+  end
+  subgraph kb["知识索引 · Doris"]
+    DOC[手册/经验/备件<br/>200 chunks]
+  end
+  subgraph deliver3["本次交付"]
+    FDL3[FDL]:::inScope
+    WB3[工作台入库]:::inScope
+    FBI3[FineBI 售后主题]:::inScope
+    WK3[Worker 混合检索]:::inScope
+  end
+  subgraph excluded3["不含"]
+    KG3[知识图谱]:::outScope
+    Dora3[Dora]:::outScope
+    MCP3[MCP]:::outScope
+  end
+  FDL3 --> ods
+  WB3 --> DOC
+  ods --> FBI3
+  DOC --> WK3
+  Dora3 -.演示.-> MCP3 -.-> WK3
+  classDef inScope fill:#f0fdf4,stroke:#16a34a,color:#1b2940
+  classDef outScope fill:#eef2f6,stroke:#94a3b8,color:#64748b,stroke-dasharray:5 5
+    </div>
+  </div>
+  <div class="scene-section">
+    <h4>3 · 实现效果</h4>
+    <ul class="points">
+      <li><strong>结构化 + 知识一体检索</strong>：工单/日志走 BI 聚合，手册/经验走 Doris 混合检索，同一底座支撑诊断链</li>
+      <li><strong>文档可引用、可审计</strong>：SOP、备件、经验案例检索结果带 document_id 与 trace，非黑盒生成</li>
+      <li><strong>指标有口径</strong>：MTTR、Q1 更换量等与 metrics 目录及 FineBI 主题一致</li>
+      <li><strong>可验收</strong>：已完成 <span class="key">11 项验收用例</span>（uCT960 · E1001/E1002 故事线）；知识图谱页面仅为 PoC 演示参考，<span class="scope-tag scope-out">非交付</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- 场景四 Doris -->
+<h2 id="ch7">七、场景四 · 存储与检索底座（SelectDB/Doris）</h2>
+<div class="panel prose">
+  <div class="scene-section">
+    <h4>1 · Demo 效果（场景）</h4>
+    <p>企业选型数据平台时，需要确认一套引擎能否同时承担分析型负载（宽表聚合、OTD KPI）与 AI 知识底座（向量/全文检索、高并发查询），并支持 TP/AP 一体、列存效率与「结构化过滤 + 全文 + 向量」的组合检索，而不是分析库、向量库、日志库各建一套。</p>
+  </div>
+  <div class="scene-section">
+    <h4>2 · 实施路径</h4>
+    <ul class="points">
+      <li>选用 <span class="key">SelectDB/Doris</span> 作为 PoC 统一数仓：MPP 列存承载 OTD/预算宽表 AP 查询；<code>kb.uih_doc_chunks</code> 表上建 HNSW 向量索引与倒排全文索引</li>
+      <li>入库：FDL 同步结构化表；制度/手册 chunk 经 Stream Load 写入；domain + doc_type 预筛后 BM25 与向量双路召回，RRF 融合排序</li>
+      <li><span class="key">retrieve_trace</span> 白盒验证检索路径；场景一（85 chunks）、场景三（200 chunks）已在真实业务流中运行</li>
+      <li>TPC/QPS 极限压测、高可用集群作为专项验收另行排期</li>
+    </ul>
+    <table>
+      <tr><th>Doris 能力</th><th>场景一</th><th>场景二</th><th>场景三</th></tr>
+      <tr><td>列存宽表 / AP 查询</td><td>预算相关表</td><td>OTD 五段宽表、KPI 汇总</td><td>ODS 可同步 Doris</td></tr>
+      <tr><td>向量 + 全文混合检索</td><td>finance 85 chunks</td><td>—</td><td>service 200 chunks</td></tr>
+      <tr><td>Stream Load 入库</td><td>制度 chunk</td><td>FDL 同步表</td><td>手册 chunk</td></tr>
+      <tr><td>domain 预筛 + RRF</td><td>制度 RAG</td><td>—</td><td>手册 RAG</td></tr>
+    </table>
+  </div>
+  <div class="scene-section">
+    <h4>3 · 实现效果</h4>
+    <ul class="points">
+      <li><strong>一库两用</strong>：同一 Doris 集群同时跑 OTD/预算分析与知识 chunk 索引，降低平台碎片化</li>
+      <li><strong>存储与索引解耦</strong>：原文与 chunk 索引分层，索引可独立更新，检索只打索引表</li>
+      <li><strong>组合检索已落地</strong>：非纸面指标，已在财务制度、售后手册场景验证入库、检索、trace 全链路</li>
+      <li><strong>工程化路径清晰</strong>：PoC 工作台入库 → 工程化服务端 RAG 流水线，检索服务与表模型可平滑演进</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 环境与访问 -->
+<h2 id="ch9">八、PoC 环境与访问说明</h2>
+
+<div class="panel prose">
+  <p>PoC 相关环境含 PoC 应用服务器（ECS）、Dora 智能助手、FineBI、FineDataLink、MySQL 与 SelectDB。下表汇总访问地址与账号；<strong>登录密码不在本文档展示</strong>，验收对接时由项目组另行提供。</p>
+</div>
+
+<div class="panel" id="ch9-overview">
+  <h3 id="ch9-overview-h">8.1 基础设施一览</h3>
+  <table>
+    <tr><th>环境</th><th>公网地址 / 连接串</th><th>账号</th><th>PoC 用途</th></tr>
+    <tr>
+      <td><strong>PoC ECS</strong><br><span class="badge b-done">应用服务器</span></td>
+      <td><a href="http://47.99.198.211:8890/scene-front.html">47.99.198.211:8890</a><br><span style="font-size:11px;color:var(--muted)">PoC 工作台 · API · MCP 网关</span></td>
+      <td>—</td>
+      <td>场景一/三验收入口；知识入库与混合检索 API</td>
+    </tr>
+    <tr>
+      <td><strong>Dora</strong><br><span class="badge b-out">不含</span></td>
+      <td><a href="https://dora-dev.fanruan.com/decision/dora/chat">https://dora-dev.fanruan.com/decision/dora/chat</a></td>
+      <td>—</td>
+      <td>PoC 对话验收演示用，非帆软交付项</td>
+    </tr>
+    <tr>
+      <td><strong>FineBI</strong><br><span class="badge b-done">BI 服务器</span></td>
+      <td><a href="http://47.99.198.211/webroot/decision">http://47.99.198.211/webroot/decision</a></td>
+      <td><code>admin</code></td>
+      <td>场景一预算分析主题、场景二 OTD 看板、场景三售后主题</td>
+    </tr>
+    <tr>
+      <td><strong>FineDataLink 5.0</strong><br><span class="badge b-done">集成服务器</span></td>
+      <td><a href="http://8.136.17.56/webroot/decision">http://8.136.17.56/webroot/decision</a></td>
+      <td><code>admin</code></td>
+      <td>场景一/二/三多源入仓、ODS/DWD 同步与治理编排</td>
+    </tr>
+    <tr>
+      <td><strong>MySQL</strong><br><span class="badge b-done">ODS 样例库</span></td>
+      <td><code>47.105.110.92:3306</code><br>库名 <code>sh_lorin</code></td>
+      <td><code>shanghai</code></td>
+      <td>场景三 · 报修、派工、设备运行日志 ODS</td>
+    </tr>
+    <tr>
+      <td><strong>SelectDB 5.0</strong><br><span class="badge b-done">分析型数仓</span></td>
+      <td><a href="https://selectdb-cn-eiz4tws8i01-public.selectdbfe.rds.aliyuncs.com">selectdb-cn-eiz4tws8i01-public.selectdbfe.rds.aliyuncs.com</a><br>MySQL 协议端口 <code>9030</code></td>
+      <td><code>admin</code></td>
+      <td>宽表、OTD 样例表、<code>kb.uih_doc_chunks</code> 向量/全文索引（285 chunks）</td>
+    </tr>
+  </table>
+</div>
+
+<div class="panel" id="ch9-ecs">
+  <h3 id="ch9-ecs-h">8.2 PoC 验收入口（ECS · 47.99.198.211）</h3>
+  <table>
+    <tr><th>环境</th><th>地址</th><th>说明</th></tr>
+    <tr>
+      <td><strong>公网（推荐）</strong></td>
+      <td><a href="http://47.99.198.211:8890/scene-front.html">http://47.99.198.211:8890/</a></td>
+      <td>PoC 验收与远程联调入口。导航页 <code>/scene-front.html</code>，工作台 <code>/</code></td>
+    </tr>
+    <tr>
+      <td>本机备用</td>
+      <td>http://127.0.0.1:8890/</td>
+      <td>需执行 <code>bash deploy/start-poc-local.sh</code>；API/MCP 经 SSH 隧道转发至 ECS</td>
+    </tr>
+  </table>
+
+  <h3>8.3 PoC 页面清单</h3>
+  <table>
+    <tr><th>页面</th><th>路径</th><th>用途</th></tr>
+    <tr><td>导航入口</td><td>/scene-front.html</td><td>全部 PoC 页面导航</td></tr>
+    <tr><td>PoC 工作台</td><td>/</td><td>文档切片、向量化、入库 Doris</td></tr>
+    <tr><td>Doris 数据查看</td><td>/doris-data.html</td><td>已入库文档与 chunk 数量</td></tr>
+    <tr><td>故障知识图谱页</td><td>/knowledge-graph.html</td><td><span class="badge b-out">不含</span> PoC 演示参考，非交付建设</td></tr>
+    <tr><td>知识产出视图</td><td>/knowledge-deliverables.html</td><td>场景三 · 本体/图谱/SOP/经验</td></tr>
+    <tr><td>进展汇总</td><td>/poc-status.html</td><td>四场景完成度</td></tr>
+    <tr><td>方案说明（本文）</td><td>/poc-demo-runbook.html</td><td>验证目标与架构说明</td></tr>
+    <tr><td>技术架构详页</td><td>/poc-architecture.html</td><td>技术栈与能力矩阵</td></tr>
+  </table>
+</div>
+
+<div class="panel" id="ch9-bi">
+  <h3 id="ch9-bi-h">8.4 FineBI 环境</h3>
+  <table>
+    <tr><th>项</th><th>值</th></tr>
+    <tr><td>部署位置</td><td>阿里云 ECS（与 PoC 应用同机 · 47.99.198.211）</td></tr>
+    <tr><td>访问地址</td><td><a href="http://47.99.198.211/webroot/decision">http://47.99.198.211/webroot/decision</a></td></tr>
+    <tr><td>登录账号</td><td><code>admin</code></td></tr>
+    <tr><td>PoC 关联内容</td><td>场景一 · 预算分析主题；场景二 · OTD 指标中心与故事看板；场景三 · 售后维修分析主题</td></tr>
+  </table>
+</div>
+
+<div class="panel" id="ch9-dora">
+  <h3 id="ch9-dora-h">8.5 Dora 环境 <span class="badge b-out">不含 · 演示用</span></h3>
+  <table>
+    <tr><th>项</th><th>值</th></tr>
+    <tr><td>边界</td><td>Dora 平台非帆软本次交付范围，仅用于 PoC 场景一/三对话验收演示</td></tr>
+    <tr><td>对话入口</td><td><a href="https://dora-dev.fanruan.com/decision/dora/chat">https://dora-dev.fanruan.com/decision/dora/chat</a></td></tr>
+    <tr><td>后端能力</td><td>实际平台能力经 PoC ECS Worker/API 与 FineBI 分析主题交付（见 8.1、8.11）</td></tr>
+  </table>
+</div>
+
+<div class="panel" id="ch9-fdl">
+  <h3 id="ch9-fdl-h">8.6 FineDataLink 5.0 环境</h3>
+  <table>
+    <tr><th>项</th><th>值</th></tr>
+    <tr><td>部署位置</td><td>阿里云 ECS · 8.136.17.56</td></tr>
+    <tr><td>访问地址</td><td><a href="http://8.136.17.56/webroot/decision">http://8.136.17.56/webroot/decision</a></td></tr>
+    <tr><td>登录账号</td><td><code>admin</code></td></tr>
+    <tr><td>PoC 关联内容</td><td>CRM/ERP/WMS → OTD 五段表；预算/售后相关表同步；ODS/DWD 分层与基础质量规则</td></tr>
+  </table>
+</div>
+
+<div class="panel" id="ch9-db">
+  <h3 id="ch9-db-h">8.7 MySQL 数据库</h3>
+  <table>
+    <tr><th>项</th><th>值</th></tr>
+    <tr><td>类型</td><td>MySQL · ODS 样例库</td></tr>
+    <tr><td>主机 / 端口</td><td><code>47.105.110.92</code> · <code>3306</code></td></tr>
+    <tr><td>库名</td><td><code>sh_lorin</code></td></tr>
+    <tr><td>账号</td><td><code>shanghai</code></td></tr>
+    <tr><td>PoC 关联内容</td><td>场景三 · <code>hospital_repair_record</code>、<code>dispatch_work_order</code>、<code>device_operation_log</code></td></tr>
+  </table>
+</div>
+
+<div class="panel">
+  <h3>8.8 SelectDB 5.0 环境</h3>
+  <table>
+    <tr><th>项</th><th>值</th></tr>
+    <tr><td>类型</td><td>SelectDB / Apache Doris 兼容 · 阿里云 RDS</td></tr>
+    <tr><td>公网 FE 地址</td><td><a href="https://selectdb-cn-eiz4tws8i01-public.selectdbfe.rds.aliyuncs.com">selectdb-cn-eiz4tws8i01-public.selectdbfe.rds.aliyuncs.com</a></td></tr>
+    <tr><td>MySQL 协议端口</td><td><code>9030</code></td></tr>
+    <tr><td>账号</td><td><code>admin</code></td></tr>
+    <tr><td>PoC 关联内容</td><td>预算/OTD 宽表；<code>kb.uih_doc_chunks</code> 向量+全文索引；Stream Load 入库</td></tr>
+    <tr><td>网络说明</td><td>ECS Worker 访问需 SelectDB 白名单放行 PoC ECS 出口 IP</td></tr>
+  </table>
+</div>
+
+<div class="panel">
+  <h3>8.9 PoC 服务组件（ECS 8890 网关）</h3>
+  <table>
+    <tr><th>组件</th><th>端口 / 路径</th><th>说明</th></tr>
+    <tr><td>Nginx 统一网关</td><td><strong>8890</strong>（公网）</td><td>静态页、API 与 MCP 反代；PoC 独立部署，不改动帆软现有 Docker/nginx</td></tr>
+    <tr><td>Ingest Worker</td><td>8790（内网）</td><td>入库、混合检索、health；外网经 <code>/api/v1/*</code> 访问</td></tr>
+    <tr><td>财务 MCP</td><td>8791 → <code>/mcp</code></td><td>场景一 · 制度 RAG + 预算日志解析 · 6 个工具</td></tr>
+    <tr><td>售后 MCP</td><td>8793 → <code>/service-mcp</code></td><td>场景三 · 手册 RAG + 故障图谱 · 4 个工具</td></tr>
+    <tr><td>飞书 Wiki MCP</td><td>8792 → <code>/feishu-mcp</code></td><td>场景一补充路径 · 待进一步优化</td></tr>
+  </table>
+
+  <h3>8.10 常用 API</h3>
+  <table>
+    <tr><th>接口</th><th>方法</th><th>说明</th></tr>
+    <tr><td>/health</td><td>GET</td><td>Worker 与 Doris 连通状态</td></tr>
+    <tr><td>/api/v1/ingest/push</td><td>POST</td><td>工作台推送 chunk 入库</td></tr>
+    <tr><td>/api/v1/retrieve</td><td>POST</td><td>混合检索（domain、mode=hybrid 等）</td></tr>
+    <tr><td>/api/v1/schema/init</td><td>POST</td><td>初始化 Doris 表结构（首次部署）</td></tr>
+    <tr><td>/api/v1/attachments/list</td><td>GET</td><td>附件清单（按 scene 过滤）</td></tr>
+  </table>
+  <p class="note">公网基址示例：<code>http://47.99.198.211:8890/health</code>。本机隧道模式下将主机改为 <code>127.0.0.1:8890</code> 即可。</p>
+</div>
+
+<div class="panel">
+  <h3>8.11 MCP 与 Dora 联调 <span class="badge b-out">不含 · 演示用</span></h3>
+  <p class="note">MCP 为 Dora 对话演示的接入协议，平台检索与问数能力已由 Worker API 与 FineBI 交付。以下配置仅供 PoC 验收演示。</p>
+  <table>
+    <tr><th>场景</th><th>演示用 MCP 地址</th><th>Skill 包</th></tr>
+    <tr>
+      <td>场景一 · 财务</td>
+      <td><code>http://47.99.198.211:8890/mcp</code></td>
+      <td>dora-scene1-finance-skill.zip</td>
+    </tr>
+    <tr>
+      <td>场景三 · 售后</td>
+      <td><code>http://47.99.198.211:8890/service-mcp</code></td>
+      <td>dora-scene3-service-skill.zip</td>
+    </tr>
+    <tr>
+      <td>飞书 Wiki（可选）</td>
+      <td><code>http://47.99.198.211:8890/feishu-mcp</code></td>
+      <td>—</td>
+    </tr>
+  </table>
+  <p>MCP 须配置 PoC ECS 公网地址；ECS 安全组放行 8890 入站，确保 Dora 云端可访问 MCP。</p>
+</div>
+
+<div class="panel">
+  <h3>8.12 环境检查</h3>
+  <table>
+    <tr><th>检查项</th><th>预期</th></tr>
+    <tr><td><code>GET /health</code>（8890）</td><td>status 为 ok，Doris chunk 约 285 条</td></tr>
+    <tr><td>Dora 对话</td><td><a href="https://dora-dev.fanruan.com/decision/dora/chat">dora-dev.fanruan.com</a> 可打开，场景一/三 Agent 可对话</td></tr>
+    <tr><td>FineBI</td><td><code>/webroot/decision</code> 可访问，分析主题可打开</td></tr>
+    <tr><td>FDL 控制台</td><td>同步任务可查看运行状态</td></tr>
+    <tr><td>MySQL / SelectDB</td><td>PoC 样例表与 chunk 索引可读</td></tr>
+    <tr><td>财务 / 售后 MCP</td><td>6 + 4 个工具可用</td></tr>
+    <tr><td>Dora 场景一 / 三</td><td>MCP 已绑定、Skill 已上传</td></tr>
+  </table>
+</div>
+
+<div class="footer">
+  联影 PoC 验证目标与方案说明 ·
+  <a href="poc-architecture.html" data-page="architecture">技术架构详页</a> ·
+  <a href="poc-status.html" data-page="status">进展汇总</a>
+</div>
+</div>
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose' });
+  if (window.POC_PATHS) POC_PATHS.bindPageLinks();
+
+  (function () {
+    var toggle = document.getElementById('sidebarToggle');
+    var closeBtn = document.getElementById('sidebarClose');
+    var sidebar = document.getElementById('sidebarNav');
+    var backdrop = document.getElementById('sidebarBackdrop');
+    var navLinks = document.querySelectorAll('.sidebar-link[data-nav]');
+
+    function openSidebar() {
+      sidebar.classList.add('open');
+      backdrop.classList.add('show');
+      document.body.classList.add('sidebar-open');
+      toggle.setAttribute('aria-expanded', 'true');
+      backdrop.setAttribute('aria-hidden', 'false');
+    }
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      backdrop.classList.remove('show');
+      document.body.classList.remove('sidebar-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      backdrop.setAttribute('aria-hidden', 'true');
+    }
+    toggle.addEventListener('click', function () {
+      sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+    });
+    closeBtn.addEventListener('click', closeSidebar);
+    backdrop.addEventListener('click', closeSidebar);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeSidebar();
+    });
+    navLinks.forEach(function (a) {
+      a.addEventListener('click', function () { closeSidebar(); });
+    });
+
+    var sections = Array.from(navLinks).map(function (a) {
+      var id = a.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      return el ? { link: a, el: el } : null;
+    }).filter(Boolean);
+
+    function setActive() {
+      var y = window.scrollY + 80;
+      var current = sections[0];
+      sections.forEach(function (s) {
+        if (s.el.offsetTop <= y) current = s;
+      });
+      navLinks.forEach(function (a) { a.classList.remove('active'); });
+      if (current) current.link.classList.add('active');
+    }
+    window.addEventListener('scroll', setActive, { passive: true });
+    setActive();
+  })();
+</script>
+</body>
+</html>

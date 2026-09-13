@@ -1,0 +1,1122 @@
+#!/usr/bin/env python3
+"""实时调用 MOSS MCP 舆情搜索，组装 CEO 看板情报包（不依赖本地 JSON 包）。"""
+
+from __future__ import annotations
+
+import json
+import os
+import re
+import sys
+import time
+import urllib.error
+import urllib.request
+from datetime import datetime, timezone, timedelta
+from pathlib import Path
+from typing import Any
+
+# 情报质量闸门与本文件同级，且需在任意工作目录下都能解析
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from intel_gate import (  # noqa: E402  全部演示包共用同一份闸门实现
+    CLICKBAIT,
+    body_fingerprint,
+    clean_title,
+    compact_text,
+    gate_reject_reason,
+    passes_intel_gate,
+)
+
+TZ_SH = timezone(timedelta(hours=8))
+
+
+def _moss_timeout() -> float:
+    """单次 MOSS 请求超时；演示现场宁可少几条，也不能让人干等。"""
+    try:
+        return max(8.0, float(os.environ.get("MOSS_TIMEOUT", "30")))
+    except ValueError:
+        return 30.0
+
+
+def _refresh_budget() -> float:
+    """一次刷新的总预算；到点就用已拿到的条目返回，其余由精选基线补齐。"""
+    try:
+        return max(10.0, float(os.environ.get("MOSS_REFRESH_BUDGET", "40")))
+    except ValueError:
+        return 40.0
+
+TOPIC_QUERIES = [
+    {
+        "topic_id": "BR-POL",
+        "label": "政策与监管",
+        "must_kw": "半导体,算力",
+        "should_kw": "出口管制,国产化,信创,采购,补贴",
+        "not_kw": "招聘,校园,晾衣架,超话,抽奖",
+    },
+    {
+        "topic_id": "BR-CMP",
+        "label": "竞品雷达",
+        "must_kw": "GPU,芯片",
+        "should_kw": "英伟达,NVIDIA,昇腾,寒武纪,摩尔线程,DeepSeek,海光",
+        "not_kw": "招聘,超话,抽奖",
+    },
+    {
+        "topic_id": "BR-IND",
+        "label": "产业链",
+        "must_kw": "算力,半导体",
+        "should_kw": "算电协同,智算中心,封测,DPU,HBM",
+        "not_kw": "招聘,超话,抽奖",
+    },
+    {
+        "topic_id": "BR-CUS",
+        "label": "客户动态",
+        "must_kw": "算力,GPU",
+        "should_kw": "阿里云,字节跳动,腾讯,百度智能云,大模型",
+        "not_kw": "招聘,超话",
+    },
+    {
+        "topic_id": "BR-SEN",
+        "label": "舆情与品牌",
+        "keyword": "壁仞",
+    },
+]
+
+RELEVANCE = re.compile(
+    r"GPU|算力|芯片|半导体|英伟达|NVIDIA|昇腾|寒武纪|摩尔线程|海光|天数|壁仞|Biren|BR100|"
+    r"智算|大模型|AI服务器|封测|HBM|DPU|澜起|出口管制|国产化|信创|智算中心|推理|训练|"
+    r"算电协同|WAIC|DeepSeek|腾讯混元|华为|阿里云|字节",
+    re.I,
+)
+# 纯政务会见/座谈：无产业关键词则不进 CEO 简报
+POLITICAL_MEETING = re.compile(r"座谈|会见|调研|考察|走访|接见|一行到", re.I)
+INDUSTRY_SIGNAL = re.compile(
+    r"算力|GPU|芯片|半导体|信创|国产化|集采|招标|出口管制|实体清单|"
+    r"智算|大模型|封测|HBM|英伟达|昇腾|壁仞|Biren",
+    re.I,
+)
+NOISE = re.compile(
+    r"晾衣架|笔记本.*排行|玉米和竹子|折叠晾衣|比人官方|回复@|体材料设|"
+    r"超话|朱志鑫|南孚|粉丝|打卡|抽奖|#22x|一路向海|"
+    r"净流入|主力资金|完整行情分析.*不含投资建议|"
+    r"单[\s\S]{0,6}双[\s\S]{0,6}大[\s\S]{0,6}小|计[\s\S]{0,4}划[\s\S]{0,4}官[\s\S]{0,4}网|"
+    r"非凡第一|代办申请|一人公司|OPC注册|专杀|大笑|"
+    r"４|𝟱|𝗳|𝗰|"
+    r"妻子的暧昧|言情|小说连载|短篇故事",
+    re.I,
+)
+# 纯行情/极短快讯：信息密度低，CEO 经营简报不收录
+THIN_FLASH = re.compile(
+    r"AI快讯|每经AI|财联社AI|快讯[:：]|盘中[涨跌]|港股[涨跌]|A股[涨跌]|"
+    r"(股价|港股|A股|收盘|开盘).{0,12}(涨|跌|跳水|拉升)\d+(\.\d+)?%|"
+    r"(涨|跌)\d+(\.\d+)?%.{0,8}(报|至|至报)?.{0,6}\d+(\.\d+)?\s*港?元|"
+    r"报\d+(\.\d+)?\s*港?元|"
+    r"收报\d+|现报\d+|最新价",
+    re.I,
+)
+CAPITAL = re.compile(
+    r"股价|跌超|涨超|06082|配售|解禁|二级市场|目标价|增持|回购|"
+    r"港股跌|港股涨|(股价|港股|A股|收盘).{0,10}(涨|跌|跳水|市值)\d|"
+    r"报\d+(\.\d+)?港元|流通盘|折让|分析师.*评级|"
+    r"(涨|跌)\d+(\.\d+)?%.{0,12}港元",
+    re.I,
+)
+SOCIAL_HOST = re.compile(
+    r"xueqiu\.com|weibo\.com|toutiao\.com|jianshu\.com|zhihu\.com|"
+    r"douyin\.com|iesdouyin\.com|baijiahao\.baidu\.com|mp\.weixin\.qq\.com",
+    re.I,
+)
+# 硬过滤平台：社交行情/短视频/百度落地页/博客二手，不进 CEO 简报
+SOCIAL_HARD = re.compile(
+    r"xueqiu\.com|weibo\.com|douyin\.com|iesdouyin\.com|baijiahao\.baidu\.com|"
+    r"mbd\.baidu\.com|blog\.csdn\.net|toutiao\.com",
+    re.I,
+)
+# 门户/聚合/自媒体：默认为低权威，不得标「高影响」
+SOURCE_TABLOID = re.compile(
+    r"sohu\.com|sina\.com\.cn|qq\.com|163\.com|ifeng\.com|"
+    r"yoojia|toutiao\.com|jianshu\.com|百家号|网易号|搜狐号|大鱼号|"
+    r"qsina|jfinfo|东方财富网?股吧",
+    re.I,
+)
+SOURCE_AGGREGATOR = re.compile(
+    r"yoojia\.baidu|baidu\.com/.*/app|news\.baidu|hao123|mbd\.baidu|"
+    r"blog\.csdn\.net|今日头条|一点资讯|ZAKER",
+    re.I,
+)
+
+GENERIC_RELEVANCE = "与壁仞经营环境相关，建议纳入外部情报简报。"
+
+BIREN_MAP = [
+    # 禁止裸「采购」误伤 CDU/厂家软文；必须带算力采购语义
+    (r"(算力|GPU|芯片).{0,6}(招标|采购|集采|中标)|(招标|集采|中标).{0,8}(算力|GPU|智算)", "算力采购信号活跃，建议销售侧跟踪相关客户招标与 POC 进展。"),
+    (r"智算中心|智算基建|算力基建", "智算基建扩张拉动 GPU 集群需求，关注区域集采与 POC 节奏。"),
+    (r"推理|Agent|智能体", "推理算力需求结构变化，关注客户整机配置与推理卡出货节奏。"),
+    (r"训练|大模型|LLM", "训练算力投入持续，关注头部客户扩容与国产集群替换窗口。"),
+    (r"澜起", "AI服务器内存互连芯片需求上升，关注客户整机配置变化对 GPU 出货节奏的影响。"),
+    (r"封测|先进封装|CoWoS", "封测产能分化影响国产 GPU 交付兑现，需核对 Q3 封测排期。"),
+    (r"DPU|网卡|RDMA", "算力集群网络瓶颈凸显，可强化 GPU+DPU 协同方案叙事。"),
+    (r"算电协同|算力券|能耗|能效|TCO", "智算中心能耗约束趋严，客户采购将更看重能效与 TCO 指标。"),
+    (r"出口管制|实体清单|BIS|EAR", "出口与管制博弈持续，国产替代窗口仍在，需同步合规口径。"),
+    (r"信创|国产化", "国产化采购导向强化，关注信创目录与客户合规选型变化。"),
+    (r"DeepSeek|自研芯片|造芯", "大模型厂商自研芯片趋强，需巩固外部客户份额与混合场景合作。"),
+    (r"WAIC|世界人工智能大会", "推理与 Agent 落地加速，WAIC 前后推理卡商务机会增多。"),
+    (r"昇腾|华为|寒武纪|摩尔线程|海光|天数|燧原|沐曦", "竞品生态扩张压制同档议价空间，需更新对标矩阵与报价策略。"),
+    (r"英伟达|NVIDIA|H100|B200|Blackwell", "英伟达平台升级抬升集群成本，利好国产性价比叙事。"),
+    (r"壁仞|Biren|BR100|BR104", "品牌相关舆情，经营侧保持交付与客户节奏沟通，IR 聚焦经营兑现。"),
+    (r"腾讯|混元|百度智能云|文心", "云侧推理需求旺盛，关注算力扩容招标窗口。"),
+    (r"阿里云|字节跳动|字节", "头部云厂商算力扩张，关注 POC 与集采节奏。"),
+    (r"HBM|内存|美光|存储", "存储互连与 HBM 供给影响 AI 服务器配置，关注客户 BOM 变化。"),
+    (r"IPO|上市|配售|港股", "资本市场热度上升，经营侧保持交付叙事聚焦，避免噪音干扰商务节奏。"),
+    (r"光刻|刻蚀|EDA|设备", "上游设备与工艺波动可能传导至产能与成本，关注供应链风险。"),
+]
+
+# 来源可信度：高 / 中 / 低
+SOURCE_HIGH = re.compile(
+    r"新华社|人民日报|人民网|央视|中央社|工信部|发改委|财政部|科技部|证监会|"
+    r"证券时报|上海证券报|中国证券报|经济日报|科技日报|财新|第一财经|界面|"
+    r"华尔街见闻|路透|Reuters|Bloomberg|彭博|FT|Financial Times|"
+    r"SEMI|集微网|芯智讯|电子工程专辑|半导体行业观察|"
+    r"people\.com\.cn|people\.cn|xinhuanet\.com|news\.cn|cctv\.com",
+    re.I,
+)
+SOURCE_MED = re.compile(
+    r"36氪|钛媒体|虎嗅|爱范儿|澎湃|观察者|新浪科技|网易科技|腾讯科技|"
+    r"机器之心|量子位|雷锋网|InfoQ|CSDN|知乎|微信|公众号|"
+    r"EETimes|AnandTech|Tom'?s Hardware|Digitimes",
+    re.I,
+)
+SOURCE_LOW = re.compile(
+    r"头条|简书|百家号|微博|超话|抖音|快手|贴吧|知乎盐选|自媒体|"
+    r"雪球|港股第一眼|AI快讯|每经AI|财联社AI|搜狐|新浪博客|网易号|大鱼号",
+    re.I,
+)
+
+TOPIC_PREFIX = {
+    "BR-POL": "POL",
+    "BR-SEN": "SEN",
+    "BR-CMP": "CMP",
+    "BR-IND": "IND",
+    "BR-CUS": "CUS",
+}
+
+
+def now_iso() -> str:
+    return datetime.now(TZ_SH).isoformat(timespec="seconds")
+
+
+def load_moss_auth() -> tuple[str, str]:
+    url = os.environ.get("MOSS_MCP_URL", "").strip()
+    token = os.environ.get("MOSS_MCP_TOKEN", "").strip()
+    if url and token:
+        auth = token if token.lower().startswith("bearer ") else f"Bearer {token}"
+        return url, auth
+
+    mcp_path = Path.home() / ".cursor" / "mcp.json"
+    if mcp_path.exists():
+        cfg = json.loads(mcp_path.read_text(encoding="utf-8"))
+        moss = (cfg.get("mcpServers") or {}).get("moss") or {}
+        url = (moss.get("url") or "").strip()
+        headers = moss.get("headers") or {}
+        auth = (headers.get("Authorization") or "").strip()
+        if url and auth:
+            return url, auth
+
+    raise RuntimeError(
+        "未配置 MOSS 凭证。请设置环境变量 MOSS_MCP_URL / MOSS_MCP_TOKEN，"
+        "或在 ~/.cursor/mcp.json 配置 moss HTTP MCP。"
+    )
+
+
+def mcp_tools_call(url: str, auth: str, name: str, arguments: dict[str, Any], req_id: int = 1) -> dict[str, Any]:
+    body = {
+        "jsonrpc": "2.0",
+        "id": req_id,
+        "method": "tools/call",
+        "params": {"name": name, "arguments": arguments},
+    }
+    req = urllib.request.Request(
+        url,
+        data=json.dumps(body).encode("utf-8"),
+        method="POST",
+        headers={
+            "Authorization": auth,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+    )
+    with urllib.request.urlopen(req, timeout=_moss_timeout()) as resp:
+        payload = json.loads(resp.read().decode("utf-8"))
+    if "error" in payload:
+        raise RuntimeError(payload["error"])
+    result = payload.get("result") or {}
+    # content[0].text may be JSON string
+    content = result.get("content") or []
+    if content and content[0].get("type") == "text":
+        text = content[0].get("text") or ""
+        try:
+            return json.loads(text)
+        except json.JSONDecodeError:
+            return {"raw_text": text, "status": "ok"}
+    if "structuredContent" in result:
+        return result["structuredContent"]
+    return result
+
+
+def epoch_to_iso(ts: Any) -> str:
+    if not ts:
+        return now_iso()
+    try:
+        n = int(ts)
+        if n > 1e12:
+            n //= 1000
+        return datetime.fromtimestamp(n, TZ_SH).isoformat(timespec="seconds")
+    except (TypeError, ValueError, OSError):
+        return now_iso()
+
+
+def first_sentence(text: str, limit: int = 220) -> str:
+    text = re.sub(r"\s+", " ", text or "").strip()
+    if not text:
+        return ""
+    parts = re.split(r"[。！？\n]", text)
+    s = (parts[0] or "").strip()
+    if len(s) < 40 and len(parts) > 1:
+        s = (s + "。" + parts[1]).strip()
+    return s[:limit] + ("…" if len(s) > limit else "")
+
+
+def is_thin_content(title: str, summary: str, full_content: str = "") -> bool:
+    """信息过简：行情快讯、转发摘录、几乎无事实展开。"""
+    title = (title or "").strip()
+    body = (full_content or summary or "").strip()
+    body = re.sub(r"\s+", " ", body)
+    blob = f"{title} {body}"
+    if THIN_FLASH.search(blob):
+        return True
+    # 标题即行情句，且正文没有展开
+    if re.search(r"(港股|股价|报\d).{0,20}(涨|跌)\d+(\.\d+)?%", title) and len(body) < 120:
+        return True
+    if 0 < len(body) < 18:
+        return True
+    # 纯报价短讯
+    if CAPITAL.search(blob) and len(body) < 90 and not re.search(
+        r"原因|影响|客户|交付|产能|招标|政策|管制|封测|推理|训练|订单|替代|国产",
+        blob,
+        re.I,
+    ):
+        return True
+    return False
+
+
+def is_quality(
+    title: str,
+    summary: str,
+    source_name: str = "",
+    url: str = "",
+    full_content: str = "",
+) -> bool:
+    title = clean_title(title)
+    head = f"{title} {summary}"
+    blob = f"{head} {full_content}"
+
+    # 共享闸门：拆字规避、赌博引流、内容农场塞词、来源残缺、政务会见等
+    if not passes_intel_gate(title, summary, source_name, url, full_content):
+        return False
+    if NOISE.search(blob) or NOISE.search(title):
+        return False
+
+    body = (full_content or summary or "").strip()
+    if is_thin_content(title, summary, body):
+        return False
+
+    host = host_from_url(url)
+    source_blob = f"{source_name} {url} {host}"
+    hard_social = bool(SOCIAL_HARD.search(url or "") or SOCIAL_HARD.search(host))
+    trash_source = bool(
+        re.search(
+            r"雪球|微博|抖音|快手|百家号|港股第一眼|AI快讯|每经AI|财联社AI",
+            source_name or "",
+            re.I,
+        )
+    )
+    tabloid = bool(SOURCE_TABLOID.search(source_blob) or SOURCE_AGGREGATOR.search(source_blob))
+
+    # 社交/短视频二手：硬拒
+    if hard_social or trash_source:
+        return False
+    # 门户/聚合：标题须有明确产业实体，且正文不能过短
+    if tabloid and (
+        len(body) < 120
+        or not re.search(
+            r"壁仞|Biren|英伟达|NVIDIA|昇腾|寒武纪|出口管制|实体清单|BIS|集采|信创|封测|HBM|智算",
+            head,
+            re.I,
+        )
+    ):
+        return False
+    return True
+
+
+def infer_source_tier(source_name: str, url: str = "") -> str:
+    blob = f"{source_name} {url}"
+    if SOURCE_HIGH.search(blob):
+        return "official"
+    if SOURCE_TABLOID.search(blob) or SOURCE_AGGREGATOR.search(blob) or SOURCE_LOW.search(blob):
+        return "tabloid"
+    if SOURCE_MED.search(blob):
+        return "trade"
+    if SOCIAL_HOST.search(blob) or SOCIAL_HARD.search(blob):
+        return "tabloid"
+    if host_from_url(url):
+        return "unknown"
+    return "unknown"
+
+
+def is_generic_relevance(text: str) -> bool:
+    t = (text or "").strip()
+    if not t:
+        return True
+    return t == GENERIC_RELEVANCE or "建议纳入外部情报简报" in t
+
+
+def short_title_phrase(title: str, max_len: int = 20) -> str:
+    t = re.sub(r"[「」【】\[\]（）()《》\"'“”]", "", (title or "").strip())
+    t = re.sub(r"\s+", " ", t)
+    if len(t) <= max_len:
+        return t
+    return t[: max_len - 1] + "…"
+
+
+def relevance_from_summary(summary: str) -> str:
+    clause = first_sentence(summary or "", 72).strip("。；， ")
+    if len(clause) < 12:
+        return ""
+    if re.search(r"大家好|点赞|关注|不做股票推荐|热卖|卷首语", clause):
+        return ""
+    return f"报道指向{clause}，建议纳入本周客户沟通与方案对标。"
+
+
+def infer_relevance(
+    title: str,
+    summary: str,
+    topic: str = "",
+    profile: dict[str, Any] | None = None,
+) -> str:
+    blob = title + summary
+    for pattern, rel in BIREN_MAP:
+        if re.search(pattern, blob, re.I):
+            return rel
+
+    prof = profile or infer_impact_profile(title, summary, topic)
+    impact_type = prof.get("impact_type") or "context"
+    phrase = short_title_phrase(title)
+
+    topic_impact_templates: dict[tuple[str, str], str] = {
+        ("direct", "BR-POL"): "监管政策直接牵动国产算力合规与出货，需法务与销售同步研判。",
+        ("direct", "BR-CMP"): "竞品动作直指壁仞客户选型，建议当日更新对标方案与商务口径。",
+        ("opportunity", "BR-CUS"): "头部客户算力布局出现扩容信号，建议销售跟踪 POC 与集采窗口。",
+        ("opportunity", "BR-POL"): "政策与补贴导向可能打开算力采购窗口，关注区域集采与能效门槛。",
+        ("competitor", "BR-CMP"): "竞品节奏抬升客户对比维度，需刷新性能/能效/交付三维对标。",
+        ("chain", "BR-IND"): "产业链波动可能传导至封测与整机交付，需核对关键物料与产能排期。",
+        ("context", "BR-IND"): "产业链供需信号变化，关注是否影响 GPU 集群成本与客户 TCO。",
+        ("context", "BR-CUS"): "客户侧算力投入节奏调整，关注是否带来替换或扩容机会。",
+        ("context", "BR-CMP"): "竞品生态与产品节奏变化，需评估对壁仞议价与客户留存的影响。",
+        ("context", "BR-SEN"): "行业舆情热度上升，经营侧保持交付叙事聚焦，避免二级市场噪音干扰商务。",
+    }
+    # BR-POL 的 context 不得默认写成「算力采购门槛」；须标题/摘要真有产业政策词
+    if impact_type == "context" and topic == "BR-POL":
+        if INDUSTRY_SIGNAL.search(blob):
+            return (
+                f"「{phrase}」：涉半导体/算力政策信号，建议核对是否影响国产算力采购与合规口径。"
+                if phrase
+                else "涉半导体/算力政策信号，建议核对是否影响国产算力采购与合规口径。"
+            )
+        return (
+            f"「{phrase}」：属政务会见/区域动态，与壁仞直接经营关联弱，建议仅作背景观察。"
+            if phrase
+            else "属政务会见/区域动态，与壁仞直接经营关联弱，建议仅作背景观察。"
+        )
+    tpl = topic_impact_templates.get((impact_type, topic))
+    if tpl:
+        return f"「{phrase}」：{tpl}" if phrase else tpl
+
+    impact_only = {
+        "direct": "对壁仞形成直接经营影响，建议相关部门当日评估应对节奏。",
+        "opportunity": "存在算力采购或合作窗口，建议销售跟踪招标/POC 并评估切入时机。",
+        "chain": "上下游波动可能传导至交付兑现，需核对封测排期与关键物料。",
+        "competitor": "竞品压力抬升客户选型对比，建议更新对标矩阵与报价策略。",
+        "context": "外部环境变化需持续跟踪，建议纳入本周经营情报复盘。",
+    }
+    base = impact_only.get(impact_type, impact_only["context"])
+    from_summary = relevance_from_summary(summary)
+    if from_summary and len(from_summary) > 20:
+        return from_summary
+    return f"「{phrase}」：{base}" if phrase else base
+
+
+def host_from_url(url: str) -> str:
+    if not url:
+        return ""
+    m = re.search(r"https?://(?:www\.)?([^/]+)", url, re.I)
+    return (m.group(1) if m else "").lower()
+
+
+def normalize_source_name(raw: str, url: str = "") -> str:
+    name = re.sub(r"\s+", " ", (raw or "").strip())
+    host = host_from_url(url)
+    host_map = {
+        "jiemian.com": "界面新闻",
+        "caixin.com": "财新",
+        "yicai.com": "第一财经",
+        "wallstreetcn.com": "华尔街见闻",
+        "36kr.com": "36氪",
+        "jiqizhixin.com": "机器之心",
+        "qbitai.com": "量子位",
+        "eet-china.com": "电子工程专辑",
+        "laoyaoba.com": "集微网",
+        "semiinsights.com": "芯智讯",
+        "thepaper.cn": "澎湃新闻",
+        "reuters.com": "路透",
+        "bloomberg.com": "彭博",
+        "toutiao.com": "今日头条",
+        "jianshu.com": "简书",
+        "mp.weixin.qq.com": "微信公众号",
+        "xueqiu.com": "雪球",
+        "weibo.com": "微博",
+        "nbd.com.cn": "每日经济新闻",
+        "people.com.cn": "人民网",
+        "people.cn": "人民网",
+        "xinhuanet.com": "新华网",
+        "news.cn": "新华网",
+        "cctv.com": "央视网",
+        "yoojia.baidu.com": "百度有驾聚合",
+        "gov.cn": "政务公开",
+    }
+    for key, label in host_map.items():
+        if key in host:
+            # 域名可识别时优先标准名，避免 whly/yoojia 这类残缺源名
+            if (not name) or name.lower() in ("行业媒体", "未知来源", "未知", "null", "whly", "yoojia", "sohu") or len(name) <= 6:
+                return label
+            # 人民网等权威域名强制标准名
+            if key in ("people.com.cn", "people.cn", "xinhuanet.com", "news.cn", "cctv.com", "caixin.com"):
+                return label
+    if name and name not in ("行业媒体", "未知来源", "未知", "null"):
+        return name[:32]
+    if host:
+        return host.split(".")[0][:24]
+    return "行业媒体"
+
+
+def infer_confidence(source_name: str, url: str = "") -> dict[str, str]:
+    tier = infer_source_tier(source_name, url)
+    if tier == "official":
+        return {"confidence": "high", "confidence_label": "高", "source_tier": tier}
+    if tier == "trade":
+        return {"confidence": "medium", "confidence_label": "中", "source_tier": tier}
+    # 门户/聚合/未知域名：一律低置信，防止搜狐类默认「中」后上桌
+    return {"confidence": "low", "confidence_label": "低", "source_tier": tier}
+
+
+def infer_impact_profile(
+    title: str,
+    summary: str,
+    topic: str,
+    *,
+    source_tier: str = "unknown",
+    confidence: str = "medium",
+) -> dict[str, Any]:
+    """按对壁仞的影响类型打标并给出排序分。高影响必须过权威门槛。"""
+    blob = title + summary
+    tags: list[str] = []
+
+    # 「制裁」单独出现不够；须配合出口管制实体/壁仞自身事件，且来源够权威
+    biren_hit = bool(re.search(r"壁仞|Biren|BR10[04]", blob, re.I))
+    biren_event = bool(re.search(
+        r"成立|注册资本|中标|丢标|签约|合作|发布|量产|投产|出货|交付|流片|适配|"
+        r"融资|获投|搬迁|扩产|任命|诉讼|裁员",
+        title,
+        re.I,
+    ))
+    policy_hit = bool(re.search(
+        r"出口管制|实体清单|BIS|EAR|国产替代|信创目录|集采中标|丢标|"
+        r"客户切换|替换英伟达|替换昇腾",
+        blob,
+        re.I,
+    ))
+    firm_direct = policy_hit or (biren_hit and biren_event)
+    weak_sanction = bool(re.search(r"制裁", blob, re.I)) and not firm_direct
+    authority_ok = source_tier in ("official", "trade") and confidence in ("high", "medium")
+    direct = firm_direct and (authority_ok or (biren_hit and biren_event))
+    if weak_sanction and not authority_ok:
+        direct = False
+
+    opportunity = bool(re.search(
+        r"(算力|GPU|芯片|智算).{0,8}(招标|采购|集采|中标|扩容|POC)|"
+        r"(招标|集采|中标).{0,8}(算力|GPU|智算)|"
+        r"推理卡|推理需求|Agent落地|WAIC|算电协同|能效招标|TCO",
+        blob,
+        re.I,
+    ))
+    upstream = bool(re.search(
+        r"封测|HBM|先进封装|光刻|刻蚀|EDA|设备|晶圆|CoWoS|基板",
+        blob,
+        re.I,
+    ))
+    downstream = bool(re.search(
+        r"智算中心|AI服务器|整机|机柜|集群|云厂商|阿里云|字节|腾讯云|百度智能云",
+        blob,
+        re.I,
+    ))
+    competitor = bool(re.search(
+        r"英伟达|NVIDIA|昇腾|寒武纪|摩尔线程|海光|天数|Meta.*芯片|自研芯片|Iris",
+        blob,
+        re.I,
+    )) or topic == "BR-CMP"
+
+    if direct:
+        impact_type, impact_label = "direct", "直接影响"
+        tags.append("直接影响")
+        level, score = "high", 92
+    elif opportunity:
+        impact_type, impact_label = "opportunity", "新机会"
+        tags.append("新机会")
+        level, score = ("high" if topic in ("BR-CUS", "BR-POL") and authority_ok else "medium"), 84
+    elif upstream or downstream:
+        impact_type, impact_label = "chain", "上下游"
+        tags.append("上游" if upstream else "下游")
+        if upstream and downstream:
+            tags = ["上游", "下游"]
+        level, score = "medium", 72
+    elif competitor:
+        impact_type, impact_label = "competitor", "竞品压力"
+        tags.append("竞品压力")
+        level, score = ("high" if authority_ok and re.search(r"昇腾|自研芯片|替代", blob, re.I) else "medium"), 68
+    else:
+        impact_type, impact_label = "context", "环境观察"
+        tags.append("环境观察")
+        level, score = ("low" if topic == "BR-SEN" else "medium"), 48
+
+    # 政策/客户主题整体上调（但不突破权威门槛）
+    if topic == "BR-POL" and level != "high":
+        score += 8
+    if topic == "BR-CUS" and opportunity:
+        score += 6
+    if topic == "BR-SEN" and not (direct and confidence == "high"):
+        level, score = "low", min(score, 40)
+    # 仅点名壁仞、无可核对事件：压低推荐分
+    if biren_hit and not direct:
+        score = min(score, 36)
+        level = "low"
+
+    # 低权威来源：禁止 high
+    if source_tier in ("tabloid", "unknown", "aggregator") and level == "high":
+        level, score = "medium", min(score, 58)
+        if impact_type == "direct":
+            impact_type, impact_label = "context", "环境观察"
+            tags = [t for t in tags if t != "直接影响"] + ["环境观察"]
+
+    return {
+        "impact_level": level,
+        "impact_type": impact_type,
+        "impact_label": impact_label,
+        "priority_score": score,
+        "type_tags": tags,
+    }
+
+
+def apply_ceo_desk_policy(item: dict[str, Any]) -> dict[str, Any]:
+    """CEO 桌面准入：标题党/低权威高影响 → 舆情噪声，不得进入今日关注。"""
+    title = item.get("title") or ""
+    source_name = item.get("source_name") or ""
+    url = item.get("source_url") or ""
+    tier = item.get("source_tier") or infer_source_tier(source_name, url)
+    conf = item.get("confidence") or "low"
+    clickbait = bool(CLICKBAIT.search(title))
+    tabloid = tier in ("tabloid", "aggregator", "unknown")
+
+    # 默认：高影响必须高置信；门户/未知源默认不上桌
+    desk_ok = True
+    if clickbait:
+        desk_ok = False
+    if conf != "high" and item.get("impact_level") == "high":
+        desk_ok = False
+    if tabloid and conf != "high":
+        desk_ok = False
+
+    item["source_tier"] = tier
+    item["desk_eligible"] = desk_ok
+
+    # 标题党或低权威蹭「制裁」类：降为舆情噪声
+    if clickbait or (tabloid and conf == "low" and (
+        clickbait
+        or re.search(r"制裁|完蛋|狂飙|曝光", title)
+        or item.get("impact_label") == "直接影响"
+    )):
+        item["impact_level"] = "low"
+        item["impact_type"] = "noise"
+        item["impact_label"] = "舆情噪声"
+        item["priority_score"] = min(int(item.get("priority_score") or 0), 28)
+        tags = [t for t in (item.get("tags") or []) if t not in ("直接影响", "新机会")]
+        item["tags"] = list(dict.fromkeys(["舆情噪声", *tags]))[:5]
+        item["desk_eligible"] = False
+        item["biren_relevance"] = "来源或标题不符合 CEO 简报标准，已降为舆情噪声，仅供可选浏览。"
+    elif not desk_ok and item.get("impact_level") == "high":
+        item["impact_level"] = "medium"
+        item["priority_score"] = min(int(item.get("priority_score") or 0), 55)
+        if item.get("impact_label") == "直接影响":
+            item["impact_type"] = "context"
+            item["impact_label"] = "环境观察"
+            item["tags"] = [t for t in (item.get("tags") or []) if t != "直接影响"] + ["环境观察"]
+        item["desk_eligible"] = False
+    return item
+
+
+def infer_tags(title: str, summary: str, topic: str, type_tags: list[str] | None = None) -> list[str]:
+    blob = title + summary
+    tags: list[str] = list(type_tags or [])
+    mapping = [
+        (r"出口|管制|制裁", "出口管制"),
+        (r"国产化|信创|国产替代", "国产化"),
+        (r"(算力|GPU|芯片).{0,6}(招标|采购|集采|中标)|(招标|集采|中标).{0,8}(算力|GPU|智算)", "算力采购"),
+        (r"推理", "推理场景"),
+        (r"训练|大模型", "大模型"),
+        (r"封测|先进封装|CoWoS", "封测上游"),
+        (r"HBM|内存|互连", "存储互连"),
+        (r"DPU|网络|集群", "集群网络"),
+        (r"能效|算电|功耗", "能效约束"),
+        (r"舆情|股价|配售", "品牌舆情"),
+        (r"英伟达|NVIDIA|昇腾|寒武纪|摩尔线程", "竞品对标"),
+        (r"阿里云|字节|腾讯|百度", "头部客户"),
+    ]
+    for pat, tag in mapping:
+        if re.search(pat, blob, re.I) and tag not in tags:
+            tags.append(tag)
+    if len(tags) <= 1:
+        fallback = {
+            "BR-POL": "政策监管",
+            "BR-CMP": "竞品雷达",
+            "BR-IND": "产业链",
+            "BR-CUS": "客户动态",
+            "BR-SEN": "舆情品牌",
+        }.get(topic)
+        if fallback and fallback not in tags:
+            tags.append(fallback)
+    return tags[:5]
+
+
+def infer_impact(title: str, summary: str, topic: str) -> str:
+    return infer_impact_profile(title, summary, topic)["impact_level"]
+
+
+def extract_rows_from_moss(payload: dict[str, Any], topic_id: str) -> list[dict[str, Any]]:
+    data = payload.get("data") or {}
+    result = data.get("result") or payload.get("result") or []
+    rows: list[dict[str, Any]] = []
+    for raw in result:
+        d = raw.get("data") or raw
+        title = (d.get("title") or "").strip()
+        content = (d.get("content") or "").strip()
+        if not title and content:
+            title = first_sentence(content, 80)
+        title = clean_title(title)
+        if len(title) > 100:
+            title = title[:97] + "…"
+        summary = first_sentence(content or title, 240)
+        url = (d.get("url") or d.get("source_url") or "").strip()
+        source = normalize_source_name(
+            d.get("website")
+            or d.get("source")
+            or d.get("media_name")
+            or d.get("user_name")
+            or "",
+            url,
+        )
+        if not title or not is_quality(title, summary, source, url, full_content=content):
+            continue
+        rows.append(
+            {
+                "topic_id": topic_id,
+                "title": title,
+                "summary": summary,
+                "source_name": source,
+                "source_url": url,
+                "published_at": epoch_to_iso(d.get("ctime") or d.get("publish_time") or d.get("gather_ctime")),
+            }
+        )
+    return rows
+
+
+def _topic_gap() -> float:
+    """MOSS 舆情接口限流约 1 次/秒，主题间必须串行留间隙。"""
+    try:
+        return max(1.05, float(os.environ.get("MOSS_TOPIC_GAP", "1.15")))
+    except ValueError:
+        return 1.15
+
+
+def _is_rate_limited(payload: dict[str, Any] | Exception) -> bool:
+    if isinstance(payload, Exception):
+        text = str(payload)
+    else:
+        text = json.dumps(payload, ensure_ascii=False)
+    return (
+        "429" in text
+        or "api000010" in text
+        or "1次/1秒" in text
+        or ("超出" in text and "限制" in text)
+    )
+
+
+def _short_topic_error(topic_id: str, exc: Exception) -> str:
+    text = str(exc)
+    if _is_rate_limited(exc):
+        return f"{topic_id}: 接口限流（约 1 次/秒），已自动降速重试或跳过"
+    if len(text) > 120:
+        text = text[:117] + "…"
+    return f"{topic_id}: {text}"
+
+
+def search_topic(url: str, auth: str, query: dict[str, str], req_id: int) -> list[dict[str, Any]]:
+    arguments: dict[str, Any] = {
+        "days": 3,
+        "size": 20,
+        "source": ["news", "weixin"],
+        "sort": "ctime",
+    }
+    if query.get("keyword"):
+        arguments["keyword"] = query["keyword"]
+    if query.get("must_kw"):
+        arguments["must_kw"] = query["must_kw"]
+    if query.get("should_kw"):
+        arguments["should_kw"] = query["should_kw"]
+    if query.get("not_kw"):
+        arguments["not_kw"] = query["not_kw"]
+
+    last_exc: Exception | None = None
+    for attempt in range(3):
+        try:
+            payload = mcp_tools_call(
+                url,
+                auth,
+                "moss_public_opinion_search",
+                arguments,
+                req_id=req_id + attempt,
+            )
+            status = payload.get("status")
+            code = payload.get("code")
+            if status and status not in ("success", "ok"):
+                msg = payload.get("message") or payload.get("description") or status
+                if _is_rate_limited(payload) and attempt < 2:
+                    time.sleep(1.25 * (attempt + 1))
+                    continue
+                raise RuntimeError(f"{query['topic_id']} MOSS 返回 status={status}: {msg}")
+            if code not in (None, 0, "0", 200, "200") and status not in ("success", "ok"):
+                if (str(code) == "429" or _is_rate_limited(payload)) and attempt < 2:
+                    time.sleep(1.25 * (attempt + 1))
+                    continue
+                raise RuntimeError(f"{query['topic_id']} MOSS code={code}: {payload.get('message')}")
+            return extract_rows_from_moss(payload, query["topic_id"])
+        except Exception as exc:  # noqa: BLE001
+            last_exc = exc
+            if _is_rate_limited(exc) and attempt < 2:
+                time.sleep(1.25 * (attempt + 1))
+                continue
+            raise
+    raise last_exc or RuntimeError(f"{query['topic_id']} MOSS 调用失败")
+
+
+def to_pack_item(row: dict[str, Any], idx: int, collected_at: str) -> dict[str, Any]:
+    topic = row["topic_id"]
+    prefix = TOPIC_PREFIX.get(topic, "ITM")
+    day = datetime.now(TZ_SH).strftime("%Y%m%d")
+    title = row["title"]
+    summary = row["summary"]
+    source_name = normalize_source_name(row.get("source_name") or "", row.get("source_url") or "")
+    conf = infer_confidence(source_name, row.get("source_url") or "")
+    profile = infer_impact_profile(
+        title,
+        summary,
+        topic,
+        source_tier=conf.get("source_tier") or "unknown",
+        confidence=conf.get("confidence") or "low",
+    )
+    # 置信度强权重：权威发布显著靠前，低置信大幅后置
+    score = profile["priority_score"]
+    if conf["confidence"] == "high":
+        score += 22
+    elif conf["confidence"] == "medium":
+        score += 8
+    else:
+        score -= 28
+    # 纯行情类即使漏网也压到末尾
+    if CAPITAL.search(title + summary):
+        score -= 40
+
+    item = {
+        "topic_id": topic,
+        "item_id": f"{prefix}-{day}-{idx:02d}",
+        "title": title,
+        "summary": summary,
+        "source_name": source_name,
+        "source_url": row["source_url"],
+        "sources": [{"name": source_name, "url": row["source_url"]}] if row["source_url"] else [],
+        "published_at": row["published_at"],
+        "collected_at": collected_at,
+        "impact_level": profile["impact_level"],
+        "impact_type": profile["impact_type"],
+        "impact_label": profile["impact_label"],
+        "priority_score": score,
+        "confidence": conf["confidence"],
+        "confidence_label": conf["confidence_label"],
+        "source_tier": conf.get("source_tier") or "unknown",
+        "tags": infer_tags(title, summary, topic, profile["type_tags"]),
+        "related_metric_tags": [],
+        "biren_relevance": infer_relevance(title, summary, topic, profile),
+        "category": "external",
+    }
+    if CAPITAL.search(title + summary):
+        item["tags"] = list(dict.fromkeys([*(item["tags"] or []), "资本市场"]))
+    return apply_ceo_desk_policy(item)
+
+
+def split_packs(items: list[dict[str, Any]], refreshed_at: str) -> dict[str, Any]:
+    # CEO 桌面优先；噪声后置
+    ordered = sorted(
+        items,
+        key=lambda i: (
+            1 if i.get("desk_eligible", True) else 0,
+            i.get("priority_score") or 0,
+            {"high": 2, "medium": 1, "low": 0}.get(i.get("confidence"), 0),
+            i.get("published_at") or "",
+        ),
+        reverse=True,
+    )
+    desk = [i for i in ordered if i.get("desk_eligible", True) and i.get("impact_type") != "noise"]
+    pool = desk or ordered
+
+    morning_items = pool[0:8]
+    noon_items = pool[8:14]
+    evening_items = pool[0:16] if pool else []
+
+    def pack(bundle_type: str, bundle_id: str, pack_items: list[dict[str, Any]]) -> dict[str, Any]:
+        return {
+            "bundle_id": bundle_id,
+            "bundle_type": bundle_type,
+            "org": "biren",
+            "timezone": "Asia/Shanghai",
+            "generated_at": refreshed_at,
+            "client_refreshed_at": refreshed_at,
+            "source": "moss_live",
+            "items": pack_items,
+        }
+
+    day = datetime.now(TZ_SH).strftime("%Y%m%d-%H%M")
+    return {
+        "morning": pack("morning_pack", f"BIREN-MORNING-LIVE-{day}", morning_items),
+        "noon": pack("noon_delta", f"BIREN-NOON-LIVE-{day}", noon_items or morning_items[:4]),
+        "evening": pack("evening_pack", f"BIREN-EVENING-LIVE-{day}", evening_items or morning_items),
+    }
+
+
+def effective_relevance(item: dict[str, Any]) -> str:
+    rel = (item.get("biren_relevance") or "").strip()
+    if not is_generic_relevance(rel):
+        return rel
+    topic = item.get("topic_id") or ""
+    title = item.get("title") or ""
+    summary = item.get("summary") or ""
+    profile = {
+        "impact_type": item.get("impact_type"),
+        "impact_label": item.get("impact_label"),
+        "impact_level": item.get("impact_level"),
+    }
+    if not profile["impact_type"]:
+        profile = infer_impact_profile(title, summary, topic)
+    return infer_relevance(title, summary, topic, profile)
+
+
+def build_day_summary(items: list[dict[str, Any]]) -> dict[str, Any]:
+    desk_items = [
+        i for i in items
+        if i.get("desk_eligible", True) and i.get("impact_type") != "noise"
+    ]
+    ordered = sorted(desk_items or items, key=lambda i: i.get("priority_score") or 0, reverse=True)
+    top = ordered[:8]
+    tag_counts: dict[str, int] = {}
+    for item in top:
+        for tag in item.get("tags") or []:
+            if tag in ("环境观察", "舆情品牌", "政策监管", "舆情噪声"):
+                continue
+            tag_counts[tag] = tag_counts.get(tag, 0) + 1
+    themes = [k for k, _ in sorted(tag_counts.items(), key=lambda x: x[1], reverse=True)[:3]]
+    if themes:
+        headline = f"{'与'.join(themes[:2])}成外部热点" + (f"，{themes[2]}需同步跟踪" if len(themes) > 2 else "")
+    elif top:
+        headline = f"{short_title_phrase(top[0].get('title') or '外部情报', 24)}等议题值得 CEO 关注"
+    else:
+        headline = "外部经营环境平稳，建议浏览高影响情报条目"
+
+    high_impact = sum(
+        1
+        for i in desk_items
+        if i.get("impact_level") == "high" and i.get("confidence") == "high"
+    )
+    topics_covered = sorted({i.get("topic_id") for i in desk_items if i.get("topic_id")})
+    track_part = (
+        f" 重点跟踪{'、'.join(themes[:2])}。"
+        if themes
+        else " 建议优先浏览竞品与客户动态。"
+    )
+    bridge = f"今日共收录 {len(desk_items)} 条可上桌情报，高影响 {high_impact} 条。{track_part}"
+    signals = []
+    for item in top[:3]:
+        rel = effective_relevance(item)
+        short = short_title_phrase(item.get("title") or "", 22)
+        signals.append(f"{short}：{rel[:48]}{'…' if len(rel) > 48 else ''}")
+
+    return {
+        "headline": headline[:56],
+        "bridge": bridge[:120],
+        "high_impact_count": high_impact,
+        "topics_covered": topics_covered,
+        "external_signals": signals,
+    }
+
+
+def build_external_focus(items: list[dict[str, Any]], limit: int = 3) -> list[dict[str, str]]:
+    tag_map = {
+        "BR-POL": "政策",
+        "BR-CMP": "竞品",
+        "BR-IND": "产业",
+        "BR-CUS": "客户",
+        "BR-SEN": "舆情",
+    }
+    # 今日关注只取 CEO 桌面准入条目；禁止用噪声条目兜底
+    candidates = [
+        i for i in items
+        if i.get("desk_eligible", True)
+        and i.get("impact_type") != "noise"
+        and not CLICKBAIT.search(i.get("title") or "")
+    ]
+    ordered = sorted(
+        candidates,
+        key=lambda i: (
+            i.get("priority_score") or 0,
+            {"high": 2, "medium": 1, "low": 0}.get(i.get("impact_level"), 0),
+            {"high": 2, "medium": 1, "low": 0}.get(i.get("confidence"), 0),
+        ),
+        reverse=True,
+    )
+    out: list[dict[str, str]] = []
+    seen: set[str] = set()
+    for item in ordered:
+        title = re.sub(r"\s+", " ", item.get("title") or "").strip()
+        if not title:
+            continue
+        key = re.sub(r"\s+", "", title)[:18]
+        if key in seen:
+            continue
+        why = effective_relevance(item)
+        if is_generic_relevance(why):
+            continue
+        seen.add(key)
+        display_title = title[:27] + "…" if len(title) > 28 else title
+        if len(why) > 72:
+            why = why[:71] + "…"
+        out.append({
+            "tag": tag_map.get(item.get("topic_id"), "外部"),
+            "text": display_title,
+            "why": why,
+        })
+        if len(out) >= limit:
+            break
+    return out
+
+
+def refresh_intel_from_moss() -> dict[str, Any]:
+    url, auth = load_moss_auth()
+    refreshed_at = now_iso()
+    collected_at = refreshed_at
+    errors: list[str] = []
+    all_rows: list[dict[str, Any]] = []
+    seen_titles: set[str] = set()
+    seen_bodies: set[str] = set()
+    t0 = datetime.now(TZ_SH)
+
+    # MOSS 舆情限流约 1 次/秒：主题必须串行，禁止并行打满
+    gap = _topic_gap()
+    budget = _refresh_budget()
+    for idx, q in enumerate(TOPIC_QUERIES):
+        elapsed = (datetime.now(TZ_SH) - t0).total_seconds()
+        if elapsed >= budget - 2:
+            left = [x["topic_id"] for x in TOPIC_QUERIES[idx:]]
+            errors.append(f"超出 {int(budget)}s 刷新预算，未完成：{'、'.join(left)}")
+            break
+        if idx > 0:
+            time.sleep(gap)
+        try:
+            rows = search_topic(url, auth, q, idx + 1)
+            for row in rows:
+                key = re.sub(r"\s+", "", row["title"])[:40]
+                if key in seen_titles:
+                    continue
+                # 同一段正文被多个不同标题复用 = 内容农场批量灌页，只留首条
+                body_key = body_fingerprint(row.get("summary") or "")
+                if body_key and body_key in seen_bodies:
+                    continue
+                seen_titles.add(key)
+                if body_key:
+                    seen_bodies.add(body_key)
+                all_rows.append(row)
+        except Exception as exc:  # noqa: BLE001
+            errors.append(_short_topic_error(q["topic_id"], exc))
+
+    # 按发布时间倒序
+    all_rows.sort(key=lambda r: r.get("published_at") or "", reverse=True)
+    items = [to_pack_item(row, i + 1, collected_at) for i, row in enumerate(all_rows[:40])]
+    items = [
+        it
+        for it in items
+        if (it.get("priority_score") or 0) >= 40
+        or it.get("confidence") == "high"
+        or (it.get("impact_type") == "direct" and (it.get("priority_score") or 0) >= 70)
+    ]
+    packs = split_packs(items, refreshed_at)
+
+    # 空结果不可伪装成实时成功（与经营闭环 v2 对齐）
+    if not items:
+        return {
+            "ok": False,
+            "mode": "moss_empty",
+            "refreshed_at": refreshed_at,
+            "item_count": 0,
+            "errors": errors or ["MOSS 返回 0 条有效情报"],
+            "error": "MOSS 实时检索无有效条目",
+            "external_focus": [],
+            "day_summary": {},
+            "packs": packs,
+        }
+
+    mode = "moss_live" if not errors else "moss_partial"
+    return {
+        "ok": True,
+        "mode": mode,
+        "refreshed_at": refreshed_at,
+        "item_count": len(items),
+        "errors": errors,
+        "external_focus": build_external_focus(items),
+        "day_summary": build_day_summary(items),
+        "packs": packs,
+    }
+
+
+if __name__ == "__main__":
+    try:
+        result = refresh_intel_from_moss()
+        print(json.dumps({
+            "ok": result["ok"],
+            "item_count": result["item_count"],
+            "errors": result["errors"],
+            "external_focus": result["external_focus"],
+            "sample": [i["title"] for i in (result["packs"]["evening"].get("items") or [])[:5]],
+        }, ensure_ascii=False, indent=2))
+    except Exception as exc:  # noqa: BLE001
+        print(json.dumps({"ok": False, "error": str(exc)}, ensure_ascii=False))

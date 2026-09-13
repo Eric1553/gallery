@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 720" role="img" aria-label="AI Agent unified retrieval architecture">
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#64748b"/>
+    </marker>
+    <linearGradient id="platformGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f8fbff"/>
+      <stop offset="100%" stop-color="#eef4fb"/>
+    </linearGradient>
+  </defs>
+  <rect width="1180" height="720" fill="#ffffff"/>
+  <text x="590" y="34" text-anchor="middle" font-size="20" font-weight="700" fill="#0f2952" font-family="PingFang SC,Microsoft YaHei,sans-serif">AI Agent 接入多源数据的统一检索编排架构</text>
+  <text x="24" y="68" font-size="13" font-weight="700" fill="#0f2952" font-family="PingFang SC,Microsoft YaHei,sans-serif">数据源</text>
+  <rect x="20" y="78" width="250" height="88" rx="6" fill="#f0f7ff" stroke="#93c5fd"/>
+  <text x="32" y="98" font-size="12" font-weight="700" fill="#1e40af" font-family="PingFang SC,Microsoft YaHei,sans-serif">结构化数据源</text>
+  <text x="32" y="118" font-size="11" fill="#334155" font-family="PingFang SC,Microsoft YaHei,sans-serif">ERP/MES · 设备数据库 · 工单指标 · 日志</text>
+  <text x="32" y="136" font-size="10" fill="#64748b" font-family="PingFang SC,Microsoft YaHei,sans-serif">JDBC / ETL / CDC →</text>
+  <rect x="32" y="144" width="210" height="16" rx="3" fill="#dbeafe"/>
+  <text x="40" y="156" font-size="10" fill="#1e40af" font-family="PingFang SC,Microsoft YaHei,sans-serif">数仓 / 业务 DB · SQL · 主题模型 · 指标服务</text>
+  <rect x="20" y="176" width="250" height="88" rx="6" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="32" y="196" font-size="12" font-weight="700" fill="#166534" font-family="PingFang SC,Microsoft YaHei,sans-serif">非结构化数据源</text>
+  <text x="32" y="216" font-size="11" fill="#334155" font-family="PingFang SC,Microsoft YaHei,sans-serif">文档库 · 知识库 · 手册报告 · 图像</text>
+  <text x="32" y="234" font-size="10" fill="#64748b" font-family="PingFang SC,Microsoft YaHei,sans-serif">API / Sync / 对象写入 →</text>
+  <rect x="32" y="242" width="210" height="16" rx="3" fill="#dcfce7"/>
+  <text x="40" y="254" font-size="10" fill="#166534" font-family="PingFang SC,Microsoft YaHei,sans-serif">知识库索引 · 切块 · Embedding · 元数据</text>
+  <rect x="20" y="274" width="250" height="72" rx="6" fill="#fff7ed" stroke="#fdba74"/>
+  <text x="32" y="294" font-size="12" font-weight="700" fill="#c2410c" font-family="PingFang SC,Microsoft YaHei,sans-serif">外部服务 / 实时</text>
+  <text x="32" y="314" font-size="11" fill="#334155" font-family="PingFang SC,Microsoft YaHei,sans-serif">IoT · 第三方 API · 消息队列 · 实时库</text>
+  <text x="32" y="334" font-size="10" fill="#64748b" font-family="PingFang SC,Microsoft YaHei,sans-serif">API / Event →</text>
+  <rect x="300" y="78" width="520" height="420" rx="10" fill="url(#platformGrad)" stroke="#1f55cc" stroke-width="2"/>
+  <text x="560" y="104" text-anchor="middle" font-size="15" font-weight="700" fill="#0f2952" font-family="PingFang SC,Microsoft YaHei,sans-serif">AI 平台 / AI Agent 平台能力层</text>
+  <rect x="320" y="118" width="150" height="72" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="330" y="138" font-size="11" font-weight="700" fill="#0f2952" font-family="PingFang SC,Microsoft YaHei,sans-serif">SQL / 指标问数</text>
+  <text x="330" y="156" font-size="10" fill="#64748b" font-family="PingFang SC,Microsoft YaHei,sans-serif">Skill</text>
+  <text x="330" y="174" font-size="10" fill="#334155" font-family="PingFang SC,Microsoft YaHei,sans-serif">Text-to-SQL · Schema 路由</text>
+  <rect x="485" y="118" width="150" height="72" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="495" y="138" font-size="11" font-weight="700" fill="#0f2952" font-family="PingFang SC,Microsoft YaHei,sans-serif">RAG 知识检索</text>
+  <text x="495" y="156" font-size="10" fill="#64748b" font-family="PingFang SC,Microsoft YaHei,sans-serif">Skill</text>
+  <text x="495" y="174" font-size="10" fill="#334155" font-family="PingFang SC,Microsoft YaHei,sans-serif">混合检索 · 向量召回</text>
+  <rect x="650" y="118" width="150" height="72" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="660" y="138" font-size="11" font-weight="700" fill="#0f2952" font-family="PingFang SC,Microsoft YaHei,sans-serif">API / 实时数据</text>
+  <text x="660" y="156" font-size="10" fill="#64748b" font-family="PingFang SC,Microsoft YaHei,sans-serif">Skill</text>
+  <text x="660" y="174" font-size="10" fill="#334155" font-family="PingFang SC,Microsoft YaHei,sans-serif">Tool Calling · 服务 API</text>
+  <rect x="340" y="210" width="440" height="120" rx="8" fill="#1f55cc" fill-opacity="0.08" stroke="#1f55cc"/>
+  <text x="560" y="236" text-anchor="middle" font-size="14" font-weight="700" fill="#1f55cc" font-family="PingFang SC,Microsoft YaHei,sans-serif">统一检索编排层</text>
+  <text x="560" y="262" text-anchor="middle" font-size="11" fill="#334155" font-family="PingFang SC,Microsoft YaHei,sans-serif">问题理解 · Skill 选取 · 来源路由 · 检索计划 · 上下文拼装</text>
+  <rect x="380" y="278" width="360" height="36" rx="6" fill="#ffffff" stroke="#93c5fd"/>
+  <text x="560" y="300" text-anchor="middle" font-size="11" fill="#1e40af" font-family="PingFang SC,Microsoft YaHei,sans-serif">Context Assembly → 下游 Agent 服务</text>
+  <text x="330" y="360" font-size="11" font-weight="700" fill="#64748b" font-family="PingFang SC,Microsoft YaHei,sans-serif">对接方式</text>
+  <rect x="330" y="368" width="70" height="26" rx="4" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="365" y="385" text-anchor="middle" font-size="10" fill="#334155" font-family="PingFang SC,Microsoft YaHei,sans-serif">API/SDK</text>
+  <rect x="410" y="368" width="50" height="26" rx="4" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="435" y="385" text-anchor="middle" font-size="10" fill="#334155" font-family="PingFang SC,Microsoft YaHei,sans-serif">CLI</text>
+  <rect x="470" y="368" width="54" height="26" rx="4" fill="#eef2f6" stroke="#94a3b8" stroke-dasharray="4 3"/>
+  <text x="497" y="385" text-anchor="middle" font-size="10" fill="#64748b" font-family="PingFang SC,Microsoft YaHei,sans-serif">MCP</text>
+  <rect x="534" y="368" width="50" height="26" rx="4" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="559" y="385" text-anchor="middle" font-size="10" fill="#334155" font-family="PingFang SC,Microsoft YaHei,sans-serif">A2A</text>
+  <text x="600" y="385" font-size="10" fill="#94a3b8" font-family="PingFang SC,Microsoft YaHei,sans-serif">（PoC 不含 MCP）</text>
+  <rect x="330" y="410" width="460" height="72" rx="6" fill="#eef2f6" stroke="#94a3b8" stroke-dasharray="5 4"/>
+  <text x="560" y="434" text-anchor="middle" font-size="12" font-weight="700" fill="#64748b" font-family="PingFang SC,Microsoft YaHei,sans-serif">AI Agent 服务层（Dora 等 · 非本次平台交付）</text>
+  <text x="560" y="456" text-anchor="middle" font-size="11" fill="#64748b" font-family="PingFang SC,Microsoft YaHei,sans-serif">推理 · 工具调用 · 结果生成 · 策略控制</text>
+  <text x="860" y="68" font-size="13" font-weight="700" fill="#0f2952" font-family="PingFang SC,Microsoft YaHei,sans-serif">业务应用</text>
+  <rect x="850" y="78" width="300" height="180" rx="8" fill="#fafbff" stroke="#cbd5e1"/>
+  <text x="870" y="104" font-size="12" font-weight="700" fill="#0f2952" font-family="PingFang SC,Microsoft YaHei,sans-serif">智能问答 · 分析报告</text>
+  <text x="870" y="126" font-size="12" fill="#334155" font-family="PingFang SC,Microsoft YaHei,sans-serif">流程触发 · IM 推送</text>
+  <rect x="870" y="144" width="260" height="96" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="885" y="168" font-size="11" fill="#334155" font-family="PingFang SC,Microsoft YaHei,sans-serif">场景一：财务融合问数</text>
+  <text x="885" y="188" font-size="11" fill="#334155" font-family="PingFang SC,Microsoft YaHei,sans-serif">场景二：OTD BI 看板</text>
+  <text x="885" y="208" font-size="11" fill="#334155" font-family="PingFang SC,Microsoft YaHei,sans-serif">场景三：售后诊断链</text>
+  <text x="885" y="228" font-size="11" fill="#64748b" font-family="PingFang SC,Microsoft YaHei,sans-serif">反馈 · Trace · 知识更新 · 案例复用</text>
+  <rect x="850" y="280" width="300" height="56" rx="6" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="1000" y="304" text-anchor="middle" font-size="11" font-weight="700" fill="#166534" font-family="PingFang SC,Microsoft YaHei,sans-serif">反馈与沉淀</text>
+  <text x="1000" y="322" text-anchor="middle" font-size="10" fill="#334155" font-family="PingFang SC,Microsoft YaHei,sans-serif">Trace 回溯 · 知识更新 · 案例复用</text>
+  <line x1="270" y1="130" x2="300" y2="150" stroke="#64748b" marker-end="url(#arrow)"/>
+  <line x1="270" y1="220" x2="300" y2="200" stroke="#64748b" marker-end="url(#arrow)"/>
+  <line x1="270" y1="310" x2="300" y2="250" stroke="#64748b" marker-end="url(#arrow)"/>
+  <line x1="820" y1="270" x2="850" y2="160" stroke="#64748b" marker-end="url(#arrow)"/>
+  <path d="M1000 258 L1000 280" stroke="#16a34a" marker-end="url(#arrow)"/>
+  <path d="M1000 336 Q760 400 560 330" fill="none" stroke="#16a34a" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+  <rect x="20" y="360" width="250" height="40" rx="6" fill="#eef2f6" stroke="#94a3b8" stroke-dasharray="5 4"/>
+  <text x="145" y="385" text-anchor="middle" font-size="11" fill="#64748b" font-family="PingFang SC,Microsoft YaHei,sans-serif">对象存储 OSS（联影侧 · 本次不含）</text>
+  <rect x="20" y="660" width="14" height="14" rx="2" fill="#f0fdf4" stroke="#16a34a"/>
+  <text x="42" y="672" font-size="11" fill="#334155" font-family="PingFang SC,Microsoft YaHei,sans-serif">本次 PoC / 工程化交付（数仓 · FDL · BI · 检索 Worker · RAG 流水线）</text>
+  <rect x="520" y="660" width="14" height="14" rx="2" fill="#eef2f6" stroke="#94a3b8" stroke-dasharray="4 3"/>
+  <text x="542" y="672" font-size="11" fill="#64748b" font-family="PingFang SC,Microsoft YaHei,sans-serif">不含：OSS · 知识图谱 · Dora 平台 · MCP</text>
+</svg>

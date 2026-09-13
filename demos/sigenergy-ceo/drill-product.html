@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>下钻 · 产品线经营</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">一把手总览</a> / 下钻：产品线经营</div>
+    <div id="param-banner" class="param-banner" hidden></div>
+    <nav class="top-nav">
+      <a href="index.html">页1 总览</a>
+      <a href="deep-dive.html">页2 深度</a>
+      <span class="current">产品线经营</span>
+    </nav>
+
+    <h1>下钻：产品线经营</h1>
+    <p class="sub">承接页1「B 产品线占比」· 筛选示例：<code>产品线=光储充一体</code></p>
+
+    <div class="toolbar">
+      <div><span class="lbl">产品线</span><span class="fake-select" data-sync-param="line">光储充一体（SigenStor）▾</span></div>
+      <div><span class="lbl">期间</span><span class="fake-select">2026 Q1 YTD ▾</span></div>
+    </div>
+
+    <section>
+      <div class="kpis">
+        <div class="kpi"><div class="label">产品线收入</div><div class="val">84.0 亿</div><div class="delta up">同比 +42%</div></div>
+        <div class="kpi"><div class="label">产品线毛利率</div><div class="val">35.8%</div><div class="delta up">▲ +1.2pt YoY</div></div>
+        <div class="kpi"><div class="label">贡献毛利</div><div class="val">30.1 亿</div><div class="delta neu">占集团 49%</div></div>
+        <div class="kpi"><div class="label">在手订单</div><div class="val">41.2 亿</div><div class="delta neu"><a href="drill-growth.html" style="color:var(--link)">管道/订单</a></div></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-title" style="margin-bottom:10px">区域拆分（该产品线）</div>
+      <table class="table-ph">
+        <thead><tr><th>区域</th><th class="num">收入（亿）</th><th class="num">毛利率</th></tr></thead>
+        <tbody>
+          <tr><td>澳大利亚</td><td class="num">40.2</td><td class="num">36.2%</td></tr>
+          <tr><td>欧洲</td><td class="num">28.4</td><td class="num">35.4%</td></tr>
+          <tr><td>其他海外</td><td class="num">12.6</td><td class="num">35.0%</td></tr>
+          <tr><td>中国</td><td class="num">2.8</td><td class="num">34.1%</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <div class="sec-title" style="margin-bottom:10px">SKU 结构（Top 机型 · 示意）</div>
+      <table class="table-ph">
+        <thead><tr><th>机型/系列</th><th class="num">出货量（套）</th><th class="num">收入（亿）</th><th class="num">均价趋势</th></tr></thead>
+        <tbody>
+          <tr><td>Stor Pro 20kWh</td><td class="num">42,100</td><td class="num">28.6</td><td class="num">平稳</td></tr>
+          <tr><td>Stor Max 30kWh</td><td class="num">18,200</td><td class="num">22.4</td><td class="num">↑ 结构上行</td></tr>
+          <tr><td>其他</td><td class="num">—</td><td class="num">33.0</td><td class="num">—</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <footer><a href="index.html" style="color:var(--link)">← 返回总览</a></footer>
+  </div>
+  <script src="drill-context.js"></script>
+</body>
+</html>

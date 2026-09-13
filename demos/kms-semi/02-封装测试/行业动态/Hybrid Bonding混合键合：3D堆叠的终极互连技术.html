@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hybrid Bonding混合键合：3D堆叠的终极互连技术 — 半导体知识库</title>
+<meta name="description" content="# Hybrid Bonding混合键合：3D堆叠的终极互连技术  > 混合键合（Hybrid Bonding）是先进封装的"圣杯"——它用铜-铜原子级的直接连接替代了沿用了半个世纪的微凸点（μBump），将芯片间互连间距从40-50μm压缩到1-10μm，互连密度提升1000倍。这是实现真正3D堆">
+<link rel="stylesheet" href="/kb/assets/style.css">
+</head>
+<body>
+<div class="top-accent"></div>
+<header class="page-header">
+  <a href="/kb/首页.html" class="home-link">🔬 半导体知识库</a>
+</header>
+<main class="container">
+<nav class="breadcrumb"><a href="/kb/首页.html">半导体知识库</a> <span class="sep">›</span> <a href="/kb//02-封装测试/index.html">02-封装测试</a> <span class="sep">›</span> <a href="/kb//02-封装测试/行业动态/index.html">行业动态</a></nav>
+<article class="note">
+<header class="note-header">
+  <h1>Hybrid Bonding混合键合：3D堆叠的终极互连技术</h1>
+  
+</header>
+<div class="note-body">
+<h1 id="hybrid-bonding3d">Hybrid Bonding混合键合：3D堆叠的终极互连技术</h1>
+<blockquote>
+<p>混合键合（Hybrid Bonding）是先进封装的"圣杯"——它用铜-铜原子级的直接连接替代了沿用了半个世纪的微凸点（μBump），将芯片间互连间距从40-50μm压缩到1-10μm，互连密度提升1000倍。这是实现真正3D堆叠计算的基础：CPU Die逻辑堆叠、HBM 16层以上堆叠、AI Chiplet的3D集成，都绕不开它。</p>
+</blockquote>
+<hr />
+<h2 id="_1">📖 技术概述</h2>
+<p>混合键合的定义：在同一键合界面上同时实现<strong>铜-铜（Cu-Cu）金属键合</strong> + <strong>介电层-介电层（Dielectric-Dielectric）共价键合</strong>——"混合"二字由此而来。传统倒装焊（Flip-Chip）的μBump需要先在芯片上生长凸点（Solder Bump或Copper Pillar），再通过回流焊或热压焊将两个芯片的凸点对熔点连接。μBump的物理尺寸决定了互连间距的下限约为30-40μm——再小，凸点就会坍塌或短路。</p>
+<p>混合键合绕过了凸点：两个芯片的表面被抛光到原子级平整度（&lt;0.5nm RMS粗糙度），铜焊盘略低于介电层表面（凹陷约5-10nm）。在室温下将两个芯片对准贴合后，介电层之间先形成范德华力预键合 → 升温至300-400°C退火 → 铜焊盘因热膨胀"鼓出"填补凹陷，实现铜-铜原子扩散连接。<strong>整个过程不需要任何焊料，不需要任何助焊剂。</strong></p>
+<p><strong>核心技术价值</strong>：
+1. <strong>互连间距↓10-40倍</strong>：从μBump的35-50μm → 混合键合的1-10μm，单芯片面积的互连通道数提升100-1000倍
+2. <strong>寄生参数↓</strong>：铜直接接触→无焊料→寄生电阻/电感/电容极小，信号完整性和功耗远超μBump
+3. <strong>热传导↑</strong>：铜-铜直接键合的热阻比μBump（含焊料+Underfill层）低一个数量级——这对3D堆叠中散热极度紧张的上层Die至关重要
+4. <strong>Z轴高度↓</strong>：混合键合单层厚度&lt;10μm，8层HBM堆叠总厚度可比μBump方案薄30%以上</p>
+<p><strong>为什么说它是"终极"互连</strong>：μBump的缩小受限于焊料冶金、表面张力和对准精度——物理极限约20μm间距。混合键合的理论极限可到亚微米级（受限于铜的晶粒尺寸和电迁移）。它把芯片互连问题从"宏观焊料"拉回到了"原子扩散"——本质上这是IC金属互连（Damascene Cu）在封装层面的延伸。</p>
+<hr />
+<h2 id="_2">🔬 技术原理深度拆解</h2>
+<h3 id="_3">工艺序列</h3>
+<div class="codehilite"><pre><span></span><code>步骤1：CMP制备键合面
+  ↓ 芯片表面做Cu Damascene → CMP抛光至Ra&lt;0.5nm
+  ↓ Cu Pad凹陷控制在5-10nm（低于SiO₂表面）
+
+步骤2：等离子体活化
+  ↓ N₂/Ar等离子体轰击介电层表面 → 生成悬挂键 → 提高表面能
+
+步骤3：室温对准+预键合
+  ↓ 两个芯片在亚微米精度对准（&lt;0.5μm）
+  ↓ 介电层-介电层接触 → 范德华力 → 预键合形成（键合能~100-200 mJ/m²）
+
+步骤4：退火（300-400°C, 1-2小时）
+  ↓ Cu因热膨胀系数&gt;SiO₂ → Cu鼓出填补凹陷 → Cu-Cu扩散键合
+  ↓ 介电层进一步脱水缩合 → Si-O-Si共价键增强
+  ↓ 最终键合能 &gt;2 J/m²（提升10倍+）
+</code></pre></div>
+
+<h3 id="_4">键合界面的关键要求</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>要求</th>
+<th>为什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>表面粗糙度（Ra）</td>
+<td>&lt;0.5 nm</td>
+<td>粗糙表面→介电层接触面积不足→预键合弱</td>
+</tr>
+<tr>
+<td>Cu Pad凹陷深度</td>
+<td>5-10 nm</td>
+<td>太浅→Cu在后续工艺中挤出；太深→退火后仍接触不上</td>
+</tr>
+<tr>
+<td>颗粒控制</td>
+<td>Class 1洁净室</td>
+<td>一颗0.5μm颗粒=键合空洞直径几十μm</td>
+</tr>
+<tr>
+<td>对准精度</td>
+<td>&lt;0.5 μm（W2W）, &lt;1 μm（D2W）</td>
+<td>两个芯片的Cu Pad必须精确对准</td>
+</tr>
+<tr>
+<td>热预算</td>
+<td>300-400°C</td>
+<td>太高影响已完成的前段器件（掺杂扩散），太低Cu扩散不充分</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="wafer-to-wafer-w2w-vs-die-to-wafer-d2w">Wafer-to-Wafer (W2W) vs Die-to-Wafer (D2W)</h3>
+<p>混合键合有两种工艺形态，适用的产品和挑战截然不同。</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th style="text-align: left;">W2W（晶圆对晶圆）</th>
+<th style="text-align: left;">D2W（芯片对晶圆）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>工艺</td>
+<td style="text-align: left;">两片完整晶圆直接键合</td>
+<td style="text-align: left;">单颗Die逐颗贴装到承载晶圆上键合</td>
+</tr>
+<tr>
+<td>优势</td>
+<td style="text-align: left;"><strong>极高产能</strong>（一次键合整片晶圆，&gt;1000颗Die同时完成）、成本低</td>
+<td style="text-align: left;"><strong>灵活性高</strong>（可混合不同尺寸/制程/来源的Die）</td>
+</tr>
+<tr>
+<td>核心挑战</td>
+<td style="text-align: left;"><strong>良率乘积效应</strong>——晶圆A良率95% × 晶圆B良率95% = 最终良率90.25%，任何一颗坏Die连累配对的好Die</td>
+<td style="text-align: left;">逐颗Die的对准和键合速度远慢于W2W；D2W的设备精度和UPH是量产瓶颈</td>
+</tr>
+<tr>
+<td>适用产品</td>
+<td style="text-align: left;">同尺寸/同制程的阵列芯片——CIS（像素阵列+逻辑）、3D NAND（存储阵列+逻辑）</td>
+<td style="text-align: left;">Chiplet异构集成——不同尺寸/制程的CPU/AI/IO Die混合堆叠</td>
+</tr>
+<tr>
+<td>关键设备商</td>
+<td style="text-align: left;">EVG Gemini, SUSS XBS300</td>
+<td style="text-align: left;">BESI 8800 Hybrid, ASM Pacific</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>关键判断</strong>：W2W是目前混合键合最成熟（Sony CIS已量产近10年）的形态，但它天然不适合Chiplet场景——Chiplet的价值就在于混合不同厂商/不同制程/不同尺寸的Die，而W2W强制要求两个晶圆的Die尺寸和布局一致。D2W是Chiplet时代的必选项，但量产设备（Besi 8800 Hybrid）2024年才成熟，2026年仍在爬坡。</p>
+</blockquote>
+<hr />
+<h2 id="_5">🏭 主要工艺平台与厂商格局</h2>
+<h3 id="foundry">三大Foundry的混合键合平台</h3>
+<table>
+<thead>
+<tr>
+<th>厂商</th>
+<th>平台名称</th>
+<th>技术形态</th>
+<th>关键进展</th>
+<th>核心客户/应用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>TSMC</strong></td>
+<td><strong>SoIC</strong>（System on Integrated Chips）</td>
+<td>W2W + D2W</td>
+<td>2018年发布，2020年AMD 3D V-Cache首发量产，2025年Apple M5传闻采用</td>
+<td>AMD（3D V-Cache/MI300X）, Apple, NVIDIA（下一代GPU）</td>
+</tr>
+<tr>
+<td><strong>三星</strong></td>
+<td><strong>X-Cube</strong></td>
+<td>W2W + D2W</td>
+<td>2020年发布，2024年三星自研Exynos使用X-Cube堆叠AI NPU，HBM4规划X-Cube</td>
+<td>三星LSI（自研芯片）, 高通（评估中）</td>
+</tr>
+<tr>
+<td><strong>Intel</strong></td>
+<td><strong>Foveros Direct</strong></td>
+<td>D2W（为主）</td>
+<td>2024年发布，采用铜-铜直接键合（无μBump），间距&lt;10μm，速度、功耗大幅优于上一代Foveros</td>
+<td>Intel自用（Arrow Lake后续/下一代至强）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sonycis">先驱者：Sony的CIS混合键合</h3>
+<p>Sony是混合键合技术的<strong>第一个大规模量产用户</strong>——2016年就在CMOS图像传感器（CIS）中使用了W2W混合键合，将像素阵列晶圆和逻辑电路晶圆面对面键合。到2025年，Sony已累计出货超过50亿颗使用混合键合的CIS芯片。Sony的实践证明了混合键合的量产可行性——在高洁净度、高良率的消费电子产品线上，混合键合可以做到99%+的键合良率。</p>
+<p><strong>Sony路径的产业意义</strong>：混合键合最先进的应用是AI/GPU Chiplet（TSMC SoIC），但让混合键合从"实验室技术"变成"量产可行"的是Sony——CIS的混合键合需求（像素阵列+逻辑层）技术难度低于复杂Chiplet，但恰好为整个产业链（设备/材料/工艺Know-how）完成了从0→1的验证。</p>
+<hr />
+<h3 id="_6">混合键合设备格局</h3>
+<p>混合键合设备的准入门槛极高——亚微米对准+原子级洁净+多步骤集成（活化→对准→预键合→退火）。全球真正具备量产级设备能力的厂商不超过4家。</p>
+<table>
+<thead>
+<tr>
+<th>厂商</th>
+<th>国家</th>
+<th>核心设备</th>
+<th>技术路线</th>
+<th>关键客户</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Besi</strong></td>
+<td>荷兰</td>
+<td>BESI 8800 Hybrid</td>
+<td>D2W专精，UPH 2000+（单Die混合键合UPH）</td>
+<td>TSMC SoIC（D2W产线）, Intel</td>
+</tr>
+<tr>
+<td><strong>EVG</strong></td>
+<td>奥地利</td>
+<td>EVG Gemini</td>
+<td>W2W先驱，键合对准&lt;100nm，临时键合/解键合生态完整</td>
+<td>Sony（CIS）, 三星, SK海力士（HBM）</td>
+</tr>
+<tr>
+<td><strong>SUSS</strong></td>
+<td>德国</td>
+<td>SUSS XBS300</td>
+<td>W2W键合，与EVG直接竞争</td>
+<td>三星/台积电（W2W产线）</td>
+</tr>
+<tr>
+<td><strong>AMAT</strong></td>
+<td>美国</td>
+<td>Centura® Hybrid Bonding</td>
+<td>全套方案（CMP+键合+退火）集成</td>
+<td>台积电/Intel（评估中）</td>
+</tr>
+<tr>
+<td><strong>TEL</strong></td>
+<td>日本</td>
+<td>键合+解键合集成方案</td>
+<td>与EVG互补——部分工序使用TEL设备</td>
+<td>三星/台积电</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>竞争动态</strong>：W2W市场由EVG和SUSS双头垄断（两家合计&gt;80%），D2W市场Besi占主导（单Die UPH远超对手）。AMAT试图用"CMP+键合+退火"集成方案打破格局——如果客户整套工艺采用AMAT方案，可减少跨设备商的工艺调参复杂度，这是AMAT的最大卖点。</p>
+</blockquote>
+<hr />
+<h2 id="bump">📊 与μBump的关键指标对比</h2>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th style="text-align: center;">μBump（传统倒装）</th>
+<th style="text-align: center;">混合键合</th>
+<th style="text-align: center;">倍数差异</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>互连间距</td>
+<td style="text-align: center;">35-50 μm</td>
+<td style="text-align: center;">1-10 μm（量产~6 μm）</td>
+<td style="text-align: center;"><strong>5-50x更密</strong></td>
+</tr>
+<tr>
+<td>互连密度</td>
+<td style="text-align: center;">~10³/mm²</td>
+<td style="text-align: center;">~10⁶/mm²</td>
+<td style="text-align: center;"><strong>1000x更高</strong></td>
+</tr>
+<tr>
+<td>单通道功耗</td>
+<td style="text-align: center;">0.5-1.0 pJ/bit</td>
+<td style="text-align: center;">0.05-0.1 pJ/bit</td>
+<td style="text-align: center;"><strong>10x更低</strong></td>
+</tr>
+<tr>
+<td>信号延迟</td>
+<td style="text-align: center;">高（焊料+UBM界面反射）</td>
+<td style="text-align: center;">极低（Cu-Cu直接，几乎无反射）</td>
+<td style="text-align: center;"><strong>5-10x更短</strong></td>
+</tr>
+<tr>
+<td>键合层厚度</td>
+<td style="text-align: center;">15-30 μm（μBump高+焊料层）</td>
+<td style="text-align: center;">&lt;5 μm（仅Cu Pad层+薄介电层）</td>
+<td style="text-align: center;"><strong>3-6x更薄</strong></td>
+</tr>
+<tr>
+<td>热导率（Z方向）</td>
+<td style="text-align: center;">~30-50 W/m·K</td>
+<td style="text-align: center;">~150-200 W/m·K</td>
+<td style="text-align: center;"><strong>3-5x更好</strong></td>
+</tr>
+<tr>
+<td>工艺温度</td>
+<td style="text-align: center;">230-260°C（回流焊）</td>
+<td style="text-align: center;">300-400°C（退火）</td>
+<td style="text-align: center;"><strong>更高</strong>（对热敏感器件是挑战）</td>
+</tr>
+<tr>
+<td>良率门槛</td>
+<td style="text-align: center;">成熟（&gt;99.99%）</td>
+<td style="text-align: center;">高但挑剔（需Class 1洁净+亚纳米CMP）</td>
+<td style="text-align: center;">环境要求高数个量级</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_7">🎯 帆软产品关联度分析</h2>
+<table>
+<thead>
+<tr>
+<th>产品线</th>
+<th style="text-align: center;">关联度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FineReport</td>
+<td style="text-align: center;">🟢</td>
+<td>键合精度SPC监控（对准偏差/CMP粗糙度/Cu凹陷深度）、键合空洞率统计、退火温度曲线报表——混合键合的工艺参数维度远超传统封装</td>
+</tr>
+<tr>
+<td>FineBI</td>
+<td style="text-align: center;">🟢</td>
+<td>W2W vs D2W良率对比、键合良率从Wafer Map热力图下钻到单Die、退火炉温度均匀性多维分析</td>
+</tr>
+<tr>
+<td>FDL数据底座</td>
+<td style="text-align: center;">🟢 极高</td>
+<td><strong>混合键合数据量爆炸</strong>——CMP量测（AFM粗糙度/膜厚/凹陷）、对准精度（对位标记偏差）、退火炉温曲线（多温区时序列）、键合空洞检测（SAM/X-ray图像）——多设备/多格式数据统一管道是刚需</td>
+</tr>
+<tr>
+<td>简道云与AI Agent</td>
+<td style="text-align: center;">🟡</td>
+<td>简道云：键合载板的清洁更换流程管理；AI Agent：键合空洞SEM图像的自动分类与根因预判（颗粒/凹陷不足/对位偏差？）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_8">🎤 售前场景</h2>
+<h3 id="1">场景1：混合键合产线的键合良率监控</h3>
+<p><strong>① 客户画像</strong>：TSMC SoIC产线、三星X-Cube产线的工艺工程部。混合键合产线良率85-95%，每提升1个百分点价值数百万美元。</p>
+<p><strong>② 痛点</strong>：混合键合良率受CMP粗糙度、Cu凹陷深度、对准精度、退火温度均匀性等多个因素交互影响——一个键合空洞可能根因在CMP（粗糙度超标）、可能在退火（温度偏差导致Cu膨胀不足）、可能在对准（偏移超出Cu Pad重叠范围）。目前工程师在三台设备（AFM量测仪/对准量测仪/退火炉温控系统）之间手动交叉比对——一个个Excel导入导出。</p>
+<p><strong>③ 帆软切入方案</strong>：FDL拉通CMP量测数据（AFM Ra + Cu凹陷）、对准精度数据（Overlay量测）、退火炉温曲线（多温区时序列）→ FineBI按Wafer ID做全参数关联分析 → FineReport输出键合空洞Wafer Map热力图叠加工艺参数偏离标注。</p>
+<p><strong>④ 参考话术</strong>："你们的混合键合良率上不去，是不是在手动排查——今天CMP粗糙度OK但退火温度偏了？明天对准偏了但CMP完美？FineBI把CMP+对准+退火全参数拉通做关联分析——哪个参数的波动在带崩键合良率，三分钟找到。TSMC的SoIC产线每天键合几千片晶圆，没有数据底座你就靠工程师肉眼排查？"</p>
+<hr />
+<h3 id="2w2w-vs-d2w">场景2：W2W vs D2W产线成本效益对比</h3>
+<p><strong>① 客户画像</strong>：三星/Intel/台积电的先进封装战略规划团队。W2W产能投资vs D2W产能投资，需要精确的长期ROI对比。</p>
+<p><strong>② 痛点</strong>：W2W单次键合效率极高（整片晶圆一次完成），但良率乘积效应意味着两片90%良率的晶圆W2W键合后有效良率仅81%——大量好Die被"连坐"。D2W无此问题（可挑KGD键合），但UPH远低于W2W（Besi 8800 Hybrid 约2000UPH vs W2W一次数千颗）。选哪个路线，取决于产品类型、良率水平、Die面积等复杂变量——需要建模型而非拍脑袋。</p>
+<p><strong>③ 帆软切入方案</strong>：FineBI构建W2W vs D2W成本效益对比模型——输入晶圆良率/Die面积/目标键合层数/D2W设备UPH/设备折旧年限 → 动态输出TCO对比和Break-even点。</p>
+<p><strong>④ 参考话术</strong>："你们在规划下一代的混合键合产能——上W2W还是D2W产线？FineBI把两条路线的成本模型拉通：你们的产品良率一旦低于93%，W2W良率乘积效应就会吞噬成本优势——FineBI一键算出来。"</p>
+<hr />
+<h3 id="3cmp">场景3：CMP工艺稳定性——混合键合的前道命门</h3>
+<p><strong>① 客户画像</strong>：混合键合产线的CMP工艺工程部。CMP是混合键合成败的"第一关"——粗糙度Ra超标零点几纳米，预键合就失败，后端检测才发现。</p>
+<p><strong>② 痛点</strong>：CMP工艺的Pad寿命（Pad Wear）、浆料浓度（Slurry Concentration）、下压力（Down Force）等参数随时间漂移——决定键合面的粗糙度和Cu凹陷深度。目前CMP设备的SPC只监控单参数趋势，无法看到多参数交互影响。</p>
+<p><strong>③ 帆软切入方案</strong>：FineReport SPC控制图监控CMP粗糙度/Cu凹陷的时序列漂移趋势 → FineBI关联Pad寿命计数器 + 浆料更换周期 + 下压力传感器数据 → 预测CMP工艺窗口剩余时间，提前触发Pad更换/浆料补充。</p>
+<p><strong>④ 参考话术</strong>："你们的CMP粗糙度是不是每隔几百片就开始飘——飘到超规格了才换Pad重新调参。FineReport把CMP粗糙度的时序列趋势画出来，FineBI拉上Pad寿命和浆料更换数据——在粗糙度飘到规格线之前18小时触发预警，提前换Pad，键合前就解决问题而不是键合后才发现。"</p>
+<hr />
+<h2 id="_9">🔗 延伸阅读</h2>
+<ul>
+<li><a href="/kb/02-封装测试/行业动态/先进封装技术深度：CoWoS、3D堆叠与Chiplet的技术路线与产业格局">先进封装技术深度：CoWoS、3D堆叠与Chiplet的技术路线与产业格局</a> — 混合键合在先进封装版图中的定位（含TSMC SoIC详解）</li>
+<li><a href="/kb/02-封装测试/行业动态/封装基板与先进封装设备：从ABF到混合键合">封装基板与先进封装设备：从ABF到混合键合</a> — 混合键合设备（Besi/EVG/SUSS/AMAT/TEL）详细格局</li>
+<li><a href="/kb/02-封装测试/行业动态/面板级封装(PLP)与玻璃基板：下一代封装的载体革命">面板级封装(PLP)与玻璃基板：下一代封装的载体革命</a> — 玻璃基板与混合键合的潜在结合点</li>
+<li><a href="/kb/02-封装测试/行业动态/Fan-Out封装技术：从InFO到FOPLP">Fan-Out封装技术：从InFO到FOPLP</a> — Fan-Out vs 混合键合的定位分层（经济适用房 vs 摩天大楼）</li>
+</ul>
+<hr />
+<h2 id="_10">📝 关键数据备忘</h2>
+<ul>
+<li>混合键合全球市场规模2026年约<strong>8亿美元</strong>（含设备+材料+代工服务），预计2030年达到30亿+美元（Yole），是先进封装中增速最高的细分赛道</li>
+<li>混合键合的最大单一驱动场景是HBM4——HBM4预计2026-2027年量产，将从μBump全面转向混合键合，三星和SK海力士均在抢先量产</li>
+<li>混合键合全球市场规模2026年约<strong>8亿美元</strong>（含设备+材料+代工服务），预计2030年达到30亿+美元（Yole），是先进封装中增速最高的细分赛道</li>
+<li>混合键合的最大单一驱动场景是HBM4——HBM4预计2026-2027年量产，将从μBump全面转向混合键合，三星和SK海力士均在抢先量产</li>
+<li>TSMC SoIC的键合良率已达到99.5%+（2025年数据），接近成熟μBump水平——这是混合键合从"特种工艺"走向"主流工艺"的关键拐点</li>
+<li>D2W（Die-to-Wafer）混合键合设备Besi 8800 Hybrid的UPH~2000颗/小时（2026年），要达到W2W的等效产出（~10,000颗/小时），UPH需要再翻5倍——D2W设备是混合键合Chiplet商业化的最大瓶颈</li>
+<li>EVG和SUSS在W2W混合键合设备市场合计份额&gt;80%——两家奥地利/德国中小企业的技术壁垒竟卡住了全球先进封装的"卡脖子"环节</li>
+<li>CMP工序在混合键合成本中占比约30%（亚纳米级CMP的Pad和浆料消耗是传统CMP的3-5倍）——CMP工艺优化是混合键合降本的核心杠杆</li>
+</ul>
+</div>
+</article>
+<footer class="note-footer">
+  <a href="/kb/02-封装测试/行业动态/index.html">← 返回目录</a>
+</footer>
+</main>
+</body>
+</html>

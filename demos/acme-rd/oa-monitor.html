@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OA 流程监控 - 盛美半导体研发运营看板</title>
+<link rel="stylesheet" href="assets/style.css?v=67">
+<link rel="stylesheet" href="assets/req-spec.css?v=67">
+</head>
+<body data-page="oa-monitor">
+<div class="layout">
+<aside class="sidebar">
+    <div class="brand">
+    <div class="brand-logo">ACM</div>
+    <h1>研发运营看板</h1>
+    <p>盛美半导体 · 演示原型 v4.4</p>
+  </div>
+  <nav class="nav">
+    <div class="nav-section">业务模块</div>
+    <a href="index.html" class="" data-page="index">总览</a>
+    <a href="hr.html" class="" data-page="hr">人力资源</a>
+    <a href="site-product.html" class="" data-page="site-product">Site 与产品</a>
+    <a href="case.html" class="" data-page="case">Case 追踪</a>
+    <a href="change.html" class="" data-page="change">变更管理</a>
+    <a href="wet-rd.html" class="" data-page="wet-rd">Wet-RD</a>
+    <a href="lingang.html" class="" data-page="lingang">临港研发线</a>
+    <a href="oa-monitor.html" class="active" data-page="oa-monitor">OA 流程监控</a>
+    <a href="knowledge.html" class="" data-page="knowledge">知识库<span class="nav-badge">预览</span></a>
+  </nav>
+  <div class="footer-note">演示数据，口径以业务确认为准</div>
+</aside>
+<main class="main">
+  <header class="topbar">
+    <div class="breadcrumb"><a href="index.html">总览</a><span class="sep">/</span><span class="current">OA流程监控</span></div>
+    <div class="topbar-actions">
+                  <div class="topbar-period" data-period-mode="quarter">
+        <span>时间</span>
+    <select data-period-grain aria-label="统计口径">
+      <option value="year">按年</option>
+      <option value="quarter" selected>按季</option>
+      <option value="month">按月</option>
+    </select>
+    <select data-period-year aria-label="年份">
+      <option value="2025">2025 年</option>
+      <option value="2026" selected>2026 年</option>
+    </select>
+    <select data-period-quarter aria-label="季度">
+      <option value="Q1">1 季度</option>
+      <option value="Q2" selected>2 季度</option>
+      <option value="Q3">3 季度</option>
+      <option value="Q4">4 季度</option>
+    </select>
+    <select data-period-month hidden aria-label="月份">
+    <option value="all">全年</option>
+    <option value="01">1 月</option>
+    <option value="02">2 月</option>
+    <option value="03">3 月</option>
+    <option value="04">4 月</option>
+    <option value="05">5 月</option>
+    <option value="06" selected>6 月</option>
+    <option value="07">7 月</option>
+    <option value="08">8 月</option>
+    <option value="09">9 月</option>
+    <option value="10">10 月</option>
+    <option value="11">11 月</option>
+    <option value="12">12 月</option>
+    </select>
+      </div>
+      <span class="chip">每周三更新</span>
+      <span class="chip">演示数据</span>
+      <button class="btn" onclick="openPushSettings()">推送配置</button>
+      <button class="btn" data-action="export"><span class="bi"></span>导出数据</button>
+      <a class="btn btn-primary" href="report.html">月度运营报告</a>
+    </div>
+  </header>
+  <div class="content">
+    <div class="page-header">
+      <div class="ph-titles"><h2>OA 流程监控</h2><p>节点耗时 · 超时预警 · 关键节点 GAP 控制</p></div>
+      <div class="ph-actions"><button class="btn" data-action="req">需求说明</button></div>
+    </div>
+    
+    
+
+<div class="demo-banner">当前展示 11 类流程（含 RD 研发需求申请），完整清单待业务确认。</div>
+<div id="req-spec-data" data-title="OA 流程监控看板 · 需求说明" data-sub="对应客户原始需求（流程监控 + 关键节点 GAP 控制）" style="display:none">
+  <div class="req-list">
+    <div class="req-item"><div class="req-idx">1</div><div class="req-body2"><div class="req-item-t">通用流程监控</div><div class="req-item-d">覆盖 Checksheet / Spec / Case / 标准化文件发布 / 产品文档 / Spec 风险 / 标准化文件新增变更 / 人力支援 / 技能评定等流程。展示节点 / 部门（顶级）/ 人员耗时；HL 耗时最长部门与人员排名；人员 Hold 节点情况（人员 + 已耗时 + Hold 流程条数，每周三更新）；所有流程归档率（可钻取）；超时人员排名（定位到人）；个人流程平均耗时（可推送推送）；并行节点以最后审批时间计算总耗时。</div></div></div>
+    <div class="req-item"><div class="req-idx">2</div><div class="req-body2"><div class="req-item-t">Checksheet 关键节点控制</div><div class="req-item-d">Checksheet 需求时间、提交 Due Date、实际提交时间（PE Owner 首次审批）、GAP；及时提交率 = GAP 为 0 的流程占有 GAP 数据流程总数的比例；GAP 大于 7 天（不含节假日）高亮，附流程链接。</div></div></div>
+    <div class="req-item"><div class="req-idx">3</div><div class="req-body2"><div class="req-item-t">Spec 入档控制（联动项目启动）</div><div class="req-item-d">项目启动流程（18 节点）与 Spec 新增流程入档时间 GAP，小于 7 天为及时；及时入档率 = GAP 小于 7 天流程数 ÷ 总流程数；HL 出超标准入档时间的流程，含申请人、流程链接、流程中耗时最长人员及部门。</div></div></div>
+    <div class="req-item"><div class="req-idx">4</div><div class="req-body2"><div class="req-item-t">标准化文件评审控制</div><div class="req-item-d">标准化文件发布流程：需求评审计划时间 vs 实际开会时间 GAP（GAP ≤ 0 按时）、及时完成率、归档率，按产品 × 文件类型统计数量 / 归档数 / 归档率。标准化文件新增变更需求流程：需求完成 plan vs 实际提交 GAP、承接人 plan vs 实际提交 GAP。</div></div></div>
+    <div class="req-item"><div class="req-idx">5</div><div class="req-body2"><div class="req-item-t">产品文档归档控制</div><div class="req-item-d">产品文档归档率；按Site 产品总归档耗时；按IC1-4 组各节点耗时；按申请人所在组维度分析。</div></div></div>
+    <div class="req-item"><div class="req-idx">+</div><div class="req-body2"><div class="req-item-t">Spec 风险 → 项目需求导入</div><div class="req-item-d">补充耗时监控：Spec 风险前置触发后的「项目需求导入」流程链路（触发数、导入完成率、节点耗时、未闭环清单）。与 Site 看板 Spec 风险 Tab 联动。</div></div></div>
+    <div class="req-item"><div class="req-idx">!</div><div class="req-body2"><div class="req-item-t">个人提醒与说明</div><div class="req-item-d">个人流程耗时可定时推送（群通知 / 邮件）；超时提醒次数按 OA 推送记录统计。</div></div></div>
+  </div>
+</div>
+<div class="tab-shell">
+<div class="tabs">
+  <button class="tab active" data-target="tab-general" data-group="oa">通用监控</button>
+  <button class="tab" data-target="tab-checksheet" data-group="oa">Checksheet GAP</button>
+  <button class="tab" data-target="tab-spec-gap" data-group="oa">Spec 入档</button>
+  <button class="tab" data-target="tab-spec-import" data-group="oa" data-hash="spec-import">风险→导入</button>
+  <button class="tab" data-target="tab-std" data-group="oa">标准化评审</button>
+  <button class="tab" data-target="tab-doc-oa" data-group="oa">产品文档归档</button>
+</div>
+<div id="tab-general" class="tab-content active" data-group="oa">
+  <div class="filter-bar">
+    <div class="filter-group"><label>流程类型</label><select><option>全部(11类)</option><option>Checksheet变更</option><option>Spec新增变更</option><option>Case追踪</option><option>标准化文件发布</option><option>产品文档变更</option><option>Spec风险前置</option><option>项目需求导入</option><option>RD研发需求申请</option><option>标准化新增变更</option><option>人力支援(CRM)</option><option>技能等级评定</option></select></div>
+    <div class="filter-group"><label>部门</label><select><option>全部(顶级部门)</option><option>Wet-RD/新工艺研发部</option><option>信息技术部</option></select></div>
+
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi-card accent-blue"><div class="kpi-label">流程归档率</div><div class="kpi-value">76.4%</div><div class="kpi-sub">每周三更新</div></div>
+    <div class="kpi-card accent-amber"><div class="kpi-label">超时待办人数</div><div class="kpi-value">18</div></div>
+    <div class="kpi-card"><div class="kpi-label">Hold 流程条数</div><div class="kpi-value">42</div></div>
+    <div class="kpi-card accent-purple"><div class="kpi-label">平均节点耗时</div><div class="kpi-value">3.8<span style="font-size:14px">天</span></div></div>
+  </div>
+  <div class="panel">
+        <div class="panel-head"><div class="panel-head-left"><h3>受监控流程总览 (11 类流程)</h3></div><a class="link" href="#" data-action="export">导出</a></div>
+    <div class="panel-body flush">
+      <table>
+        <tr><th>监控流程</th><th>流程总数</th><th>归档率</th><th>平均节点耗时</th><th>Hold 条数</th><th>超时数</th><th>状态</th></tr>
+        <tr class="expand-row"><td><span class="exp-caret">▶</span>Checksheet 变更</td><td>132</td><td>82.5%</td><td>3.2 天</td><td>8</td><td>5</td><td><span class="tag tag-close">正常</span></td></tr>
+        <tr class="detail-row" style="display:none"><td colspan="7"><div class="detail-inner"><div class="detail-grid"><div class="detail-kv"><div class="k">关键节点</div><div class="v">07→08 测试/PE审批</div></div><div class="detail-kv"><div class="k">GAP 口径</div><div class="v">&gt;7天(不含节假日)计延期</div></div><div class="detail-kv"><div class="k">及时率</div><div class="v">82.5%</div></div></div></div></td></tr>
+        <tr><td>Spec 新增变更</td><td>312</td><td>78.3%</td><td>4.1 天</td><td>12</td><td>8</td><td><span class="tag tag-warn">关注</span></td></tr>
+        <tr><td>Case 追踪</td><td>156</td><td>69.9%</td><td>5.6 天</td><td>9</td><td>6</td><td><span class="tag tag-warn">关注</span></td></tr>
+        <tr><td>标准化文件发布</td><td>105</td><td>79.0%</td><td>3.8 天</td><td>4</td><td>2</td><td><span class="tag tag-close">正常</span></td></tr>
+        <tr><td>产品文档变更</td><td>88</td><td>74.0%</td><td>4.4 天</td><td>6</td><td>3</td><td><span class="tag tag-close">正常</span></td></tr>
+        <tr><td>Spec 风险前置</td><td>47</td><td>85.1%</td><td>2.9 天</td><td>2</td><td>1</td><td><span class="tag tag-close">正常</span></td></tr>
+        <tr class="highlight-row"><td>项目需求导入 <span class="chip">新增监控</span></td><td>31</td><td>71.0%</td><td>3.6 天</td><td>4</td><td>3</td><td><span class="tag tag-warn">关注</span></td></tr>
+        <tr class="highlight-row"><td>RD 研发需求申请 <span class="chip">新增监控</span></td><td>67</td><td>62.7%</td><td>4.8 天</td><td>5</td><td>4</td><td><span class="tag tag-warn">关注</span></td></tr>
+        <tr><td>标准化文件新增变更</td><td>36</td><td>80.6%</td><td>3.3 天</td><td>3</td><td>1</td><td><span class="tag tag-close">正常</span></td></tr>
+        <tr><td>人力支援 (CRM)</td><td>64</td><td>88.0%</td><td>2.1 天</td><td>1</td><td>0</td><td><span class="tag tag-close">正常</span></td></tr>
+        <tr><td>技能等级评定</td><td>42</td><td>91.0%</td><td>1.8 天</td><td>0</td><td>0</td><td><span class="tag tag-close">正常</span></td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-head"><h3>耗时最长部门 Top 10</h3></div>
+      <div class="panel-body">
+        <ul class="rank-list">
+          <li class="rank-item"><span class="rank-num top">1</span><span style="flex:1">工艺验证部</span><div class="rank-bar"><div class="rank-bar-fill" style="width:100%"></div></div><span class="rank-val">8.2天</span></li>
+          <li class="rank-item"><span class="rank-num top">2</span><span style="flex:1">产品工程部</span><div class="rank-bar"><div class="rank-bar-fill" style="width:82%"></div></div><span class="rank-val">6.7天</span></li>
+          <li class="rank-item"><span class="rank-num top">3</span><span style="flex:1">应用支持部</span><div class="rank-bar"><div class="rank-bar-fill" style="width:68%"></div></div><span class="rank-val">5.6天</span></li>
+          <li class="rank-item"><span class="rank-num">4</span><span style="flex:1">测试部</span><div class="rank-bar"><div class="rank-bar-fill" style="width:55%"></div></div><span class="rank-val">4.8天</span></li>
+          <li class="rank-item"><span class="rank-num">5</span><span style="flex:1">研发部</span><div class="rank-bar"><div class="rank-bar-fill" style="width:48%"></div></div><span class="rank-val">4.2天</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h3>耗时最长人员 Top 10</h3></div>
+      <div class="panel-body">
+        <ul class="rank-list">
+          <li class="rank-item"><span class="rank-num top">1</span><span style="flex:1">王** · 工艺验证部</span><span class="rank-val">12天</span></li>
+          <li class="rank-item"><span class="rank-num top">2</span><span style="flex:1">李** · 产品工程部</span><span class="rank-val">9天</span></li>
+          <li class="rank-item"><span class="rank-num top">3</span><span style="flex:1">张** · 应用支持部</span><span class="rank-val">8天</span></li>
+          <li class="rank-item"><span class="rank-num">4</span><span style="flex:1">刘** · 测试部</span><span class="rank-val">7天</span></li>
+          <li class="rank-item"><span class="rank-num">5</span><span style="flex:1">陈** · 研发部</span><span class="rank-val">6天</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-head"><h3>超时人员排名</h3><a class="link" href="#" data-action="personal" data-person="王**" data-dept="工艺验证部">个人视图 →</a></div>
+      <div class="panel-body flush">
+        <table>
+          <tr><th>人员</th><th>部门</th><th>Hold条数</th><th>已耗时</th><th>超时次数</th></tr>
+          <tr class="highlight-row"><td>王**</td><td>工艺验证部</td><td>5</td><td>12天</td><td>3</td></tr>
+          <tr><td>李**</td><td>产品工程部</td><td>3</td><td>8天</td><td>2</td></tr>
+          <tr><td>张**</td><td>应用支持部</td><td>2</td><td>6天</td><td>1</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-left"><h3>个人流程平均耗时</h3></div><span class="chip">可推送</span></div>
+      <div class="panel-body flush">
+        <table>
+          <tr><th>人员</th><th>部门</th><th>进行中</th><th>平均耗时</th><th>操作</th></tr>
+          <tr><td>王**</td><td>工艺验证部</td><td>5</td><td>4.2 天</td><td><a class="table-link" href="#" data-action="personal" data-person="王**" data-dept="工艺验证部">查看</a></td></tr>
+          <tr><td>李**</td><td>产品工程部</td><td>3</td><td>3.8 天</td><td><a class="table-link" href="#" data-action="personal" data-person="李**" data-dept="产品工程部">查看</a></td></tr>
+          <tr><td>张**</td><td>应用支持部</td><td>2</td><td>3.2 天</td><td><a class="table-link" href="#" data-action="personal" data-person="张**" data-dept="应用支持部">查看</a></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-left"><h3>流程归档率趋势 (可钻取)</h3></div></div>
+      <div class="panel-body"><div class="chart-wrap" data-percent="true" data-line='{"labels":["1月","2月","3月","4月","5月","6月"],"series":[{"name":"归档率","data":[68,70,72,73,75,76],"c":"#2563eb"}]}'></div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-left"><h3>Hold 流程条数 Top 部门</h3></div><span class="chip">每周三更新</span></div>
+      <div class="panel-body"><div class="chart-wrap" data-hbars='[{"l":"工艺验证部","v":15,"c":"#dc2626"},{"l":"产品工程部","v":11,"c":"#d97706"},{"l":"应用支持部","v":8,"c":"#2563eb"},{"l":"测试部","v":5,"c":"#4a7ab0"},{"l":"研发部","v":3,"c":"#5b7c99"}]'></div></div>
+    </div>
+  </div>
+  <div class="alert-box info">并行节点按末次审批计时；个人耗时可推送；Hold 名单每周三更新</div>
+</div>
+
+<div id="tab-checksheet" class="tab-content" data-group="oa">
+  <div class="kpi-grid">
+    <div class="kpi-card accent-green"><div class="kpi-label">及时提交率</div><div class="kpi-value">82.5%</div><div class="kpi-sub">GAP=0 占比</div></div>
+    <div class="kpi-card accent-amber"><div class="kpi-label">GAP &gt; 7天</div><div class="kpi-value">8</div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><h3>Checksheet GAP 明细</h3></div>
+    <div class="panel-body flush">
+      <table>
+        <tr><th>流程</th><th>需求时间</th><th>Due Date</th><th>PE Owner审批</th><th>GAP(天)</th><th>及时?</th><th>链接</th></tr>
+        <tr><td>CS-2026-045</td><td>2026-05-28</td><td>2026-06-01</td><td>2026-06-03</td><td>0</td><td><span class="tag tag-close">是</span></td><td><a class="table-link" href="#" data-action="drill">查看</a></td></tr>
+        <tr class="highlight-row"><td>CS-2026-052</td><td>2026-06-01</td><td>2026-06-05</td><td>2026-06-18</td><td>6</td><td><span class="tag tag-warn">否</span></td><td><a class="table-link" href="#" data-action="drill">查看</a></td></tr>
+        <tr class="highlight-row"><td>CS-2026-061</td><td>2026-06-08</td><td>2026-06-10</td><td>2026-06-25</td><td>8</td><td><span class="tag tag-warn">否</span></td><td><a class="table-link" href="#" data-action="drill">查看</a></td></tr>
+      </table>
+    </div>
+  </div>
+  <p style="font-size:12px;color:#64748b;margin-top:8px">GAP = PE Owner 首次审批 − Due Date · &gt;7 天（不含节假日）高亮 · 及时提交率 = GAP=0 占比</p>
+</div>
+
+<div id="tab-spec-gap" class="tab-content" data-group="oa">
+  <div class="kpi-grid">
+    <div class="kpi-card accent-green"><div class="kpi-label">Spec 及时入档率</div><div class="kpi-value">78.3%</div><div class="kpi-sub">GAP&lt;7天</div></div>
+    <div class="kpi-card accent-amber"><div class="kpi-label">超标准入档</div><div class="kpi-value">12</div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><h3>Spec 入档 GAP 明细 (联动项目启动18节点)</h3></div>
+    <div class="panel-body flush">
+      <table>
+        <tr><th>项目号</th><th>申请人</th><th>项目启动日期</th><th>Spec入档日期</th><th>GAP</th><th>耗时最长人员</th><th>部门</th><th>状态</th></tr>
+        <tr><td>P-2026-0142</td><td>张三</td><td>2026-03-15</td><td>2026-03-20</td><td>5天</td><td>李**</td><td>产品工程部</td><td><span class="tag tag-close">及时</span></td></tr>
+        <tr class="highlight-row"><td>P-2026-0201</td><td>李四</td><td>2026-05-22</td><td>—</td><td>—</td><td>王**</td><td>工艺验证部</td><td><span class="tag tag-warn">超期</span></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="tab-spec-import" class="tab-content" data-group="oa">
+  <div class="alert-box info">监控 Spec 风险前置后的<strong>项目需求导入</strong>链路，与 Site「Spec风险」联动</div>
+  <div class="kpi-grid fixed3">
+    <div class="kpi-card accent-purple"><div class="kpi-label">风险前置触发</div><div class="kpi-value">47</div><div class="kpi-sub">本周期</div></div>
+    <div class="kpi-card accent-blue"><div class="kpi-label">已发起项目导入</div><div class="kpi-value">31</div><div class="kpi-sub">触发转化率 66%</div></div>
+    <div class="kpi-card accent-green"><div class="kpi-label">导入完成率</div><div class="kpi-value">71%</div><div class="kpi-sub">已归档 / 已发起</div></div>
+    <div class="kpi-card accent-amber"><div class="kpi-label">未闭环</div><div class="kpi-value">9</div><div class="kpi-sub">含超时 3</div></div>
+    <div class="kpi-card"><div class="kpi-label">平均导入耗时</div><div class="kpi-value">3.6<small>天</small></div></div>
+    <div class="kpi-card accent-blue"><div class="kpi-label">链路完整率</div><div class="kpi-value">58%</div><div class="kpi-sub">风险归档且导入归档</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-left"><h3>风险 → 导入转化漏斗</h3></div></div>
+      <div class="panel-body"><div class="chart-wrap" data-hbars='[{"l":"风险前置发起","v":47,"c":"#7c3aed"},{"l":"触发导入","v":31,"c":"#2563eb"},{"l":"导入归档","v":22,"c":"#5b7c99"},{"l":"超时未闭环","v":3,"c":"#dc2626"}]'></div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-left"><h3>导入节点平均耗时 (天)</h3></div></div>
+      <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"接收","v":0.8,"unit":"天"},{"l":"校验","v":1.2,"unit":"天"},{"l":"立项映射","v":1.1,"unit":"天"},{"l":"归档","v":0.5,"unit":"天"}]'></div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>未闭环清单 · Spec 风险触发项目需求导入</h3></div>
+      <a class="link" href="#" data-action="export">导出 →</a>
+    </div>
+    <div class="panel-body flush">
+      <table>
+        <tr><th>风险流程</th><th>项目号</th><th>Site</th><th>导入流程</th><th>当前节点</th><th>已耗时</th><th>状态</th><th>明细</th></tr>
+        <tr class="highlight-row"><td>SR-2026-018</td><td>P-2026-0201</td><td>Intel</td><td>PI-2026-009</td><td>立项映射</td><td>6 天</td><td><span class="tag tag-warn">超时</span></td><td><a class="table-link" data-action="drill" data-title="PI-2026-009 · 导入明细" data-cols="节点,处理人,进入时间,耗时(天),状态">查看</a></td></tr>
+        <tr class="highlight-row"><td>SR-2026-022</td><td>P-2026-0218</td><td>TSMC</td><td>PI-2026-014</td><td>校验</td><td>4 天</td><td><span class="tag tag-open">进行中</span></td><td><a class="table-link" data-action="drill" data-title="PI-2026-014 · 导入明细" data-cols="节点,处理人,进入时间,耗时(天),状态">查看</a></td></tr>
+        <tr><td>SR-2026-025</td><td>P-2026-0225</td><td>SMIC</td><td>—</td><td>未触发导入</td><td>—</td><td><span class="tag tag-warn">缺口</span></td><td><a class="table-link" data-action="drill" data-title="SR-2026-025 · 风险明细" data-cols="风险项,Site,发起人,状态,建议动作">查看</a></td></tr>
+        <tr><td>SR-2026-011</td><td>P-2026-0142</td><td>TSMC</td><td>PI-2026-004</td><td>归档</td><td>2 天</td><td><span class="tag tag-close">已闭环</span></td><td><a class="table-link" data-action="drill" data-title="PI-2026-004 · 导入明细" data-cols="节点,处理人,进入时间,耗时(天),状态">查看</a></td></tr>
+      </table>
+    </div>
+  </div>
+  <p class="chart-footnote" style="text-align:left;margin-top:10px">转化率 = 已发起导入 ÷ 风险前置；完成率 = 导入归档 ÷ 已发起导入</p>
+</div>
+
+<div id="tab-std" class="tab-content" data-group="oa">
+  <div class="sub-tabs">
+    <button class="sub-tab active" data-sub-group="std" data-sub-target="std-pub">标准化文件发布流程</button>
+    <button class="sub-tab" data-sub-group="std" data-sub-target="std-chg">标准化文件新增变更需求流程</button>
+  </div>
+  <div class="sub-panel" data-sub-group="std" data-sub-target="std-pub">
+  <div class="kpi-grid">
+    <div class="kpi-card accent-green"><div class="kpi-top"><div class="kpi-label">评审及时率</div></div><div class="kpi-value">85%</div><div class="kpi-sub">需求评审 vs 实际开会 GAP≤0</div></div>
+    <div class="kpi-card accent-blue"><div class="kpi-top"><div class="kpi-label">归档率</div></div><div class="kpi-value">79%</div></div>
+    <div class="kpi-card accent-purple"><div class="kpi-top"><div class="kpi-label">标准文件总数</div></div><div class="kpi-value">105</div><div class="kpi-sub">按产品 × 文件类型</div></div>
+  </div>
+  <div class="grid-2">
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>按产品 × 文件类型 (数量 / 归档率)</h3></div></div>
+    <div class="panel-body flush">
+      <table>
+        <tr><th>产品类型</th><th>文件类型</th><th>数量</th><th>归档数</th><th>归档率</th></tr>
+        <tr><td>湿法产品类</td><td>SOP 作业指导</td><td>28</td><td>24</td><td>86%</td></tr>
+        <tr><td>湿法产品类</td><td>Checklist</td><td>16</td><td>13</td><td>81%</td></tr>
+        <tr><td>湿法化学类</td><td>SOP 作业指导</td><td>18</td><td>15</td><td>83%</td></tr>
+        <tr><td>湿法化学类</td><td>Spec 规范</td><td>14</td><td>12</td><td>86%</td></tr>
+        <tr><td>ECP</td><td>Checklist</td><td>17</td><td>13</td><td>76%</td></tr>
+        <tr><td>ECP</td><td>SOP 作业指导</td><td>12</td><td>10</td><td>83%</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>评审 GAP 明细 (计划评审 vs 实际开会)</h3></div><a class="link" href="#" data-action="export">导出</a></div>
+    <div class="panel-body flush">
+      <table>
+        <tr><th>流程</th><th>计划评审</th><th>实际开会</th><th>GAP</th><th>及时?</th></tr>
+        <tr><td>STD-2026-012</td><td>2026-06-01</td><td>2026-05-30</td><td>-2 天</td><td><span class="tag tag-close">及时</span></td></tr>
+        <tr class="highlight-row"><td>STD-2026-018</td><td>2026-06-10</td><td>2026-06-14</td><td>+4 天</td><td><span class="tag tag-warn">超期</span></td></tr>
+        <tr><td>STD-2026-021</td><td>2026-06-15</td><td>2026-06-15</td><td>0 天</td><td><span class="tag tag-close">及时</span></td></tr>
+      </table>
+    </div>
+  </div>
+  </div>
+  </div>
+  <div class="sub-panel" data-sub-group="std" data-sub-target="std-chg" style="display:none">
+  <div class="kpi-grid">
+    <div class="kpi-card accent-green"><div class="kpi-top"><div class="kpi-label">需求承接及时率</div></div><div class="kpi-value">82%</div><div class="kpi-sub">承接 plan vs 实际提交 GAP≤0</div></div>
+    <div class="kpi-card accent-blue"><div class="kpi-top"><div class="kpi-label">归档率</div></div><div class="kpi-value">77%</div></div>
+    <div class="kpi-card accent-amber"><div class="kpi-top"><div class="kpi-label">承接超期流程</div></div><div class="kpi-value">6</div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>新增变更需求承接 GAP 明细</h3></div><a class="link" href="#" data-action="export">导出</a></div>
+    <div class="panel-body flush">
+      <table>
+        <tr><th>需求流程</th><th>承接人</th><th>需求完成 plan</th><th>实际提交</th><th>完成 GAP</th><th>承接 plan GAP</th><th>状态</th></tr>
+        <tr><td>STDC-2026-006</td><td>张**</td><td>2026-06-08</td><td>2026-06-07</td><td>-1 天</td><td>0 天</td><td><span class="tag tag-close">及时</span></td></tr>
+        <tr class="highlight-row"><td>STDC-2026-009</td><td>李**</td><td>2026-06-10</td><td>2026-06-18</td><td>+8 天</td><td>+3 天</td><td><span class="tag tag-warn">超期</span></td></tr>
+        <tr><td>STDC-2026-012</td><td>王**</td><td>2026-06-20</td><td>2026-06-20</td><td>0 天</td><td>0 天</td><td><span class="tag tag-close">及时</span></td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>按部门 × 产品 × 文件类型 数量</h3></div></div>
+    <div class="panel-body"><div class="chart-wrap" data-group-bars='{"groups":[{"label":"工艺部","values":[12,8,6]},{"label":"产品部","values":[10,7,5]},{"label":"研发部","values":[8,5,4]}],"series":["SOP","Checklist","Spec"]}'></div></div>
+  </div>
+  </div>
+</div>
+
+<div id="tab-doc-oa" class="tab-content" data-group="oa">
+  <div class="kpi-grid fixed3">
+    <div class="kpi-card accent-green"><div class="kpi-label">文档归档率</div><div class="kpi-value">74%</div></div>
+    <div class="kpi-card accent-blue"><div class="kpi-label">平均总归档耗时</div><div class="kpi-value">14<small>天</small></div></div>
+    <div class="kpi-card accent-purple"><div class="kpi-label">超期未归档</div><div class="kpi-value">8</div></div>
+  </div>
+  <div class="grid-2">
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>按Site 归档总耗时 (天)</h3></div></div>
+    <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"TSMC","v":15,"unit":"天"},{"l":"SMIC","v":12,"unit":"天"},{"l":"Intel","v":18,"unit":"天"},{"l":"Samsung","v":14,"unit":"天"}]'></div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>按IC组 各节点耗时 (天)</h3></div></div>
+    <div class="panel-body"><div class="chart-wrap" data-group-bars='{"groups":[{"label":"IC1","values":[3,4,3]},{"label":"IC2","values":[4,5,4]},{"label":"IC3","values":[2,3,3]},{"label":"IC4","values":[5,6,5]}],"series":["发起","审核","归档"]}'></div></div>
+  </div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>IC 组 · 归档率(%) vs 总耗时(天)</h3></div></div>
+    <div class="panel-body"><div class="chart-wrap" data-group-bars='{"groups":[{"label":"IC1","values":[82,10]},{"label":"IC2","values":[76,13]},{"label":"IC3","values":[88,8]},{"label":"IC4","values":[71,16]}],"series":["归档率%","总耗时天"]}'></div>
+      <p class="chart-footnote">归档率与平均耗时对比</p></div>
+  </div>
+</div>
+</div>
+  </div>
+</main>
+</div>
+<script src="assets/charts.js?v=67"></script>
+<script src="assets/app.js?v=67"></script>
+<script>setActiveNav('oa-monitor');</script>
+
+<script
+  src="http://120.55.184.234:8787/embed.js?v=20260801acme4"
+  data-demo-id="acme-rd"
+  data-mode="basic"
+  data-api="http://120.55.184.234:8787"
+  async defer></script>
+
+</body>
+</html>

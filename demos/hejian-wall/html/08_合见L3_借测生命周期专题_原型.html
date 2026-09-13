@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>合见 · 借测生命周期专题（L3）原型</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { background:#eef3f9; }
+  body { font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif; color:#23314c; -webkit-font-smoothing:antialiased; }
+  .stage { width:1600px; height:990px; position:relative; background:linear-gradient(165deg,#ffffff,#fdf4ec); }
+  .ribbon { position:absolute; right:0; top:0; background:#e2574c; color:#fff; font-size:12px; font-weight:700; padding:5px 16px; border-bottom-left-radius:10px; z-index:3; }
+  .top { background:linear-gradient(135deg,#c2682f,#e8985a); color:#fff; padding:14px 28px; display:flex; justify-content:space-between; align-items:center; }
+  .top h1 { font-size:21px; font-weight:800; letter-spacing:1px; }
+  .top h1 .en { font-size:12px; opacity:.85; font-weight:600; margin-left:8px; }
+  .top .meta { font-size:12.5px; opacity:.92; }
+  .body { padding:16px 28px; }
+  .lab { font-size:12px; font-weight:800; color:#c2682f; letter-spacing:1px; margin:2px 0 10px; display:flex; align-items:center; gap:8px; }
+  .lab::before { content:""; width:5px; height:14px; background:#e8985a; border-radius:2px; }
+  .lab .tg { font-size:10.5px; font-weight:700; color:#9a6845; background:#fbeee2; padding:1px 8px; border-radius:10px; }
+  .kpis { display:grid; grid-template-columns:repeat(6,1fr); gap:13px; margin-bottom:16px; }
+  .kpi { background:#fff; border:1px solid #f0e2d4; border-radius:11px; padding:13px 16px; box-shadow:0 3px 9px rgba(150,100,60,.06); position:relative; overflow:hidden; }
+  .kpi::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; }
+  .kpi.o::before{background:#e8855a;} .kpi.g::before{background:#2e8b57;} .kpi.b::before{background:#3f7fc4;} .kpi.r::before{background:#e2574c;} .kpi.c::before{background:#2aa3b8;}
+  .kpi .t { font-size:11.5px; color:#9a8472; }
+  .kpi .v { font-size:26px; font-weight:800; color:#5a3a22; margin-top:4px; }
+  .kpi .v small { font-size:13px; font-weight:700; }
+  .kpi .d { font-size:11px; margin-top:3px; color:#9a8472; }
+  .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:14px; }
+  .grid2 { display:grid; grid-template-columns:1.1fr 1fr; gap:14px; }
+  .panel { background:#fff; border:1px solid #f0e2d4; border-radius:11px; padding:12px 14px 6px; box-shadow:0 3px 10px rgba(150,100,60,.05); }
+  .panel .ph { font-size:13.5px; font-weight:800; color:#5a3a22; display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+  .panel .ph .sub { font-size:10.5px; color:#b09680; font-weight:600; }
+  .chart { width:100%; height:206px; }
+  .warn { background:#fff; border:1px solid #f0e2d4; border-radius:11px; padding:12px 14px; box-shadow:0 3px 10px rgba(150,100,60,.05); }
+  .warn .ph { font-size:13.5px; font-weight:800; color:#5a3a22; margin-bottom:8px; }
+  .warn table { width:100%; border-collapse:collapse; }
+  .warn th { font-size:10.5px; color:#9a8472; text-align:left; padding:6px 8px; border-bottom:1.5px solid #f3e9dd; font-weight:700; }
+  .warn td { font-size:12px; color:#5a4636; padding:7px 8px; border-bottom:1px solid #f6efe7; }
+  .bad { color:#c0392b; font-weight:700; }
+  .note { margin-top:8px; background:linear-gradient(90deg,#fdf2ea,#fdf8f3); border:1px dashed #f0c8a8; border-left:4px solid #e8855a; border-radius:8px; padding:9px 16px; font-size:12.5px; color:#5a4636; line-height:1.5; }
+  .note b { color:#c2682f; }
+</style>
+  <link rel="stylesheet" href="nav.css">
+</head>
+<body data-page="08">
+<div class="proto-app">
+  <aside id="proto-nav" class="proto-nav"></aside>
+  <div class="proto-main">
+<div class="stage">
+  <div class="ribbon">原型设计稿</div>
+  <div class="top">
+    <h1>借测生命周期专题<span class="en">Loan-Test Lifecycle · L3 合见特色主线</span></h1>
+    <div class="meta">主线：卖 → 借 → 转/还 → 收　|　序列号级追踪　|　示意数据</div>
+  </div>
+  <div class="body">
+    <div class="lab">借测核心 KPI <span class="tg">运营 / 销售运营</span></div>
+    <div class="kpis">
+      <div class="kpi o"><div class="t">借出总量（台）</div><div class="v">480</div><div class="d">YTD 累计</div></div>
+      <div class="kpi c"><div class="t">在借量（未归还）</div><div class="v">213</div><div class="d">在借在途</div></div>
+      <div class="kpi g"><div class="t">借转销量</div><div class="v">210</div><div class="d">已转销售</div></div>
+      <div class="kpi g"><div class="t">借转销转化率</div><div class="v">58.6<small>%</small></div><div class="d">目标待校准</div></div>
+      <div class="kpi b"><div class="t">平均在借天数</div><div class="v">52</div><div class="d">天</div></div>
+      <div class="kpi r"><div class="t">超期在借（>90天）</div><div class="v">28</div><div class="d">需督办</div></div>
+    </div>
+    <div class="grid3">
+      <div class="panel"><div class="ph">借测生命周期漏斗<span class="sub">借出 → 在借 → 借转销</span></div><div class="chart" id="e1"></div></div>
+      <div class="panel"><div class="ph">借出 / 归还 / 借转销 月度趋势<span class="sub">流转</span></div><div class="chart" id="e2"></div></div>
+      <div class="panel"><div class="ph">在借天数分布<span class="sub">超期识别</span></div><div class="chart" id="e3"></div></div>
+    </div>
+    <div class="grid2">
+      <div class="panel"><div class="ph">借转销转化率（按产品线）<span class="sub">转化</span></div><div class="chart" id="e4"></div></div>
+      <div class="warn"><div class="ph">超期在借 TOP 清单（待督办）</div>
+        <table>
+          <thead><tr><th>序列号</th><th>客户</th><th>产品</th><th>在借天数</th><th>转化概率</th><th>建议</th></tr></thead>
+          <tbody>
+            <tr><td>SN-3389</td><td>客户 A</td><td>UVHS-2</td><td class="bad">126</td><td>72%</td><td>推动借转销</td></tr>
+            <tr><td>SN-2655</td><td>客户 I</td><td>UV APS</td><td class="bad">104</td><td>40%</td><td>限期归还</td></tr>
+            <tr><td>SN-3120</td><td>客户 K</td><td>UVHP</td><td class="bad">98</td><td>65%</td><td>推动借转销</td></tr>
+            <tr><td>SN-2901</td><td>客户 L</td><td>子卡</td><td class="bad">95</td><td>30%</td><td>归还复检</td></tr>
+            <tr><td>SN-2788</td><td>客户 M</td><td>模组</td><td class="bad">92</td><td>55%</td><td>跟进客户</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="note"><b>分析思路：</b>沿「卖 → 借 → 转/还 → 收」追踪借测<b>全生命周期</b>，聚焦借转销转化与超期在借督办——这是合见运营特色主线，直接影响可售库存释放与收入实现。</div>
+  </div>
+</div>
+<script>
+  var BLUE='#3f7fc4',LBLUE='#7bb0e6',GREEN='#2e8b57',ORANGE='#e8855a',RED='#e2574c',CYAN='#2aa3b8';
+  var M=['1月','2月','3月','4月','5月','6月'];
+  function init(id,opt){echarts.init(document.getElementById(id)).setOption(opt);}
+  var L={top:0,itemWidth:10,itemHeight:10,textStyle:{fontSize:10,color:'#9a8472'}};
+  init('e1',{animation:false,series:[{type:'funnel',left:'8%',right:'8%',top:10,bottom:10,minSize:'30%',label:{fontSize:12,color:'#fff',formatter:'{b}  {c}'},data:[{value:480,name:'借出',itemStyle:{color:LBLUE}},{value:300,name:'在借',itemStyle:{color:CYAN}},{value:210,name:'借转销',itemStyle:{color:GREEN}}]}]});
+  init('e2',{animation:false,legend:Object.assign({data:['借出','归还','借转销']},L),grid:{left:42,right:16,top:28,bottom:24},xAxis:{type:'category',data:M,axisLabel:{fontSize:10,color:'#9a8472'}},yAxis:{type:'value',splitLine:{lineStyle:{color:'#f3e9dd'}},axisLabel:{fontSize:10,color:'#9a8472'}},series:[{name:'借出',type:'bar',data:[62,70,66,78,84,80],barWidth:12,itemStyle:{color:LBLUE,borderRadius:[3,3,0,0]}},{name:'归还',type:'bar',data:[20,22,21,24,26,25],barWidth:12,itemStyle:{color:ORANGE,borderRadius:[3,3,0,0]}},{name:'借转销',type:'line',data:[34,40,38,46,52,48],smooth:true,itemStyle:{color:GREEN},lineStyle:{width:2.5}}]});
+  init('e3',{animation:false,grid:{left:42,right:16,top:18,bottom:24},xAxis:{type:'category',data:['0-30','31-60','61-90','90+'],axisLabel:{fontSize:10,color:'#9a8472'}},yAxis:{type:'value',splitLine:{lineStyle:{color:'#f3e9dd'}},axisLabel:{fontSize:10,color:'#9a8472'}},series:[{type:'bar',data:[96,72,45,28],barWidth:30,itemStyle:{color:function(p){return ['#9ed6b6','#7bb0e6','#f0b888','#e2574c'][p.dataIndex];},borderRadius:[5,5,0,0]}}]});
+  init('e4',{animation:false,grid:{left:54,right:40,top:16,bottom:22},xAxis:{type:'category',data:['UVHP','UVHS','UV APS','子卡','模组'],axisLabel:{fontSize:10,color:'#9a8472'}},yAxis:{type:'value',max:100,splitLine:{lineStyle:{color:'#f3e9dd'}},axisLabel:{fontSize:10,color:'#9a8472',formatter:'{value}%'}},series:[{type:'bar',data:[68,62,55,48,40],barWidth:26,itemStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'#7bd6a8'},{offset:1,color:GREEN}]),borderRadius:[5,5,0,0]},label:{show:true,position:'top',fontSize:11,color:'#5a3a22',formatter:'{c}%'}}]});
+</script>
+  </div>
+</div>
+<script src="nav.js"></script>
+</body>
+</html>

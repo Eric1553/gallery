@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ALD-ALE：原子层沉积与刻蚀技术 — 半导体知识库</title>
+<meta name="description" content="# ALD/ALE：原子层沉积与刻蚀技术  ## 概述 - ALD（Atomic Layer Deposition，原子层沉积）是半导体制造中最精密的薄膜沉积技术。如果说CVD是用"浇花"的方式沉积薄膜，那ALD就是在"一片一片地贴叶子"——逐层、逐原子地构建薄膜。 - ALD在2000年代之前主要">
+<link rel="stylesheet" href="/kb/assets/style.css">
+</head>
+<body>
+<div class="top-accent"></div>
+<header class="page-header">
+  <a href="/kb/首页.html" class="home-link">🔬 半导体知识库</a>
+</header>
+<main class="container">
+<nav class="breadcrumb"><a href="/kb/首页.html">半导体知识库</a> <span class="sep">›</span> <a href="/kb//03-半导体设备/index.html">03-半导体设备</a> <span class="sep">›</span> <a href="/kb//03-半导体设备/行业动态/index.html">行业动态</a></nav>
+<article class="note">
+<header class="note-header">
+  <h1>ALD-ALE：原子层沉积与刻蚀技术</h1>
+  <div class="meta-line"><span class="meta-item">📅 2026-07-09</span> · <span class="meta-item">📂 03-半导体设备</span> · <span class="meta-item" style="color:#D97706">⭐ medium</span> · <span class="meta-item">🏷️ <span class="tag">半导体设备</span> <span class="tag">ALD</span> <span class="tag">ALE</span> <span class="tag">薄膜沉积</span> <span class="tag">技术深潜</span></span></div>
+</header>
+<div class="note-body">
+<h1 id="aldale">ALD/ALE：原子层沉积与刻蚀技术</h1>
+<h2 id="_1">概述</h2>
+<ul>
+<li>ALD（Atomic Layer Deposition，原子层沉积）是半导体制造中最精密的薄膜沉积技术。如果说CVD是用"浇花"的方式沉积薄膜，那ALD就是在"一片一片地贴叶子"——逐层、逐原子地构建薄膜。</li>
+<li>ALD在2000年代之前主要用于研发和特殊应用，但在2007年后随着高k金属栅极（HKMG）在45nm节点的引入，ALD成为先进半导体制造的必需品。到了7nm以下的GAA时代，ALD的地位进一步上升——纳米片的间隙需要AL级的介质层覆盖，只有ALD能做到。</li>
+</ul>
+<h2 id="ald">ALD的工作原理</h2>
+<ul>
+<li>ALD的核心特征是<strong>自限制表面化学反应</strong>（Self-limiting Surface Reaction）：</li>
+<li><strong>一个ALD循环包含四个步骤</strong>：</li>
+<li>
+<ol>
+<li><strong>前驱体A脉冲</strong>：含金属元素的气体分子（如TMA，三甲基铝）进入反应腔，化学吸附在晶圆表面。当表面被单层分子完全覆盖时，吸附自动停止（因为表面位点已饱和）。</li>
+</ol>
+</li>
+<li>
+<ol>
+<li><strong>吹扫</strong>：用惰性气体（N₂/Ar）吹走多余的前驱体A。</li>
+</ol>
+</li>
+<li>
+<ol>
+<li><strong>前驱体B脉冲</strong>：含氧/氮等反应气体的分子（如H₂O、O₃、NH₃）进入，与前驱体A反应形成氧化物/氮化物薄膜，同时产生挥发性副产物。</li>
+</ol>
+</li>
+<li>
+<ol>
+<li><strong>吹扫</strong>：吹走反应副产物和多余反应物。</li>
+</ol>
+</li>
+<li>重复这四个步骤N次，就得到了N个原子层的精准薄膜。每个循环沉积约0.05-0.1nm（0.5-1 Å），膜厚的控制精度就是"几个循环"。</li>
+</ul>
+<h2 id="ald-vs-cvdald">ALD vs CVD：什么时候用ALD</h2>
+<table>
+<thead>
+<tr>
+<th>-</th>
+<th>维度</th>
+<th>ALD</th>
+<th>CVD（化学气相沉积）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-</td>
+<td>膜厚控制</td>
+<td>Å级别（原子级）</td>
+<td>nm级别</td>
+</tr>
+<tr>
+<td>-</td>
+<td>台阶覆盖率（Step Coverage）</td>
+<td>接近100%（完全均匀）</td>
+<td>80-95%（高深宽比处会变薄）</td>
+</tr>
+<tr>
+<td>-</td>
+<td>沉积速度</td>
+<td>极慢（~0.1nm/分钟）</td>
+<td>快（1-100nm/分钟）</td>
+</tr>
+<tr>
+<td>-</td>
+<td>温度</td>
+<td>100-400°C（可低温）</td>
+<td>300-900°C</td>
+</tr>
+<tr>
+<td>-</td>
+<td>成本</td>
+<td>高（慢、前驱体贵）</td>
+<td>低（快、材料便宜）</td>
+</tr>
+<tr>
+<td>- <strong>选择逻辑</strong>：</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>- - 需要完美的台阶覆盖率（如3D NAND的高深宽比沟道、GAA纳米片间隙）→ ALD</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>- - 需要极薄的均匀膜（如高k介质&lt;2nm）→ ALD</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>- - 膜厚要求较大且可接受一定的不均匀性 → CVD</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>## ALD在先进制程中的关键应用</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>### 1. High-k金属栅极（HKMG）</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>- 45nm节点后，传统的SiO₂栅介质（厚度仅1.2nm导致极高空穴隧穿）被高k材料（如HfO₂，二氧化铪）替代。HfO₂层需要不到2nm的膜厚且在整个300mm晶圆上厚度偏差&lt;1%——这只有ALD能做到。</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>### 2. 多重图案化侧墙（Spacer-Defined Multiple Patterning）</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>- 在自对准双重图案化（SADP）中，先在芯轴（Mandrel）上沉积均匀的侧墙材料（SiN/SiO₂），然后蚀刻芯轴留下侧墙作为后续刻蚀的硬掩模。侧墙的宽度均匀性直接决定最终线条的CD（关键尺寸）均匀性——必须用ALD。</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>### 3. 3D NAND</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>- 3D NAND需要在极高深宽比（&gt;100:1）的通道孔内沉积阻挡层/电荷俘获层/隧穿氧化层等极薄的膜。CVD在这种结构下无法做到均匀覆盖，只有ALD可以实现。128层3D NAND之后，ALD几乎覆盖了所有介质层的沉积。</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>### 4. GAA纳米片</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>- 这是ALD的新战场。在GAA制造过程中，Si/SiGe超晶格蚀刻形成悬浮的Si纳米片后，需要在纳米片之间（间隙可能&lt;10nm）沉积高k介质和功函数金属。ALD是唯一的选择。</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>## ALE（原子层刻蚀）：ALD的反向</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>- ALE利用与ALD类似的原理实现"一次一个原子层"的刻蚀：</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>- 1. <strong>吸附</strong>：反应气体化学吸附在表面，形成一层改性的表面层</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>- 2. <strong>活化</strong>：用低能离子或等离子体选择性去除被改性的原子层</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>- ALE的目标不是快，而是精准——在GAA的纳米片释放步骤中，选择性去除SiGe层但不能损伤相邻的Si纳米片，只有ALE能做到这种级别的选择性。</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>## ALD设备竞争格局</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>-</td>
+<td>企业</td>
+<td>ALD市占率</td>
+<td>强项</td>
+</tr>
+<tr>
+<td>-</td>
+<td>------</td>
+<td>:---:</td>
+<td>------</td>
+</tr>
+<tr>
+<td>-</td>
+<td>ASM International</td>
+<td>~35%</td>
+<td>ALD设备全球No.1，尤其在High-k ALD</td>
+</tr>
+<tr>
+<td>-</td>
+<td>Lam Research</td>
+<td>~25%</td>
+<td>ALD/ALE覆盖全面</td>
+</tr>
+<tr>
+<td>-</td>
+<td>TEL</td>
+<td>~20%</td>
+<td>栅极堆叠和3D NAND</td>
+</tr>
+<tr>
+<td>-</td>
+<td>AMAT</td>
+<td>~15%</td>
+<td>在PVD/CVD领域更强</td>
+</tr>
+<tr>
+<td>-</td>
+<td>国产（拓荆/中微）</td>
+<td>&lt;5%</td>
+<td>在成熟制程的ALD追赶中</td>
+</tr>
+<tr>
+<td>- 注意：ALD设备领域的全球第一是ASM International（荷兰），而不是ASML/AMAT/Lam这些更知名的巨头。ASM International是一家低调但技术实力极强的荷兰设备公司。</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>## 📊 帆软产品关联度分析</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>产品线</th>
+<th style="text-align: center;">关联度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FineReport</td>
+<td style="text-align: center;">⚪无</td>
+<td>ALD/ALE作为纯技术主题，不涉及报告类场景</td>
+</tr>
+<tr>
+<td>FineBI</td>
+<td style="text-align: center;">🟡中</td>
+<td>ALD工艺数据的可视化分析——ALD每个循环的膜厚均匀性、前驱体消耗效率、多种前驱体的工艺窗口对比。但这些分析通常内嵌在设备商（ASMI/Lam/TEL）自带的工艺分析软件中，BI工具的切入门槛较高</td>
+</tr>
+<tr>
+<td>FineDataLink</td>
+<td style="text-align: center;">🟡中</td>
+<td>ALD设备产生的工艺数据（前驱体流量、腔体压力/温度曲线、膜厚量测数据）需要与FDC/SPC/YMS系统打通。FDL可以扮演"工艺数据集成层"的角色，将ALD设备的Trace Data与其他工序设备数据关联</td>
+</tr>
+<tr>
+<td>简道云</td>
+<td style="text-align: center;">⚪无</td>
+<td>技术专题不涉及流程管理场景</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_2">💼 售前场景</h2>
+<h3 id="1fabald">场景1：Fab厂工艺工程师——ALD膜厚一致性监控</h3>
+<p><strong>背景</strong>：ALD工艺的核心价值是"原子级膜厚控制"，但在实际生产中，数百个ALD循环后膜厚的微小偏差可能累积。工艺工程师需要监控每批晶圆的ALD膜厚数据与量测结果之间的关系，以及前驱体更换周期对膜厚一致性的影响。
+<strong>帆软切入点</strong>：FDL汇聚ALD设备Trace Data+在线膜厚量测数据+离线TEM/XRR数据→FineBI构建膜厚一致性控制图。售前话术："ALD的承诺是'每个循环0.1nm'，但实际情况需要在数据中验证——FineBI帮助工艺工程师用SPC的方法管理ALD工艺的稳定性。"</p>
+<h3 id="2ald">场景2：设备商——ALD设备性能对比分析</h3>
+<p><strong>背景</strong>：ASMI/Lam/TEL三家在ALD市场的竞争本质上是设备性能的对标竞赛——谁的ALD能在更高深宽比的结构中实现更好的台阶覆盖率、谁的设备能更稳定地运行数千个循环。设备商和Fab厂都需要对这些性能数据进行系统化对比。
+<strong>帆软切入点</strong>：FineBI构建ALD设备性能对标看板——按供应商/型号/工艺应用的台阶覆盖率、膜厚均匀性、产率(WPH)对比。售前话术："帮助Fab厂在新设备选型时用数据说话——不是看供应商的PPT，而是看自己产线实际跑出来的数据。"</p>
+<h2 id="_3">🔗 关联</h2>
+<ul>
+<li>
+<ul>
+<li><a href="/kb/行业知识体系/03-半导体设备/基础概念/半导体设备分类与市场格局">半导体设备分类与市场格局</a></li>
+</ul>
+</li>
+<li>
+<ul>
+<li><a href="/kb/01-晶圆制造/行业动态/晶体管技术演进：从MOSFET到FinFET到GAA">晶体管技术演进：从MOSFET到FinFET到GAA</a></li>
+</ul>
+</li>
+<li>
+<ul>
+<li><a href="/kb/01-晶圆制造/行业动态/存储芯片行业全景：DRAM、NAND与HBM">存储芯片行业全景：DRAM、NAND与HBM</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="_4">🔗 来源</h2>
+<ul>
+<li>技术文献及应用材料综合</li>
+<li>入库时间：2026-07-09</li>
+</ul>
+</div>
+</article>
+<footer class="note-footer">
+  <a href="/kb/03-半导体设备/行业动态/index.html">← 返回目录</a>
+</footer>
+</main>
+</body>
+</html>

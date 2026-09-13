@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>合见 · 库存驾驶舱（L2）原型</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { background:#eef3f9; }
+  body { font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif; color:#23314c; -webkit-font-smoothing:antialiased; }
+  .stage { width:1600px; height:992px; position:relative; background:linear-gradient(165deg,#ffffff,#eef4fb); }
+  .ribbon { position:absolute; right:0; top:0; background:#e2574c; color:#fff; font-size:12px; font-weight:700; padding:5px 16px; border-bottom-left-radius:10px; z-index:3; }
+  .top { background:linear-gradient(135deg,#2a7d8c,#3f9fb0); color:#fff; padding:14px 28px; display:flex; justify-content:space-between; align-items:center; }
+  .top h1 { font-size:21px; font-weight:800; letter-spacing:1px; }
+  .top h1 .en { font-size:12px; opacity:.85; font-weight:600; margin-left:8px; }
+  .top .meta { font-size:12.5px; opacity:.92; }
+  .body { padding:16px 28px; }
+  .lab { font-size:12px; font-weight:800; color:#2a7d8c; letter-spacing:1px; margin:2px 0 10px; display:flex; align-items:center; gap:8px; }
+  .lab::before { content:""; width:5px; height:14px; background:#3f9fb0; border-radius:2px; }
+  .lab .tg { font-size:10.5px; font-weight:700; color:#8a93a6; background:#eef2f8; padding:1px 8px; border-radius:10px; }
+  .kpis { display:grid; grid-template-columns:repeat(6,1fr); gap:13px; margin-bottom:16px; }
+  .kpi { background:#fff; border:1px solid #e4ebf4; border-radius:11px; padding:13px 16px; box-shadow:0 3px 9px rgba(40,70,120,.05); position:relative; overflow:hidden; }
+  .kpi::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; }
+  .kpi.b::before{background:#3f7fc4;} .kpi.g::before{background:#2e8b57;} .kpi.o::before{background:#e8855a;} .kpi.r::before{background:#e2574c;} .kpi.c::before{background:#2aa3b8;}
+  .kpi .t { font-size:11.5px; color:#7c869a; }
+  .kpi .v { font-size:26px; font-weight:800; color:#1c2c4a; margin-top:4px; }
+  .kpi .v small { font-size:13px; font-weight:700; }
+  .kpi .d { font-size:11px; margin-top:3px; }
+  .kpi .d.up { color:#2e8b57; } .kpi .d.dn { color:#e2574c; }
+  .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:14px; }
+  .panel { background:#fff; border:1px solid #e4ebf4; border-radius:11px; padding:12px 14px 6px; box-shadow:0 3px 10px rgba(40,70,120,.05); }
+  .panel .ph { font-size:13.5px; font-weight:800; color:#1c2c4a; display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+  .panel .ph .sub { font-size:10.5px; color:#9aa3b5; font-weight:600; }
+  .chart { width:100%; height:212px; }
+  .note { margin-top:6px; background:linear-gradient(90deg,#eaf6f8,#f3fafb); border:1px dashed #a9d6de; border-left:4px solid #2aa3b8; border-radius:8px; padding:9px 16px; font-size:12.5px; color:#3a4660; line-height:1.5; }
+  .note b { color:#1f6f7e; }
+</style>
+  <link rel="stylesheet" href="nav.css">
+</head>
+<body data-page="04">
+<div class="proto-app">
+  <aside id="proto-nav" class="proto-nav"></aside>
+  <div class="proto-main">
+<div class="stage">
+  <div class="ribbon">原型设计稿</div>
+  <div class="top">
+    <h1>合见库存驾驶舱<span class="en">Inventory Cockpit · L2 库存与资产</span></h1>
+    <div class="meta">期间：2026 YTD　|　主体：全部　|　含借测占用勾稽　|　示意数据</div>
+  </div>
+  <div class="body">
+    <div class="lab">库存核心 KPI <span class="tg">库存 / 运营负责人</span></div>
+    <div class="kpis">
+      <div class="kpi b"><div class="t">库存总额（万元）</div><div class="v">9,420</div><div class="d dn">▲ 3.2% 环比</div></div>
+      <div class="kpi g"><div class="t">库存周转率（次）</div><div class="v">4.2</div><div class="d up">▲ 0.3</div></div>
+      <div class="kpi c"><div class="t">周转天数</div><div class="v">86</div><div class="d up">▼ 5 天</div></div>
+      <div class="kpi r"><div class="t">呆滞率</div><div class="v">11.4<small>%</small></div><div class="d up">▼ 1.2pct</div></div>
+      <div class="kpi o"><div class="t">借测占用额（万元）</div><div class="v">2,260</div><div class="d dn">占比 24%</div></div>
+      <div class="kpi g"><div class="t">可售占比</div><div class="v">46<small>%</small></div><div class="d up">▲ 2pct</div></div>
+    </div>
+    <div class="grid3">
+      <div class="panel"><div class="ph">库存状态结构<span class="sub">可售/借测/在制/委外/呆滞</span></div><div class="chart" id="e1"></div></div>
+      <div class="panel"><div class="ph">法人实体库存走势<span class="sub">沪 / 深 / 京</span></div><div class="chart" id="e2"></div></div>
+      <div class="panel"><div class="ph">库龄分段分布<span class="sub">含呆滞线</span></div><div class="chart" id="e3"></div></div>
+    </div>
+    <div class="grid3">
+      <div class="panel"><div class="ph">物料分组库存 TOP<span class="sub">金额</span></div><div class="chart" id="e4"></div></div>
+      <div class="panel"><div class="ph">借测占用 vs 可售（按产品线）<span class="sub">勾稽</span></div><div class="chart" id="e5"></div></div>
+      <div class="panel"><div class="ph">呆滞金额与呆滞率趋势<span class="sub">健康</span></div><div class="chart" id="e6"></div></div>
+    </div>
+    <div class="note"><b>分析思路：</b>可售 ↔ 借测占用 ↔ 在制<b>统一勾稽</b>，库龄/呆滞监控库存健康，回答「库里有什么、健不健康、为何账面有货却发不出」，为缺货归因提供库存侧依据。</div>
+  </div>
+</div>
+<script>
+  var BLUE='#3f7fc4',LBLUE='#7bb0e6',GREEN='#2e8b57',ORANGE='#e8855a',RED='#e2574c',CYAN='#2aa3b8';
+  var M=['1月','2月','3月','4月','5月','6月'];
+  function init(id,opt){echarts.init(document.getElementById(id)).setOption(opt);}
+  var L={top:0,itemWidth:10,itemHeight:10,textStyle:{fontSize:10,color:'#6b7790'}};
+  init('e1',{animation:false,legend:{bottom:0,itemWidth:9,itemHeight:9,textStyle:{fontSize:10,color:'#6b7790'}},series:[{type:'pie',radius:['42%','66%'],center:['50%','45%'],label:{fontSize:10,formatter:'{b}\n{d}%'},data:[{value:46,name:'可售',itemStyle:{color:BLUE}},{value:24,name:'借测占用',itemStyle:{color:ORANGE}},{value:14,name:'在制',itemStyle:{color:CYAN}},{value:6,name:'委外',itemStyle:{color:LBLUE}},{value:10,name:'呆滞',itemStyle:{color:RED}}]}]});
+  init('e2',{animation:false,legend:Object.assign({data:['上海','深圳','北京']},L),grid:{left:48,right:16,top:28,bottom:24},xAxis:{type:'category',data:M,axisLabel:{fontSize:10,color:'#8a93a6'}},yAxis:{type:'value',splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:10,color:'#8a93a6'}},series:[{name:'上海',type:'line',data:[5200,5400,5300,5600,5800,5900],smooth:true,itemStyle:{color:BLUE}},{name:'深圳',type:'line',data:[2400,2300,2500,2450,2600,2700],smooth:true,itemStyle:{color:CYAN}},{name:'北京',type:'line',data:[1500,1480,1600,1620,1700,1820],smooth:true,itemStyle:{color:ORANGE}}]});
+  init('e3',{animation:false,grid:{left:46,right:16,top:18,bottom:24},xAxis:{type:'category',data:['0-30','31-60','61-90','91-180','180+'],axisLabel:{fontSize:10,color:'#8a93a6'}},yAxis:{type:'value',splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:10,color:'#8a93a6'}},series:[{type:'bar',data:[3200,2400,1500,1100,920],barWidth:24,itemStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:LBLUE},{offset:1,color:BLUE}]),borderRadius:[4,4,0,0]},markLine:{symbol:'none',lineStyle:{color:RED,type:'dashed'},data:[{yAxis:1000,label:{formatter:'呆滞线',fontSize:9,color:RED}}]}}]});
+  init('e4',{animation:false,grid:{left:72,right:18,top:14,bottom:18},xAxis:{type:'value',splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:9,color:'#8a93a6'}},yAxis:{type:'category',data:['包装材料','元器件','开发板','模组','子卡','芯片成品'],axisLabel:{fontSize:10,color:'#6b7790'}},series:[{type:'bar',data:[280,620,880,1240,1860,3200],barWidth:11,itemStyle:{color:CYAN,borderRadius:[0,4,4,0]}}]});
+  init('e5',{animation:false,legend:Object.assign({data:['可售','借测占用']},L),grid:{left:48,right:16,top:28,bottom:24},xAxis:{type:'category',data:['UVHP','UVHS','UV APS','子卡','模组'],axisLabel:{fontSize:10,color:'#8a93a6'}},yAxis:{type:'value',splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:10,color:'#8a93a6'}},series:[{name:'可售',type:'bar',stack:'s',data:[800,720,560,1200,900],itemStyle:{color:BLUE}},{name:'借测占用',type:'bar',stack:'s',data:[420,520,380,300,240],itemStyle:{color:ORANGE,borderRadius:[3,3,0,0]}}]});
+  init('e6',{animation:false,legend:Object.assign({data:['呆滞金额','呆滞率']},L),grid:{left:48,right:46,top:28,bottom:24},xAxis:{type:'category',data:M,axisLabel:{fontSize:10,color:'#8a93a6'}},yAxis:[{type:'value',splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:10,color:'#8a93a6'}},{type:'value',max:20,axisLabel:{fontSize:10,color:'#8a93a6',formatter:'{value}%'},splitLine:{show:false}}],series:[{name:'呆滞金额',type:'bar',data:[1280,1240,1180,1120,1080,1020],barWidth:18,itemStyle:{color:RED,borderRadius:[4,4,0,0]}},{name:'呆滞率',type:'line',yAxisIndex:1,data:[14,13.5,12.8,12.2,11.8,11.4],smooth:true,itemStyle:{color:ORANGE},lineStyle:{width:2.5}}]});
+</script>
+  </div>
+</div>
+<script src="nav.js"></script>
+</body>
+</html>

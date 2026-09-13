@@ -1,0 +1,51 @@
+{
+  "version": "1.0",
+  "domain": "service",
+  "description": "故障码→原因→方案 轻量路由图（PoC Demo，与 EXP-2024-015 / RM-2023-001 等文档对齐）",
+  "nodes": [
+    { "id": "E1001", "type": "error_code", "label": "E1001", "desc": "球管温度过高（旋转阳极转速不足）" },
+    { "id": "E1002", "type": "error_code", "label": "E1002", "desc": "球管电流异常（旋转阳极卡死）" },
+    { "id": "symptom_anode_rpm", "type": "symptom", "label": "旋转阳极转速不足", "desc": "无法达到额定转速 9600rpm，图像重建失败" },
+    { "id": "cause_anode_stall", "type": "root_cause", "label": "旋转阳极卡死", "share_pct": 34.3 },
+    { "id": "cause_grease_dry", "type": "root_cause", "label": "轴承润滑脂干涸", "share_pct": 58.0 },
+    { "id": "cause_coolant", "type": "root_cause", "label": "冷却系统异常", "action": "优先排查冷却系统" },
+    { "id": "solution_sop_tube", "type": "solution", "label": "球管更换 SOP", "document_id": "RM-2023-001" },
+    { "id": "part_ui_ct_tube_960", "type": "spare_part", "label": "UI-CT-TUBE-960", "price_cny": 850000, "lead_days": 45, "document_id": "SP-2024-001" },
+    { "id": "risk_supply", "type": "risk", "label": "球管供应红色预警", "stock_qty": 12, "document_id": "SP-2024-025" },
+    { "id": "report_q1_tube", "type": "report", "label": "Q1 uCT960 球管更换统计", "document_id": "SP-REC-2025-Q1" },
+    { "id": "E6xxx", "type": "error_code", "label": "E6xxx", "desc": "MRI 梯度系统错误码族", "device_model": "uMR 790" },
+    { "id": "cause_gradient", "type": "root_cause", "label": "梯度线性度下降", "document_id": "RM-2023-008" },
+    { "id": "helium_abnormal", "type": "symptom", "label": "液氦年消耗>1500升", "device_model": "uMR 790" },
+    { "id": "cause_cold_head", "type": "root_cause", "label": "冷头故障", "share_pct": 40.0, "document_id": "EXP-2025-006" }
+  ],
+  "edges": [
+    { "from": "E1001", "to": "symptom_anode_rpm", "relation": "manifests" },
+    { "from": "E1002", "to": "symptom_anode_rpm", "relation": "manifests" },
+    { "from": "symptom_anode_rpm", "to": "cause_coolant", "relation": "check_first", "priority": 1 },
+    { "from": "symptom_anode_rpm", "to": "cause_anode_stall", "relation": "likely_cause", "priority": 2 },
+    { "from": "symptom_anode_rpm", "to": "cause_grease_dry", "relation": "likely_cause", "priority": 3 },
+    { "from": "cause_anode_stall", "to": "EXP-2024-015", "relation": "documented_in", "document_id": "EXP-2024-015" },
+    { "from": "cause_grease_dry", "to": "EXP-2024-015", "relation": "documented_in", "document_id": "EXP-2024-015" },
+    { "from": "cause_coolant", "to": "EXP-2024-015", "relation": "documented_in", "document_id": "EXP-2024-015" },
+    { "from": "cause_anode_stall", "to": "solution_sop_tube", "relation": "recommend" },
+    { "from": "solution_sop_tube", "to": "part_ui_ct_tube_960", "relation": "requires_part" },
+    { "from": "part_ui_ct_tube_960", "to": "risk_supply", "relation": "check_supply" },
+    { "from": "part_ui_ct_tube_960", "to": "report_q1_tube", "relation": "usage_stats" },
+    { "from": "E6xxx", "to": "cause_gradient", "relation": "likely_cause" },
+    { "from": "helium_abnormal", "to": "cause_cold_head", "relation": "likely_cause" }
+  ],
+  "lookup": {
+    "E1001": {
+      "symptoms": ["symptom_anode_rpm"],
+      "causes": ["cause_coolant", "cause_anode_stall", "cause_grease_dry"],
+      "documents": ["EXP-2024-015", "RM-2023-001", "SP-2024-001", "SP-2024-025", "SP-REC-2025-Q1"],
+      "structured_tables": ["hospital_repair_record", "device_operation_log"]
+    },
+    "E1002": {
+      "symptoms": ["symptom_anode_rpm"],
+      "causes": ["cause_coolant", "cause_anode_stall", "cause_grease_dry"],
+      "documents": ["EXP-2024-015", "RM-2023-001", "SP-2024-001", "SP-2024-025", "SP-REC-2025-Q1"],
+      "structured_tables": ["hospital_repair_record", "dispatch_work_order", "device_operation_log"]
+    }
+  }
+}

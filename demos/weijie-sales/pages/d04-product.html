@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>D-04 产品经营分析 · 唯捷创芯</title>
+<link rel="stylesheet" href="../assets/style.css" />
+<script src="../assets/echarts.min.js"></script>
+</head>
+<body>
+<div id="content">
+
+  <div class="grid r-23" style="margin-bottom:4px">
+    <div class="card"><div class="card-b" style="padding:12px 16px">
+      <div class="flow">
+        <div class="step"><span class="sn">1</span>总览</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">2</span>系列/型号</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">3</span>新品</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">4</span>交叉</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">5</span>明细</div>
+      </div>
+    </div></div>
+    <div class="card"><div class="card-b" style="padding:12px 16px">
+      <div class="meta-strip">
+        <span class="ms">POP报表 <b>已完成·联动</b></span>
+        <span class="ms">价格分析 <b>移至 D-06</b></span>
+        <span class="ms">大类均价 <b>不做</b></span>
+        <span class="ms">新品逻辑 <b>对齐 PDT</b></span>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="grid g5" id="kpi"></div>
+
+  <div class="section-head"><span class="bar"></span><h2>规模分析</h2>
+    <span class="desc">销量 · 销售额 · 占比 · 增长率</span><span class="line"></span></div>
+  <div class="grid r-21">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>产品大类销量 / 销售额 / 增长率</div><span class="cx">单位：万元 · 万颗</span></div>
+      <div class="card-b"><div id="c1" class="chart" style="height:262px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>销售额占比 ABC 分布</div></div>
+      <div class="card-b"><div id="c2" class="chart" style="height:262px"></div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>系列 / 型号下钻</h2>
+    <span class="desc">总览 → 系列 → 型号，联动已完成 POP 报表</span>
+    <button class="btn-ghost" style="margin-left:8px">↗ 跳转 POP 大类/型号报表</button><span class="line"></span></div>
+  <div class="grid r-12">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>TOP 型号销售额</div></div>
+      <div class="card-b"><div class="rank" id="rank"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>系列销售额趋势</div></div>
+      <div class="card-b"><div id="c3" class="chart" style="height:248px"></div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>新品表现</h2>
+    <span class="desc">新品销售占比 · 与 PDT 新品定义保持一致</span><span class="line"></span></div>
+  <div class="grid g2">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>新品 vs 在售 销售额走势</div></div>
+      <div class="card-b"><div id="c4" class="chart" style="height:240px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>各大类新品销售占比</div></div>
+      <div class="card-b"><div id="c5" class="chart" style="height:240px"></div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>交叉分析 · 产品 × 客户 / 渠道</h2>
+    <span class="desc">热力交叉视角，识别重点品类-客户组合</span><span class="line"></span></div>
+  <div class="card">
+    <div class="card-h"><div class="ct"><span class="ci"></span>产品大类 × 客户行业 销售额热力</div><span class="cx">单位：万元</span></div>
+    <div class="card-b"><div id="c6" class="chart" style="height:280px"></div></div>
+  </div>
+
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+renderLayout("d04",{chapter:"第二章 · 拆经营结构",
+ sub:"面向销售管理及产品管理：产品销量销售额、占比、增长率与新品表现（价格分析已移至库存页）。",
+ batchTags:'<span class="tag tag-blue" style="margin-left:8px">一期 P1</span>'});
+
+const kpi=[
+ {t:"产品销售额",v:"38,642",u:"万元",f:'<span class="trend-up">环比 +3.1%</span>',c:"",sc:"#2468f2",sp:[31,33,32,35,34,36,38]},
+ {t:"产品销量",v:"1.86",u:"亿颗",f:'<span class="trend-up">环比 +2.4%</span>',c:"k-cyan",sc:"#16b8c8",sp:[1.5,1.6,1.62,1.7,1.74,1.8,1.86]},
+ {t:"在售型号数",v:"312",u:"个",f:'<span class="lbl">暂保留</span>',c:"k-green",sc:"#25a36c",sp:[280,288,294,300,305,309,312]},
+ {t:"TOP10型号占比",v:"58.3",u:"%",f:'<span class="trend-flat">集中度</span>',c:"k-gold",sc:"#e0a106",sp:[54,55,56,56.5,57,58,58.3]},
+ {t:"新品销售占比",v:"14.6",u:"%",f:'<span class="trend-up">▲3.2pct</span>',c:"k-orange",sc:"#f07a1d",sp:[8,9,10,11,12,13,14.6]},
+];
+document.getElementById("kpi").innerHTML=kpi.map((k,i)=>`
+ <div class="kpi ${k.c}"><div class="kt"><span class="dot" style="background:${k.sc}"></span>${k.t}</div>
+ <div class="kv">${k.v}<small>${k.u}</small></div><div class="kf">${k.f}</div><div class="spark" id="s${i}"></div></div>`).join("");
+kpi.forEach((k,i)=>spark("s"+i,k.sp,k.sc));
+
+const P=["消费电子","工业控制","汽车电子","通信","其他"];
+mk("c1",{tooltip:tip(),legend:legend({data:["销售额","销量","增长率"]}),grid:baseGrid({top:34,right:46}),
+ xAxis:catAxis(P),yAxis:[valAxis({name:"万元"}),valAxis({name:"增长%",splitLine:{show:false}})],
+ series:[
+  {name:"销售额",type:"bar",barWidth:22,itemStyle:{borderRadius:[4,4,0,0],color:gradient("#5b9bff","#2468f2")},data:[13800,9600,7200,5100,2942]},
+  {name:"销量",type:"line",smooth:true,symbol:"circle",symbolSize:6,lineStyle:{width:2.5,color:"#16b8c8"},itemStyle:{color:"#16b8c8"},data:[680,520,360,240,160]},
+  {name:"增长率",type:"line",yAxisIndex:1,smooth:true,symbol:"none",lineStyle:{width:2,type:"dashed",color:"#f07a1d"},data:[8.6,15.2,22.4,-3.1,5.7]},
+ ]});
+
+mk("c2",{tooltip:{trigger:"item",formatter:"{b}<br/>{c} 万元 ({d}%)"},legend:legend({orient:"vertical",right:0,top:"center",icon:"circle"}),
+ series:[{type:"pie",radius:["44%","70%"],center:["38%","52%"],roseType:"radius",itemStyle:{borderColor:"#fff",borderWidth:2,borderRadius:4},
+  label:{show:false},data:[{value:13800,name:"A类·消费电子"},{value:9600,name:"A类·工业控制"},{value:7200,name:"B类·汽车电子"},{value:5100,name:"B类·通信"},{value:2942,name:"C类·其他"}]}]});
+
+const rk=[["WL2456 射频前端","2,860"],["WL3088 电源管理","2,210"],["WL1207 信号链","1,940"],["WL5521 MCU","1,560"],["WL4410 传感","1,180"],["WL6602 接口","960"]];
+document.getElementById("rank").innerHTML=rk.map((r,i)=>`
+ <div class="ri ${i<3?'top'+(i+1):''}"><span class="rn">${i+1}</span><span class="rl">${r[0]}</span>
+ <span class="rv">${r[1]}</span></div>`).join("");
+
+const M=["1月","2月","3月","4月","5月","6月"];
+mk("c3",{tooltip:tip(),legend:legend({data:["射频系列","电源系列","信号链系列"]}),grid:baseGrid({top:30}),
+ xAxis:catAxis(M),yAxis:valAxis({name:"万元"}),
+ series:[
+  {name:"射频系列",type:"line",smooth:true,symbol:"none",lineStyle:{width:2.5,color:"#2468f2"},areaStyle:{color:areaGrad("36,104,242",.2,.01)},data:[2100,2200,2400,2350,2600,2860]},
+  {name:"电源系列",type:"line",smooth:true,symbol:"none",lineStyle:{width:2.5,color:"#16b8c8"},data:[1600,1700,1800,1850,2050,2210]},
+  {name:"信号链系列",type:"line",smooth:true,symbol:"none",lineStyle:{width:2.5,color:"#25a36c"},data:[1400,1500,1600,1620,1800,1940]},
+ ]});
+
+mk("c4",{tooltip:tip(),legend:legend({data:["在售销售额","新品销售额"]}),grid:baseGrid({top:30}),
+ xAxis:catAxis(M),yAxis:valAxis({name:"万元"}),
+ series:[
+  {name:"在售销售额",type:"bar",stack:"a",barWidth:24,itemStyle:{color:"#2468f2"},data:[4500,4800,5200,5000,5400,5800]},
+  {name:"新品销售额",type:"bar",stack:"a",barWidth:24,itemStyle:{color:"#f07a1d",borderRadius:[4,4,0,0]},data:[700,800,900,900,1000,1000]},
+ ]});
+
+mk("c5",{tooltip:tip(),grid:baseGrid({top:18}),xAxis:catAxis(P),yAxis:valAxis({name:"%"}),
+ series:[{type:"bar",barWidth:28,label:{show:true,position:"top",formatter:"{c}%",color:"#46586c",fontWeight:700},
+  itemStyle:{borderRadius:[4,4,0,0],color:gradient("#ffc879","#f07a1d")},data:[18.2,12.4,22.6,8.5,10.1]}]});
+
+const yh=["消费电子","工业控制","汽车电子","通信"];
+const xh=["消费","工业","汽车","通信","医疗"];
+const vals=[[5200,1200,300,800,400],[900,5600,400,700,300],[300,500,4800,600,200],[600,400,300,3100,200]];
+const data=[];
+for(let i=0;i<xh.length;i++)for(let j=0;j<yh.length;j++)data.push([i,j,vals[j]?vals[j][i]:0]);
+// fix: vals is by row (product), columns are industries
+const data2=[];
+for(let j=0;j<yh.length;j++)for(let i=0;i<xh.length;i++)data2.push([i,j,vals[j][i]]);
+mk("c6",{tooltip:{position:"top",formatter:function(p){return xh[p.data[0]]+" 行业 × "+yh[p.data[1]]+"<br/>"+p.data[2]+" 万元"}},
+ grid:{top:10,left:80,right:70,bottom:40,containLabel:true},
+ xAxis:{type:"category",data:xh,name:"客户行业",axisLine:{lineStyle:{color:"#dde6f0"}},axisTick:{show:false},axisLabel:{color:"#9aa9bc"}},
+ yAxis:{type:"category",data:yh,axisLine:{lineStyle:{color:"#dde6f0"}},axisTick:{show:false},axisLabel:{color:"#9aa9bc"}},
+ visualMap:{min:0,max:5600,calculable:true,orient:"vertical",right:0,top:"center",
+  inRange:{color:["#eaf1ff","#9cc0ff","#2468f2"]},textStyle:{color:"#9aa9bc"}},
+ series:[{type:"heatmap",data:data2,label:{show:true,color:"#1f2d3d",fontSize:11},
+  itemStyle:{borderColor:"#fff",borderWidth:2,borderRadius:4}}]});
+</script>
+</body>
+</html>

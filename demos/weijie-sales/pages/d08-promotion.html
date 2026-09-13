@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>D-08 促销方案执行分析 · 唯捷创芯</title>
+<link rel="stylesheet" href="../assets/style.css" />
+<script src="../assets/echarts.min.js"></script>
+</head>
+<body>
+<div id="content">
+
+  <div class="grid r-23" style="margin-bottom:4px">
+    <div class="card"><div class="card-b" style="padding:12px 16px">
+      <div class="flow">
+        <div class="step"><span class="sn">1</span>总览</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">2</span>方案拆解</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">3</span>上传呈现</div>
+      </div>
+    </div></div>
+    <div class="card"><div class="card-b" style="padding:12px 16px">
+      <div class="meta-strip">
+        <span class="ms">数据 <b>销售上传表单</b></span>
+        <span class="ms">买赠比例图 <b>本期不做</b></span>
+        <span class="ms">页面定位 <b>方案执行呈现</b></span>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="grid g2" id="kpi"></div>
+
+  <div class="section-head"><span class="bar"></span><h2>促销方案总览</h2>
+    <span class="desc">仅关注方案数与覆盖客户（基于销售上传表单呈现）</span><span class="line"></span></div>
+  <div class="grid r-21">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>促销方案数月度走势</div></div>
+      <div class="card-b"><div id="c1" class="chart" style="height:260px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>方案覆盖客户数走势</div></div>
+      <div class="card-b"><div id="c2" class="chart" style="height:260px"></div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>方案拆解 · 活动 / 产品</h2>
+    <span class="desc">按促销方案与产品维度呈现执行情况</span><span class="line"></span></div>
+  <div class="grid g2">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>各促销方案覆盖客户</div></div>
+      <div class="card-b"><div id="c3" class="chart" style="height:240px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>各产品大类关联方案数</div></div>
+      <div class="card-b"><div id="c4" class="chart" style="height:240px"></div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>销售上传表单呈现</h2>
+    <span class="desc">基于上传表单直接展示促销方案执行明细</span><span class="line"></span></div>
+  <div class="card"><div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl" id="tbl"></table></div></div></div>
+
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+renderLayout("d08",{chapter:"第四章 · 保交付与促销",
+ sub:"面向销售管理及市场：基于销售上传表单呈现促销方案执行，仅保留方案数与覆盖客户（买赠比例图本期不做）。",
+ batchTags:'<span class="tag tag-orange" style="margin-left:8px">二期 P2</span>'});
+
+const kpi=[
+ {t:"促销方案数",v:"12",u:"个",f:'<span class="lbl">进行中</span>',c:"",sc:"#2468f2",sp:[8,9,10,10,11,12,12]},
+ {t:"促销方案覆盖客户数",v:"96",u:"家",f:'<span class="trend-up">▲14</span>',c:"k-cyan",sc:"#16b8c8",sp:[70,76,82,86,90,93,96]},
+];
+document.getElementById("kpi").innerHTML=kpi.map((k,i)=>`
+ <div class="kpi ${k.c}"><div class="kt"><span class="dot" style="background:${k.sc}"></span>${k.t}</div>
+ <div class="kv">${k.v}<small>${k.u}</small></div><div class="kf">${k.f}</div><div class="spark" id="s${i}"></div></div>`).join("");
+kpi.forEach((k,i)=>spark("s"+i,k.sp,k.sc));
+
+const M=["1月","2月","3月","4月","5月","6月"];
+mk("c1",{tooltip:tip(),grid:baseGrid({top:18}),xAxis:catAxis(M),yAxis:valAxis({name:"个"}),
+ series:[{type:"bar",barWidth:28,itemStyle:{borderRadius:[4,4,0,0],color:gradient("#5b9bff","#2468f2")},
+  label:{show:true,position:"top",color:"#46586c",fontWeight:700},data:[8,9,10,10,11,12]}]});
+
+mk("c2",{tooltip:tip(),grid:baseGrid({top:18}),xAxis:catAxis(M),yAxis:valAxis({name:"家"}),
+ series:[{type:"line",smooth:true,symbol:"circle",symbolSize:7,lineStyle:{width:2.5,color:"#16b8c8"},itemStyle:{color:"#16b8c8"},
+  areaStyle:{color:areaGrad("22,184,200",.22,.01)},data:[70,76,82,86,90,96]}]});
+
+mk("c3",{tooltip:tip(),grid:baseGrid({top:12,left:16}),xAxis:valAxis({name:"家"}),
+ yAxis:catAxis(["年中大促","新品首发","渠道返利","区域专项","清库促销"],{inverse:true,axisLine:{show:false}}),
+ series:[{type:"bar",barWidth:16,itemStyle:{borderRadius:[0,4,4,0],color:gradient("#9a8ff5","#7a6ff0")},
+  label:{show:true,position:"right",formatter:"{c}",color:"#46586c"},data:[42,28,18,12,8]}]});
+
+mk("c4",{tooltip:tip(),grid:baseGrid({top:18}),xAxis:catAxis(["消费电子","工业控制","汽车电子","通信","其他"]),yAxis:valAxis({name:"个"}),
+ series:[{type:"bar",barWidth:28,label:{show:true,position:"top",color:"#46586c",fontWeight:700},
+  itemStyle:{borderRadius:[4,4,0,0],color:gradient("#ffc879","#f07a1d")},data:[5,3,2,1,1]}]});
+
+const rows=[
+ ["年中大促","消费电子","WL3088","42","进行中","销售上传"],
+ ["新品首发","工业控制","WL5521","28","进行中","销售上传"],
+ ["渠道返利","通信","WL1207","18","已结束","销售上传"],
+ ["区域专项","汽车电子","WL2456","12","进行中","销售上传"],
+];
+const head=["促销方案","大类","型号","覆盖客户数","状态","数据来源"];
+document.getElementById("tbl").innerHTML=
+ "<thead><tr>"+head.map((h,i)=>`<th class="${i===3?'num':''}">${h}</th>`).join("")+"</tr></thead><tbody>"+
+ rows.map(r=>"<tr>"+r.map((c,i)=>{let v=c;
+  if(i===4)v=`<span class="tag ${c==='进行中'?'tag-green':'tag-gray'}">${c}</span>`;
+  return `<td class="${i===3?'num':''} ${i===0?'strong':''}">${v}</td>`;}).join("")+"</tr>").join("")+"</tbody>";
+</script>
+</body>
+</html>

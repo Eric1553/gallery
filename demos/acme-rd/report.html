@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>研发运营月度分析报告 - 盛美半导体</title>
+<link rel="stylesheet" href="assets/style.css?v=67">
+<style>
+  body { background: #eef2f7; }
+  .report-toolbar {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,.82); backdrop-filter: saturate(180%) blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .report-toolbar .rt-left { display: flex; align-items: center; gap: 12px; font-weight: 700; color: var(--text); letter-spacing: -.02em; }
+  .report-toolbar .rt-left .rt-badge { background: #1d4e89; color:#fff; font-size:11px; font-weight:700; padding:4px 10px; border-radius:999px; }
+  .report-toolbar .rt-actions { display: flex; gap: 10px; }
+
+  .paper {
+    max-width: 920px; margin: 28px auto; background: #fff;
+    border-radius: 18px; box-shadow: 0 24px 60px -16px rgba(16,24,40,.22);
+    overflow: hidden;
+  }
+  /* Cover */
+  .r-cover {
+    position: relative; overflow: hidden; color: #eaf0ff;
+    padding: 56px 56px 48px;
+    background:
+      radial-gradient(700px 320px at 88% -30%, rgba(79,134,255,.4), transparent 60%),
+      radial-gradient(560px 320px at 0% 130%, rgba(8,145,178,.32), transparent 60%),
+      linear-gradient(135deg, #0b1530 0%, #14224a 60%, #0d1a3a 100%);
+  }
+  .r-cover .r-eyebrow { font-size: 13px; font-weight: 600; color: #9fb0db; letter-spacing: .08em; text-transform: uppercase; }
+  .r-cover h1 { font-size: 38px; font-weight: 800; letter-spacing: -.04em; margin: 14px 0 10px; color: #fff; }
+  .r-cover .r-sub { font-size: 15px; color: #c3cdec; font-weight: 500; }
+  .r-cover .r-meta { display: flex; gap: 30px; margin-top: 34px; flex-wrap: wrap; }
+  .r-cover .r-meta div .v { font-size: 15px; font-weight: 700; color: #fff; }
+  .r-cover .r-meta div .l { font-size: 11.5px; color: #94a3c8; margin-top: 3px; font-weight: 600; }
+  .r-cover .r-tag { position: absolute; top: 28px; right: 56px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); padding: 7px 14px; border-radius: 999px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 7px; backdrop-filter: blur(6px); }
+
+  .r-section { padding: 36px 56px; border-bottom: 1px solid var(--border-light); }
+  .r-section:last-child { border-bottom: none; }
+  .r-sec-head { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .r-sec-num { width: 30px; height: 30px; border-radius: 9px; background: var(--grad-brand); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0; }
+  .r-sec-head h2 { font-size: 20px; font-weight: 800; letter-spacing: -.03em; color: var(--text); }
+  .r-sec-head .r-sec-sub { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+  .r-summary { font-size: 14px; line-height: 1.9; color: var(--text-secondary); }
+  .r-summary .hl { background: linear-gradient(180deg, transparent 62%, #fde68a 62%); font-weight: 700; color: var(--text); padding: 0 2px; }
+  .r-summary .hl-up { color: var(--success); font-weight: 700; }
+  .r-summary .hl-down { color: var(--danger); font-weight: 700; }
+
+  .r-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .r-kpi { background: var(--surface-2); border: 1px solid var(--border-light); border-radius: 14px; padding: 18px; }
+  .r-kpi .rk-l { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+  .r-kpi .rk-v { font-size: 28px; font-weight: 800; letter-spacing: -.04em; margin-top: 6px; color: var(--text); }
+  .r-kpi .rk-t { font-size: 11.5px; font-weight: 700; margin-top: 6px; }
+  .r-kpi .rk-t.up { color: var(--success); }
+  .r-kpi .rk-t.down { color: var(--danger); }
+
+  .r-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .r-chart-card { border: 1px solid var(--border); border-radius: 14px; padding: 18px; }
+  .r-chart-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .r-chart-card .r-note { font-size: 12px; color: var(--text-muted); line-height: 1.7; margin-top: 10px; }
+
+  .r-modules { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .r-mod { border: 1px solid var(--border-light); border-radius: 12px; padding: 16px 18px; background: var(--surface-2); }
+  .r-mod .rm-h { display: flex; align-items: center; gap: 9px; font-size: 13.5px; font-weight: 700; margin-bottom: 8px; }
+  .r-mod .rm-ic { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; background: var(--primary-soft); }
+  .r-mod p { font-size: 12.5px; color: var(--text-secondary); line-height: 1.7; }
+
+  .r-risks { display: flex; flex-direction: column; gap: 12px; }
+  .r-risk { display: flex; gap: 14px; padding: 14px 16px; border-radius: 12px; border: 1px solid #fde68a; background: #fffbeb; }
+  .r-risk.high { border-color: #fecaca; background: var(--danger-soft); }
+  .r-risk .rr-tag { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 6px; height: fit-content; background: #fef3c7; color: #b45309; white-space: nowrap; }
+  .r-risk.high .rr-tag { background: #fee2e2; color: #b91c1c; }
+  .r-risk .rr-c { font-size: 12.5px; color: var(--text-secondary); line-height: 1.7; }
+  .r-risk .rr-c b { color: var(--text); }
+
+  .r-actions-list { display: flex; flex-direction: column; gap: 12px; counter-reset: ra; }
+  .r-action { display: flex; gap: 14px; align-items: flex-start; }
+  .r-action::before { counter-increment: ra; content: counter(ra); width: 26px; height: 26px; border-radius: 50%; background: var(--grad-brand); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+  .r-action .ra-c { font-size: 13px; color: var(--text-secondary); line-height: 1.7; padding-top: 2px; }
+  .r-action .ra-c b { color: var(--text); }
+
+  .r-foot { padding: 28px 56px 40px; background: var(--surface-2); color: var(--text-muted); font-size: 12px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .r-foot .rf-sign { font-weight: 600; color: var(--text-secondary); }
+
+  @media print {
+    .report-toolbar { display: none; }
+    body { background: #fff; }
+    .paper { box-shadow: none; margin: 0; max-width: 100%; border-radius: 0; }
+    .r-section { page-break-inside: avoid; }
+  }
+  @media (max-width: 860px) {
+    .r-kpis { grid-template-columns: repeat(2,1fr); }
+    .r-grid2, .r-modules { grid-template-columns: 1fr; }
+    .r-section, .r-cover, .r-foot { padding-left: 28px; padding-right: 28px; }
+  }
+</style>
+</head>
+<body>
+<div class="report-toolbar">
+  <div class="rt-left"><span class="rt-badge">数据汇总</span>研发运营月度报告</div>
+  <div class="rt-actions">
+                <div class="topbar-period" data-period-mode="month">
+        <span>时间</span>
+    <select data-period-year aria-label="年份">
+      <option value="2025">2025 年</option>
+      <option value="2026" selected>2026 年</option>
+    </select>
+    <select data-period-month aria-label="月份">
+    <option value="all">全年</option>
+    <option value="01">1 月</option>
+    <option value="02">2 月</option>
+    <option value="03">3 月</option>
+    <option value="04">4 月</option>
+    <option value="05">5 月</option>
+    <option value="06" selected>6 月</option>
+    <option value="07">7 月</option>
+    <option value="08">8 月</option>
+    <option value="09">9 月</option>
+    <option value="10">10 月</option>
+    <option value="11">11 月</option>
+    <option value="12">12 月</option>
+    </select>
+      </div>
+    <a class="btn" href="index.html">返回看板</a>
+    <button class="btn btn-primary" onclick="window.print()">导出汇报 / 存为 PDF</button>
+  </div>
+</div>
+
+<div class="paper">
+  <!-- 封面 -->
+  <section class="r-cover">
+    <div class="r-tag">演示数据</div>
+    <div class="r-eyebrow">SHENGMEI · R&D OPERATIONS</div>
+    <h1>研发运营月度报告</h1>
+    <div class="r-sub">盛美半导体 · 运营数据汇总、规则命中与治理建议</div>
+    <div class="r-meta">
+      <div><div class="v">2026 年 6 月</div><div class="l">报告周期</div></div>
+      <div><div class="v">2026-06-30</div><div class="l">整理日期</div></div>
+      <div><div class="v">36 项需求 / 10 类流程</div><div class="l">数据范围</div></div>
+      <div><div class="v">OA · CRM · HR</div><div class="l">数据来源</div></div>
+    </div>
+  </section>
+
+  <!-- 1 执行摘要 -->
+  <section class="r-section">
+    <div class="r-sec-head"><div class="r-sec-num">1</div><div><h2>运营摘要</h2><div class="r-sec-sub">基于当前看板数据整理的运营结论</div></div></div>
+    <div class="r-summary">
+      本月研发运营整体平稳向好。在研立项项目达 <span class="hl">186 项</span>（较上月 <span class="hl-up">+12</span>），其中量产机台占比最高（78 项）；Case 未归档数降至 <span class="hl">47 项</span>（较上周 <span class="hl-up">-5</span>），归档效率持续改善。本月 Spec 变更率为 <span class="hl">8.3%</span>（环比 <span class="hl-up">-1.2pp</span>），变更管控初见成效，但研发机台变更率仍偏高（14.2%）需重点关注。OA 流程归档率提升至 <span class="hl">76.4%</span>，仍有 <span class="hl-down">18 人</span>存在超时待办。Case 入档环节发现 <span class="hl-down">3 个产品类别</span>入档率低于 50%，且入档率与 PM 判断 已关闭 率存在显著 GAP，建议优先治理。
+    </div>
+  </section>
+
+  <!-- 2 核心指标 -->
+  <section class="r-section">
+    <div class="r-sec-head"><div class="r-sec-num">2</div><div><h2>核心运营指标</h2><div class="r-sec-sub">本月关键 KPI 及环比变化</div></div></div>
+    <div class="r-kpis">
+      <div class="r-kpi"><div class="rk-l">在研立项项目</div><div class="rk-v">186</div><div class="rk-t up">较上月 +12</div></div>
+      <div class="r-kpi"><div class="rk-l">Case 未归档</div><div class="rk-v">47</div><div class="rk-t up">较上周 -5</div></div>
+      <div class="r-kpi"><div class="rk-l">Spec 变更率</div><div class="rk-v">8.3%</div><div class="rk-t up">环比 -1.2pp</div></div>
+      <div class="r-kpi"><div class="rk-l">流程归档率</div><div class="rk-v">76.4%</div><div class="rk-t up">环比 +2.1pp</div></div>
+    </div>
+  </section>
+
+  <!-- 3 趋势分析 -->
+  <section class="r-section">
+    <div class="r-sec-head"><div class="r-sec-num">3</div><div><h2>趋势分析</h2><div class="r-sec-sub">近 6 个月运营趋势与解读</div></div></div>
+    <div class="r-grid2">
+      <div class="r-chart-card">
+        <h3>立项 / 归档 / 变更趋势</h3>
+        <div class="chart-wrap" data-line='{"labels":["1月","2月","3月","4月","5月","6月"],"series":[{"name":"立项数","data":[142,158,165,172,178,186],"c":"#2563eb"},{"name":"Case归档","data":[88,95,101,104,107,109],"c":"#5b7c99"},{"name":"Spec变更","data":[18,21,26,24,30,28],"c":"#d97706"}]}'></div>
+        <div class="r-note">立项规模稳步增长，Case 归档保持同步上升，变更次数在 5 月达峰后回落，整体处于健康区间。</div>
+      </div>
+      <div class="r-chart-card">
+        <h3>OA 流程归档率趋势</h3>
+        <div class="chart-wrap" data-percent="true" data-line='{"labels":["1月","2月","3月","4月","5月","6月"],"series":[{"name":"归档率","data":[68,70,72,73,75,76],"c":"#7c3aed"}]}'></div>
+        <div class="r-note">流程归档率连续 6 个月稳步提升，累计 +8.4pp，反映流程治理与每周三例行跟催成效显著。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 各模块小结 -->
+  <section class="r-section">
+    <div class="r-sec-head"><div class="r-sec-num">4</div><div><h2>各业务模块运营小结</h2><div class="r-sec-sub">8 大看板本月要点</div></div></div>
+    <div class="r-modules">
+      <div class="r-mod"><div class="rm-h"><span class="rm-ic" style="background:var(--primary-soft)"></span>Site 与产品</div><p>立项 186 项、在管机台 524 台；RLS 已发布 218 台。Layer RLS 对标 POR 仍有 6 台待 Release，建议推进 Etch / Plating 工序。</p></div>
+      <div class="r-mod"><div class="rm-h"><span class="rm-ic" style="background:var(--success-soft)"></span>Case 追踪</div><p>归档率 69.9%，Lesson Learn 累计入档 34 篇。ECP-300mm、Track-海外入档率偏低（<50%），需专项治理。</p></div>
+      <div class="r-mod"><div class="rm-h"><span class="rm-ic" style="background:var(--warning-soft)"></span>变更管理</div><p>Spec 变更率 8.3%（环比 -1.2pp），研发机台变更率 14.2% 偏高；产品文档 7 类变更共 61 次，规格书占比最高。</p></div>
+      <div class="r-mod"><div class="rm-h"><span class="rm-ic" style="background:#fdf4ff"></span>Wet-RD 新工艺研发部</div><p>仪器借用 186 次、样品测试 234 件；研发需求 67 项（已关闭 63%），平均研发周期 38 天，实施阶段耗时最长。</p></div>
+      <div class="r-mod"><div class="rm-h"><span class="rm-ic" style="background:#f0fdf4"></span>临港研发线</div><p>夜莺计划 28 项（延期 3 项需关注）；外部需求导入 45 项；设备腔体正常率 92%。</p></div>
+      <div class="r-mod"><div class="rm-h"><span class="rm-ic" style="background:var(--primary-soft)"></span>人力资源</div><p>在岗研发 342 人（本科以上 89%）；本月出差 127 人次；离职 5 人，月离职率 1.5%，环比下降。</p></div>
+    </div>
+  </section>
+
+  <!-- 5 风险提示 -->
+  <section class="r-section">
+    <div class="r-sec-head"><div class="r-sec-num">5</div><div><h2>规则命中与运营异常</h2><div class="r-sec-sub">按既定业务规则筛出的关注项</div></div></div>
+    <div class="r-risks">
+      <div class="r-risk high"><div class="rr-tag">高风险</div><div class="rr-c"><b>入档率与 PM 已关闭 率 GAP 超标：</b>ECP-300mm（GAP 34pp）、Track-海外（GAP 24pp）"判断可 已关闭 但实际未及时入档"，存在数据资产流失风险，建议本周内专项推进。</div></div>
+      <div class="r-risk high"><div class="rr-tag">高风险</div><div class="rr-c"><b>研发机台 Spec 变更率偏高：</b>研发机台变更率达 14.2%，显著高于量产（6.1%），需排查设计冻结与变更评审流程。</div></div>
+      <div class="r-risk"><div class="rr-tag">中风险</div><div class="rr-c"><b>OA 流程超时：</b>工艺验证部平均节点耗时 8.2 天居首，18 人存在超时待办，建议加强每周三例行跟催。</div></div>
+      <div class="r-risk"><div class="rr-tag">中风险</div><div class="rr-c"><b>夜莺计划延期：</b>3 个夜莺项目处于延期状态（节点 06），建议补充资源或调整里程碑。</div></div>
+    </div>
+  </section>
+
+  <!-- 6 行动建议 -->
+  <section class="r-section">
+    <div class="r-sec-head"><div class="r-sec-num">6</div><div><h2>治理事项</h2><div class="r-sec-sub">责任人需确认的下一阶段待办</div></div></div>
+    <div class="r-actions-list">
+      <div class="r-action"><div class="ra-c"><b>治理低入档率产品类别：</b>针对 ECP-300mm、Track-海外、WET-150mm 三类入档率低于 50% 的产品，组织 PM 与工程团队专项补录，目标本月底入档率提升至 70%。</div></div>
+      <div class="r-action"><div class="ra-c"><b>收紧研发机台变更评审：</b>对研发机台 Spec 变更建立二次评审机制，将变更率从 14.2% 控制到 10% 以内。</div></div>
+      <div class="r-action"><div class="ra-c"><b>压降 OA 超时：</b>对工艺验证部等耗时 Top 部门设置节点 SLA，每周三推送个人耗时排名与提醒。</div></div>
+      <div class="r-action"><div class="ra-c"><b>推进 Layer RLS 释放：</b>聚焦 6 台待 Release 机台的 Etch / Plating 工序 Step，协调 CRM 维度数据按时更新。</div></div>
+    </div>
+  </section>
+
+  <div class="r-foot">
+    <div>本报告为演示数据汇总 · 数据截止 2026-06-30</div>
+    <div class="rf-sign">盛美半导体 · 研发运营数据看板 v4.4</div>
+  </div>
+</div>
+
+<script src="assets/charts.js?v=67"></script>
+
+<script
+  src="http://120.55.184.234:8787/embed.js?v=20260801acme4"
+  data-demo-id="acme-rd"
+  data-mode="basic"
+  data-api="http://120.55.184.234:8787"
+  async defer></script>
+
+</body>
+</html>

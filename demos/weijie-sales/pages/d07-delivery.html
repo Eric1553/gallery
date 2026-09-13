@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>D-07 订单履约与交付监控 · 唯捷创芯</title>
+<link rel="stylesheet" href="../assets/style.css" />
+<script src="../assets/echarts.min.js"></script>
+</head>
+<body>
+<div id="content">
+
+  <div class="grid r-23" style="margin-bottom:4px">
+    <div class="card"><div class="card-b" style="padding:12px 16px">
+      <div class="flow">
+        <div class="step"><span class="sn">1</span>总览</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">2</span>Lead Time</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">3</span>Pull/Push</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">4</span>异常清单</div>
+      </div>
+    </div></div>
+    <div class="card"><div class="card-b" style="padding:12px 16px">
+      <div class="meta-strip">
+        <span class="ms">数据源 <b>SAP CRD / 订单</b></span>
+        <span class="ms">及时率 <b>本期不做</b></span>
+        <span class="ms">环节时长 <b>本期不做</b></span>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="grid g5" id="kpi"></div>
+
+  <div class="section-head"><span class="bar"></span><h2>Lead Time 分布</h2>
+    <span class="desc">下单日 → 首次 CRD → 实际发货（不拆各环节时长）</span><span class="line"></span></div>
+  <div class="grid r-21">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>Lead Time 区间分布</div></div>
+      <div class="card-b"><div id="c1" class="chart" style="height:260px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>平均 Lead Time 走势</div></div>
+      <div class="card-b"><div id="c2" class="chart" style="height:260px"></div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>Pull-in / Push-out 订单</h2>
+    <span class="desc">按客户拆分，占比 = 该类订单 ÷ 总订单</span><span class="line"></span></div>
+  <div class="grid g2">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>各客户 Pull-in 订单笔数及占比</div></div>
+      <div class="card-b"><div id="c3" class="chart" style="height:250px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>各客户 Push-out 订单笔数及占比</div></div>
+      <div class="card-b"><div id="c4" class="chart" style="height:250px"></div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>异常清单 · 预测与实际达成差异</h2>
+    <span class="desc">有预测无订单 / 有订单无预测</span><span class="line"></span></div>
+  <div class="card"><div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl" id="tbl"></table></div></div></div>
+
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+renderLayout("d07",{chapter:"第四章 · 保交付与促销",
+ sub:"面向销售运营及供应链：Lead Time 分布、Pull-in/Push-out 及预测-订单差异异常（及时率本期不做）。",
+ batchTags:'<span class="tag tag-gold" style="margin-left:8px">二期 P1</span>'});
+
+const kpi=[
+ {t:"平均 Lead Time",v:"11.2",u:"天",f:'<span class="lbl">下单→发货</span>',c:"k-gold",sc:"#e0a106",sp:[9,9.5,10,10.4,10.8,11,11.2]},
+ {t:"订单总数",v:"1,842",u:"单",f:'<span class="trend-up">▲8.2%</span>',c:"",sc:"#2468f2",sp:[1500,1600,1680,1720,1780,1820,1842]},
+ {t:"Pull-in 笔数",v:"126",u:"单",f:'<span class="lbl">占比 6.8%</span>',c:"k-cyan",sc:"#16b8c8",sp:[90,95,100,108,115,120,126]},
+ {t:"Push-out 笔数",v:"98",u:"单",f:'<span class="lbl">占比 5.3%</span>',c:"k-violet",sc:"#7a6ff0",sp:[70,75,80,85,90,94,98]},
+ {t:"预测差异异常",v:"34",u:"项",f:'<span class="trend-down">需核对</span>',c:"k-red",sc:"#e2544a",sp:[20,22,25,28,30,32,34]},
+];
+document.getElementById("kpi").innerHTML=kpi.map((k,i)=>`
+ <div class="kpi ${k.c}"><div class="kt"><span class="dot" style="background:${k.sc}"></span>${k.t}</div>
+ <div class="kv">${k.v}<small>${k.u}</small></div><div class="kf">${k.f}</div><div class="spark" id="s${i}"></div></div>`).join("");
+kpi.forEach((k,i)=>spark("s"+i,k.sp,k.sc));
+
+mk("c1",{tooltip:tip(),grid:baseGrid({top:18}),xAxis:catAxis(["≤7天","8-14天","15-21天","22-30天",">30天"]),yAxis:valAxis({name:"单"}),
+ series:[{type:"bar",barWidth:30,label:{show:true,position:"top",color:"#46586c",fontWeight:700},
+  itemStyle:{borderRadius:[4,4,0,0],color:function(p){return p.dataIndex>=3?gradient("#f1968e","#e2544a"):gradient("#5b9bff","#2468f2")}},
+  data:[680,820,224,86,32]}]});
+
+const W=["W23","W24","W25","W26","W27","W28"];
+mk("c2",{tooltip:tip(),legend:legend({data:["平均Lead Time","订单量"]}),grid:baseGrid({top:30,right:46}),
+ xAxis:catAxis(W),yAxis:[valAxis({name:"天"}),valAxis({name:"单",splitLine:{show:false}})],
+ series:[
+  {name:"平均Lead Time",type:"line",smooth:true,symbol:"circle",symbolSize:6,lineStyle:{width:2.5,color:"#f07a1d"},itemStyle:{color:"#f07a1d"},data:[10.2,10.5,10.8,11.0,11.1,11.2]},
+  {name:"订单量",type:"bar",yAxisIndex:1,barWidth:18,itemStyle:{color:"#dbe8ff",borderRadius:[3,3,0,0]},data:[420,440,460,450,480,492]},
+ ]});
+
+const cust=["汇顶科技","汇川技术","比亚迪半导","紫光展锐","中颖电子"];
+mk("c3",{tooltip:tip(),legend:legend({data:["Pull-in笔数","占比"]}),grid:baseGrid({top:30,right:46}),
+ xAxis:catAxis(cust),yAxis:[valAxis({name:"单"}),valAxis({name:"%",max:20,splitLine:{show:false}})],
+ series:[
+  {name:"Pull-in笔数",type:"bar",barWidth:22,itemStyle:{borderRadius:[4,4,0,0],color:gradient("#5fd4dc","#16b8c8")},data:[38,26,22,24,16]},
+  {name:"占比",type:"line",yAxisIndex:1,smooth:true,symbol:"circle",symbolSize:5,lineStyle:{width:2,color:"#f07a1d"},itemStyle:{color:"#f07a1d"},data:[8.2,7.1,6.5,9.0,5.8]},
+ ]});
+
+mk("c4",{tooltip:tip(),legend:legend({data:["Push-out笔数","占比"]}),grid:baseGrid({top:30,right:46}),
+ xAxis:catAxis(cust),yAxis:[valAxis({name:"单"}),valAxis({name:"%",max:20,splitLine:{show:false}})],
+ series:[
+  {name:"Push-out笔数",type:"bar",barWidth:22,itemStyle:{borderRadius:[4,4,0,0],color:gradient("#9a8ff5","#7a6ff0")},data:[28,22,18,16,14]},
+  {name:"占比",type:"line",yAxisIndex:1,smooth:true,symbol:"circle",symbolSize:5,lineStyle:{width:2,color:"#e2544a"},itemStyle:{color:"#e2544a"},data:[6.0,6.0,5.3,6.0,5.1]},
+ ]});
+
+const rows=[
+ ["汇顶科技","WL3088","消费电子","华东一组","有预测无订单","预测 58 / 订单 0"],
+ ["汇川技术","WL5521","工业控制","华南一组","有订单无预测","预测 0 / 订单 12"],
+ ["比亚迪半导","WL2456","汽车电子","华北一组","有预测无订单","预测 36 / 订单 0"],
+ ["紫光展锐","WL1207","通信","西南一组","有订单无预测","预测 0 / 订单 8"],
+];
+const head=["客户","型号","大类","销售组","异常类型","差异说明"];
+document.getElementById("tbl").innerHTML=
+ "<thead><tr>"+head.map(h=>`<th>${h}</th>`).join("")+"</tr></thead><tbody>"+
+ rows.map(r=>"<tr>"+r.map((c,i)=>{let v=c;
+  if(i===4)v=`<span class="tag ${c.includes('无订单')?'tag-orange':'tag-red'}">${c}</span>`;
+  return `<td class="${i===0?'strong':''}">${v}</td>`;}).join("")+"</tr>").join("")+"</tbody>";
+</script>
+</body>
+</html>

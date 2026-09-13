@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>模拟芯片行业：品类、格局与IDM壁垒 — 半导体知识库</title>
+<meta name="description" content="# 模拟芯片行业：品类、格局与IDM壁垒  ## 什么是模拟芯片 - 半导体芯片分为两大基本类别： - - **数字芯片**（Digital）：处理0和1的离散信号。CPU、GPU、存储器、MCU、FPGA都是数字芯片。 - - **模拟芯片**（Analog）：处理真实世界的连续信号（温度、压力、">
+<link rel="stylesheet" href="/kb/assets/style.css">
+</head>
+<body>
+<div class="top-accent"></div>
+<header class="page-header">
+  <a href="/kb/首页.html" class="home-link">🔬 半导体知识库</a>
+</header>
+<main class="container">
+<nav class="breadcrumb"><a href="/kb/首页.html">半导体知识库</a> <span class="sep">›</span> <a href="/kb//01-晶圆制造/index.html">01-晶圆制造</a> <span class="sep">›</span> <a href="/kb//01-晶圆制造/行业动态/index.html">行业动态</a></nav>
+<article class="note">
+<header class="note-header">
+  <h1>模拟芯片行业：品类、格局与IDM壁垒</h1>
+  <div class="meta-line"><span class="meta-item">📅 2026-07-09</span> · <span class="meta-item">📂 01-晶圆制造</span> · <span class="meta-item" style="color:#D97706">⭐ medium</span> · <span class="meta-item">🏷️ <span class="tag">晶圆制造</span> <span class="tag">模拟芯片</span> <span class="tag">IDM</span> <span class="tag">TI</span> <span class="tag">ADI</span></span></div>
+</header>
+<div class="note-body">
+<h1 id="idm">模拟芯片行业：品类、格局与IDM壁垒</h1>
+<h2 id="_1">什么是模拟芯片</h2>
+<ul>
+<li>半导体芯片分为两大基本类别：</li>
+<li>
+<ul>
+<li><strong>数字芯片</strong>（Digital）：处理0和1的离散信号。CPU、GPU、存储器、MCU、FPGA都是数字芯片。</li>
+</ul>
+</li>
+<li>
+<ul>
+<li><strong>模拟芯片</strong>（Analog）：处理真实世界的连续信号（温度、压力、声音、光线、电磁波等）。放大器、电源管理、数据转换器、射频前端、传感器接口都是模拟芯片。</li>
+</ul>
+</li>
+<li>模拟芯片的核心特征是：<strong>品类极度分散，单品类量不大但利润极高，依赖资深工程师的经验积累而非先进制程</strong>。</li>
+</ul>
+<h2 id="_2">市场规模与格局</h2>
+<ul>
+<li>2025年全球模拟芯片市场约950亿美元，占半导体总市场的约15%。模拟芯片市场有两个鲜明特点：</li>
+</ul>
+<h3 id="1">1. 极度分散的产品组合</h3>
+<ul>
+<li>TI（德州仪器）有超过80,000个产品型号，ADI有超过50,000个。相比之下，NVIDIA的GPU产品线只有几十个SKU。每一个模拟芯片品类可能只有几百万到几千万美元的市场，但加起来就是一个巨大的市场。</li>
+</ul>
+<h3 id="2">2. 不需要先进制程</h3>
+<ul>
+<li>绝大多数模拟芯片使用0.18μm到28nm的成熟制程。130nm、180nm的BCD（Bipolar-CMOS-DMOS）工艺至今仍是模拟芯片的主力工艺。这意味着：</li>
+<li>
+<ul>
+<li>模拟芯片不受先进制程出口管制的限制</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>设计和制造的know-how比制程节点更重要</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>资深模拟工程师是稀缺资源——模拟电路设计高度依赖经验和直觉，不像数字电路那样可以高度自动化</li>
+</ul>
+</li>
+</ul>
+<h2 id="_3">主要品类</h2>
+<h3 id="pmic">电源管理芯片（PMIC）——最大的模拟品类</h3>
+<ul>
+<li>约占总模拟市场的25-30%。每个电子设备都需要电源管理——将电池或电源适配器的电压转换为芯片所需的各种电压。</li>
+<li>主要应用：</li>
+<li>
+<ul>
+<li>智能手机：10-20颗PMIC（CPU核心供电、内存供电、RF供电等各有专属的PMIC）</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>服务器/数据中心：高效的多相电源（给GPU供电的PMIC可能有16相以上）</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>汽车：从12V/48V系统向各个ECU供电</li>
+</ul>
+</li>
+<li>全球PMIC格局：TI约18%（最大的PMIC供应商）、ADI约10%、Renesas（收购Dialog后）、英飞凌、MPS（芯源系统）、矽力杰、圣邦微。</li>
+</ul>
+<h3 id="adcdac">数据转换器（ADC/DAC）</h3>
+<ul>
+<li>将模拟信号转换为数字信号（ADC，模数转换）或反之（DAC，数模转换）。这是模拟芯片中技术壁垒最高的品类之一。</li>
+<li>ADC的性能由两个核心指标衡量：</li>
+<li>
+<ul>
+<li><strong>分辨率</strong>（精度）：有多少位（8-bit、12-bit、16-bit、24-bit）。每增加1-bit，信噪比提升6dB</li>
+</ul>
+</li>
+<li>
+<ul>
+<li><strong>采样率</strong>（速度）：每秒采样多少次（kSPS、MSPS、GSPS）</li>
+</ul>
+</li>
+<li>高精度+高速ADC是"皇冠上的明珠"——军用雷达、通信基站、医疗影像（CT/MRI）、测试测量仪器都需要。全球高端ADC几乎被ADI和TI垄断。ADI是绝对的ADC之王。</li>
+</ul>
+<h3 id="signal-chain">信号链（Signal Chain）</h3>
+<ul>
+<li>包括放大器（运算放大器Op-Amp、仪表放大器）、比较器、滤波器、模拟开关等。每一颗都是"小而不凡"——一颗卖几毛钱的Op-Amp，设计可能需要顶级模拟工程师数月的打磨。</li>
+</ul>
+<h3 id="_4">接口芯片</h3>
+<ul>
+<li>包括RS-232/485、CAN/LIN总线收发器、USB PHY、HDMI/DisplayPort接口等。TI在接口芯片领域有极广的产品覆盖。</li>
+</ul>
+<h2 id="_5">全球模拟芯片格局</h2>
+<table>
+<thead>
+<tr>
+<th>-</th>
+<th style="text-align: center;">排名</th>
+<th>企业</th>
+<th style="text-align: center;">模拟营收（2025年）</th>
+<th style="text-align: center;">市占率</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-</td>
+<td style="text-align: center;">1</td>
+<td>TI（德州仪器）</td>
+<td style="text-align: center;">~190亿美元</td>
+<td style="text-align: center;">~19%</td>
+<td>产品最广、市场份额最大</td>
+</tr>
+<tr>
+<td>-</td>
+<td style="text-align: center;">2</td>
+<td>ADI（亚德诺）</td>
+<td style="text-align: center;">~120亿美元</td>
+<td style="text-align: center;">~13%</td>
+<td>高端ADC/混合信号最强</td>
+</tr>
+<tr>
+<td>-</td>
+<td style="text-align: center;">3</td>
+<td>Infineon（英飞凌）</td>
+<td style="text-align: center;">~80亿美元</td>
+<td style="text-align: center;">~9%</td>
+<td>汽车模拟（功率+传感器）</td>
+</tr>
+<tr>
+<td>-</td>
+<td style="text-align: center;">4</td>
+<td>STMicro</td>
+<td style="text-align: center;">~70亿美元</td>
+<td style="text-align: center;">~8%</td>
+<td>工业和汽车</td>
+</tr>
+<tr>
+<td>-</td>
+<td style="text-align: center;">5</td>
+<td>Skyworks/Qorvo</td>
+<td style="text-align: center;">~110亿美元</td>
+<td style="text-align: center;">~12%</td>
+<td>射频前端</td>
+</tr>
+<tr>
+<td>-</td>
+<td style="text-align: center;">6</td>
+<td>NXP</td>
+<td style="text-align: center;">~55亿美元</td>
+<td style="text-align: center;">~6%</td>
+<td>汽车接口和电源</td>
+</tr>
+<tr>
+<td>## 模拟芯片的IDM壁垒</td>
+<td style="text-align: center;"></td>
+<td></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td></td>
+</tr>
+<tr>
+<td>- 模拟芯片行业的一个核心规律是：<strong>纯Fabless在模拟领域很难做到顶级</strong>。</td>
+<td style="text-align: center;"></td>
+<td></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td></td>
+</tr>
+<tr>
+<td>- TI、ADI、Infineon都是IDM（自己设计+自己制造）。原因在于：</td>
+<td style="text-align: center;"></td>
+<td></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td></td>
+</tr>
+<tr>
+<td>- 1. 模拟芯片的性能高度依赖制造工艺的优化。一个ADC的线性度可能取决于晶圆厂氧化层生长的一个秘密配方。</td>
+<td style="text-align: center;"></td>
+<td></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td></td>
+</tr>
+<tr>
+<td>- 2. 模拟工艺（BCD、BiCMOS、高压CMOS）是非标的，与标准逻辑工艺完全不同。台积电的标准CMOS工艺可以服务所有数字芯片设计，但没有动力为某一客户的特殊模拟需求做深度工艺优化。</td>
+<td style="text-align: center;"></td>
+<td></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td></td>
+</tr>
+<tr>
+<td>- 3. TI拥有庞大的自有晶圆厂产能（300mm模拟产线），使它在产能紧缺时不受代工厂排期的限制——这在2021-2022年芯片短缺期间给了TI巨大的竞争优势。</td>
+<td style="text-align: center;"></td>
+<td></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td></td>
+</tr>
+<tr>
+<td>## 中国模拟芯片格局</td>
+<td style="text-align: center;"></td>
+<td></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td></td>
+</tr>
+<tr>
+<td>- 中国模拟芯片自给率约12-15%，远低于数字芯片。但这也是增长空间最大的领域之一——因为模拟芯片不受先进制程限制，中国企业可以在成熟制程上公平竞争。</td>
+<td style="text-align: center;"></td>
+<td></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td></td>
+</tr>
+<tr>
+<td>- <strong>头部企业</strong>：</td>
+<td style="text-align: center;"></td>
+<td></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td></td>
+</tr>
+<tr>
+<td>-</td>
+<td style="text-align: center;">企业</td>
+<td>2025年营收</td>
+<td style="text-align: center;">核心产品</td>
+<td style="text-align: center;"></td>
+<td></td>
+</tr>
+<tr>
+<td>-</td>
+<td style="text-align: center;">------</td>
+<td>:---:</td>
+<td style="text-align: center;">------</td>
+<td style="text-align: center;"></td>
+<td></td>
+</tr>
+<tr>
+<td>-</td>
+<td style="text-align: center;">圣邦微（SG Micro）</td>
+<td>~35亿人民币</td>
+<td style="text-align: center;">信号链+电源管理，品类最全的国产模拟</td>
+<td style="text-align: center;"></td>
+<td></td>
+</tr>
+<tr>
+<td>-</td>
+<td style="text-align: center;">思瑞浦（3Peak）</td>
+<td>~20亿人民币</td>
+<td style="text-align: center;">高性能运放、ADC</td>
+<td style="text-align: center;"></td>
+<td></td>
+</tr>
+<tr>
+<td>-</td>
+<td style="text-align: center;">纳芯微（Novosense）</td>
+<td>~20亿人民币</td>
+<td style="text-align: center;">汽车级传感器接口和隔离芯片</td>
+<td style="text-align: center;"></td>
+<td></td>
+</tr>
+<tr>
+<td>-</td>
+<td style="text-align: center;">艾为电子（Awinic）</td>
+<td>~25亿人民币</td>
+<td style="text-align: center;">消费电子模拟（手机音频/触觉）</td>
+<td style="text-align: center;"></td>
+<td></td>
+</tr>
+<tr>
+<td>-</td>
+<td style="text-align: center;">南芯科技（Southchip）</td>
+<td>~20亿人民币</td>
+<td style="text-align: center;">快充电源管理芯片</td>
+<td style="text-align: center;"></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_6">📊 帆软产品关联度分析</h2>
+<table>
+<thead>
+<tr>
+<th>帆软产品线</th>
+<th style="text-align: center;">关联度</th>
+<th>关联说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>FineReport</strong></td>
+<td style="text-align: center;">🟡 中</td>
+<td>模拟芯片市场研究报告模板、TI/ADI对标报表——行业分析辅助工具</td>
+</tr>
+<tr>
+<td><strong>FineBI</strong></td>
+<td style="text-align: center;">🟢 高</td>
+<td>TI/ADI/Infineon等模拟巨头的产品组合分析、细分品类市场规模追踪、中国模拟芯片企业的对标成长分析——投资和战略分析的核心工具</td>
+</tr>
+<tr>
+<td><strong>FineDataLink</strong></td>
+<td style="text-align: center;">⚪ 无</td>
+<td>概念分析不涉及多源数据汇聚</td>
+</tr>
+<tr>
+<td><strong>简道云 + AI Agent</strong></td>
+<td style="text-align: center;">⚪ 无</td>
+<td>无直接流程协作场景</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>模拟芯片行业是品类极度分散的"蚂蚁市场"——TI有8万个SKU，ADI有5万个。FineBI可以帮助行业分析师和投资者理解和追踪这个复杂的产品矩阵。</p>
+</blockquote>
+<h2 id="_7">💼 售前场景</h2>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>痛点描述</th>
+<th>帆软产品</th>
+<th>具体切入</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>模拟巨头对标分析</strong></td>
+<td>投资者需要对比TI vs ADI vs ST的产品组合、毛利率、研发效率等指标</td>
+<td>FineBI</td>
+<td>预设模拟芯片对标维度，一键生成"TI的毛利率比ADI高5pp，源自300mm产线的成本优势"等洞察</td>
+</tr>
+<tr>
+<td><strong>中国模拟芯片成长追踪</strong></td>
+<td>行业分析师需要追踪圣邦微/思瑞浦/纳芯微等国产模拟企业的营收增速和品类拓展</td>
+<td>FineBI</td>
+<td>国产模拟企业成长看板——营收→品类数→客户数的年度趋势追踪</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_8">售前话术</h3>
+<blockquote>
+<p>"模拟芯片行业是一个'闷声发财'的行业——TI年营收190亿美元，但你可能没听说过它做了哪些芯片。FineBI帮行业分析师从8万个SKU中提炼出10个最有价值的品类趋势。"</p>
+</blockquote>
+<h2 id="_9">🔗 关联</h2>
+<ul>
+<li>
+<ul>
+<li><a href="/kb/行业知识体系/04-IC设计/基础概念/IC设计流程与产业模式">IC设计流程与产业模式</a></li>
+</ul>
+</li>
+<li>
+<ul>
+<li><a href="/kb/产业全景/半导体产业链上下游关系">半导体产业链上下游关系</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="_10">🔗 来源</h2>
+<ul>
+<li>TI/ADI/Infineon年报及IC Insights报告</li>
+<li>入库时间：2026-07-09</li>
+</ul>
+</div>
+</article>
+<footer class="note-footer">
+  <a href="/kb/01-晶圆制造/行业动态/index.html">← 返回目录</a>
+</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>D-06 库存与供需平衡监控 · 唯捷创芯</title>
+<link rel="stylesheet" href="../assets/style.css" />
+<script src="../assets/echarts.min.js"></script>
+</head>
+<body>
+<div id="content">
+
+  <div class="grid r-23" style="margin-bottom:4px">
+    <div class="card"><div class="card-b" style="padding:12px 16px">
+      <div class="flow">
+        <div class="step"><span class="sn">1</span>总览</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">2</span>分层</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">3</span>三角核对</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">4</span>价格</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">5</span>预警</div>
+      </div>
+    </div></div>
+    <div class="card"><div class="card-b" style="padding:12px 16px">
+      <div class="meta-strip">
+        <span class="ms">周转 <b>VMI / 自有 / 经销商</b></span>
+        <span class="ms">VMI·经销商 <b>销售上传</b></span>
+        <span class="ms">价格 <b>POP/POS/rebate</b></span>
+        <span class="ms">库存满足率 <b>不做</b></span>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="grid g5" id="kpi"></div>
+
+  <div class="section-head"><span class="bar"></span><h2>库存总览 · VMI / 自有 / 经销商</h2>
+    <span class="desc">周转天数 = 当前库存 ÷ 预测日消耗</span><span class="line"></span></div>
+  <div class="grid r-21">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>三类库存 + 周转天数</div><span class="cx">单位：万颗</span></div>
+      <div class="card-b"><div id="c1" class="chart" style="height:262px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>库存结构占比</div></div>
+      <div class="card-b"><div id="c2" class="chart" style="height:262px"></div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>分层查看 · 按经销商 / 产品</h2>
+    <span class="desc">识别高库存与低周转环节</span><span class="line"></span></div>
+  <div class="grid g2">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>经销商库存分布</div></div>
+      <div class="card-b"><div id="c3" class="chart" style="height:240px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>产品大类库存周转（天）</div></div>
+      <div class="card-b"><div id="c4" class="chart" style="height:240px"></div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>三角核对 · FCST / 订单 / 出货</h2>
+    <span class="desc">月季度 FCST + 实际订单 + POP/POS 已出货 + 库存</span><span class="line"></span></div>
+  <div class="card">
+    <div class="card-h"><div class="ct"><span class="ci"></span>供需三角核对</div><span class="cx">单位：万颗</span></div>
+    <div class="card-b"><div id="c5" class="chart" style="height:260px"></div></div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>价格分析 · POP / POS / Rebate</h2>
+    <span class="desc">自产品页迁入；SAP 取价（POS rebate 准确性待确认）</span><span class="line"></span></div>
+  <div class="grid g2">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>POP / POS / Rebate 价格对比</div></div>
+      <div class="card-b"><div id="c6" class="chart" style="height:240px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>价格期间变动趋势</div></div>
+      <div class="card-b"><div id="c7" class="chart" style="height:240px"></div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>异常预警 · 库存周转异常</h2>
+    <span class="desc">高于阈值预警，支持下钻明细</span><span class="line"></span></div>
+  <div class="card"><div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl" id="tbl"></table></div></div></div>
+
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+renderLayout("d06",{chapter:"第三章 · 管库存与供需",
+ sub:"面向销售及供应链：监控 VMI/自有/经销商库存周转，并纳入 POP/POS/rebate 价格对照。",
+ batchTags:'<span class="tag tag-gold" style="margin-left:8px">二期 P1</span>'});
+
+const kpi=[
+ {t:"自有库存(VC)",v:"612",u:"万颗",f:'<span class="lbl">周转 38天</span>',c:"k-violet",sc:"#7a6ff0",sp:[58,60,62,61,60,61,61.2]},
+ {t:"VMI库存",v:"286",u:"万颗",f:'<span class="lbl">周转 28天</span>',c:"k-cyan",sc:"#16b8c8",sp:[24,25,26,27,27.5,28,28.6]},
+ {t:"经销商库存",v:"548",u:"万颗",f:'<span class="trend-up">▲6.2%</span>',c:"k-gold",sc:"#e0a106",sp:[44,46,48,50,52,53,54.8]},
+ {t:"综合周转天数",v:"42",u:"天",f:'<span class="lbl">库存÷日消耗</span>',c:"",sc:"#2468f2",sp:[36,37,38,39,40,41,42]},
+ {t:"预警 SKU 数",v:"7",u:"个",f:'<span class="trend-down">需处理</span>',c:"k-red",sc:"#e2544a",sp:[3,4,5,5,6,6,7]},
+];
+document.getElementById("kpi").innerHTML=kpi.map((k,i)=>`
+ <div class="kpi ${k.c}"><div class="kt"><span class="dot" style="background:${k.sc}"></span>${k.t}</div>
+ <div class="kv">${k.v}<small>${k.u}</small></div><div class="kf">${k.f}</div><div class="spark" id="s${i}"></div></div>`).join("");
+kpi.forEach((k,i)=>spark("s"+i,k.sp,k.sc));
+
+const M=["1月","2月","3月","4月","5月","6月"];
+mk("c1",{tooltip:tip(),legend:legend({data:["自有","VMI","经销商","周转天数"]}),grid:baseGrid({top:34,right:46}),
+ xAxis:catAxis(M),yAxis:[valAxis({name:"万颗"}),valAxis({name:"天",splitLine:{show:false}})],
+ series:[
+  {name:"自有",type:"bar",stack:"a",barWidth:22,itemStyle:{color:gradient("#9a8ff5","#7a6ff0")},data:[580,600,620,610,600,612]},
+  {name:"VMI",type:"bar",stack:"a",barWidth:22,itemStyle:{color:gradient("#5fd4dc","#16b8c8")},data:[240,250,260,270,280,286]},
+  {name:"经销商",type:"bar",stack:"a",barWidth:22,itemStyle:{color:gradient("#ffc879","#f07a1d"),borderRadius:[4,4,0,0]},data:[440,460,480,500,520,548]},
+  {name:"周转天数",type:"line",yAxisIndex:1,smooth:true,symbol:"circle",symbolSize:6,lineStyle:{width:2.5,color:"#e2544a"},itemStyle:{color:"#e2544a"},data:[36,37,38,39,40,42]},
+ ]});
+
+mk("c2",{tooltip:{trigger:"item",formatter:"{b}<br/>{c} 万颗 ({d}%)"},legend:legend({bottom:0,icon:"circle"}),
+ series:[{type:"pie",radius:["46%","72%"],center:["50%","44%"],itemStyle:{borderColor:"#fff",borderWidth:2,borderRadius:4},
+  label:{show:true,formatter:"{b}\n{d}%",fontSize:11},
+  data:[{value:612,name:"自有(VC)"},{value:286,name:"VMI"},{value:548,name:"经销商"}]}]});
+
+mk("c3",{tooltip:tip(),grid:baseGrid({top:12,left:16}),xAxis:valAxis({name:"万颗"}),
+ yAxis:catAxis(["华东电子","南方科技","北方半导","西部芯联","环球贸易"],{inverse:true,axisLine:{show:false}}),
+ series:[{type:"bar",barWidth:16,itemStyle:{borderRadius:[0,4,4,0],color:gradient("#5fd4dc","#16b8c8")},
+  label:{show:true,position:"right",formatter:"{c}",color:"#46586c"},data:[168,126,98,84,72]}]});
+
+mk("c4",{tooltip:tip(),grid:baseGrid({top:18}),xAxis:catAxis(["消费电子","工业控制","汽车电子","通信","其他"]),yAxis:valAxis({name:"天"}),
+ series:[{type:"bar",barWidth:26,label:{show:true,position:"top",formatter:"{c}天",color:"#46586c",fontWeight:700},
+  itemStyle:{borderRadius:[4,4,0,0],color:function(p){return p.data>45?gradient("#f1968e","#e2544a"):gradient("#9a8ff5","#7a6ff0")}},data:[38,44,52,40,46]}]});
+
+mk("c5",{tooltip:tip(),legend:legend({data:["FCST","实际订单","POP出货","POS出货","期末库存"]}),grid:baseGrid({top:34}),
+ xAxis:catAxis(M),yAxis:valAxis({name:"万颗"}),
+ series:[
+  {name:"FCST",type:"bar",barWidth:14,itemStyle:{color:"#dbe8ff",borderRadius:[3,3,0,0]},data:[160,168,176,170,182,190]},
+  {name:"实际订单",type:"bar",barWidth:14,itemStyle:{color:gradient("#5b9bff","#2468f2"),borderRadius:[3,3,0,0]},data:[152,160,170,166,178,186]},
+  {name:"POP出货",type:"line",smooth:true,symbol:"circle",symbolSize:5,lineStyle:{width:2.5,color:"#25a36c"},itemStyle:{color:"#25a36c"},data:[148,156,165,162,172,180]},
+  {name:"POS出货",type:"line",smooth:true,symbol:"none",lineStyle:{width:2,color:"#16b8c8"},data:[140,150,158,156,166,174]},
+  {name:"期末库存",type:"line",smooth:true,symbol:"none",lineStyle:{width:2,type:"dashed",color:"#7a6ff0"},data:[60,58,62,66,60,64]},
+ ]});
+
+const P=["消费电子","工业控制","汽车电子","通信","其他"];
+mk("c6",{tooltip:tip(),legend:legend({data:["POP价","POS价","Rebate后净价"]}),grid:baseGrid({top:30}),
+ xAxis:catAxis(P),yAxis:valAxis({name:"元/颗"}),
+ series:[
+  {name:"POP价",type:"bar",barWidth:12,itemStyle:{borderRadius:[3,3,0,0],color:"#2468f2"},data:[2.4,3.1,4.9,2.0,2.2]},
+  {name:"POS价",type:"bar",barWidth:12,itemStyle:{borderRadius:[3,3,0,0],color:"#16b8c8"},data:[2.6,3.3,5.2,2.2,2.4]},
+  {name:"Rebate后净价",type:"bar",barWidth:12,itemStyle:{borderRadius:[3,3,0,0],color:"#7a6ff0"},data:[2.25,2.95,4.7,1.9,2.05]},
+ ]});
+
+mk("c7",{tooltip:tip(),legend:legend({data:["POP","POS","Rebate净价"]}),grid:baseGrid({top:30}),
+ xAxis:catAxis(M),yAxis:valAxis({name:"元/颗",min:1.8}),
+ series:[
+  {name:"POP",type:"line",smooth:true,symbol:"circle",symbolSize:5,lineStyle:{width:2.5,color:"#2468f2"},itemStyle:{color:"#2468f2"},data:[2.30,2.32,2.35,2.36,2.38,2.40]},
+  {name:"POS",type:"line",smooth:true,symbol:"none",lineStyle:{width:2,color:"#16b8c8"},data:[2.50,2.52,2.55,2.56,2.58,2.60]},
+  {name:"Rebate净价",type:"line",smooth:true,symbol:"none",lineStyle:{width:2,type:"dashed",color:"#7a6ff0"},data:[2.18,2.20,2.22,2.23,2.24,2.25]},
+ ]});
+
+const rows=[
+ ["WL2456 射频前端","北方半导","汽车电子","经销商","86","78天","预警"],
+ ["WL5521 MCU","南方科技","工业控制","VMI","64","61天","预警"],
+ ["WL3088 电源管理","—","消费电子","自有","42","38天","正常"],
+ ["WL1207 信号链","西部芯联","通信","经销商","36","52天","关注"],
+];
+const head=["产品型号","经销商","大类","库存类型","库存(万颗)","周转","状态"];
+document.getElementById("tbl").innerHTML=
+ "<thead><tr>"+head.map((h,i)=>`<th class="${i===4?'num':''}">${h}</th>`).join("")+"</tr></thead><tbody>"+
+ rows.map(r=>"<tr>"+r.map((c,i)=>{let v=c;
+  if(i===6){const cls=c==="预警"?"tag-red":(c==="关注"?"tag-gold":"tag-green");v=`<span class="tag ${cls}">${c}</span>`;}
+  return `<td class="${i===4?'num':''} ${i===0?'strong':''}">${v}</td>`;}).join("")+"</tr>").join("")+"</tbody>";
+</script>
+</body>
+</html>

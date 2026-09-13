@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>D-10 销售异常与退货监控 · 唯捷创芯</title>
+<link rel="stylesheet" href="../assets/style.css" />
+<script src="../assets/echarts.min.js"></script>
+</head>
+<body>
+<div id="content">
+
+  <div class="grid r-23" style="margin-bottom:4px">
+    <div class="card"><div class="card-b" style="padding:12px 16px">
+      <div class="flow">
+        <div class="step"><span class="sn">1</span>总览</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">2</span>产品</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">3</span>客户</div>
+      </div>
+    </div></div>
+    <div class="card"><div class="card-b" style="padding:12px 16px">
+      <div class="meta-strip">
+        <span class="ms">仅统计 <b>订单退货属性</b></span>
+        <span class="ms">前置条件 <b>SAP退货原因标记</b></span>
+        <span class="ms">监控 <b>退货率/金额/次数</b></span>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="grid g6" id="kpi"></div>
+
+  <div class="section-head"><span class="bar"></span><h2>退货总览</h2>
+    <span class="desc">退货率 / 金额 / 次数趋势与预警</span><span class="line"></span></div>
+  <div class="grid r-21">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>退货金额 / 退货次数 + 退货率趋势</div><span class="cx">单位：万元 · 次</span></div>
+      <div class="card-b"><div id="c1" class="chart" style="height:262px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>退货率</div><span class="cx">本月 · 阈值1.0%</span></div>
+      <div class="card-b"><div id="c2" class="chart" style="height:262px"></div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>下钻 · 产品 / 客户</h2>
+    <span class="desc">定位高退货产品与客户</span><span class="line"></span></div>
+  <div class="grid g2">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>各产品大类退货率</div></div>
+      <div class="card-b"><div id="c3" class="chart" style="height:240px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>退货原因分布</div></div>
+      <div class="card-b"><div id="c4" class="chart" style="height:240px"></div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>异常退货清单</h2>
+    <span class="desc">退货异常趋势预警，可下钻明细</span><span class="line"></span></div>
+  <div class="card"><div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl" id="tbl"></table></div></div></div>
+
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+renderLayout("d10",{chapter:"第六章 · 控异常",
+ sub:"面向销售管理及财务，持续监控产品退货情况。",
+ batchTags:'<span class="tag tag-blue" style="margin-left:8px">一期 P1</span>'});
+
+const kpi=[
+ {t:"退货率",v:"1.12",u:"%",f:'<span class="trend-down">▲0.18pct</span>',c:"k-red",sc:"#e2544a",sp:[0.9,0.95,1.0,1.05,1.0,1.08,1.12]},
+ {t:"退货金额",v:"432",u:"万元",f:'<span class="trend-down">▲12.4%</span>',c:"k-gold",sc:"#e0a106",sp:[320,340,360,380,400,415,432]},
+ {t:"退货次数",v:"86",u:"次",f:'<span class="trend-down">▲9</span>',c:"k-orange",sc:"#f07a1d",sp:[62,66,70,74,78,82,86]},
+ {t:"涉及客户",v:"24",u:"家",f:'<span class="trend-flat">需关注</span>',c:"k-violet",sc:"#7a6ff0",sp:[18,19,20,21,22,23,24]},
+ {t:"涉及型号",v:"31",u:"个",f:'<span class="trend-down">▲5</span>',c:"k-cyan",sc:"#16b8c8",sp:[22,24,26,27,28,30,31]},
+ {t:"高退货预警",v:"3",u:"项",f:'<span class="trend-down">超阈值</span>',c:"",sc:"#e2544a",sp:[1,1,2,2,2,3,3]},
+];
+document.getElementById("kpi").innerHTML=kpi.map((k,i)=>`
+ <div class="kpi ${k.c}"><div class="kt"><span class="dot" style="background:${k.sc}"></span>${k.t}</div>
+ <div class="kv">${k.v}<small>${k.u}</small></div><div class="kf">${k.f}</div><div class="spark" id="s${i}"></div></div>`).join("");
+kpi.forEach((k,i)=>spark("s"+i,k.sp,k.sc));
+
+const M=["1月","2月","3月","4月","5月","6月"];
+mk("c1",{tooltip:tip(),legend:legend({data:["退货金额","退货次数","退货率"]}),grid:baseGrid({top:34,right:46}),
+ xAxis:catAxis(M),yAxis:[valAxis({name:"万元"}),valAxis({name:"率%",max:2,splitLine:{show:false}})],
+ series:[
+  {name:"退货金额",type:"bar",barWidth:22,itemStyle:{borderRadius:[4,4,0,0],color:gradient("#ffc879","#f07a1d")},data:[320,340,360,380,400,432]},
+  {name:"退货次数",type:"line",smooth:true,symbol:"circle",symbolSize:5,lineStyle:{width:2,color:"#7a6ff0"},itemStyle:{color:"#7a6ff0"},data:[62,66,70,74,78,86]},
+  {name:"退货率",type:"line",yAxisIndex:1,smooth:true,symbol:"circle",symbolSize:6,lineStyle:{width:2.5,color:"#e2544a"},itemStyle:{color:"#e2544a"},
+   data:[0.9,0.95,1.0,1.05,1.0,1.12],
+   markLine:{silent:true,symbol:"none",lineStyle:{color:"#e2544a",type:"dashed"},data:[{yAxis:1.0,label:{formatter:"阈值1.0%"}}]}},
+ ]});
+
+mk("c2",gaugeOpt(1.12,gradient("#f1968e","#e2544a"),{max:2,name:"退货率",fmt:function(v){return v+"%"}}));
+
+mk("c3",{tooltip:tip(),grid:baseGrid({top:18}),xAxis:catAxis(["消费电子","工业控制","汽车电子","通信","其他"]),yAxis:valAxis({name:"%",max:2.5}),
+ series:[{type:"bar",barWidth:30,label:{show:true,position:"top",formatter:"{c}%",color:"#46586c",fontWeight:700},
+  itemStyle:{borderRadius:[4,4,0,0],color:function(p){return p.data>1.5?gradient("#f1968e","#e2544a"):gradient("#9a8ff5","#7a6ff0")}},
+  markLine:{silent:true,symbol:"none",lineStyle:{color:"#e2544a",type:"dashed"},data:[{yAxis:1.5,label:{formatter:"阈值"}}]},
+  data:[0.86,1.42,1.88,0.94,1.10]}]});
+
+mk("c4",{tooltip:{trigger:"item",formatter:"{b}: {d}%"},legend:legend({bottom:0,icon:"circle"}),
+ series:[{type:"pie",radius:["40%","66%"],center:["50%","44%"],itemStyle:{borderColor:"#fff",borderWidth:2},
+  label:{show:false},data:[{value:38,name:"质量问题"},{value:24,name:"规格不符"},{value:18,name:"客户取消"},{value:12,name:"物流损坏"},{value:8,name:"其他"}]}]});
+
+const rows=[
+ ["WL2456 射频前端","北方半导","汽车电子","1.88%","128","↑超阈值","预警"],
+ ["WL5521 MCU","南方科技","工业控制","1.42%","86","↑上升","关注"],
+ ["WL1207 信号链","西部芯联","通信","0.94%","42","正常","正常"],
+ ["WL3088 电源管理","华东电子","消费电子","0.86%","38","正常","正常"],
+];
+const head=["产品型号","客户","大类","退货率","退货金额(万元)","趋势","状态"];
+document.getElementById("tbl").innerHTML=
+ "<thead><tr>"+head.map((h,i)=>`<th class="${i===4?'num':''}">${h}</th>`).join("")+"</tr></thead><tbody>"+
+ rows.map(r=>"<tr>"+r.map((c,i)=>{let v=c;
+  if(i===6){const cls=c==="预警"?"tag-red":(c==="关注"?"tag-gold":"tag-green");v=`<span class="tag ${cls}">${c}</span>`;}
+  return `<td class="${i===4?'num':''} ${i===0?'strong':''}">${v}</td>`;}).join("")+"</tr>").join("")+"</tbody>";
+</script>
+</body>
+</html>

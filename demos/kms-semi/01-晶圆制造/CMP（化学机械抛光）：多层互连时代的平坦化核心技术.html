@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CMP（化学机械抛光）：多层互连时代的平坦化核心技术 — 半导体知识库</title>
+<meta name="description" content="# CMP（化学机械抛光）：多层互连时代的平坦化核心技术  ## 什么是CMP：化学与机械的协同艺术  CMP（Chemical Mechanical Polishing/Planarization，化学机械抛光）是半导体制造中实现晶圆表面全局平坦化的核心技术。它的基本思想是把**化学腐蚀**和**">
+<link rel="stylesheet" href="/kb/assets/style.css">
+</head>
+<body>
+<div class="top-accent"></div>
+<header class="page-header">
+  <a href="/kb/首页.html" class="home-link">🔬 半导体知识库</a>
+</header>
+<main class="container">
+<nav class="breadcrumb"><a href="/kb/首页.html">半导体知识库</a> <span class="sep">›</span> <a href="/kb//01-晶圆制造/index.html">01-晶圆制造</a></nav>
+<article class="note">
+<header class="note-header">
+  <h1>CMP（化学机械抛光）：多层互连时代的平坦化核心技术</h1>
+  <div class="meta-line"><span class="meta-item">📅 2026-07-09</span> · <span class="meta-item">📂 01-晶圆制造</span> · <span class="meta-item" style="color:#059669">⭐ high</span> · <span class="meta-item">🏷️ <span class="tag">晶圆制造</span> <span class="tag">CMP</span> <span class="tag">平坦化</span> <span class="tag">抛光液</span> <span class="tag">耗材</span> <span class="tag">技术深潜</span></span></div>
+</header>
+<div class="note-body">
+<h1 id="cmp">CMP（化学机械抛光）：多层互连时代的平坦化核心技术</h1>
+<h2 id="cmp_1">什么是CMP：化学与机械的协同艺术</h2>
+<p>CMP（Chemical Mechanical Polishing/Planarization，化学机械抛光）是半导体制造中实现晶圆表面全局平坦化的核心技术。它的基本思想是把<strong>化学腐蚀</strong>和<strong>机械研磨</strong>结合在一起：抛光液（Slurry）中的化学成分软化/氧化晶圆表面材料，抛光垫（Pad）与磨粒（Abrasive）共同施加机械力将其去除。单一化学腐蚀速率太慢且不可控，单一机械研磨会引入表面损伤——两者协同才实现了纳米级的平坦精度。</p>
+<p>没有CMP，现代芯片的多层互连结构根本无法制造。因为每一层金属互连都要求下层表面在光刻焦深（DOF）范围内——先进制程DOF仅几十纳米，而未经CMP的表面起伏可能高达数微米。CMP是连接「薄膜沉积」与「光刻」的必经桥梁，在先进逻辑芯片制造中，CMP步骤从130nm节点的约10步膨胀到3nm节点的超过30步。</p>
+<h2 id="prestoncmp">🔬 Preston方程：CMP的量化基础</h2>
+<p>CMP的去除速率（Material Removal Rate, MRR）由Preston方程描述：</p>
+<p>$$MRR = K_p \cdot P \cdot V$$</p>
+<p>其中：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+<th>工艺影响</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$K_p$</td>
+<td>Preston系数（包含化学作用、磨粒特性、Pad硬度等）</td>
+<td>Slurry配方/温度/材料硬度决定</td>
+</tr>
+<tr>
+<td>$P$</td>
+<td>晶圆表面施加的下压力（Pressure）</td>
+<td>过高→划伤/碟形凹陷；过低→速率不足</td>
+</tr>
+<tr>
+<td>$V$</td>
+<td>晶圆与Pad之间的相对线速度</td>
+<td>由抛光盘转速和晶圆载具转速共同决定</td>
+</tr>
+</tbody>
+</table>
+<p>Preston方程的工程意义在于：<strong>CMP工艺窗口由$P$和$V$两个可控变量与$K_p$这个材料-化学变量共同决定</strong>。实际生产中，工程师通过调整$P$/$V$来控制速率，通过调整Slurry的化学组成（氧化剂浓度/pH值/磨粒粒径）来优化$K_p$。先进CMP设备还引入<strong>分区背压控制</strong>（Zone Back Pressure），在晶圆不同径向区域施加不同压力，实现全晶圆范围的均匀去除。</p>
+<p><strong>CMP工艺的评价指标</strong>超出单纯去除速率：
+- <strong>WIWNU（Within-Wafer Non-Uniformity，片内非均匀性）</strong>：同一晶圆上不同位置的去除差异，先进制程要求 &lt; 3%
+- <strong>WTWNU（Wafer-to-Wafer Non-Uniformity，片间非均匀性）</strong>：批次内的一致性
+- <strong>碟形凹陷（Dishing）</strong>与<strong>侵蚀（Erosion）</strong>：铜CMP中金属线区域过度凹陷、介质区域过度去除——直接决定RC延迟和可靠性
+- <strong>缺陷密度</strong>：划伤（Scratch）、颗粒残留、腐蚀坑，每片晶圆的致命缺陷需控制在个位数</p>
+<h2 id="slurry-pad-conditioner">🧪 关键耗材三角：Slurry / Pad / Conditioner</h2>
+<p>CMP耗材是典型的"剃刀+刀片"模式——设备本身单价数十万至数百万美元，但耗材消耗贯穿设备整个生命周期，耗材市场规模远超设备。</p>
+<h3 id="slurry">抛光液（Slurry）</h3>
+<p>Slurry是CMP的心脏，决定去除速率、选择性和缺陷水平。按应用分：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>应用场景</th>
+<th>典型磨粒</th>
+<th>关键供应商</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>氧化物CMP Slurry</strong>（Oxide）</td>
+<td>STI平坦化、ILD平坦化</td>
+<td>SiO₂（气相二氧化硅）/ CeO₂（氧化铈）</td>
+<td>Cabot, Fujimi, 安集科技</td>
+</tr>
+<tr>
+<td><strong>钨CMP Slurry</strong>（Tungsten）</td>
+<td>W接触塞/通孔</td>
+<td>Al₂O₃（氧化铝）+ H₂O₂（氧化剂）</td>
+<td>Cabot, Versum（现Merck）, 安集</td>
+</tr>
+<tr>
+<td><strong>铜CMP Slurry</strong>（Copper）</td>
+<td>Cu Damascene互连</td>
+<td>SiO₂ + 抑制剂（BTA）+ 氧化剂 + 络合剂</td>
+<td>Cabot, Fujimi, Versum, 安集</td>
+</tr>
+<tr>
+<td><strong>多晶硅CMP Slurry</strong></td>
+<td>栅极形成</td>
+<td>SiO₂或CeO₂</td>
+<td>Fujimi, Cabot</td>
+</tr>
+<tr>
+<td><strong>阻挡层CMP Slurry</strong>（Barrier）</td>
+<td>Cu Damascene中去除Ta/TaN阻挡层</td>
+<td>低缺陷、高选择性配方</td>
+<td>Cabot, Versum</td>
+</tr>
+</tbody>
+</table>
+<p>铜CMP是技术难度最高的品类，因为铜互连工艺要求三步抛光：① 大块铜去除（Bulk Cu Removal）→ ② 残留铜清除（Cu Clear）→ ③ 阻挡层去除（Barrier Removal），每一步的Slurry化学配方完全不同，且三步间的<strong>终点检测（Endpoint Detection）</strong>精度直接影响良率。</p>
+<h3 id="pad">抛光垫（Pad）</h3>
+<p>Pad是CMP的"研磨平台"，承担三个角色：承载Slurry、传递下压力、排出副产物。材质以<strong>聚氨酯（Polyurethane, PU）</strong>为主，表面微孔结构（Pore）和沟槽图案（Groove Pattern）决定Slurry分布和去除均匀性。</p>
+<ul>
+<li><strong>硬垫（Hard Pad）</strong>：高去除速率，适合大块材料去除，但易引入缺陷</li>
+<li><strong>软垫（Soft Pad）</strong>：低缺陷、高平坦度，适合终抛（Buff）步骤</li>
+<li><strong>层叠式垫</strong>：硬垫+软垫底层，兼顾速率与平坦度</li>
+</ul>
+<p>全球Pad市场高度集中，<strong>陶氏化学（Dow）</strong>占据约80%份额（其IC1000系列是行业标准），其余由Fujibo、Nitta Haas等日系厂商瓜分。中国厂商（鼎龙股份等）正在突破，但认证周期长达2-3年。</p>
+<h3 id="conditioner">修整器（Conditioner）</h3>
+<p>Pad在抛光过程中表面会"釉化"（Glazing）——磨屑堵塞微孔、表面变光滑，导致去除速率下降和均匀性恶化。Conditioner（金刚石修整器）的功能是用<strong>金刚石颗粒</strong>持续切削Pad表面，去除釉化层、恢复表面微观结构。</p>
+<p>Conditioner的核心参数：金刚石粒度、分布密度、切削深度。修整频率（每片晶圆修整/每N片修整）是重要的工艺调节变量。全球主要供应商包括<strong>3M</strong>、<strong>Kinik（中国砂轮）</strong>、<strong>Saesol</strong>。</p>
+<h2 id="cmp_2">🏭 应用场景：CMP贯穿芯片制造的六大关键步骤</h2>
+<h3 id="1-sti-cmp">1. STI CMP（浅槽隔离平坦化）</h3>
+<p>隔离相邻晶体管的关键结构。沉积SiO₂填充浅槽后，CMP去除多余的氧化层，以Si₃N₄（氮化硅）作为停止层实现高选择性平坦化。STI是CMP在芯片制造中的最早应用（1980年代IBM首次引入），也是所有后续CMP步骤的"母工艺"。</p>
+<h3 id="2-ild-cmp">2. ILD CMP（层间介质平坦化）</h3>
+<p>每沉积一层ILD（Inter-Layer Dielectric，通常为SiO₂）后，CMP将其表面平坦化，为上一层金属光刻提供平整基底。多晶硅栅极形成后的PMD（Pre-Metal Dielectric）CMP也属于此类。</p>
+<h3 id="3-cmpw-plug-w-contact-cmp">3. 钨接触塞CMP（W Plug / W Contact CMP）</h3>
+<p>在ILD中刻蚀接触孔、沉积W填充后，CMP去除表面多余的W，只在孔内留下W塞。这是典型的"高选择性"CMP——要求对W去除速率远高于对SiO₂的速率，避免介质被过度减薄。W CMP是0.25μm节点开始的重要步骤。</p>
+<h3 id="4-damascene-cmp">4. 铜Damascene CMP（铜互连大马士革工艺）</h3>
+<p>铜互连不能像铝一样直接刻蚀（铜的挥发性刻蚀产物极少），因此采用Damascene（大马士革）工艺：先在介质中刻蚀沟槽→沉积阻挡层（Ta/TaN）和铜种子层→电镀填充铜→CMP去除多余铜和阻挡层，仅在沟槽中留下铜互连线。</p>
+<p>每一步金属层都需要一次完整的Damascene CMP循环。一个3nm芯片有15-18层金属互连，意味着仅铜CMP就需执行15-18次——这是CMP步骤数量在先进制程中激增的主因。</p>
+<h3 id="5-finfet-sti-cmp">5. FinFET STI CMP</h3>
+<p>FinFET（鳍式场效应晶体管）时代，STI CMP有了新挑战：Fin的高度由STI氧化层的回刻（Recess）量决定，CMP的均匀性直接影响Fin高度的均一性，进而影响整个晶体管的电性。FinFET STI CMP对WIWNU的要求比平面晶体管时代严苛一倍以上。</p>
+<h3 id="6-cmp">6. 先进封装CMP</h3>
+<p>2.5D/3D封装中的TSV（硅通孔）露铜、Hybrid Bonding界面平坦化，都依赖CMP。封装级CMP精度要求虽低于前道，但晶圆厚度更薄（50-100μm），机台需要特殊处理能力。</p>
+<h2 id="cmp_3">📈 制程节点演进：CMP步骤数量的指数级增长</h2>
+<table>
+<thead>
+<tr>
+<th>制程节点</th>
+<th style="text-align: center;">金属互连层数</th>
+<th style="text-align: center;">CMP步骤（约）</th>
+<th>关键变化</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.25μm（Al互连）</td>
+<td style="text-align: center;">4-5</td>
+<td style="text-align: center;">~5-8</td>
+<td>W接触塞CMP首次引入</td>
+</tr>
+<tr>
+<td>130nm（Cu互连）</td>
+<td style="text-align: center;">6-8</td>
+<td style="text-align: center;">~10-12</td>
+<td>Cu Damascene CMP成为主流，每层金属=1次CMP</td>
+</tr>
+<tr>
+<td>45nm</td>
+<td style="text-align: center;">8-10</td>
+<td style="text-align: center;">~15-18</td>
+<td>Low-k介质引入，CMP需避免对脆弱介质的损伤</td>
+</tr>
+<tr>
+<td>14nm/16nm（FinFET）</td>
+<td style="text-align: center;">10-12</td>
+<td style="text-align: center;">~20-25</td>
+<td>FinFET STI CMP精度要求跃升；Co覆盖层引入</td>
+</tr>
+<tr>
+<td>7nm</td>
+<td style="text-align: center;">12-14</td>
+<td style="text-align: center;">~25-30</td>
+<td>EUV光刻要求更严格的CMP表面平坦度（DOF更小）</td>
+</tr>
+<tr>
+<td>3nm</td>
+<td style="text-align: center;">15-18</td>
+<td style="text-align: center;">&gt;30</td>
+<td>每层金属CMP + 多重图案化相关的额外CMP</td>
+</tr>
+</tbody>
+</table>
+<p><strong>核心规律</strong>：金属层数每增加一层，就需要增加至少一次（通常2-3次，含阻挡层CMP）CMP步骤。从130nm到3nm，CMP步骤数从约10步膨胀到30+步，这意味着<strong>单晶圆CMP设备需求量增长了3倍以上</strong>，且每一步的精度要求都在持续提升。</p>
+<h2 id="amat">🏢 设备商格局：AMAT主导，中国力量崛起</h2>
+<h3 id="applied-materials">应用材料（Applied Materials）——绝对霸主</h3>
+<p>应用材料的<strong>Reflexion系列</strong>是CMP设备的事实标准。Reflexion LK（用于先进制程Cu CMP）采用多压区（Multi-Zone）晶圆载具和实时终点检测（Real-time Profile Control），在7nm以下节点市占率超过70%。最新一代<strong>Reflexion LK Prime</strong>针对3nm节点，引入了机器学习驱动的工艺控制。</p>
+<p>应用材料在CMP设备的竞争壁垒在于：
+- <strong>工艺集成能力</strong>：与Slurry供应商（多为Cabot）深度绑定，提供"设备+耗材+工艺菜单"整体方案
+- <strong>终点检测技术</strong>：光学/涡流传感器实时监测膜厚，自动终止抛光
+- <strong>全球Fab覆盖</strong>：所有先进Fab（TSMC/Samsung/Intel/SK Hynix/Micron）的标准配置</p>
+<h3 id="ebara">荏原（Ebara）——日系第二极</h3>
+<p>Ebara的F-REX系列在铜CMP领域有一定份额，特别在存储芯片（DRAM/3D NAND）的CMP中表现强劲。Ebara的优势在于日系供应链协同（与Fujimi Slurry、Fujibo Pad配合），对韩国存储客户的渗透较深。</p>
+<h3 id="hwatsingcmp">华海清科（Hwatsing）——中国CMP设备第一股</h3>
+<p>华海清科源于清华大学摩擦学国家重点实验室，其Universal系列CMP设备已在中芯国际、华虹等国内Fab实现批量应用。华海清科目前覆盖逻辑/存储/化合物半导体的主流CMP工序，2025年营收突破50亿元人民币，代表设备已进入14nm逻辑和3D NAND量产线。</p>
+<h3 id="amec">中微公司（AMEC）</h3>
+<p>中微以刻蚀设备闻名，CMP尚处于布局阶段（通过子公司沈阳拓荆间接参与），暂未形成规模化CMP设备出货。</p>
+<p><strong>CMP设备全球市场格局（估算）</strong>：
+- 应用材料：~70%
+- Ebara：~15%
+- 华海清科：~8%
+- 其他（东京精密、Disco等）：~7%</p>
+<h2 id="_1">🛒 耗材市场格局：精细化工的隐形冠军</h2>
+<p>CMP耗材市场总规模约45-50亿美元（2025年），其中Slurry占60-65%，Pad占25-30%，Conditioner占5-10%。</p>
+<h3 id="slurry_1">抛光液（Slurry）</h3>
+<table>
+<thead>
+<tr>
+<th>供应商</th>
+<th>国别</th>
+<th style="text-align: center;">份额</th>
+<th>优势品类</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cabot Microelectronics</strong>（CMC）</td>
+<td>美国</td>
+<td style="text-align: center;">~35%</td>
+<td>全品类领先，Cu/Tungsten/Oxide均强；与应用材料深度绑定</td>
+</tr>
+<tr>
+<td><strong>Fujimi</strong></td>
+<td>日本</td>
+<td style="text-align: center;">~15%</td>
+<td>Oxide/多晶硅Slurry强，日系Fab标配</td>
+</tr>
+<tr>
+<td><strong>Versum Materials</strong>（现Merck）</td>
+<td>美国/德国</td>
+<td style="text-align: center;">~12%</td>
+<td>Tungsten/Barrier Slurry见长</td>
+</tr>
+<tr>
+<td><strong>安集科技（Anji Technology）</strong></td>
+<td>中国</td>
+<td style="text-align: center;">~8%</td>
+<td>国产唯一规模化Slurry企业，W/Cu/Oxide全面布局；已进中芯国际/长江存储供应链</td>
+</tr>
+<tr>
+<td><strong>DuPont</strong></td>
+<td>美国</td>
+<td style="text-align: center;">~8%</td>
+<td>后道CMP及特殊Slurry</td>
+</tr>
+<tr>
+<td><strong>其他</strong>（Hitachi Chemical, Soulbrain等）</td>
+<td>多国</td>
+<td style="text-align: center;">~22%</td>
+<td>区域性细分</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pad_1">抛光垫（Pad）</h3>
+<table>
+<thead>
+<tr>
+<th>供应商</th>
+<th style="text-align: center;">份额</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Dow Chemical</strong></td>
+<td style="text-align: center;">~80%</td>
+<td>IC1000系列垄断，Fab认证门槛极高</td>
+</tr>
+<tr>
+<td>Fujibo / Nitta Haas</td>
+<td style="text-align: center;">~12%</td>
+<td>日系Fab体系内</td>
+</tr>
+<tr>
+<td><strong>鼎龙股份（Dinglong）</strong></td>
+<td style="text-align: center;">~3%</td>
+<td>国产唯一Pad供应商，已进长江存储3D NAND产线；2025年营收突破10亿</td>
+</tr>
+</tbody>
+</table>
+<h3 id="conditioner_1">修整器（Conditioner）</h3>
+<p>市场较小但壁垒高，3M占据主导地位，台湾中国砂轮（Kinik）和韩国Saesol紧随其后。</p>
+<p><strong>国产替代的窗口期</strong>：美国对华出口管制升级背景下，国产CMP耗材（安集Slurry + 鼎龙Pad）正处于从"替补"到"主力"的转折点。2023-2025年间，安集和鼎龙在长江存储/中芯国际的份额快速提升。但产品一致性（Lot-to-Lot Uniformity）和7nm以下先进制程的配方能力仍是差距所在。</p>
+<hr />
+<h2 id="cmp_4">📊 帆软关联度：CMP工序的数字化痛点与售前切入点</h2>
+<h3 id="cmp_5">为什么CMP相关的数据需求对帆软有价值？</h3>
+<p>CMP是晶圆制造中<strong>参数最复杂、耗材消耗最大、工艺窗口最窄</strong>的模块之一。一个先进Fab的CMP区域通常包含：</p>
+<ul>
+<li>数百个工艺配方（Recipe），每个配方有20+可调参数</li>
+<li>数十种Slurry/Pad/Conditioner组合，对应不同的材料和步骤</li>
+<li>每片晶圆消耗约5-20mL Slurry，耗材成本占CMP总成本的60%以上</li>
+<li>终点检测传感器每毫秒产生数据，全批次Trace Data达GB级别</li>
+</ul>
+<p>这些数据天然需要<strong>汇聚、分析、可视化、预警</strong>——正是帆软产品矩阵的用武之地。</p>
+<h3 id="_2">售前场景矩阵</h3>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>痛点描述</th>
+<th>帆软产品</th>
+<th>具体切入</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CMP工艺监控大屏</strong></td>
+<td>工程师需要在多个系统间切换查看去除速率、WIWNU、碟形凹陷等指标</td>
+<td>FineReport</td>
+<td>实时CMP产线大屏：每片晶圆的MRR/WIWNU趋势 + 各机台状态 + 耗材寿命预警，一屏呈现</td>
+</tr>
+<tr>
+<td><strong>Slurry批次一致性分析</strong></td>
+<td>更换Slurry批次后良率波动，但工程师无法快速关联批次号与良率数据</td>
+<td>FineBI + FDL</td>
+<td>FDL拉通MES（批次号）+ SPC（去除速率）+ 良率数据，FineBI做Slurry批次→良率的关联分析，快速定位问题批次</td>
+</tr>
+<tr>
+<td><strong>Pad寿命预测与耗材库存优化</strong></td>
+<td>Pad更换周期依赖经验值，过早换浪费成本，过晚换影响良率</td>
+<td>AI Agent + FineReport</td>
+<td>AI Agent基于历史去除速率衰减曲线预测Pad剩余寿命；FineReport生成耗材消耗预测报表，优化库存</td>
+</tr>
+<tr>
+<td><strong>多机台CMP一致性（Matching）</strong></td>
+<td>同一工艺在不同机台上的去除速率不一致，导致片间良率波动</td>
+<td>FineBI</td>
+<td>按机台/Chamber维度对比MRR/WIWNU，自动标注偏离基线&gt;3σ的机台，触发工程师排查</td>
+</tr>
+<tr>
+<td><strong>铜CMP三步工艺终点检测追溯</strong></td>
+<td>铜CMP三步（Bulk→Clear→Barrier）的数据散落在FDC系统中，客户稽核时无法快速出具完整数据链</td>
+<td>FDL + FineReport</td>
+<td>FDL汇聚三步工艺数据形成完整CMP数据链，FineReport一键生成客户稽核报告</td>
+</tr>
+<tr>
+<td><strong>耗材成本归集</strong></td>
+<td>财务/工艺部门无法精准归集每种Slurry/Pad在每道工序的成本</td>
+<td>FineReport + 简道云</td>
+<td>FineReport按工序/BOM展开CMP耗材成本；简道云做耗材申领与消耗登记</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_3">售前话术要点</h3>
+<blockquote>
+<p>"一个晶圆厂CMP区一天消耗的Slurry价值数十万人民币，但很多Fab连精确的耗材成本归集都做不到——不知道这笔钱花在哪道工序、哪个产品上。FineReport+FDL帮你们建立起从Slurry入料到晶圆出片的完整成本追溯链。"</p>
+<p>"CMP工艺调优靠的是经验丰富的老师傅。但老师傅会退休、会跳槽。FineBI把老师傅脑子里的'感觉'变成系统里的'模型'——哪个Slurry批次好、哪个Pressure和RPM组合产出最高，数据说了算，不是谁资历老说了算。"</p>
+<p>"客户稽核的时候，Auditor要求看过去6个月每一步CMP的终点检测数据和耗材批次号。如果靠工程师手工整理，至少一周。我们用FDL把数据链路打通，一键出报告，当天搞定。"</p>
+</blockquote>
+<hr />
+<h2 id="_4">🔗 关联</h2>
+<ul>
+<li><a href="/kb/行业知识体系/01-晶圆制造/基础概念/晶圆制造全流程">晶圆制造全流程</a></li>
+<li><a href="/kb/01-晶圆制造/行业动态/半导体材料市场格局与关键品类">半导体材料市场格局与关键品类</a></li>
+<li><a href="/kb/行业知识体系/03-半导体设备/基础概念/半导体设备分类与市场格局">半导体设备分类与市场格局</a></li>
+<li><a href="/kb/01-晶圆制造/行业动态/SPC与良率管理：半导体制造的质量控制体系">SPC与良率管理：半导体制造的质量控制体系</a></li>
+<li><a href="/kb/01-晶圆制造/行业动态/晶体管技术演进：从MOSFET到FinFET到GAA">晶体管技术演进：从MOSFET到FinFET到GAA</a></li>
+<li><a href="/kb/行业知识体系/01-晶圆制造/基础概念/先进制程vs成熟制程">先进制程vs成熟制程</a></li>
+<li><a href="/kb/01-晶圆制造/行业动态/中国半导体材料头部企业：沪硅、安集、江丰、鼎龙">中国半导体材料头部企业：沪硅、安集、江丰、鼎龙</a></li>
+</ul>
+<h2 id="_5">🔗 来源</h2>
+<ul>
+<li>应用材料CMP技术白皮书/Cabot Microelectronics公开资料/安集科技招股书/华海清科招股书/鼎龙股份年报</li>
+<li>入库时间：2026-07-09</li>
+</ul>
+</div>
+</article>
+<footer class="note-footer">
+  <a href="/kb/01-晶圆制造/index.html">← 返回目录</a>
+</footer>
+</main>
+</body>
+</html>

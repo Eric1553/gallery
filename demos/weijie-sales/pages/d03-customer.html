@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>D-03 客户经营分析 · 唯捷创芯</title>
+<link rel="stylesheet" href="../assets/style.css" />
+<script src="../assets/echarts.min.js"></script>
+</head>
+<body>
+<div id="content">
+
+  <div class="grid r-23" style="margin-bottom:4px">
+    <div class="card"><div class="card-b" style="padding:12px 16px">
+      <div class="flow">
+        <div class="step"><span class="sn">1</span>总览</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">2</span>大客户</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">3</span>满意度</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">4</span>Lead Time</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">5</span>明细</div>
+      </div>
+    </div></div>
+    <div class="card"><div class="card-b" style="padding:12px 16px">
+      <div class="meta-strip">
+        <span class="ms">核心 <b>大客户销售额</b></span>
+        <span class="ms">满意度 <b>年度上传</b></span>
+        <span class="ms">周期 <b>客户维度 Lead Time</b></span>
+        <span class="ms">新老客/数量分析 <b>本期不做</b></span>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="grid g3" id="kpi"></div>
+
+  <div class="section-head"><span class="bar"></span><h2>大客户销售额</h2>
+    <span class="desc">按客户分类（车载/手机/物联网等）看大客户收入结构</span><span class="line"></span></div>
+  <div class="grid r-21">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>客户分类 · 大客户销售额</div><span class="cx">单位：万元</span></div>
+      <div class="card-b"><div id="c1" class="chart" style="height:250px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>客户 × 销售组 销售额热力</div></div>
+      <div class="card-b"><div id="c2" class="chart" style="height:250px"></div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>年度客户满意度</h2>
+    <span class="desc">每年上传，展示年度同比</span><span class="line"></span></div>
+  <div class="grid g2">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>年度客户满意度同比</div></div>
+      <div class="card-b"><div id="c3" class="chart" style="height:236px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>满意度分项对比</div></div>
+      <div class="card-b"><div id="c4" class="chart" style="height:236px"></div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>销售周期 · 客户 Lead Time</h2>
+    <span class="desc">按客户维度统计 Lead Time（不按产品类型平均）</span><span class="line"></span></div>
+  <div class="card">
+    <div class="card-h"><div class="ct"><span class="ci"></span>各客户 Lead Time（天）</div></div>
+    <div class="card-b"><div id="c5" class="chart" style="height:260px"></div></div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>客户明细 · 客户 × 销售组</h2>
+    <span class="desc">大客户销售额、满意度与 Lead Time</span><span class="line"></span></div>
+  <div class="card"><div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl" id="tbl"></table></div></div></div>
+
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+renderLayout("d03",{chapter:"第二章 · 拆经营结构",
+ sub:"面向销售管理及客户经理：聚焦大客户销售额、年度满意度与客户维度 Lead Time（新老客/客户数量本期不做）。",
+ batchTags:'<span class="tag tag-blue" style="margin-left:8px">一期 P1</span>'});
+
+const kpi=[
+ {t:"大客户销售额",v:"24,860",u:"万元",f:'<span class="lbl">占总盘 64.3%</span>',c:"",sc:"#2468f2",sp:[20,21,22,23,23.5,24,24.8]},
+ {t:"客户满意度",v:"4.42",u:"/5",f:'<span class="trend-up">▲0.08</span>',c:"k-green",sc:"#25a36c",sp:[4.2,4.25,4.3,4.32,4.36,4.4,4.42]},
+ {t:"平均 Lead Time",v:"68",u:"天",f:'<span class="lbl">客户维度</span>',c:"k-gold",sc:"#e0a106",sp:[60,62,63,64,65,66,68]},
+];
+document.getElementById("kpi").innerHTML=kpi.map((k,i)=>`
+ <div class="kpi ${k.c}"><div class="kt"><span class="dot" style="background:${k.sc}"></span>${k.t}</div>
+ <div class="kv">${k.v}<small>${k.u}</small></div><div class="kf">${k.f}</div><div class="spark" id="s${i}"></div></div>`).join("");
+kpi.forEach((k,i)=>spark("s"+i,k.sp,k.sc));
+
+mk("c1",{tooltip:tip(),grid:baseGrid({top:18}),xAxis:catAxis(["车载","手机","物联网","工业","消费"]),yAxis:valAxis({name:"万元"}),
+ series:[{type:"bar",barWidth:30,label:{show:true,position:"top",formatter:"{c}",color:"#46586c",fontWeight:700},
+  itemStyle:{borderRadius:[4,4,0,0],color:gradient("#5bd0a6","#12b39a")},data:[8200,6400,4200,3600,2460]}]});
+
+const yh=["华东一组","华南一组","华北一组","西南一组"];
+const xh=["汇顶科技","汇川技术","比亚迪半导","紫光展锐","中颖电子"];
+const vals=[[2860,0,800,0,940],[0,1560,0,700,0],[300,0,3260,0,200],[0,400,0,2140,0]];
+const data=[];
+for(let i=0;i<xh.length;i++)for(let j=0;j<yh.length;j++)data.push([i,j,vals[j][i]]);
+mk("c2",{tooltip:{position:"top",formatter:function(p){return xh[p.data[0]]+" × "+yh[p.data[1]]+"<br/>"+p.data[2]+" 万元"}},
+ grid:{top:10,left:80,right:40,bottom:40,containLabel:true},
+ xAxis:{type:"category",data:xh,axisLabel:{color:"#9aa9bc",rotate:20},axisTick:{show:false},axisLine:{lineStyle:{color:"#dde6f0"}}},
+ yAxis:{type:"category",data:yh,axisLabel:{color:"#9aa9bc"},axisTick:{show:false},axisLine:{lineStyle:{color:"#dde6f0"}}},
+ visualMap:{min:0,max:3260,show:false,inRange:{color:["#eaf1ff","#9cc0ff","#2468f2"]}},
+ series:[{type:"heatmap",data:data,label:{show:true,color:"#1f2d3d",fontSize:10},itemStyle:{borderColor:"#fff",borderWidth:2}}]});
+
+mk("c3",{tooltip:tip(),legend:legend({data:["今年","去年"]}),grid:baseGrid({top:30}),
+ xAxis:catAxis(["2023","2024","2025","2026"]),yAxis:valAxis({name:"评分",max:5,min:3.5}),
+ series:[
+  {name:"今年",type:"bar",barWidth:28,itemStyle:{borderRadius:[4,4,0,0],color:gradient("#5b9bff","#2468f2")},data:[null,null,null,4.42]},
+  {name:"去年",type:"bar",barWidth:28,itemStyle:{borderRadius:[4,4,0,0],color:"#dbe8ff"},data:[4.18,4.26,4.34,null]},
+ ]});
+
+mk("c4",{tooltip:tip(),legend:legend({data:["今年","去年"]}),grid:baseGrid({top:30,left:16}),
+ xAxis:catAxis(["产品质量","交付及时","技术支持","商务响应","价格竞争力"]),yAxis:valAxis({name:"评分",max:5,min:3}),
+ series:[
+  {name:"今年",type:"line",smooth:true,symbol:"circle",symbolSize:6,lineStyle:{width:2.5,color:"#2468f2"},itemStyle:{color:"#2468f2"},data:[4.5,4.3,4.6,4.4,4.1]},
+  {name:"去年",type:"line",smooth:true,symbol:"circle",symbolSize:5,lineStyle:{width:2,type:"dashed",color:"#aab6c5"},itemStyle:{color:"#aab6c5"},data:[4.4,4.2,4.5,4.3,4.0]},
+ ]});
+
+mk("c5",{tooltip:tip(),grid:baseGrid({top:12,left:16}),xAxis:valAxis({name:"天"}),
+ yAxis:catAxis(["比亚迪半导","汇川技术","紫光展锐","汇顶科技","中颖电子","Tier-1 ODM"],{inverse:true,axisLine:{show:false}}),
+ series:[{type:"bar",barWidth:16,itemStyle:{borderRadius:[0,4,4,0],color:gradient("#ffc879","#f07a1d")},
+  label:{show:true,position:"right",formatter:"{c} 天",color:"#46586c"},data:[112,86,74,52,68,45]}]});
+
+const rows=[
+ ["汇顶科技","手机","华东一组","2,860","4.48","52"],
+ ["汇川技术","工业","华南一组","1,560","4.36","86"],
+ ["比亚迪半导","车载","华北一组","3,260","4.51","112"],
+ ["紫光展锐","手机","西南一组","2,140","4.22","74"],
+ ["中颖电子","物联网","华东一组","1,940","4.40","68"],
+];
+const head=["大客户","客户分类","销售组","销售额(万元)","满意度","Lead Time(天)"];
+document.getElementById("tbl").innerHTML=
+ "<thead><tr>"+head.map((h,i)=>`<th class="${i>=3?'num':''}">${h}</th>`).join("")+"</tr></thead><tbody>"+
+ rows.map(r=>"<tr>"+r.map((c,i)=>`<td class="${i>=3?'num':''} ${i===0?'strong':''}">${c}</td>`).join("")+"</tr>").join("")+"</tbody>";
+</script>
+</body>
+</html>

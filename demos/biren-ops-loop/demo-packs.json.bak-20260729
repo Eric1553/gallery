@@ -1,0 +1,910 @@
+{
+  "morning": {
+    "bundle_id": "BIREN-MORNING-LIVE-20260728-1630",
+    "bundle_type": "morning_pack",
+    "org": "biren",
+    "timezone": "Asia/Shanghai",
+    "generated_at": "2026-07-28T16:29:49+08:00",
+    "client_refreshed_at": "2026-07-28T16:29:49+08:00",
+    "source": "moss_live",
+    "items": [
+      {
+        "topic_id": "BR-POL",
+        "item_id": "POL-20260728-11",
+        "title": "国产工作站可以搭配英伟达显卡吗（企业采购版）｜海卫士专业选型与配置建议",
+        "summary": "信创浪潮之下，国产工作站正从“备选”变为“标配”。然而，企业采购决策者面临一个尖锐问题：国产工作站能否稳定运行英伟达企业版专业显卡",
+        "source_name": "yoojia",
+        "source_url": "https://yoojia.baidu.com/app/tuwen/index?nid=9933919950110326442",
+        "sources": [
+          {
+            "name": "yoojia",
+            "url": "https://yoojia.baidu.com/app/tuwen/index?nid=9933919950110326442"
+          }
+        ],
+        "published_at": "2026-07-28T16:28:00+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "high",
+        "impact_type": "opportunity",
+        "impact_label": "新机会",
+        "priority_score": 92,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "新机会",
+          "国产化",
+          "算力采购",
+          "竞品对标"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "算力采购信号活跃，建议销售侧跟踪相关客户招标与 POC 进展。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-CMP",
+        "item_id": "CMP-20260728-03",
+        "title": "AI数据中心新王登基！AMD 官宣发布 EPYC 9006 系列服务器处理器",
+        "summary": "今天上午，AMD 董事会主席兼首席执行官 Dr. Lisa Su 在 ADVANCING AI 2026 大会上正式发布了全新的 AMD EPYC 9006 系列服务器处理器",
+        "source_name": "kejibo",
+        "source_url": "http://www.kejibo.cn/keji/117158.html",
+        "sources": [
+          {
+            "name": "kejibo",
+            "url": "http://www.kejibo.cn/keji/117158.html"
+          }
+        ],
+        "published_at": "2026-07-28T16:27:44+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "medium",
+        "impact_type": "competitor",
+        "impact_label": "竞品压力",
+        "priority_score": 76,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "竞品压力",
+          "竞品雷达"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "「AI数据中心新王登基！AMD 官宣发布…」：竞品节奏抬升客户对比维度，需刷新性能/能效/交付三维对标。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-IND",
+        "item_id": "IND-20260728-17",
+        "title": "国产DUV传出投产：为什么仅仅5台设备，就让全球芯片股重新定价？",
+        "summary": "【核心观点】：五台国产浸没式DUV光刻机，短期内既无法取代ASML，也不足以改变全球半导体产能格局",
+        "source_name": "微信公众号",
+        "source_url": "http://mp.weixin.qq.com/s?__biz=MzkzMTI1NzIwNQ==&mid=2247484551&idx=2&sn=e2214a7acd8a1e9d9404e6896557bc45",
+        "sources": [
+          {
+            "name": "微信公众号",
+            "url": "http://mp.weixin.qq.com/s?__biz=MzkzMTI1NzIwNQ==&mid=2247484551&idx=2&sn=e2214a7acd8a1e9d9404e6896557bc45"
+          }
+        ],
+        "published_at": "2026-07-28T16:25:12+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "medium",
+        "impact_type": "chain",
+        "impact_label": "上下游",
+        "priority_score": 80,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "上游",
+          "产业链"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "上游设备与工艺波动可能传导至产能与成本，关注供应链风险。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-CUS",
+        "item_id": "CUS-20260728-18",
+        "title": "国产 GPU 也能跑万亿大模型：海光 DCU 适配 Kimi K3，896 专家并行不卡顿",
+        "summary": "国产算力第一次把万亿参数级的模型稳稳托住了。海光信息宣布，已完成 Kimi K3在其 DCU 平台上的全栈适配与性能验证——这意味着，跑动这类庞然大物的，不再只是少数几款海外旗舰芯片",
+        "source_name": "sohu",
+        "source_url": "https://www.sohu.com/a/1055782583_211762",
+        "sources": [
+          {
+            "name": "sohu",
+            "url": "https://www.sohu.com/a/1055782583_211762"
+          }
+        ],
+        "published_at": "2026-07-28T16:25:00+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "medium",
+        "impact_type": "competitor",
+        "impact_label": "竞品压力",
+        "priority_score": 76,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "竞品压力",
+          "大模型"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "训练算力投入持续，关注头部客户扩容与国产集群替换窗口。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-SEN",
+        "item_id": "SEN-20260728-09",
+        "title": "长鑫市值破3万亿，中途下车的碧桂园含泪错过450亿",
+        "summary": "2026年7月27日， A股迎来了新一代“股王”长鑫科技。 正如市场所预期的那样，一上市长鑫存储就表现非常火爆，单日涨幅超过4.6倍，截至收盘价，总市值接近3.3万亿",
+        "source_name": "今日头条",
+        "source_url": "https://www.toutiao.com/article/7667490457131270702/",
+        "sources": [
+          {
+            "name": "今日头条",
+            "url": "https://www.toutiao.com/article/7667490457131270702/"
+          }
+        ],
+        "published_at": "2026-07-28T16:23:10+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "low",
+        "impact_type": "context",
+        "impact_label": "环境观察",
+        "priority_score": 12,
+        "confidence": "low",
+        "confidence_label": "低",
+        "tags": [
+          "环境观察",
+          "舆情品牌"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "存储互连与 HBM 供给影响 AI 服务器配置，关注客户 BOM 变化。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-CMP",
+        "item_id": "CMP-20260728-04",
+        "title": "全球首个3T级模型Kimi K3开源，魔搭社区同步上线",
+        "summary": "7月28日，Kimi K3已上线魔搭社区，用户可在魔搭社区官网一键下载。作为全球首个开放的 3T 级模型，Kimi K3 总参数量达 2.8T，具备原生视觉能力与 100 万 token 上下文窗口，面向长程编码、知识工作与推理等前沿智能场景设计",
+        "source_name": "ichaoqi",
+        "source_url": "https://www.ichaoqi.com/caijing/2026/0728/84284.html",
+        "sources": [
+          {
+            "name": "ichaoqi",
+            "url": "https://www.ichaoqi.com/caijing/2026/0728/84284.html"
+          }
+        ],
+        "published_at": "2026-07-28T16:25:29+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "medium",
+        "impact_type": "competitor",
+        "impact_label": "竞品压力",
+        "priority_score": 76,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "竞品压力",
+          "推理场景"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "推理算力需求结构变化，关注客户整机配置与推理卡出货节奏。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-IND",
+        "item_id": "IND-20260728-21",
+        "title": "李在明访美签下9500亿大单，韩国芯片喜忧参半，背后谁是真正赢家",
+        "summary": "2026年7月24日，旧金山The Ramp餐厅，炸鱼薯条和汉堡摆了一桌，韩国总统李在明举起啤酒杯，对面坐着英伟达CEO黄仁勋，旁边是三星电子会长李在镕、SK集团会长崔泰源",
+        "source_name": "sohu",
+        "source_url": "https://www.sohu.com/a/1055782409_122157672",
+        "sources": [
+          {
+            "name": "sohu",
+            "url": "https://www.sohu.com/a/1055782409_122157672"
+          }
+        ],
+        "published_at": "2026-07-28T16:24:00+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "medium",
+        "impact_type": "competitor",
+        "impact_label": "竞品压力",
+        "priority_score": 76,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "竞品压力",
+          "竞品对标"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "英伟达平台升级抬升集群成本，利好国产性价比叙事。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-CMP",
+        "item_id": "CMP-20260728-31",
+        "title": "拒绝踩坑！笔记本买哪款好？照着这9款买，高性能、便携、长续航全搞定！",
+        "summary": "买笔记本最怕的不是贵，而是钱花了却买错定位——要便携的扛不动，要性能的续航崩，要稳定的售后找不到人",
+        "source_name": "yoojia",
+        "source_url": "https://yoojia.baidu.com/app/tuwen/index?nid=9960053932767801127",
+        "sources": [
+          {
+            "name": "yoojia",
+            "url": "https://yoojia.baidu.com/app/tuwen/index?nid=9960053932767801127"
+          }
+        ],
+        "published_at": "2026-07-28T16:23:00+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "medium",
+        "impact_type": "competitor",
+        "impact_label": "竞品压力",
+        "priority_score": 76,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "竞品压力",
+          "竞品雷达"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "「拒绝踩坑！笔记本买哪款好？照着这9款买…」：竞品节奏抬升客户对比维度，需刷新性能/能效/交付三维对标。",
+        "category": "external"
+      }
+    ]
+  },
+  "noon": {
+    "bundle_id": "BIREN-NOON-LIVE-20260728-1630",
+    "bundle_type": "noon_delta",
+    "org": "biren",
+    "timezone": "Asia/Shanghai",
+    "generated_at": "2026-07-28T16:29:49+08:00",
+    "client_refreshed_at": "2026-07-28T16:29:49+08:00",
+    "source": "moss_live",
+    "items": [
+      {
+        "topic_id": "BR-POL",
+        "item_id": "POL-20260728-22",
+        "title": "东方钽业亮相慕尼黑上海电子展，高端稀材受产业链热捧，机构看好成长空间",
+        "summary": "近日，东方钽业（000962.SZ）与参股子公司西北稀有金属材料研究院（简称“西材院”）参加2026慕尼黑上海电子展，公司作为央企中国有色集团旗下、国内最大的钽铌产品研发制造基地与钽铌行业“国家队”，集中呈现高端稀有金属材料领域创新解决方案，以高精尖材料助力电子产业高质量转型升级",
+        "source_name": "egsea",
+        "source_url": "https://www.egsea.com/news/detail/2320610.html",
+        "sources": [
+          {
+            "name": "egsea",
+            "url": "https://www.egsea.com/news/detail/2320610.html"
+          }
+        ],
+        "published_at": "2026-07-28T16:24:00+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "medium",
+        "impact_type": "context",
+        "impact_label": "环境观察",
+        "priority_score": 64,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "环境观察",
+          "政策监管"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "「东方钽业亮相慕尼黑上海电子展，高端稀材…」：政策风向变化，可能影响国产算力采购门槛与合规口径。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-CMP",
+        "item_id": "CMP-20260728-32",
+        "title": "电力排队5年，英伟达一年一代：数据中心投资是“新地产”还是“新泡沫”？",
+        "summary": "黑石集团曾在2026年中投资展望里自信断言，数据中心“在根本上规避了供给过剩的风险”",
+        "source_name": "yoojia",
+        "source_url": "https://yoojia.baidu.com/app/tuwen/index?nid=9810410606396114276",
+        "sources": [
+          {
+            "name": "yoojia",
+            "url": "https://yoojia.baidu.com/app/tuwen/index?nid=9810410606396114276"
+          }
+        ],
+        "published_at": "2026-07-28T16:23:00+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "medium",
+        "impact_type": "competitor",
+        "impact_label": "竞品压力",
+        "priority_score": 76,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "竞品压力",
+          "竞品对标"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "英伟达平台升级抬升集群成本，利好国产性价比叙事。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-IND",
+        "item_id": "IND-20260728-06",
+        "title": "打破海外三足鼎立！长鑫科技登陆科创板，国产存储打响关键一战",
+        "summary": "存储芯片被誉为数字时代的“工业粮食”，手机、电脑、AI服务器、各类智能终端，运转都离不开它",
+        "source_name": "今日头条",
+        "source_url": "https://www.toutiao.com/article/7667489682225152550/",
+        "sources": [
+          {
+            "name": "今日头条",
+            "url": "https://www.toutiao.com/article/7667489682225152550/"
+          }
+        ],
+        "published_at": "2026-07-28T16:26:39+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "medium",
+        "impact_type": "chain",
+        "impact_label": "上下游",
+        "priority_score": 44,
+        "confidence": "low",
+        "confidence_label": "低",
+        "tags": [
+          "下游",
+          "产业链"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "存储互连与 HBM 供给影响 AI 服务器配置，关注客户 BOM 变化。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-CUS",
+        "item_id": "CUS-20260728-08",
+        "title": "午休露营全搞定，这车不只好开更好玩",
+        "summary": "作为年轻人的 台车， 让人崩溃的不是动力弱，而是车机卡。导航加载半天，路口都过了地图还没出来；语音喊了三遍“打开空调”，它还在转圈",
+        "source_name": "dealer",
+        "source_url": "https://dealer.yiche.com/100243286/news/202607/1444459551.html",
+        "sources": [
+          {
+            "name": "dealer",
+            "url": "https://dealer.yiche.com/100243286/news/202607/1444459551.html"
+          }
+        ],
+        "published_at": "2026-07-28T16:27:10+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "medium",
+        "impact_type": "context",
+        "impact_label": "环境观察",
+        "priority_score": 56,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "环境观察",
+          "客户动态"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "「午休露营全搞定，这车不只好开更好玩」：客户侧算力投入节奏调整，关注是否带来替换或扩容机会。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-SEN",
+        "item_id": "SEN-20260728-10",
+        "title": "长鑫科技登顶A股，地产创投集体&#34;卖在黎明前&#34;——一场时代的错配 7月27日，国产DRAM存储龙头长鑫科技登陆科创板，首日暴涨超531%，收盘市值约3.28万亿元，登顶A股市值榜首…",
+        "summary": "长鑫科技登顶A股，地产创投集体\"卖在黎明前\"——一场时代的错配 7月27日，国产DRAM存储龙头长鑫科技登陆科创板，首日暴涨超531%，收盘市值约3.28万亿元，登顶A股市值榜首",
+        "source_name": "今日头条",
+        "source_url": "https://www.toutiao.com/w/1871945634993152/",
+        "sources": [
+          {
+            "name": "今日头条",
+            "url": "https://www.toutiao.com/w/1871945634993152/"
+          }
+        ],
+        "published_at": "2026-07-28T16:14:34+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "low",
+        "impact_type": "context",
+        "impact_label": "环境观察",
+        "priority_score": -28,
+        "confidence": "low",
+        "confidence_label": "低",
+        "tags": [
+          "环境观察",
+          "舆情品牌",
+          "资本市场"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "存储互连与 HBM 供给影响 AI 服务器配置，关注客户 BOM 变化。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-POL",
+        "item_id": "POL-20260728-27",
+        "title": "科技跌了这么多，什么变了、什么没变？",
+        "summary": "最近这波科技股的回调，让不少投资者心里发慌。越是在市场剧烈波动的时候，越需要冷静下来想清楚一个问题：到底什么变了，什么没变",
+        "source_name": "finance",
+        "source_url": "https://finance.sina.cn/2026-07-28/detail-inikizzz2459007.d.html",
+        "sources": [
+          {
+            "name": "finance",
+            "url": "https://finance.sina.cn/2026-07-28/detail-inikizzz2459007.d.html"
+          }
+        ],
+        "published_at": "2026-07-28T16:23:21+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "medium",
+        "impact_type": "context",
+        "impact_label": "环境观察",
+        "priority_score": 64,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "环境观察",
+          "政策监管"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "「科技跌了这么多，什么变了、什么没变？」：政策风向变化，可能影响国产算力采购门槛与合规口径。",
+        "category": "external"
+      }
+    ]
+  },
+  "evening": {
+    "bundle_id": "BIREN-EVENING-LIVE-20260728-1630",
+    "bundle_type": "evening_pack",
+    "org": "biren",
+    "timezone": "Asia/Shanghai",
+    "generated_at": "2026-07-28T16:29:49+08:00",
+    "client_refreshed_at": "2026-07-28T16:29:49+08:00",
+    "source": "moss_live",
+    "items": [
+      {
+        "topic_id": "BR-POL",
+        "item_id": "POL-20260728-11",
+        "title": "国产工作站可以搭配英伟达显卡吗（企业采购版）｜海卫士专业选型与配置建议",
+        "summary": "信创浪潮之下，国产工作站正从“备选”变为“标配”。然而，企业采购决策者面临一个尖锐问题：国产工作站能否稳定运行英伟达企业版专业显卡",
+        "source_name": "yoojia",
+        "source_url": "https://yoojia.baidu.com/app/tuwen/index?nid=9933919950110326442",
+        "sources": [
+          {
+            "name": "yoojia",
+            "url": "https://yoojia.baidu.com/app/tuwen/index?nid=9933919950110326442"
+          }
+        ],
+        "published_at": "2026-07-28T16:28:00+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "high",
+        "impact_type": "opportunity",
+        "impact_label": "新机会",
+        "priority_score": 92,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "新机会",
+          "国产化",
+          "算力采购",
+          "竞品对标"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "算力采购信号活跃，建议销售侧跟踪相关客户招标与 POC 进展。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-CMP",
+        "item_id": "CMP-20260728-03",
+        "title": "AI数据中心新王登基！AMD 官宣发布 EPYC 9006 系列服务器处理器",
+        "summary": "今天上午，AMD 董事会主席兼首席执行官 Dr. Lisa Su 在 ADVANCING AI 2026 大会上正式发布了全新的 AMD EPYC 9006 系列服务器处理器",
+        "source_name": "kejibo",
+        "source_url": "http://www.kejibo.cn/keji/117158.html",
+        "sources": [
+          {
+            "name": "kejibo",
+            "url": "http://www.kejibo.cn/keji/117158.html"
+          }
+        ],
+        "published_at": "2026-07-28T16:27:44+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "medium",
+        "impact_type": "competitor",
+        "impact_label": "竞品压力",
+        "priority_score": 76,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "竞品压力",
+          "竞品雷达"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "「AI数据中心新王登基！AMD 官宣发布…」：竞品节奏抬升客户对比维度，需刷新性能/能效/交付三维对标。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-IND",
+        "item_id": "IND-20260728-17",
+        "title": "国产DUV传出投产：为什么仅仅5台设备，就让全球芯片股重新定价？",
+        "summary": "【核心观点】：五台国产浸没式DUV光刻机，短期内既无法取代ASML，也不足以改变全球半导体产能格局",
+        "source_name": "微信公众号",
+        "source_url": "http://mp.weixin.qq.com/s?__biz=MzkzMTI1NzIwNQ==&mid=2247484551&idx=2&sn=e2214a7acd8a1e9d9404e6896557bc45",
+        "sources": [
+          {
+            "name": "微信公众号",
+            "url": "http://mp.weixin.qq.com/s?__biz=MzkzMTI1NzIwNQ==&mid=2247484551&idx=2&sn=e2214a7acd8a1e9d9404e6896557bc45"
+          }
+        ],
+        "published_at": "2026-07-28T16:25:12+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "medium",
+        "impact_type": "chain",
+        "impact_label": "上下游",
+        "priority_score": 80,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "上游",
+          "产业链"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "上游设备与工艺波动可能传导至产能与成本，关注供应链风险。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-CUS",
+        "item_id": "CUS-20260728-18",
+        "title": "国产 GPU 也能跑万亿大模型：海光 DCU 适配 Kimi K3，896 专家并行不卡顿",
+        "summary": "国产算力第一次把万亿参数级的模型稳稳托住了。海光信息宣布，已完成 Kimi K3在其 DCU 平台上的全栈适配与性能验证——这意味着，跑动这类庞然大物的，不再只是少数几款海外旗舰芯片",
+        "source_name": "sohu",
+        "source_url": "https://www.sohu.com/a/1055782583_211762",
+        "sources": [
+          {
+            "name": "sohu",
+            "url": "https://www.sohu.com/a/1055782583_211762"
+          }
+        ],
+        "published_at": "2026-07-28T16:25:00+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "medium",
+        "impact_type": "competitor",
+        "impact_label": "竞品压力",
+        "priority_score": 76,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "竞品压力",
+          "大模型"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "训练算力投入持续，关注头部客户扩容与国产集群替换窗口。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-SEN",
+        "item_id": "SEN-20260728-09",
+        "title": "长鑫市值破3万亿，中途下车的碧桂园含泪错过450亿",
+        "summary": "2026年7月27日， A股迎来了新一代“股王”长鑫科技。 正如市场所预期的那样，一上市长鑫存储就表现非常火爆，单日涨幅超过4.6倍，截至收盘价，总市值接近3.3万亿",
+        "source_name": "今日头条",
+        "source_url": "https://www.toutiao.com/article/7667490457131270702/",
+        "sources": [
+          {
+            "name": "今日头条",
+            "url": "https://www.toutiao.com/article/7667490457131270702/"
+          }
+        ],
+        "published_at": "2026-07-28T16:23:10+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "low",
+        "impact_type": "context",
+        "impact_label": "环境观察",
+        "priority_score": 12,
+        "confidence": "low",
+        "confidence_label": "低",
+        "tags": [
+          "环境观察",
+          "舆情品牌"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "存储互连与 HBM 供给影响 AI 服务器配置，关注客户 BOM 变化。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-CMP",
+        "item_id": "CMP-20260728-04",
+        "title": "全球首个3T级模型Kimi K3开源，魔搭社区同步上线",
+        "summary": "7月28日，Kimi K3已上线魔搭社区，用户可在魔搭社区官网一键下载。作为全球首个开放的 3T 级模型，Kimi K3 总参数量达 2.8T，具备原生视觉能力与 100 万 token 上下文窗口，面向长程编码、知识工作与推理等前沿智能场景设计",
+        "source_name": "ichaoqi",
+        "source_url": "https://www.ichaoqi.com/caijing/2026/0728/84284.html",
+        "sources": [
+          {
+            "name": "ichaoqi",
+            "url": "https://www.ichaoqi.com/caijing/2026/0728/84284.html"
+          }
+        ],
+        "published_at": "2026-07-28T16:25:29+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "medium",
+        "impact_type": "competitor",
+        "impact_label": "竞品压力",
+        "priority_score": 76,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "竞品压力",
+          "推理场景"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "推理算力需求结构变化，关注客户整机配置与推理卡出货节奏。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-IND",
+        "item_id": "IND-20260728-21",
+        "title": "李在明访美签下9500亿大单，韩国芯片喜忧参半，背后谁是真正赢家",
+        "summary": "2026年7月24日，旧金山The Ramp餐厅，炸鱼薯条和汉堡摆了一桌，韩国总统李在明举起啤酒杯，对面坐着英伟达CEO黄仁勋，旁边是三星电子会长李在镕、SK集团会长崔泰源",
+        "source_name": "sohu",
+        "source_url": "https://www.sohu.com/a/1055782409_122157672",
+        "sources": [
+          {
+            "name": "sohu",
+            "url": "https://www.sohu.com/a/1055782409_122157672"
+          }
+        ],
+        "published_at": "2026-07-28T16:24:00+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "medium",
+        "impact_type": "competitor",
+        "impact_label": "竞品压力",
+        "priority_score": 76,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "竞品压力",
+          "竞品对标"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "英伟达平台升级抬升集群成本，利好国产性价比叙事。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-CMP",
+        "item_id": "CMP-20260728-31",
+        "title": "拒绝踩坑！笔记本买哪款好？照着这9款买，高性能、便携、长续航全搞定！",
+        "summary": "买笔记本最怕的不是贵，而是钱花了却买错定位——要便携的扛不动，要性能的续航崩，要稳定的售后找不到人",
+        "source_name": "yoojia",
+        "source_url": "https://yoojia.baidu.com/app/tuwen/index?nid=9960053932767801127",
+        "sources": [
+          {
+            "name": "yoojia",
+            "url": "https://yoojia.baidu.com/app/tuwen/index?nid=9960053932767801127"
+          }
+        ],
+        "published_at": "2026-07-28T16:23:00+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "medium",
+        "impact_type": "competitor",
+        "impact_label": "竞品压力",
+        "priority_score": 76,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "竞品压力",
+          "竞品雷达"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "「拒绝踩坑！笔记本买哪款好？照着这9款买…」：竞品节奏抬升客户对比维度，需刷新性能/能效/交付三维对标。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-CMP",
+        "item_id": "CMP-20260728-32",
+        "title": "电力排队5年，英伟达一年一代：数据中心投资是“新地产”还是“新泡沫”？",
+        "summary": "黑石集团曾在2026年中投资展望里自信断言，数据中心“在根本上规避了供给过剩的风险”",
+        "source_name": "yoojia",
+        "source_url": "https://yoojia.baidu.com/app/tuwen/index?nid=9810410606396114276",
+        "sources": [
+          {
+            "name": "yoojia",
+            "url": "https://yoojia.baidu.com/app/tuwen/index?nid=9810410606396114276"
+          }
+        ],
+        "published_at": "2026-07-28T16:23:00+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "medium",
+        "impact_type": "competitor",
+        "impact_label": "竞品压力",
+        "priority_score": 76,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "竞品压力",
+          "竞品对标"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "英伟达平台升级抬升集群成本，利好国产性价比叙事。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-POL",
+        "item_id": "POL-20260728-22",
+        "title": "东方钽业亮相慕尼黑上海电子展，高端稀材受产业链热捧，机构看好成长空间",
+        "summary": "近日，东方钽业（000962.SZ）与参股子公司西北稀有金属材料研究院（简称“西材院”）参加2026慕尼黑上海电子展，公司作为央企中国有色集团旗下、国内最大的钽铌产品研发制造基地与钽铌行业“国家队”，集中呈现高端稀有金属材料领域创新解决方案，以高精尖材料助力电子产业高质量转型升级",
+        "source_name": "egsea",
+        "source_url": "https://www.egsea.com/news/detail/2320610.html",
+        "sources": [
+          {
+            "name": "egsea",
+            "url": "https://www.egsea.com/news/detail/2320610.html"
+          }
+        ],
+        "published_at": "2026-07-28T16:24:00+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "medium",
+        "impact_type": "context",
+        "impact_label": "环境观察",
+        "priority_score": 64,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "环境观察",
+          "政策监管"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "「东方钽业亮相慕尼黑上海电子展，高端稀材…」：政策风向变化，可能影响国产算力采购门槛与合规口径。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-POL",
+        "item_id": "POL-20260728-27",
+        "title": "科技跌了这么多，什么变了、什么没变？",
+        "summary": "最近这波科技股的回调，让不少投资者心里发慌。越是在市场剧烈波动的时候，越需要冷静下来想清楚一个问题：到底什么变了，什么没变",
+        "source_name": "finance",
+        "source_url": "https://finance.sina.cn/2026-07-28/detail-inikizzz2459007.d.html",
+        "sources": [
+          {
+            "name": "finance",
+            "url": "https://finance.sina.cn/2026-07-28/detail-inikizzz2459007.d.html"
+          }
+        ],
+        "published_at": "2026-07-28T16:23:21+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "medium",
+        "impact_type": "context",
+        "impact_label": "环境观察",
+        "priority_score": 64,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "环境观察",
+          "政策监管"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "「科技跌了这么多，什么变了、什么没变？」：政策风向变化，可能影响国产算力采购门槛与合规口径。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-CMP",
+        "item_id": "CMP-20260728-38",
+        "title": "光线追踪技术储备曝光！景嘉微布局下一代GPU，国产替代的“光追”时刻要来了？",
+        "summary": "7月27日，景嘉微（300474.SZ）在投资者交流中透露了一个关键信息：公司一直密切关注硬件光线追踪等技术演进，光线追踪技术是GPU图形渲染的重要发展方向，公司已在该领域持续投入研发与技术储备",
+        "source_name": "雪球",
+        "source_url": "https://xueqiu.com/7268593997/402476846",
+        "sources": [
+          {
+            "name": "雪球",
+            "url": "https://xueqiu.com/7268593997/402476846"
+          }
+        ],
+        "published_at": "2026-07-28T16:20:57+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "high",
+        "impact_type": "direct",
+        "impact_label": "直接影响",
+        "priority_score": 64,
+        "confidence": "low",
+        "confidence_label": "低",
+        "tags": [
+          "直接影响",
+          "国产化"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "「光线追踪技术储备曝光！景嘉微布局下一代…」：竞品动作直指壁仞客户选型，建议当日更新对标方案与商务口径。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-CUS",
+        "item_id": "CUS-20260728-08",
+        "title": "午休露营全搞定，这车不只好开更好玩",
+        "summary": "作为年轻人的 台车， 让人崩溃的不是动力弱，而是车机卡。导航加载半天，路口都过了地图还没出来；语音喊了三遍“打开空调”，它还在转圈",
+        "source_name": "dealer",
+        "source_url": "https://dealer.yiche.com/100243286/news/202607/1444459551.html",
+        "sources": [
+          {
+            "name": "dealer",
+            "url": "https://dealer.yiche.com/100243286/news/202607/1444459551.html"
+          }
+        ],
+        "published_at": "2026-07-28T16:27:10+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "medium",
+        "impact_type": "context",
+        "impact_label": "环境观察",
+        "priority_score": 56,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "环境观察",
+          "客户动态"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "「午休露营全搞定，这车不只好开更好玩」：客户侧算力投入节奏调整，关注是否带来替换或扩容机会。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-CUS",
+        "item_id": "CUS-20260728-16",
+        "title": "乐山数发科技有限公司算力调度平台生态伙伴公开征集公告",
+        "summary": "乐山数发科技发展有限公司（以下简称“我司”）现公开征集算力调度平台开发建设合作伙伴，相关事项公告如下： 一、项目概况 我司牵头建设“乐山市算力调度平台”，目标实现多元异构算力统一纳管、智能调度与高效运营",
+        "source_name": "lsgxt",
+        "source_url": "https://www.lsgxt.com/Home/Article/g5pZbihU36aWtKKdNdAIAQ==",
+        "sources": [
+          {
+            "name": "lsgxt",
+            "url": "https://www.lsgxt.com/Home/Article/g5pZbihU36aWtKKdNdAIAQ=="
+          }
+        ],
+        "published_at": "2026-07-28T16:25:29+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "medium",
+        "impact_type": "context",
+        "impact_label": "环境观察",
+        "priority_score": 56,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "环境观察",
+          "客户动态"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "「乐山数发科技有限公司算力调度平台生态伙…」：客户侧算力投入节奏调整，关注是否带来替换或扩容机会。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-CUS",
+        "item_id": "CUS-20260728-26",
+        "title": "云南省“人工智能+”典型案例之一丨云南移动Token工厂一体化智算服务创新",
+        "summary": "编者按 为深入贯彻落实习近平总书记在2026世界人工智能大会暨人工智能全球治理高级别会议开幕式上的重要讲话精神，省发展改革委会同省级部门、企业、高校，依托云南丰富多元的特色场景优势，聚焦重点领域，以场景应用为牵引，从各行各业中遴选出一批“人工智能+”典型案例，陆续对外发布，推动人工智能赋能千行百业，促进人工智能和实体经济深度融合",
+        "source_name": "微信公众号",
+        "source_url": "http://mp.weixin.qq.com/s?__biz=MzY5OTE5NDk3OA==&mid=2247485299&idx=2&sn=f2948a5f6a81839049b3aa3ea79c183a",
+        "sources": [
+          {
+            "name": "微信公众号",
+            "url": "http://mp.weixin.qq.com/s?__biz=MzY5OTE5NDk3OA==&mid=2247485299&idx=2&sn=f2948a5f6a81839049b3aa3ea79c183a"
+          }
+        ],
+        "published_at": "2026-07-28T16:23:23+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "medium",
+        "impact_type": "context",
+        "impact_label": "环境观察",
+        "priority_score": 56,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "环境观察",
+          "客户动态"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "智算基建扩张拉动 GPU 集群需求，关注区域集采与 POC 节奏。",
+        "category": "external"
+      },
+      {
+        "topic_id": "BR-CUS",
+        "item_id": "CUS-20260728-29",
+        "title": "银行AI大潮下，没有上亿预算的地方中小银行，如何“轻量化”落地？",
+        "summary": "上半年，国家金融监督管理总局正式发布《关于银行业保险业人工智能安全开发应用的指导意见》（金发〔2026〕8号）",
+        "source_name": "mbd",
+        "source_url": "https://mbd.baidu.com/newspage/data/landingshare?nid=news_9914698648607929369",
+        "sources": [
+          {
+            "name": "mbd",
+            "url": "https://mbd.baidu.com/newspage/data/landingshare?nid=news_9914698648607929369"
+          }
+        ],
+        "published_at": "2026-07-28T16:23:00+08:00",
+        "collected_at": "2026-07-28T16:29:49+08:00",
+        "impact_level": "medium",
+        "impact_type": "context",
+        "impact_label": "环境观察",
+        "priority_score": 56,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "tags": [
+          "环境观察",
+          "客户动态"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "「银行AI大潮下，没有上亿预算的地方中小…」：客户侧算力投入节奏调整，关注是否带来替换或扩容机会。",
+        "category": "external"
+      }
+    ]
+  }
+}

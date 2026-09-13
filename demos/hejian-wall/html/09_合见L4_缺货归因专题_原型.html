@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>合见 · 满足率与缺货归因专题（L3/L4）原型</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { background:#eef3f9; }
+  body { font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif; color:#23314c; -webkit-font-smoothing:antialiased; }
+  .stage { width:1600px; height:990px; position:relative; background:linear-gradient(165deg,#ffffff,#eef4fb); }
+  .ribbon { position:absolute; right:0; top:0; background:#e2574c; color:#fff; font-size:12px; font-weight:700; padding:5px 16px; border-bottom-left-radius:10px; z-index:3; }
+  .top { background:linear-gradient(135deg,#b23a35,#e2574c); color:#fff; padding:14px 28px; display:flex; justify-content:space-between; align-items:center; }
+  .top h1 { font-size:21px; font-weight:800; letter-spacing:1px; }
+  .top h1 .en { font-size:12px; opacity:.85; font-weight:600; margin-left:8px; }
+  .top .meta { font-size:12.5px; opacity:.92; }
+  .body { padding:16px 28px; }
+  .lab { font-size:12px; font-weight:800; color:#b23a35; letter-spacing:1px; margin:2px 0 10px; display:flex; align-items:center; gap:8px; }
+  .lab::before { content:""; width:5px; height:14px; background:#e2574c; border-radius:2px; }
+  .lab .tg { font-size:10.5px; font-weight:700; color:#8a93a6; background:#eef2f8; padding:1px 8px; border-radius:10px; }
+  .kpis { display:grid; grid-template-columns:repeat(6,1fr); gap:13px; margin-bottom:16px; }
+  .kpi { background:#fff; border:1px solid #e4ebf4; border-radius:11px; padding:13px 16px; box-shadow:0 3px 9px rgba(40,70,120,.05); position:relative; overflow:hidden; }
+  .kpi::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; }
+  .kpi.b::before{background:#3f7fc4;} .kpi.g::before{background:#2e8b57;} .kpi.o::before{background:#e8855a;} .kpi.r::before{background:#e2574c;} .kpi.c::before{background:#2aa3b8;}
+  .kpi .t { font-size:11.5px; color:#7c869a; }
+  .kpi .v { font-size:25px; font-weight:800; color:#1c2c4a; margin-top:4px; }
+  .kpi .v small { font-size:13px; font-weight:700; }
+  .kpi .d { font-size:11px; margin-top:3px; color:#8a93a6; }
+  .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:14px; }
+  .grid2 { display:grid; grid-template-columns:1fr 1.15fr; gap:14px; }
+  .panel { background:#fff; border:1px solid #e4ebf4; border-radius:11px; padding:12px 14px 6px; box-shadow:0 3px 10px rgba(40,70,120,.05); }
+  .panel .ph { font-size:13.5px; font-weight:800; color:#1c2c4a; display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+  .panel .ph .sub { font-size:10.5px; color:#9aa3b5; font-weight:600; }
+  .chart { width:100%; height:206px; }
+  .warn { background:#fff; border:1px solid #e4ebf4; border-radius:11px; padding:12px 14px; box-shadow:0 3px 10px rgba(40,70,120,.05); }
+  .warn .ph { font-size:13.5px; font-weight:800; color:#1c2c4a; margin-bottom:8px; }
+  .warn table { width:100%; border-collapse:collapse; }
+  .warn th { font-size:10.5px; color:#8a93a6; text-align:left; padding:6px 8px; border-bottom:1.5px solid #eef2f8; font-weight:700; }
+  .warn td { font-size:12px; color:#3a4660; padding:7px 8px; border-bottom:1px solid #f1f4f9; }
+  .tag { font-size:10.5px; font-weight:700; padding:2px 9px; border-radius:10px; background:#fef0e2; color:#cf6a2e; }
+  .tag.r{background:#fde8e6;color:#c0392b;}
+  .note { margin-top:8px; background:linear-gradient(90deg,#fdeeec,#fdf6f5); border:1px dashed #f0bcb6; border-left:4px solid #e2574c; border-radius:8px; padding:9px 16px; font-size:12.5px; color:#3a4660; line-height:1.5; }
+  .note b { color:#b23a35; }
+</style>
+  <link rel="stylesheet" href="nav.css">
+</head>
+<body data-page="09">
+<div class="proto-app">
+  <aside id="proto-nav" class="proto-nav"></aside>
+  <div class="proto-main">
+<div class="stage">
+  <div class="ribbon">原型设计稿</div>
+  <div class="top">
+    <h1>满足率与缺货归因专题<span class="en">Fulfillment &amp; Stockout Root-cause · L3 / L4</span></h1>
+    <div class="meta">从「看到缺货」到「说清原因」　|　缺货五因归因　|　示意数据</div>
+  </div>
+  <div class="body">
+    <div class="lab">满足 / 缺货 KPI <span class="tg">运营主管 / 分析</span></div>
+    <div class="kpis">
+      <div class="kpi b"><div class="t">订单满足率</div><div class="v">90.3<small>%</small></div><div class="d">目标待校准</div></div>
+      <div class="kpi r"><div class="t">缺货率</div><div class="v">9.7<small>%</small></div><div class="d">▲ 0.9pct</div></div>
+      <div class="kpi o"><div class="t">缺货订单数</div><div class="v">96</div><div class="d">笔</div></div>
+      <div class="kpi r"><div class="t">缺货金额（万元）</div><div class="v">1,840</div><div class="d">受影响</div></div>
+      <div class="kpi c"><div class="t">最高缺货行业</div><div class="v" style="font-size:18px;">数据中心</div><div class="d">缺货 22%</div></div>
+      <div class="kpi o"><div class="t">最高缺货产品</div><div class="v" style="font-size:18px;">UVHS-2</div><div class="d">借测占用高</div></div>
+    </div>
+    <div class="grid3">
+      <div class="panel"><div class="ph">满足率 vs 缺货率 月度趋势<span class="sub">OTD</span></div><div class="chart" id="e1"></div></div>
+      <div class="panel"><div class="ph">缺货五因归因<span class="sub">计划/生产/质量/借测/映射</span></div><div class="chart" id="e2"></div></div>
+      <div class="panel"><div class="ph">各行业 满足率 / 缺货率<span class="sub">下钻</span></div><div class="chart" id="e3"></div></div>
+    </div>
+    <div class="grid2">
+      <div class="panel"><div class="ph">各产品 缺货率 TOP<span class="sub">下钻</span></div><div class="chart" id="e4"></div></div>
+      <div class="warn"><div class="ph">高风险缺货订单（可穿透单笔卡片）</div>
+        <table>
+          <thead><tr><th>订单号</th><th>客户</th><th>产品</th><th>缺口</th><th>归因</th><th>等级</th></tr></thead>
+          <tbody>
+            <tr><td>SO-2026-0391</td><td>客户 C</td><td>UV APS</td><td>2 台</td><td>借测占用</td><td><span class="tag r">高</span></td></tr>
+            <tr><td>SO-2026-0420</td><td>客户 N</td><td>UVHS-2</td><td>1 台</td><td>生产未完工</td><td><span class="tag r">高</span></td></tr>
+            <tr><td>SO-2026-0408</td><td>客户 O</td><td>子卡</td><td>5 台</td><td>计划未排</td><td><span class="tag">中</span></td></tr>
+            <tr><td>SO-2026-0399</td><td>客户 P</td><td>模组</td><td>3 台</td><td>质量 Hold</td><td><span class="tag">中</span></td></tr>
+            <tr><td>SO-2026-0385</td><td>客户 Q</td><td>开发板</td><td>8 台</td><td>映射异常</td><td><span class="tag">中</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="note"><b>分析思路：</b>从「看到缺货」到「说清原因」——<b>缺货五因归因</b>（计划未排 / 生产未完工 / 质量 Hold / 借测占用 / 映射异常），并可穿透到高风险订单卡片，明确责任与缓解措施。</div>
+  </div>
+</div>
+<script>
+  var BLUE='#3f7fc4',LBLUE='#7bb0e6',GREEN='#2e8b57',ORANGE='#e8855a',RED='#e2574c',CYAN='#2aa3b8',PURPLE='#7e6cc4';
+  var M=['1月','2月','3月','4月','5月','6月'];
+  function init(id,opt){echarts.init(document.getElementById(id)).setOption(opt);}
+  var L={top:0,itemWidth:10,itemHeight:10,textStyle:{fontSize:10,color:'#6b7790'}};
+  init('e1',{animation:false,legend:Object.assign({data:['满足率','缺货率']},L),grid:{left:44,right:16,top:28,bottom:24},xAxis:{type:'category',data:M,axisLabel:{fontSize:10,color:'#8a93a6'}},yAxis:{type:'value',max:100,splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:10,color:'#8a93a6',formatter:'{value}%'}},series:[{name:'满足率',type:'line',data:[88,90,91,89,92,90],smooth:true,areaStyle:{color:'rgba(63,127,196,.12)'},itemStyle:{color:BLUE},lineStyle:{width:2.5}},{name:'缺货率',type:'line',data:[12,10,9,11,8,10],smooth:true,itemStyle:{color:RED},lineStyle:{width:2.5}}]});
+  init('e2',{animation:false,legend:{bottom:0,itemWidth:9,itemHeight:9,textStyle:{fontSize:9.5,color:'#6b7790'}},series:[{type:'pie',radius:['40%','64%'],center:['50%','44%'],label:{fontSize:9.5,formatter:'{b}\n{d}%'},data:[{value:34,name:'借测占用',itemStyle:{color:ORANGE}},{value:26,name:'生产未完工',itemStyle:{color:CYAN}},{value:18,name:'计划未排',itemStyle:{color:BLUE}},{value:12,name:'质量Hold',itemStyle:{color:PURPLE}},{value:10,name:'映射异常',itemStyle:{color:RED}}]}]});
+  init('e3',{animation:false,legend:Object.assign({data:['满足率','缺货率']},L),grid:{left:64,right:14,top:26,bottom:18},xAxis:{type:'value',max:100,splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:9,color:'#8a93a6',formatter:'{value}%'}},yAxis:{type:'category',data:['消费电子','5G通信','HPC','ADAS','数据中心'],axisLabel:{fontSize:10,color:'#6b7790'}},series:[{name:'满足率',type:'bar',data:[95,92,90,84,78],itemStyle:{color:BLUE,borderRadius:[0,3,3,0]},barWidth:8},{name:'缺货率',type:'bar',data:[5,8,10,16,22],itemStyle:{color:RED,borderRadius:[0,3,3,0]},barWidth:8}]});
+  init('e4',{animation:false,grid:{left:54,right:30,top:16,bottom:22},xAxis:{type:'category',data:['UVHS-2','UV APS','UVHP','模组','子卡'],axisLabel:{fontSize:10,color:'#8a93a6'}},yAxis:{type:'value',max:30,splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:10,color:'#8a93a6',formatter:'{value}%'}},series:[{type:'bar',data:[22,18,14,11,7],barWidth:28,itemStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'#f0a98a'},{offset:1,color:RED}]),borderRadius:[5,5,0,0]},label:{show:true,position:'top',fontSize:11,color:'#b23a35',formatter:'{c}%'}}]});
+</script>
+  </div>
+</div>
+<script src="nav.js"></script>
+</body>
+</html>

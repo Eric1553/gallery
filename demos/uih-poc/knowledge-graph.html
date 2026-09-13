@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>联影 PoC · 故障知识图谱</title>
+  <style>
+    :root {
+      --text:#1b2940; --muted:#63748b; --line:#d7e1ef; --navy:#173b69;
+      --blue:#1f55cc; --teal:#0d8a7a; --purple:#5a3fd4; --green:#0d9a6a;
+      --orange:#d4820a; --red:#e04560; --gray:#eef3f9;
+    }
+    *{box-sizing:border-box;margin:0}
+    body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#f0f4fa;color:var(--text);font-size:14px;min-height:100vh}
+    .header{background:linear-gradient(135deg,#2d1b69,#5a3fd4 55%,#1f55cc);color:#fff;padding:14px 24px}
+    .header-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+    .header h1{font-size:20px;font-weight:700}
+    .header p{font-size:12px;opacity:.85;margin-top:4px;max-width:720px}
+    .header-links{display:flex;gap:8px;flex-wrap:wrap}
+    .header-link{font-size:11px;font-weight:600;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;text-decoration:none}
+    .header-link:hover{background:rgba(255,255,255,.25)}
+    .sync-badge{font-size:10px;padding:4px 10px;border-radius:999px;background:rgba(16,185,129,.25);border:1px solid rgba(110,231,183,.4)}
+    .sync-badge.stale{background:rgba(251,191,36,.2);border-color:rgba(252,211,77,.5)}
+    .layout{display:grid;grid-template-columns:1fr 320px;gap:14px;padding:14px 18px 24px;max-width:1680px;margin:0 auto}
+    @media(max-width:1100px){.layout{grid-template-columns:1fr}}
+    .panel{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(22,52,95,.07)}
+    .panel-head{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+    .panel-head h2{font-size:13px;font-weight:700;color:var(--navy)}
+    .panel-body{padding:14px 16px}
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+    .btn{border:none;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:700;cursor:pointer}
+    .btn-primary{background:var(--purple);color:#fff}
+    .btn-secondary{background:#fff;border:1px solid var(--line);color:var(--navy)}
+    .scene-pill{padding:6px 12px;border-radius:999px;font-size:11px;font-weight:700;border:1px solid var(--line);background:#fff;cursor:pointer}
+    .scene-pill.active{background:#f5f0ff;border-color:#c4b5fd;color:var(--purple)}
+    #graphWrap{overflow:auto;border:1px solid var(--line);border-radius:12px;max-height:75vh;background:linear-gradient(180deg,#fafbff,#fff)}
+    #graphCanvas{position:relative;min-height:560px;min-width:980px;padding:8px 0}
+    #graphSvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+    #graphSvg line{stroke:#c7d2fe;stroke-width:1.5;opacity:.85}
+    #graphSvg line.highlight{stroke:var(--purple);stroke-width:2.5;opacity:1}
+    .g-node{position:absolute;min-width:108px;max-width:140px;padding:8px 10px;border-radius:10px;border:2px solid var(--line);background:#fff;font-size:10px;cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s;z-index:2}
+    .g-node:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(90,63,212,.15)}
+    .g-node.selected{border-color:var(--purple);box-shadow:0 0 0 3px rgba(90,63,212,.15)}
+    .g-node .type{font-size:8px;font-weight:800;text-transform:uppercase;opacity:.65;margin-bottom:3px}
+    .g-node .label{font-weight:700;color:var(--navy);line-height:1.35;word-break:break-all}
+    .g-node .meta{font-size:9px;color:var(--muted);margin-top:4px}
+    .g-node.error_code{border-color:#a5b4fc;background:#eef2ff}
+    .g-node.symptom{border-color:#93c5fd;background:#eff6ff}
+    .g-node.root_cause{border-color:#fcd34d;background:#fffbeb}
+    .g-node.solution{border-color:#6ee7b7;background:#ecfdf5}
+    .g-node.document{border-color:#c4b5fd;background:#faf5ff}
+    .g-node.spare_part,.g-node.report,.g-node.risk{border-color:#d8b4fe;background:#fdf4ff}
+    .g-node.document.indexed{border-color:var(--green);background:#ecfdf5}
+    .g-node.document.ready{border-color:var(--orange);background:#fff7ed}
+    .g-node.document.processing{border-color:var(--blue);animation:pulse 1.2s infinite}
+    .g-node.document.new-doc{box-shadow:0 0 0 3px rgba(90,63,212,.25)}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.75}}
+    .legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;font-size:10px;color:var(--muted)}
+    .legend span{display:inline-flex;align-items:center;gap:4px}
+    .legend i{width:10px;height:10px;border-radius:3px;display:inline-block;border:1px solid var(--line)}
+    .detail-block{margin-bottom:12px}
+    .detail-block h3{font-size:12px;color:var(--navy);margin-bottom:6px}
+    .detail-row{font-size:11px;line-height:1.6;color:var(--text);padding:4px 0;border-bottom:1px dashed var(--line)}
+    .doc-list{max-height:280px;overflow-y:auto}
+    .doc-item{padding:8px 10px;border:1px solid var(--line);border-radius:8px;margin-bottom:6px;font-size:11px;cursor:pointer}
+    .doc-item:hover{border-color:#c4b5fd;background:#faf5ff}
+    .doc-item.active{border-color:var(--purple);background:#f5f0ff}
+    .st{font-size:9px;font-weight:700;padding:2px 6px;border-radius:999px;margin-left:4px}
+    .st-indexed{background:#d1fae5;color:#065f46}
+    .st-ready{background:#ffedd5;color:#9a3412}
+    .st-pending{background:var(--gray);color:var(--muted)}
+    .st-processing{background:#dbeafe;color:#1e40af}
+    .empty{color:var(--muted);font-size:11px;text-align:center;padding:24px}
+    .toast{position:fixed;bottom:16px;right:16px;background:var(--navy);color:#fff;padding:10px 14px;border-radius:8px;font-size:11px;opacity:0;transition:opacity .3s;z-index:99}
+    .toast.show{opacity:1}
+  </style>
+</head>
+<body>
+<header class="header">
+  <div class="header-top">
+    <div>
+      <h1>联影 PoC · 故障知识图谱</h1>
+      <p>故障码 → 症状 → 根因 → 方案 → 文档 · 与「知识入库工作台」实时联动（新增文档/切片/入库状态自动反映）</p>
+    </div>
+    <div class="header-links">
+      <span class="sync-badge" id="syncBadge">同步中…</span>
+      <a class="header-link" id="linkDeliverables" href="knowledge-deliverables.html">📦 知识产出</a>
+      <a class="header-link" id="linkWorkbench" href="index.html">← 返回切片工作台</a>
+      <a class="header-link" id="linkDoris" href="doris-data.html" target="_blank" rel="noopener">Doris 数据</a>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <main class="panel">
+    <div class="panel-head">
+      <h2 id="graphTitle">Scene 03 · 故障码路由知识网</h2>
+      <span id="graphStats" style="font-size:10px;color:var(--muted)">—</span>
+    </div>
+    <div class="panel-body">
+      <div class="toolbar">
+        <button class="scene-pill" data-scene="1">SCENE 01 财务</button>
+        <button class="scene-pill active" data-scene="3">SCENE 03 售后</button>
+        <button class="btn btn-secondary" id="btnFit">重新布局</button>
+        <button class="btn btn-secondary" id="btnExportGraph">导出图谱 JSON</button>
+      </div>
+      <div id="graphWrap">
+        <div id="graphCanvas">
+          <svg id="graphSvg"></svg>
+        </div>
+      </div>
+      <div class="legend">
+        <span><i style="background:#eef2ff"></i>故障码</span>
+        <span><i style="background:#eff6ff"></i>症状</span>
+        <span><i style="background:#fffbeb"></i>根因</span>
+        <span><i style="background:#ecfdf5"></i>方案</span>
+        <span><i style="background:#ecfdf5;border-color:#0d9a6a"></i>已入库文档</span>
+        <span><i style="background:#fff7ed;border-color:#d4820a"></i>待推送</span>
+      </div>
+    </div>
+  </main>
+
+  <aside class="panel">
+    <div class="panel-head"><h2>节点详情</h2><span id="detailTime" style="font-size:10px;color:var(--muted)">—</span></div>
+    <div class="panel-body">
+      <div id="nodeDetail" class="detail-block"><div class="empty">点击图谱节点查看详情</div></div>
+      <div class="detail-block">
+        <h3>文档入库状态（联动工作台）</h3>
+        <div class="doc-list" id="docList"></div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="poc-paths.js"></script>
+<script src="poc-sync.js"></script>
+<script>
+(function () {
+  const TYPE_COLS = {
+    error_code: 0, symptom: 1, root_cause: 2, solution: 3,
+    document: 4, spare_part: 5, report: 6, risk: 7,
+  };
+  const COL_COUNT = 8;
+  const MIN_GAP = 64;
+  const NODE_H = 54;
+  const PAD_X = 16;
+  const PAD_Y = 28;
+  let baseGraph = null;
+  let mergedGraph = { nodes: [], edges: [] };
+  let currentScene = 3;
+  let selectedId = null;
+  let syncState = {};
+  let nodePositions = {};
+
+  const $ = (s) => document.querySelector(s);
+  const esc = (s) => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  function toast(msg) {
+    const el = $('#toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2200);
+  }
+
+  function setSyncBadge(state, source) {
+    const el = $('#syncBadge');
+    const t = state.updatedAt ? new Date(state.updatedAt) : null;
+    el.textContent = t
+      ? `已同步 ${t.toLocaleTimeString()}${source === 'broadcast' ? ' · 工作台更新' : ''}`
+      : '等待工作台数据';
+    el.classList.toggle('stale', !t || Date.now() - state.updatedAt > 60000);
+    $('#detailTime').textContent = t ? t.toLocaleString() : '—';
+  }
+
+  async function loadBaseGraph() {
+    const origin = (location.protocol.startsWith('http') && location.port === '8890')
+      ? location.origin.replace(/\/$/, '') : '';
+    const urls = [
+      origin ? origin + '/service-fault-graph.json' : '',
+      POC_PATHS.getWorkerBase() + '/service-fault-graph.json',
+      'service-fault-graph.json',
+    ].filter(Boolean);
+    for (const u of urls) {
+      try {
+        const r = await fetch(u, { signal: AbortSignal.timeout(8000) });
+        if (r.ok) { baseGraph = await r.json(); return; }
+      } catch (_) {}
+    }
+    baseGraph = { nodes: [], edges: [], lookup: {} };
+  }
+
+  function mergeGraph(state) {
+    const nodes = [];
+    const edges = [];
+    const nodeIds = new Set();
+
+    function addNode(n) {
+      if (!n || !n.id || nodeIds.has(n.id)) return;
+      nodeIds.add(n.id);
+      nodes.push(Object.assign({}, n));
+    }
+
+    if (currentScene === 3 && baseGraph) {
+      (baseGraph.nodes || []).forEach(addNode);
+      (baseGraph.edges || []).forEach((e) => edges.push(Object.assign({}, e)));
+    }
+
+    if (currentScene === 1) {
+      addNode({ id: 'finance_hub', type: 'solution', label: '财务制度知识', desc: 'budget policy RAG' });
+      ['BG-2022-001', 'BG-2022-005', 'BG-2023-012'].forEach((did) => {
+        addNode({ id: did, type: 'document', label: did, document_id: did, domain: 'finance' });
+        edges.push({ from: 'finance_hub', to: did, relation: 'policy' });
+      });
+    }
+
+    const docNodes = POC_SYNC.buildDocumentNodes(state).filter((d) => d.scene === currentScene);
+    docNodes.forEach((d) => {
+      const existing = nodes.find((n) => n.id === d.id);
+      const merged = existing ? Object.assign(existing, d) : d;
+      if (!existing) {
+        addNode(merged);
+        if (currentScene === 3) {
+          const lookup = baseGraph && baseGraph.lookup;
+          if (lookup) {
+            Object.keys(lookup).forEach((code) => {
+              if ((lookup[code].documents || []).includes(d.document_id)) {
+                edges.push({ from: code, to: d.id, relation: 'references', dynamic: true });
+              }
+            });
+          }
+          edges.push({ from: 'service_knowledge', to: d.id, relation: 'catalog', dynamic: true });
+        }
+      } else {
+        Object.assign(existing, d);
+      }
+    });
+
+    if (currentScene === 3 && !nodeIds.has('service_knowledge')) {
+      addNode({ id: 'service_knowledge', type: 'solution', label: '售后知识库', desc: '工作台 catalog' });
+    }
+
+    const docIdRe = /^(BG|RM|EXP|SP)-/;
+    edges.forEach((e) => {
+      ['from', 'to'].forEach((key) => {
+        const id = e[key];
+        if (id && !nodeIds.has(id) && docIdRe.test(id)) {
+          addNode({ id, type: 'document', label: id, document_id: id, domain: 'service' });
+        }
+      });
+    });
+
+    (state.customEdges || []).forEach((e) => {
+      if (e.scene === currentScene || !e.scene) edges.push(e);
+    });
+
+    mergedGraph = { nodes, edges };
+    return mergedGraph;
+  }
+
+  function layoutNodes() {
+    const wrap = $('#graphWrap');
+    const canvas = $('#graphCanvas');
+    const groups = {};
+    mergedGraph.nodes.forEach((n) => {
+      const col = TYPE_COLS[n.type] != null ? TYPE_COLS[n.type] : 4;
+      (groups[col] ||= []).push(n);
+    });
+
+    Object.keys(groups).forEach((colKey) => {
+      groups[colKey].sort((a, b) =>
+        String(a.label || a.id).localeCompare(String(b.label || b.id), 'zh-CN'));
+    });
+
+    const colKeys = Object.keys(groups).map(Number).sort((a, b) => a - b);
+    const maxCount = Math.max(...colKeys.map((k) => groups[k].length), 1);
+    const H = Math.max(560, maxCount * MIN_GAP + PAD_Y * 2 + NODE_H);
+    const nodeW = 118;
+    const colStep = nodeW + 22;
+    const W = Math.max(wrap.clientWidth || 900, PAD_X * 2 + (COL_COUNT - 1) * colStep + nodeW);
+
+    canvas.style.height = H + 'px';
+    canvas.style.minHeight = H + 'px';
+    canvas.style.width = W + 'px';
+    canvas.style.minWidth = W + 'px';
+
+    nodePositions = {};
+    colKeys.forEach((col) => {
+      const list = groups[col];
+      const x = PAD_X + col * colStep;
+      const blockH = MIN_GAP * Math.max(list.length - 1, 0) + NODE_H;
+      const startY = PAD_Y + Math.max(0, (H - PAD_Y * 2 - blockH) / 2);
+      list.forEach((n, i) => {
+        nodePositions[n.id] = { x, y: startY + i * MIN_GAP };
+      });
+    });
+  }
+
+  function renderGraph() {
+    const canvas = $('#graphCanvas');
+    canvas.querySelectorAll('.g-node').forEach((el) => el.remove());
+    layoutNodes();
+    const svg = $('#graphSvg');
+    svg.innerHTML = '';
+    const nodeMap = Object.fromEntries(mergedGraph.nodes.map((n) => [n.id, n]));
+
+    mergedGraph.edges.forEach((e) => {
+      const a = nodePositions[e.from];
+      const b = nodePositions[e.to];
+      if (!a || !b) return;
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', a.x + 100);
+      line.setAttribute('y1', a.y + 28);
+      line.setAttribute('x2', b.x);
+      line.setAttribute('y2', b.y + 28);
+      if (selectedId && (e.from === selectedId || e.to === selectedId)) line.classList.add('highlight');
+      if (e.dynamic) line.setAttribute('stroke-dasharray', '4 3');
+      svg.appendChild(line);
+    });
+
+    mergedGraph.nodes.forEach((n) => {
+      const pos = nodePositions[n.id];
+      if (!pos) return;
+      const el = document.createElement('div');
+      el.className = 'g-node ' + (n.type || 'document');
+      if (n.ingestStatus) el.classList.add(n.ingestStatus);
+      if (n.isNew) el.classList.add('new-doc');
+      if (n.id === selectedId) el.classList.add('selected');
+      el.style.left = pos.x + 'px';
+      el.style.top = pos.y + 'px';
+      el.dataset.id = n.id;
+      el.innerHTML =
+        `<div class="type">${esc(n.type || 'node')}</div>` +
+        `<div class="label">${esc(n.label || n.id)}</div>` +
+        (n.chunks ? `<div class="meta">${n.chunks} chunks</div>` : '') +
+        (n.ingestStatus === 'indexed' ? `<div class="meta">✓ 已入库</div>` : '');
+      el.addEventListener('click', () => selectNode(n.id));
+      canvas.appendChild(el);
+    });
+
+    const docs = mergedGraph.nodes.filter((n) => n.type === 'document');
+    const indexed = docs.filter((d) => d.ingestStatus === 'indexed').length;
+    $('#graphStats').textContent = `${mergedGraph.nodes.length} 节点 · ${mergedGraph.edges.length} 边 · 文档 ${indexed}/${docs.length} 已入库`;
+    renderDocList();
+  }
+
+  function renderDocList() {
+    const docs = mergedGraph.nodes.filter((n) => n.type === 'document' && n.scene === currentScene)
+      .concat(mergedGraph.nodes.filter((n) => n.type === 'document' && !n.scene && currentScene === 3));
+    const uniq = [];
+    const seen = new Set();
+    docs.forEach((d) => { if (!seen.has(d.id)) { seen.add(d.id); uniq.push(d); } });
+    if (!uniq.length) {
+      $('#docList').innerHTML = '<div class="empty">暂无文档 · 请在工作台加载附件</div>';
+      return;
+    }
+    $('#docList').innerHTML = uniq.map((d) => {
+      const st = d.ingestStatus || 'pending';
+      const stLabel = { indexed:'已入库', ready:'待推送', pending:'待处理', processing:'处理中', error:'失败' }[st] || st;
+      return `<div class="doc-item ${d.id===selectedId?'active':''}" data-id="${esc(d.id)}">
+        <strong>${esc(d.document_id || d.id)}</strong>
+        <span class="st st-${st}">${stLabel}</span>
+        <div style="color:var(--muted);margin-top:4px">${esc(d.doc_type||'')} · ${d.chunks||0} chunks</div>
+      </div>`;
+    }).join('');
+    $('#docList').querySelectorAll('.doc-item').forEach((el) => {
+      el.addEventListener('click', () => selectNode(el.dataset.id, true));
+    });
+  }
+
+  function selectNode(id, syncBack) {
+    selectedId = id;
+    const n = mergedGraph.nodes.find((x) => x.id === id);
+    if (!n) return;
+    renderGraph();
+    const lines = [
+      `<div class="detail-row"><strong>ID</strong> ${esc(n.id)}</div>`,
+      `<div class="detail-row"><strong>类型</strong> ${esc(n.type)}</div>`,
+    ];
+    if (n.desc) lines.push(`<div class="detail-row">${esc(n.desc)}</div>`);
+    if (n.document_id) lines.push(`<div class="detail-row"><strong>document_id</strong> ${esc(n.document_id)}</div>`);
+    if (n.share_pct) lines.push(`<div class="detail-row">占比 ${n.share_pct}%</div>`);
+    if (n.ingestStatus) lines.push(`<div class="detail-row">入库状态 ${esc(n.ingestStatus)}</div>`);
+    const relEdges = mergedGraph.edges.filter((e) => e.from === id || e.to === id);
+    if (relEdges.length) {
+      lines.push('<div class="detail-row"><strong>关联</strong><br>' +
+        relEdges.map((e) => esc(e.from === id ? '→ ' + e.to : e.from + ' →')).join('<br>') + '</div>');
+    }
+    $('#nodeDetail').innerHTML = lines.join('');
+    if (syncBack && n.document_id) {
+      POC_SYNC.save({ selectedCatalogId: n.document_id, selectedGraphNode: id, currentScene });
+      toast('已同步选中项到工作台');
+    }
+  }
+
+  function applySync(state, source) {
+    syncState = state || {};
+    if (state.currentScene) currentScene = state.currentScene;
+    document.querySelectorAll('.scene-pill').forEach((p) => {
+      p.classList.toggle('active', +p.dataset.scene === currentScene);
+    });
+    if (state.selectedGraphNode && source === 'broadcast') {
+      selectedId = state.selectedGraphNode;
+    }
+    mergeGraph(state);
+    renderGraph();
+    setSyncBadge(state, source);
+    if (source === 'broadcast') toast('图谱已更新（工作台变更）');
+  }
+
+  function exportGraph() {
+    const blob = new Blob([JSON.stringify(mergedGraph, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `poc_fault_graph_scene${currentScene}.json`;
+    a.click();
+  }
+
+  document.querySelectorAll('.scene-pill').forEach((p) => {
+    p.addEventListener('click', () => {
+      currentScene = +p.dataset.scene;
+      document.querySelectorAll('.scene-pill').forEach((x) => x.classList.toggle('active', x === p));
+      $('#graphTitle').textContent = currentScene === 1 ? 'Scene 01 · 财务制度图谱' : 'Scene 03 · 故障码路由知识网';
+      POC_SYNC.save({ currentScene });
+      mergeGraph(POC_SYNC.load());
+      renderGraph();
+    });
+  });
+
+  $('#btnFit').addEventListener('click', renderGraph);
+  $('#btnExportGraph').addEventListener('click', exportGraph);
+  $('#linkWorkbench').href = POC_PATHS.pageUrl('workbench');
+  $('#linkDoris').href = POC_PATHS.pageUrl('doris');
+  const linkDel = $('#linkDeliverables');
+  if (linkDel) linkDel.href = POC_PATHS.pageUrl('deliverables');
+
+  window.addEventListener('resize', renderGraph);
+
+  (async function init() {
+    await loadBaseGraph();
+    POC_SYNC.subscribe((state, source) => applySync(state, source));
+    applySync(POC_SYNC.load(), 'init');
+    const hash = location.hash.match(/doc=([^&]+)/);
+    if (hash) selectNode(decodeURIComponent(hash[1]));
+    else if (syncState.selectedCatalogId) selectNode(syncState.selectedCatalogId);
+  })();
+})();
+</script>
+</body>
+</html>

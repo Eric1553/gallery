@@ -1,0 +1,59 @@
+# Gallery · DEMO 展览馆
+
+帆软售前 DEMO 案例库：Python 后端 + 静态前端 + 全量 Demo 静态资源。  
+源码镜像自 ECS PROD（`/opt/demo-gallery` + `/opt/demos`），供 Cursor Cloud Agent / Grok Bot 读取与协作。
+
+## 仓库结构
+
+```
+gallery/
+├── server.py              # 展览馆 HTTP 服务（catalog API、门禁、联邦检索）
+├── catalog.json           # Demo 目录元数据（客户/内部、标签、入口）
+├── search_index.json      # 本地检索索引
+├── search_federation.py   # MaxKB / KMS / KH 联邦检索
+├── gallery_brief.py       # 会前 brief 生成
+├── web/                   # 主馆 UI（gallery.css / gallery.js / gate.js）
+├── scripts/               # 运维脚本（封面、索引、ECS 同步）
+├── tests/                 # pytest
+├── static-demos/          # 内嵌在主馆模块内的静态 Demo
+├── covers/                # 卡片 thumb / 详情 cover（WebP）
+├── data/                  # 运行时数据目录（auth/token 不入库，见 .gitignore）
+└── demos/                 # 全部 Demo 静态包（对应 ECS /opt/demos/<id>/）
+    ├── biren-ceo/
+    ├── smic-finance/
+    └── …
+```
+
+## 线上部署（ECS）
+
+| 项 | 路径 |
+|---|---|
+| 展览馆模块 | `/opt/demo-gallery/` |
+| Demo 静态资源 | `/opt/demos/<id>/` |
+| 公网入口 | `http://120.55.184.234/gallery/` |
+| Demo 直连 | `http://120.55.184.234/demos/<id>/` |
+
+环境变量（生产在 systemd / 服务器配置，**勿提交密钥**）：
+
+- `GALLERY_PASSWORD` — 门禁密码
+- `GALLERY_MAXKB_TOKEN` / `GALLERY_MAXKB_TOKEN_FILE` — MaxKB 联邦检索
+- `GALLERY_KMS_BASE` + `GALLERY_KMS_TOKEN` — KMS 检索
+
+## 本地 / CI
+
+```bash
+python3 -m pytest tests/
+python3 server.py   # 默认 :8788
+```
+
+## Grok Bot / Cloud Agent 用法
+
+1. Cursor Dashboard → Integrations → GitHub → 授权本仓库
+2. 对 GB 说：`读 gallery 仓库 main 分支，catalog 在 catalog.json，Demo 静态资源在 demos/`
+
+## 归属约定
+
+- **客户 DEMO**：`audience: "client"` 或具名客户
+- **内部 DEMO**：`audience: "internal"` 或 client 为「内部 / 帆软…」
+
+详细入库流程见 Cursor skill `demo-gallery-ecs`。

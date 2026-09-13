@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>江原研发项目管理</title>
+  <link rel="stylesheet" href="css/app.css?v=11" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">JY</div>
+        <div>
+          <h1>江原研发项目管理</h1>
+          <p>应用工作台</p>
+        </div>
+      </div>
+      <div class="wf-strip">
+        <button type="button" class="wf-item" data-route="todo" title="我的待办">
+          <span class="wf-ico">☑</span><span>我的待办</span>
+          <em class="badge-n" id="todo-count" style="display:none">0</em>
+        </button>
+        <button type="button" class="wf-item muted" title="演示">
+          <span class="wf-ico">↗</span><span>我发起的</span>
+        </button>
+        <button type="button" class="wf-item muted" title="演示">
+          <span class="wf-ico">⟳</span><span>我处理的</span>
+        </button>
+        <button type="button" class="wf-item muted" title="演示">
+          <span class="wf-ico">✉</span><span>抄送我的</span>
+        </button>
+      </div>
+      <div class="todo-mini">
+        <a href="#" data-todo-link>
+          <span>⭐员工待办事项</span>
+          <span class="badge-n" id="todo-count-mini" style="display:none">0</span>
+        </a>
+      </div>
+      <input class="side-search" id="nav-search" type="search" placeholder="输入名称来搜索" />
+      <div class="nav-scroll" id="nav-scroll"></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <div class="title" id="top-title">项目综合看板</div>
+        </div>
+        <div class="top-extra" id="top-extra"></div>
+      </header>
+      <div class="view" id="view"></div>
+    </main>
+  </div>
+
+  <div class="modal-mask" id="modal-mask"></div>
+  <div class="modal" id="modal" role="dialog" aria-modal="true">
+    <header class="modal-head">
+      <strong id="modal-title">填写表单</strong>
+      <button type="button" class="modal-x" id="modal-close" aria-label="关闭">×</button>
+    </header>
+    <div class="modal-body" id="modal-body"></div>
+    <footer class="modal-foot" id="modal-foot"></footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/data.js?v=11"></script>
+  <script src="js/flow.js?v=11"></script>
+  <script src="js/app.js?v=11"></script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>合见运营 · OTD 供给与缺货闭环分析思路</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { background:#eef3f9; }
+  body { font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif; color:#23314c; -webkit-font-smoothing:antialiased; }
+  .stage { width:1600px; height:860px; position:relative; background:linear-gradient(165deg,#ffffff 0%,#f4f8fd 55%,#e8f0fa 100%); overflow:hidden; }
+  .stage::before { content:""; position:absolute; inset:0; background:radial-gradient(ellipse 900px 420px at 70% 38%, rgba(232,133,90,.06), transparent 70%); pointer-events:none; }
+
+  .lcol { position:absolute; left:24px; top:22px; width:368px; }
+  .box { border-radius:10px; overflow:hidden; box-shadow:0 4px 12px rgba(40,70,120,.09); margin-bottom:10px; border:1px solid rgba(180,200,225,.45); }
+  .box .h { color:#fff; font-size:15px; font-weight:800; letter-spacing:.8px; padding:8px 14px; }
+  .box .h.pain { background:linear-gradient(135deg,#3f7fc4,#5fa0db); }
+  .box .h.goal { background:linear-gradient(135deg,#2e8b57,#49a877); }
+  .box .h.act  { background:linear-gradient(135deg,#e8855a,#f0a472); }
+  .box .c { background:#fff; padding:10px 14px; }
+  .box .c ul { list-style:none; }
+  .box .c li { font-size:12.2px; color:#46505f; line-height:1.48; padding-left:14px; position:relative; margin-bottom:6px; }
+  .box .c li:last-child { margin-bottom:0; }
+  .box .c li::before { content:"•"; position:absolute; left:0; color:#3f7fc4; font-weight:800; }
+  .box .c li b { color:#d4302b; }
+  .goalwrap .hi { background:#fef4ef; border:1px solid #f5d4c0; color:#b85a2a; font-size:13px; font-weight:800; text-align:center; padding:6px; border-radius:7px; margin-bottom:8px; }
+  .goalwrap .g4 { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+  .goalwrap .g4 div { background:#fdf8f5; border:1px solid #f0ddd0; border-radius:6px; text-align:center; font-size:12px; font-weight:700; color:#c46a3a; padding:6px 3px; }
+
+  .center { position:absolute; left:412px; top:22px; width:1164px; }
+  .sihd { background:linear-gradient(135deg,#1c3a6b,#2f5e9c); color:#fff; font-size:16px; font-weight:800; letter-spacing:1.5px; padding:8px 16px; border-radius:9px; display:flex; align-items:center; gap:10px; box-shadow:0 4px 14px rgba(28,58,107,.22); }
+  .sihd .en { font-size:11.5px; opacity:.82; font-weight:600; letter-spacing:.5px; }
+
+  .tree { position:absolute; left:412px; top:72px; width:300px; background:rgba(255,255,255,.72); border:1px solid #dce6f2; border-radius:10px; padding:8px 10px 10px; box-shadow:0 3px 10px rgba(40,70,120,.06); }
+  .root { display:flex; align-items:center; margin:8px 0 4px; }
+  .root .rt { font-size:13px; font-weight:800; color:#fff; padding:6px 12px; border-radius:7px; }
+  .root .rt.up { background:linear-gradient(135deg,#4a8fd0,#6aa9e0); }
+  .root .rt.mid { background:linear-gradient(135deg,#2e8b57,#49a877); }
+  .root .rt.down { background:linear-gradient(135deg,#e8855a,#f0a472); }
+  .leaf { display:flex; align-items:center; margin:4px 0 4px 18px; position:relative; }
+  .leaf::before { content:""; position:absolute; left:-12px; top:50%; width:10px; height:1.5px; background:#c6d2e2; }
+  .leaf span { font-size:11.8px; font-weight:600; color:#3a4660; background:#fff; border:1px solid #dbe5f1; border-radius:5px; padding:3px 8px; box-shadow:0 1px 4px rgba(40,70,120,.05); }
+  .leaf span.done { border-color:#6cb38c; color:#1c6b40; background:#f1faf4; }
+  .leaf span.done::before { content:"✓ "; }
+
+  .thumb { position:absolute; border:1px solid #c8d6e8; border-radius:9px; overflow:hidden; box-shadow:0 6px 18px rgba(30,55,110,.14); background:#fff; }
+  .thumb img { width:100%; display:block; }
+  .cap { position:absolute; font-size:10.5px; font-weight:700; color:#3a4660; background:rgba(255,255,255,.92); border:1px solid #dce6f2; border-radius:5px; padding:2px 7px; white-space:nowrap; }
+  .stage .num { position:absolute; width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,#e2574c,#d4302b); color:#fff; font-size:14px; font-weight:800; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 8px rgba(226,87,76,.38); z-index:6; border:2px solid #fff; }
+  .rlab { position:absolute; color:#d4302b; font-size:11.5px; font-weight:800; font-style:italic; z-index:6; line-height:1.35; }
+
+  .bbox { position:absolute; top:648px; border:1px solid #d9e3f0; border-radius:10px; background:#fff; box-shadow:0 3px 10px rgba(40,70,120,.07); padding:10px 14px; }
+  .bbox .bh { font-size:13.5px; font-weight:800; color:#1c2c4a; margin-bottom:7px; display:flex; align-items:center; gap:7px; }
+  .bbox .bh::before { content:""; width:4px; height:14px; background:#4a8fd0; border-radius:2px; }
+  .bbox.alt .bh::before { background:#e8855a; }
+  .bbox .cols { display:grid; grid-template-columns:1fr 1fr; gap:4px 14px; }
+  .bbox .cols div { font-size:12px; color:#46505f; line-height:1.45; padding-left:13px; position:relative; }
+  .bbox .cols div::before { content:"▪"; position:absolute; left:0; color:#5fa0db; }
+  .bbox.alt .cols div::before { color:#e8855a; }
+
+  svg.an { position:absolute; left:0; top:0; width:1600px; height:860px; pointer-events:none; z-index:5; }
+</style>
+  <link rel="stylesheet" href="nav.css">
+</head>
+<body data-page="17">
+<div class="proto-app">
+  <aside id="proto-nav" class="proto-nav"></aside>
+  <div class="proto-main">
+<div class="stage">
+
+  <div class="lcol">
+    <div class="box">
+      <div class="h pain">管理痛点</div>
+      <div class="c"><ul>
+        <li>需求→计划→排产→入库<b>链路不透明</b>，缺货难追供给侧；</li>
+        <li>账面有货却发不出，<b>借测占用与可售未勾稽</b>；</li>
+        <li>缺货只能看结果，<b>难区分计划/生产/质量/借测</b>；</li>
+        <li>完工释放可售时点<b>不可视</b>，交付预期难管理。</li>
+      </ul></div>
+    </div>
+    <div class="box goalwrap">
+      <div class="h goal">管理目标</div>
+      <div class="c">
+        <div class="hi">打通 OTD 供给侧，实现缺货可归因、交付可预期</div>
+        <div class="g4"><div>产销可平衡</div><div>供给可追踪</div><div>缺货可归因</div><div>满足可提升</div></div>
+      </div>
+    </div>
+    <div class="box">
+      <div class="h act">保障措施</div>
+      <div class="c"><ul>
+        <li>计划生产驾驶舱：<b>需求→主计划→排产→工单→质检→入库</b>；</li>
+        <li>库存驾驶舱：<b>可售↔借测↔在制</b>三态勾稽；</li>
+        <li>缺货五因归因 + <b>高风险订单穿透</b>；</li>
+        <li>运营驾驶舱联动<b>满足率 / 缺货率</b>总览。</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="center"><div class="sihd">分析思路 <span class="en">Analysis Logic · OTD 上游供给 → 库存勾稽 → 缺货归因闭环</span></div></div>
+
+  <div class="tree">
+    <div class="root"><div class="rt up">OTD 上游 · 计划与生产</div></div>
+    <div class="leaf"><span class="done">产销平衡</span></div>
+    <div class="leaf"><span class="done">工单进度 / 质量 Hold</span></div>
+    <div class="root"><div class="rt mid">库存 · 三态勾稽</div></div>
+    <div class="leaf"><span class="done">可售 / 借测 / 在制</span></div>
+    <div class="leaf"><span class="done">库龄 / 呆滞</span></div>
+    <div class="root"><div class="rt down">缺货 · 归因与穿透</div></div>
+    <div class="leaf"><span>缺货五因归因</span></div>
+    <div class="leaf"><span>明细清单 → 单笔卡片</span></div>
+  </div>
+
+  <div class="thumb" style="left:728px; top:68px; width:400px; height:230px;"><img src="previews/06_合见L2_计划生产驾驶舱_原型.webp" loading="lazy" decoding="async"></div>
+  <div class="num" style="left:714px; top:74px;">①</div>
+  <div class="cap" style="left:732px; top:302px;">① 计划与生产驾驶舱 · 供给侧追踪</div>
+
+  <div class="thumb" style="left:1144px; top:68px; width:400px; height:230px;"><img src="previews/04_合见L2_库存驾驶舱_原型.webp" loading="lazy" decoding="async"></div>
+  <div class="num" style="left:1130px; top:74px;">②</div>
+  <div class="cap" style="left:1144px; top:302px;">② 库存驾驶舱 · 可售↔借测勾稽</div>
+
+  <div class="thumb" style="left:728px; top:328px; width:400px; height:230px;"><img src="previews/09_合见L4_缺货归因专题_原型.webp" loading="lazy" decoding="async"></div>
+  <div class="num" style="left:714px; top:334px;">③</div>
+  <div class="cap" style="left:728px; top:562px;">③ 缺货归因专题 · 五因拆解</div>
+
+  <div class="thumb" style="left:1144px; top:328px; width:190px; height:230px;"><img src="previews/12_合见运营_穿透清单_原型.webp" loading="lazy" decoding="async"></div>
+  <div class="num" style="left:1130px; top:334px;">④</div>
+  <div class="cap" style="left:1144px; top:562px;">④ L5 缺货明细清单</div>
+
+  <div class="thumb" style="left:1354px; top:328px; width:190px; height:230px;"><img src="previews/13_合见运营_订单卡片_原型.webp" loading="lazy" decoding="async"></div>
+  <div class="num" style="left:1340px; top:334px;">⑤</div>
+  <div class="cap" style="left:1354px; top:562px;">⑤ 单笔 360° 卡片</div>
+
+  <div class="rlab" style="left:548px; top:240px;">供给<br>释放 →</div>
+  <div class="rlab" style="left:548px; top:400px;">库存<br>勾稽 →</div>
+  <div class="rlab" style="left:548px; top:520px;">归因<br>穿透 →</div>
+
+  <div class="bbox" style="left:412px; top:648px; width:520px; height:188px;">
+    <div class="bh">供给侧追踪信息</div>
+    <div class="cols">
+      <div>需求预测 / 主计划</div><div>排产 / 工单进度</div>
+      <div>在制数量 / 完工入库</div><div>质量 Hold / 放行</div>
+      <div>供给缺口归因</div><div>完工释放可售时点</div>
+    </div>
+  </div>
+  <div class="bbox alt" style="left:948px; top:648px; width:628px; height:188px;">
+    <div class="bh">缺货归因与穿透信息</div>
+    <div class="cols">
+      <div>满足率 / 缺货率趋势</div><div>五因：计划/生产/质量/借测/映射</div>
+      <div>行业 / 产品缺货下钻</div><div>高风险缺货订单清单</div>
+      <div>序列号级穿透</div><div>单笔履约状态 / Hold / 在借占用</div>
+    </div>
+  </div>
+
+  <svg class="an" viewBox="0 0 1600 860">
+    <defs><marker id="rr" markerWidth="11" markerHeight="11" refX="8" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" fill="#d4302b"/></marker></defs>
+    <path d="M712,180 C680,200 660,240 728,260" stroke="#d4302b" stroke-width="2" fill="none" stroke-dasharray="6 4" marker-end="url(#rr)"/>
+    <path d="M1128,180 C1100,220 1080,260 1144,280" stroke="#d4302b" stroke-width="2" fill="none" stroke-dasharray="6 4" marker-end="url(#rr)"/>
+    <path d="M1128,300 C1080,340 1060,400 728,460" stroke="#d4302b" stroke-width="2" fill="none" stroke-dasharray="6 4" marker-end="url(#rr)"/>
+    <path d="M1128,460 C1180,500 1220,520 1144,540" stroke="#d4302b" stroke-width="1.8" fill="none" stroke-dasharray="5 4" marker-end="url(#rr)"/>
+    <path d="M1334,460 C1360,500 1370,520 1354,540" stroke="#d4302b" stroke-width="1.8" fill="none" stroke-dasharray="5 4" marker-end="url(#rr)"/>
+  </svg>
+
+</div>
+  </div>
+</div>
+<script src="nav.js"></script>
+</body>
+</html>

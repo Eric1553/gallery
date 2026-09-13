@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>原型总览墙 | 中芯国际财经驾驶舱</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/overview-wall.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="logo-area">
+      <div class="logo-mark">SMIC</div>
+      <div class="logo-text">
+        <h1>财经驾驶舱</h1>
+        <span>管理报告 · 财务经分会二期</span>
+      </div>
+    </div>
+    <nav class="header-nav">
+      <a href="index.html" data-page="overview" class="active">总览</a>
+      <a href="revenue.html" data-page="revenue">收入专题</a>
+      <a href="cost.html" data-page="cost">成本专题</a>
+      <a href="profit.html" data-page="profit">盈利效率</a>
+      <a href="dupont-site.html" data-page="dupont">杜邦分析</a>
+    </nav>
+    <div class="header-meta">
+      <span class="badge-proto">HTML 原型</span>
+      <span>2025-07 · 月度</span>
+    </div>
+  </header>
+
+  <div class="app-body">
+    <aside class="sidebar"></aside>
+
+    <main class="main-content">
+      <div class="overview-wall-wrap">
+        <div class="overview-wall">
+          <div class="ow-head">
+            <div>
+              <div class="ttl">中芯国际财经驾驶舱 · <span class="hl">五层穿透总览墙</span></div>
+              <div class="sub">公司总览 → 经营成效 → 业务结果 → 专题分析 → 下钻穿透 · 点击缩略图进入对应看板</div>
+            </div>
+            <div class="ow-tags">
+              <span class="ow-tag">BOSS 管报</span>
+              <span class="ow-tag">月/季 × 实际/预测</span>
+              <span class="ow-tag">帆软 FVS</span>
+            </div>
+          </div>
+
+          <div class="ow-body">
+            <!-- L1 · 公司总览 ×1 -->
+            <div class="ow-row">
+              <div class="ow-badge l1"><div class="lv">L1</div><div class="nm">公司总览</div><div class="au">CFO</div></div>
+              <div class="ow-cards l1-row">
+                <a class="ow-card-link" href="l1-cockpit.html">
+                  <div class="ow-card c-l1">
+                    <div class="stripe"></div>
+                    <div class="ow-preview"><span class="idx">01</span><img src="assets/png/01_l1_cockpit.png?v=2" alt="财经驾驶舱总览" loading="lazy"></div>
+                    <div class="ow-cap">财经驾驶舱总览</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <!-- L2 · 经营成效 ×4 -->
+            <div class="ow-row">
+              <div class="ow-badge l2"><div class="lv">L2</div><div class="nm">经营成效</div><div class="au">×4</div></div>
+              <div class="ow-cards l2-row">
+                <a class="ow-card-link" href="dupont-site.html"><div class="ow-card c-l2"><div class="stripe"></div><div class="ow-preview"><span class="idx">02</span><img src="assets/png/05_dupont_site.png?v=2" alt=""></div><div class="ow-cap">杜邦 · ROE经营分解</div></div></a>
+                <a class="ow-card-link" href="profit.html"><div class="ow-card c-l2"><div class="stripe"></div><div class="ow-preview"><span class="idx">03</span><img src="assets/png/04_profit.png?v=2" alt=""></div><div class="ow-cap">盈利效率分析</div></div></a>
+                <a class="ow-card-link" href="revenue.html"><div class="ow-card c-l2"><div class="stripe"></div><div class="ow-preview"><span class="idx">04</span><img src="assets/png/02_revenue.png?v=2" alt=""></div><div class="ow-cap">收入达成分析</div></div></a>
+                <a class="ow-card-link" href="cost.html"><div class="ow-card c-l2"><div class="stripe"></div><div class="ow-preview"><span class="idx">05</span><img src="assets/png/03_cost.png?v=2" alt=""></div><div class="ow-cap">成本管控分析</div></div></a>
+              </div>
+            </div>
+
+            <!-- L3 · 业务结果 ×8 -->
+            <div class="ow-row">
+              <div class="ow-badge l3"><div class="lv">L3</div><div class="nm">业务结果</div><div class="au">×8</div></div>
+              <div class="ow-cards l3-row">
+                <a class="ow-card-link" href="revenue.html#overview"><div class="ow-card c-l3"><div class="stripe"></div><div class="ow-preview"><span class="idx">06</span><img src="assets/png/02_revenue.png?v=2" alt=""></div><div class="ow-cap">收入总览</div></div></a>
+                <a class="ow-card-link" href="revenue.html#wafer"><div class="ow-card c-l3"><div class="stripe"></div><div class="ow-preview"><span class="idx">07</span><img src="assets/png/02_revenue.png?v=2" alt=""></div><div class="ow-cap">晶圆收入</div></div></a>
+                <a class="ow-card-link" href="cost.html#total"><div class="ow-card c-l3"><div class="stripe"></div><div class="ow-preview"><span class="idx">08</span><img src="assets/png/03_cost.png?v=2" alt=""></div><div class="ow-cap">总成本分析</div></div></a>
+                <a class="ow-card-link" href="cost.html#layer"><div class="ow-card c-l3"><div class="stripe"></div><div class="ow-preview"><span class="idx">09</span><img src="assets/png/03_cost.png?v=2" alt=""></div><div class="ow-cap">总成本 / Layer</div></div></a>
+                <a class="ow-card-link" href="profit.html"><div class="ow-card c-l3"><div class="stripe"></div><div class="ow-preview"><span class="idx">10</span><img src="assets/png/04_profit.png?v=2" alt=""></div><div class="ow-cap">盈利结构看板</div></div></a>
+                <a class="ow-card-link" href="dupont-site.html"><div class="ow-card c-l3"><div class="stripe"></div><div class="ow-preview"><span class="idx">11</span><img src="assets/png/05_dupont_site.png?v=2" alt=""></div><div class="ow-cap">杜邦 · Site结果</div></div></a>
+                <a class="ow-card-link" href="revenue.html#wafer"><div class="ow-card c-l3"><div class="stripe"></div><div class="ow-preview"><span class="idx">12</span><img src="assets/png/02_revenue.png?v=2" alt=""></div><div class="ow-cap">TOP20 · 客户结果</div></div></a>
+                <a class="ow-card-link" href="cost.html"><div class="ow-card c-l3"><div class="stripe"></div><div class="ow-preview"><span class="idx">13</span><img src="assets/png/03_cost.png?v=2" alt=""></div><div class="ow-cap">制造费用 · 组织</div></div></a>
+              </div>
+            </div>
+
+            <!-- L4 · 专题分析 ×4 -->
+            <div class="ow-row">
+              <div class="ow-badge l4"><div class="lv">L4</div><div class="nm">专题分析</div><div class="au">×4</div></div>
+              <div class="ow-cards l4-row">
+                <a class="ow-card-link" href="dupont-tree.html"><div class="ow-card c-l4"><div class="stripe"></div><div class="ow-preview"><span class="idx">14</span><img src="assets/png/06_dupont_tree.png?v=2" alt=""></div><div class="ow-cap">杜邦 · 九层分解树</div></div></a>
+                <a class="ow-card-link" href="revenue.html"><div class="ow-card c-l4"><div class="stripe"></div><div class="ow-preview"><span class="idx">15</span><img src="assets/png/02_revenue.png?v=2" alt=""></div><div class="ow-cap">KPI · 同比环比</div></div></a>
+                <a class="ow-card-link" href="cost.html"><div class="ow-card c-l4"><div class="stripe"></div><div class="ow-preview"><span class="idx">16</span><img src="assets/png/03_cost.png?v=2" alt=""></div><div class="ow-cap">结构 · BU/FAB圆环</div></div></a>
+                <a class="ow-card-link" href="profit.html"><div class="ow-card c-l4"><div class="stripe"></div><div class="ow-preview"><span class="idx">17</span><img src="assets/png/04_profit.png?v=2" alt=""></div><div class="ow-cap">趋势 · 组织堆积</div></div></a>
+              </div>
+            </div>
+
+            <!-- L5 · 下钻穿透 ×3 -->
+            <div class="ow-row">
+              <div class="ow-badge l5"><div class="lv">L5</div><div class="nm">下钻穿透</div><div class="au">×3</div></div>
+              <div class="ow-cards l5-row">
+                <a class="ow-card-link" href="revenue.html#wafer"><div class="ow-card c-l5"><div class="stripe"></div><div class="ow-preview"><span class="idx">18</span><img src="assets/png/02_revenue.png?v=2" alt=""></div><div class="ow-cap">弹窗明细钻取</div></div></a>
+                <a class="ow-card-link" href="cost.html"><div class="ow-card c-l5"><div class="stripe"></div><div class="ow-preview"><span class="idx">19</span><img src="assets/png/03_cost.png?v=2" alt=""></div><div class="ow-cap">组织 · 科目联动</div></div></a>
+                <a class="ow-card-link" href="dupont-table.html"><div class="ow-card c-l5"><div class="stripe"></div><div class="ow-preview"><span class="idx">20</span><img src="assets/png/07_dupont_table.png?v=2" alt=""></div><div class="ow-cap">杜邦 · 108项填报</div></div></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="ow-foot">
+            <span class="chain-lbl"><i></i>典型穿透链路</span>
+            <a href="l1-cockpit.html">① 公司总览</a><span class="arrow">→</span>
+            <a href="dupont-site.html">② 经营成效 · ROE</a><span class="arrow">→</span>
+            <a href="revenue.html#wafer">③ 业务结果 · 晶圆</a><span class="arrow">→</span>
+            <a href="dupont-tree.html">④ 专题分析 · 杜邦树</a><span class="arrow">→</span>
+            <a href="dupont-table.html">⑤ 下钻穿透 · 填报</a>
+            <span class="note">共 20 张原型 · 总览 → 成效 → 结果 → 专题 → 穿透</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-note">中芯国际 × 帆软 FVS · 原型总览墙 · 总体入口</div>
+    </main>
+  </div>
+
+  <script src="assets/js/levels.js"></script>
+  <script src="assets/js/common.js"></script>
+  <script>
+    boot(function () { Cockpit.initNav('overview', { sidebarPage: 'wall' }); });
+  </script>
+</body>
+</html>

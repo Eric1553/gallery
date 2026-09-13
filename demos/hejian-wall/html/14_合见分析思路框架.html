@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>合见运营 · 分析思路框架</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { background:#eef3f9; }
+  body { font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif; color:#23314c; -webkit-font-smoothing:antialiased; }
+  .stage { width:1600px; height:860px; position:relative; background:linear-gradient(165deg,#ffffff 0%,#f4f8fd 55%,#e8f0fa 100%); padding:0; overflow:hidden; }
+  .stage::before { content:""; position:absolute; inset:0; background:radial-gradient(ellipse 900px 420px at 78% 38%, rgba(63,127,196,.06), transparent 70%); pointer-events:none; }
+
+  .lcol { position:absolute; left:24px; top:22px; width:368px; }
+  .box { border-radius:10px; overflow:hidden; box-shadow:0 4px 12px rgba(40,70,120,.09); margin-bottom:10px; border:1px solid rgba(180,200,225,.45); }
+  .box .h { color:#fff; font-size:15px; font-weight:800; letter-spacing:.8px; padding:8px 14px; }
+  .box .h.pain { background:linear-gradient(135deg,#3f7fc4,#5fa0db); }
+  .box .h.goal { background:linear-gradient(135deg,#2e8b57,#49a877); }
+  .box .h.act  { background:linear-gradient(135deg,#4a6fb0,#6a8fd0); }
+  .box .c { background:#fff; padding:10px 14px; }
+  .box .c ul { list-style:none; }
+  .box .c li { font-size:12.2px; color:#46505f; line-height:1.48; padding-left:14px; position:relative; margin-bottom:6px; }
+  .box .c li:last-child { margin-bottom:0; }
+  .box .c li::before { content:"•"; position:absolute; left:0; color:#3f7fc4; font-weight:800; }
+  .box .c li b { color:#d4302b; }
+  .goalwrap .hi { background:#eaf6ef; border:1px solid #bfe3cd; color:#1c6b40; font-size:13px; font-weight:800; text-align:center; padding:6px; border-radius:7px; margin-bottom:8px; }
+  .goalwrap .g4 { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+  .goalwrap .g4 div { background:#f3f8fc; border:1px solid #d7e4f1; border-radius:6px; text-align:center; font-size:12px; font-weight:700; color:#2a5ea0; padding:6px 3px; }
+
+  .center { position:absolute; left:412px; top:22px; width:1164px; }
+  .sihd { background:linear-gradient(135deg,#1c3a6b,#2f5e9c); color:#fff; font-size:16px; font-weight:800; letter-spacing:1.5px; padding:8px 16px; border-radius:9px; display:flex; align-items:center; gap:10px; box-shadow:0 4px 14px rgba(28,58,107,.22); }
+  .sihd .en { font-size:11.5px; opacity:.82; font-weight:600; letter-spacing:.5px; }
+
+  .tree { position:absolute; left:412px; top:72px; width:300px; background:rgba(255,255,255,.72); border:1px solid #dce6f2; border-radius:10px; padding:8px 10px 10px; box-shadow:0 3px 10px rgba(40,70,120,.06); }
+  .root { display:flex; align-items:center; margin:8px 0 4px; }
+  .root .rt { font-size:13px; font-weight:800; color:#fff; padding:6px 12px; border-radius:7px; }
+  .root .rt.ltc { background:linear-gradient(135deg,#4a8fd0,#6aa9e0); }
+  .root .rt.loan { background:linear-gradient(135deg,#e8855a,#f0a472); }
+  .leaf { display:flex; align-items:center; gap:6px; margin:5px 0 5px 22px; position:relative; }
+  .leaf::before { content:""; position:absolute; left:-14px; top:50%; width:12px; height:1.5px; background:#c6d2e2; }
+  .leaf span { font-size:12px; font-weight:600; color:#3a4660; background:#fff; border:1px solid #dbe5f1; border-radius:5px; padding:4px 9px; box-shadow:0 1px 4px rgba(40,70,120,.05); }
+  .leaf span.done { border-color:#6cb38c; color:#1c6b40; background:#f1faf4; }
+  .leaf span.done::before { content:"✓ "; }
+
+  .thumb { position:absolute; border:1px solid #c8d6e8; border-radius:9px; overflow:hidden; box-shadow:0 6px 18px rgba(30,55,110,.14); background:#fff; }
+  .thumb img { width:100%; display:block; }
+  .cap { position:absolute; font-size:11px; font-weight:700; color:#3a4660; background:rgba(255,255,255,.92); border:1px solid #dce6f2; border-radius:5px; padding:3px 8px; white-space:nowrap; }
+  .stage .num { position:absolute; width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#e2574c,#d4302b); color:#fff; font-size:15px; font-weight:800; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 8px rgba(226,87,76,.38); z-index:6; border:2px solid #fff; }
+  .rlab { position:absolute; color:#d4302b; font-size:12px; font-weight:800; font-style:italic; z-index:6; line-height:1.35; }
+
+  .bbox { position:absolute; top:648px; border:1px solid #d9e3f0; border-radius:10px; background:#fff; box-shadow:0 3px 10px rgba(40,70,120,.07); padding:10px 14px; }
+  .bbox .bh { font-size:13.5px; font-weight:800; color:#1c2c4a; margin-bottom:7px; display:flex; align-items:center; gap:7px; }
+  .bbox .bh::before { content:""; width:4px; height:14px; background:#3f7fc4; border-radius:2px; }
+  .bbox.alt .bh::before { background:#e8855a; }
+  .bbox .cols { display:grid; grid-template-columns:1fr 1fr; gap:4px 14px; }
+  .bbox .cols div { font-size:12px; color:#46505f; line-height:1.45; padding-left:13px; position:relative; }
+  .bbox .cols div::before { content:"▪"; position:absolute; left:0; color:#5fa0db; }
+  .bbox.alt .cols div::before { color:#e8855a; }
+
+  svg.an { position:absolute; left:0; top:0; width:1600px; height:860px; pointer-events:none; z-index:5; }
+</style>
+  <link rel="stylesheet" href="nav.css">
+</head>
+<body data-page="14">
+<div class="proto-app">
+  <aside id="proto-nav" class="proto-nav"></aside>
+  <div class="proto-main">
+<div class="stage">
+
+  <div class="lcol">
+    <div class="box">
+      <div class="h pain">管理痛点</div>
+      <div class="c"><ul>
+        <li>借测占用与可售库存<b>未实时勾稽</b>，"账面有货却发不出"；</li>
+        <li>缺货 / 满足率<b>能看结果、难归因</b>到计划 / 生产 / 质量 / 借测占用；</li>
+        <li>多主体（沪/深/京）与维度映射靠填报外挂，<b>口径滞后致看板失真</b>；</li>
+        <li>在借超期、借转销停滞、呆滞缺乏<b>预警与闭环</b>。</li>
+      </ul></div>
+    </div>
+    <div class="box goalwrap">
+      <div class="h goal">管理目标</div>
+      <div class="c">
+        <div class="hi">提升运营履约与借测转销的掌控能力</div>
+        <div class="g4"><div>借测可追踪</div><div>缺货可归因</div><div>库存可勾稽</div><div>交付可预期</div></div>
+      </div>
+    </div>
+    <div class="box">
+      <div class="h act">保障措施</div>
+      <div class="c"><ul>
+        <li>构建 L1–L5 运营看板 + <b>序列号级穿透</b>（工作台→清单→卡片）；</li>
+        <li>统一口径与区域 / 客户 / 产品<b>映射规则</b>，治理主数据；</li>
+        <li>打通「卖→借→转/还→收」<b>借测闭环全链路</b>；</li>
+        <li>指标体系 + 数据底座保障，建立<b>异常预警闭环</b>；</li>
+        <li>延续金蝶 + FDL + FR/FVS，<b>一期成果上加盖、不重建</b>。</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="center"><div class="sihd">分析思路 <span class="en">Analysis Logic · 借测转销主线 × L1–L5 穿透</span></div></div>
+
+  <div class="tree">
+    <div class="root"><div class="rt ltc">LTC 线索到回款</div></div>
+    <div class="leaf"><span class="done">销售发货分析</span></div>
+    <div class="leaf"><span class="done">DF 收入 / 收入成本</span></div>
+    <div class="leaf"><span>借转销转化专题</span></div>
+    <div class="root"><div class="rt loan">OTD / 借测特色主线</div></div>
+    <div class="leaf"><span class="done">库存健康 / 库龄</span></div>
+    <div class="leaf"><span class="done">借测出库 · 在借追踪</span></div>
+    <div class="leaf"><span>满足率 / 缺货归因</span></div>
+    <div class="leaf"><span>借转销 / 归还闭环</span></div>
+  </div>
+
+  <div class="thumb" style="left:728px; top:68px; width:548px; height:310px;"><img src="previews/03_合见运营驾驶舱_原型.webp" loading="lazy" decoding="async" style="margin-top:-2px;"></div>
+  <div class="num" style="left:714px; top:74px;">①</div>
+  <div class="cap" style="left:732px; top:382px;">① 运营管理工作台 · L1/L2 总览 + 异常预警</div>
+
+  <div class="thumb" style="left:728px; top:418px; width:360px; height:210px;"><img src="previews/12_合见运营_穿透清单_原型.webp" loading="lazy" decoding="async" style="margin-top:-1px;"></div>
+  <div class="num" style="left:714px; top:424px;">②</div>
+  <div class="cap" style="left:728px; top:632px;">② 借测 / 发货全量明细清单 · L5</div>
+
+  <div class="thumb" style="left:1104px; top:418px; width:330px; height:210px;"><img src="previews/13_合见运营_订单卡片_原型.webp" loading="lazy" decoding="async" style="margin-top:-1px;"></div>
+  <div class="num" style="left:1090px; top:424px;">③</div>
+  <div class="cap" style="left:1104px; top:632px;">③ 单笔订单 / 序列号 360° 卡片</div>
+
+  <div class="rlab" style="left:548px; top:398px;">穿透此类的<br>全量清单 →</div>
+  <div class="rlab" style="left:1094px; top:568px;">穿透<br>单笔卡片 →</div>
+
+  <div class="bbox" style="left:412px; top:648px; width:520px; height:188px;">
+    <div class="bh">运营总览信息</div>
+    <div class="cols">
+      <div>订单 / 借测总量</div><div>发货完成率 / 满足率</div>
+      <div>缺货率 / 借转销转化率</div><div>库存周转 / 呆滞率</div>
+      <div>在借在途 / 超期在借</div><div>库龄分段分布</div>
+      <div>各行业 / 区域对比</div><div>异常预警数（分级）</div>
+    </div>
+  </div>
+  <div class="bbox alt" style="left:948px; top:648px; width:628px; height:188px;">
+    <div class="bh">单笔订单 / 序列号属性</div>
+    <div class="cols">
+      <div>订单类型（购买/借用/借转销/归还）</div><div>客户 / 行业 / 区域</div>
+      <div>产品 / 平台 / 序列号</div><div>在借天数 / 库龄</div>
+      <div>履约状态 / 质量 Hold</div><div>借转销概率 / 收入成本</div>
+      <div>全链路时间轴</div><div>关联单据（金蝶/泛微/填报）</div>
+    </div>
+  </div>
+
+  <svg class="an" viewBox="0 0 1600 860">
+    <defs><marker id="rr" markerWidth="11" markerHeight="11" refX="8" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" fill="#d4302b"/></marker></defs>
+    <path d="M908,378 C840,400 790,420 788,468" stroke="#d4302b" stroke-width="2" fill="none" stroke-dasharray="6 4" marker-end="url(#rr)"/>
+    <path d="M1088,528 C1100,560 1104,568 1104,568" stroke="#d4302b" stroke-width="2" fill="none" stroke-dasharray="6 4" marker-end="url(#rr)"/>
+  </svg>
+
+</div>
+  </div>
+</div>
+<script src="nav.js"></script>
+</body>
+</html>

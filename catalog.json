@@ -1,0 +1,785 @@
+{
+  "meta": {
+    "title": "DEMO案例库",
+    "subtitle": "Vibe coding 成果的展示、检索与客户演示入口",
+    "version": "1.4.1",
+    "updated_at": "2026-08-13",
+    "host_hint": "http://120.55.184.234",
+    "cover_policy": "webp_thumb_800 + cover_1600",
+    "cover_size": "3200x2000",
+    "traffic": "cards use thumb.webp; long-cache on static assets",
+    "audience_note": "客户 DEMO=具名客户交付；内部含「内部」与帆软横向产品",
+    "tag_policy": {
+      "count": 4,
+      "order": [
+        "行业",
+        "业务域",
+        "核心内容",
+        "补充关键词"
+      ],
+      "industry": [
+        "半导体",
+        "半导体软件",
+        "新能源",
+        "医疗器械",
+        "矿业",
+        "财务",
+        "平台",
+        "知识检索",
+        "销售运营",
+        "方法论",
+        "智能制造"
+      ],
+      "business": [
+        "经营决策",
+        "财务分析",
+        "销售管理",
+        "研发运营",
+        "组织人效",
+        "产品研发",
+        "供应链",
+        "客户PoC",
+        "智能问数",
+        "知识弹药",
+        "知识检索",
+        "售前方法",
+        "数据治理",
+        "低代码"
+      ],
+      "format": "2–8字；优先中文名词；英文仅用通行缩写（CEO/IPD/OTD/LTC/FICO/PoC/BI/FineBI/MOSS/FBN/AI/Agentic/Knowhow/Runbook/Site）",
+      "notes": "卡片只展示这 4 个标签，不再额外拼接 industry 字段"
+    },
+    "sort_policy": {
+      "default": "time-asc",
+      "field": "added_at",
+      "fallback": "catalog_index",
+      "note": "主列表按添加时间排序；精选区保持 catalog 原序，不受排序控件影响"
+    }
+  },
+  "halls": [
+    {
+      "id": "ceo",
+      "name": "一把手看板",
+      "blurb": "CEO / 经营闭环 / 财经驾驶舱"
+    },
+    {
+      "id": "ops",
+      "name": "运营与销售",
+      "blurb": "研发运营、销售 BI、人效与 IPD"
+    },
+    {
+      "id": "poc",
+      "name": "行业 POC",
+      "blurb": "医疗、矿业等客户验证现场"
+    },
+    {
+      "id": "platform",
+      "name": "平台能力",
+      "blurb": "Agentic、弹药库、知识检索"
+    },
+    {
+      "id": "misc",
+      "name": "方法与素材",
+      "blurb": "脑图、内部看板与知识站"
+    }
+  ],
+  "demos": [
+    {
+      "id": "jingxin-helmsman",
+      "title": "旌芯 · 掌舵者OS 作战支持（桌面）",
+      "client": "旌芯半导体",
+      "industry": "半导体",
+      "hall": "ceo",
+      "type": "客户交付 H5",
+      "summary": "一把手经营速递：北极星指标、收入结构、情报/异动、参谋部与任务盯办，分身小芯在线协同。桌面完整版。",
+      "tags": [
+        "半导体",
+        "经营决策",
+        "一把手看板",
+        "掌舵者OS"
+      ],
+      "entry": "index.html",
+      "source": "external:218.78.8.206:7981",
+      "live_url": "http://218.78.8.206:7981/",
+      "featured": true,
+      "audience": "client",
+      "family": "jingxin-helmsman",
+      "version_label": "桌面版",
+      "form_factor": "desktop",
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "added_at": "2026-08-13"
+    },
+    {
+      "id": "jingxin-helmsman-mobile",
+      "title": "旌芯 · 掌舵者OS 作战支持（手机）",
+      "client": "旌芯半导体",
+      "industry": "半导体",
+      "hall": "ceo",
+      "type": "客户交付 H5",
+      "summary": "手机版晨报：北极星、异动归因、任务盯办与问数，分身小芯。参谋部与管理面板请用桌面版。",
+      "tags": [
+        "半导体",
+        "经营决策",
+        "一把手看板",
+        "手机晨报"
+      ],
+      "entry": "index.html",
+      "source": "external:218.78.8.206:7981/mobile",
+      "live_url": "http://218.78.8.206:7981/mobile/",
+      "featured": true,
+      "audience": "client",
+      "family": "jingxin-helmsman",
+      "version_label": "手机版",
+      "form_factor": "mobile",
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "added_at": "2026-08-13"
+    },
+    {
+      "id": "taihu-supply-dark",
+      "title": "钛虎 · 供应链看板（深蓝）",
+      "client": "钛虎机器人",
+      "industry": "智能制造",
+      "hall": "ceo",
+      "type": "客户交付 H5",
+      "summary": "供应链驾驶舱视觉原型：总览 KPI、审批时效、采购执行、来料质量、仓储、项目交期与内部交易，深蓝海军风。",
+      "tags": [
+        "智能制造",
+        "供应链",
+        "一把手看板",
+        "深蓝风"
+      ],
+      "entry": "index.html",
+      "source": "T-钛虎机器人/taihu-supply-board",
+      "featured": true,
+      "audience": "client",
+      "version_label": "最新",
+      "form_factor": "desktop",
+      "cover": "cover-v2.webp",
+      "thumb": "thumb-v2.webp",
+      "added_at": "2026-08-06"
+    },
+    {
+      "id": "taihu-supply-light",
+      "title": "钛虎 · 供应链看板（浅蓝）",
+      "client": "钛虎机器人",
+      "industry": "智能制造",
+      "hall": "ceo",
+      "type": "客户交付 H5",
+      "summary": "供应链驾驶舱视觉原型：总览 KPI、审批时效、采购执行、来料质量、仓储、项目交期与内部交易，浅蓝冷白风。",
+      "tags": [
+        "智能制造",
+        "供应链",
+        "一把手看板",
+        "浅蓝风"
+      ],
+      "entry": "index.html",
+      "source": "T-钛虎机器人/taihu-supply-board",
+      "featured": true,
+      "audience": "client",
+      "version_label": "最新",
+      "form_factor": "desktop",
+      "cover": "cover-v2.webp",
+      "thumb": "thumb-v2.webp",
+      "added_at": "2026-08-04"
+    },
+    {
+      "id": "biren-ceo",
+      "title": "壁仞 · CEO 决策看板",
+      "client": "壁仞科技",
+      "industry": "半导体",
+      "hall": "ceo",
+      "type": "客户交付 H5",
+      "summary": "早中晚情报节奏 + MOSS 实时刷新的一把手决策看板，可直接对外演示。",
+      "tags": [
+        "半导体",
+        "经营决策",
+        "一把手看板",
+        "MOSS"
+      ],
+      "entry": "index.html",
+      "source": "B-壁仞科技/壁仞科技CEO看板/ceo-dashboard-客户演示包",
+      "featured": true,
+      "live_port": 8765,
+      "version_label": "最新",
+      "form_factor": "mobile",
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "added_at": "2026-03-22"
+    },
+    {
+      "id": "biren-ops-loop",
+      "title": "壁仞 · 经营闭环",
+      "client": "壁仞科技",
+      "industry": "半导体",
+      "hall": "ops",
+      "type": "客户交付 H5",
+      "summary": "从经营异常到动作闭环的第二形态看板，适合讲「看见问题 → 推动动作」。",
+      "tags": [
+        "半导体",
+        "经营决策",
+        "经营闭环",
+        "异常动作"
+      ],
+      "entry": "index.html",
+      "source": "B-壁仞科技/壁仞科技CEO看板/ceo-ops-loop-h5",
+      "featured": true,
+      "live_port": 8770,
+      "version_label": "最新",
+      "form_factor": "mobile",
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "added_at": "2026-03-28"
+    },
+    {
+      "id": "biren-finance",
+      "title": "壁仞 · 财务数字化一期原型",
+      "client": "壁仞科技",
+      "industry": "半导体",
+      "hall": "ceo",
+      "type": "售前/交付原型",
+      "summary": "浅色高质感财务分析原型：CEO看板、预算预实、订单/销售/应收/个人KPI、存货与研财，以及填报与明细报表。",
+      "tags": [
+        "半导体",
+        "财务分析",
+        "预算预实",
+        "研财协同"
+      ],
+      "entry": "index.html",
+      "source": "B-壁仞科技/财务项目/finance-dashboard-prototype",
+      "featured": true,
+      "version_label": "最新",
+      "baseline_id": "biren-finance__baseline",
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "added_at": "2026-04-02"
+    },
+    {
+      "id": "biren-finance__baseline",
+      "title": "壁仞 · 财务数字化一期原型（批注基线）",
+      "client": "壁仞科技",
+      "industry": "半导体",
+      "hall": "ceo",
+      "type": "售前/交付原型",
+      "summary": "客户首轮批注时冻结的对照基线，只读不覆盖。现行请看 biren-finance。",
+      "tags": [
+        "半导体",
+        "财务分析",
+        "批注基线"
+      ],
+      "entry": "index.html",
+      "source": "B-壁仞科技/财务项目/finance-dashboard-prototype__baseline",
+      "featured": false,
+      "version_label": "批注基线",
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "added_at": "2026-03-30"
+    },
+    {
+      "id": "smic-finance",
+      "title": "中芯 · 财经驾驶舱",
+      "client": "中芯国际",
+      "industry": "半导体",
+      "hall": "ceo",
+      "type": "售前原型",
+      "summary": "杜邦拆解、收入与成本等多页财经驾驶舱，面向一把手与 CFO 叙事。",
+      "tags": [
+        "半导体",
+        "财务分析",
+        "杜邦分析",
+        "驾驶舱"
+      ],
+      "entry": "index.html",
+      "source": "Z-中芯国际/财经驾驶舱原型",
+      "featured": true,
+      "version_label": "最新",
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "added_at": "2026-04-15"
+    },
+    {
+      "id": "sigenergy-ceo",
+      "title": "思格 · 一把手看板",
+      "client": "思格新能源",
+      "industry": "新能源",
+      "hall": "ceo",
+      "type": "FineBI 原型",
+      "summary": "一把手视角 mockup，含下钻页与口播结构，适合新能源场景售前。",
+      "tags": [
+        "新能源",
+        "经营决策",
+        "一把手看板",
+        "FineBI"
+      ],
+      "entry": "index.html",
+      "source": "S-思格新能源/sigenergy-ceo-finebi-prototype/mockup",
+      "featured": false,
+      "version_label": "最新",
+      "form_factor": "mobile",
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "added_at": "2026-05-20"
+    },
+    {
+      "id": "acme-rd",
+      "title": "盛美 · 研发运营看板",
+      "client": "盛美半导体",
+      "industry": "半导体",
+      "hall": "ops",
+      "type": "售前原型",
+      "summary": "v4.4：公司级 Fanout 申请/选机/现场反馈/角色汇总；Layer RLS 独立页签；时间按年季月筛选。",
+      "tags": [
+        "半导体",
+        "研发运营",
+        "Site看板",
+        "湿法工艺"
+      ],
+      "entry": "index.html",
+      "source": "S-盛美半导体/dashboard-prototype",
+      "featured": true,
+      "version_label": "v4.4",
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "added_at": "2026-04-22"
+    },
+    {
+      "id": "hejian-wall",
+      "title": "合见 · 咨询原型墙",
+      "client": "合见工软",
+      "industry": "半导体软件",
+      "hall": "ops",
+      "type": "原型墙",
+      "summary": "L1–L5 运营原型总览墙；轻量预览图加速跳转。",
+      "tags": [
+        "半导体软件",
+        "供应链",
+        "库存OTD",
+        "LTC"
+      ],
+      "entry": "html/01_合见原型总览墙.html",
+      "source": "H-合见工软/咨询方案/原型/html",
+      "featured": true,
+      "version_label": "最新",
+      "cover": "cover-v2.webp",
+      "thumb": "thumb-v2.webp",
+      "added_at": "2026-05-06"
+    },
+    {
+      "id": "weijie-sales",
+      "title": "唯捷 · 销售 BI 原型",
+      "client": "唯捷创芯",
+      "industry": "半导体",
+      "hall": "ops",
+      "type": "售前原型",
+      "summary": "多页销售管理驾驶舱，覆盖业绩、漏斗与过程管理。",
+      "tags": [
+        "半导体",
+        "销售管理",
+        "销售BI",
+        "漏斗转化"
+      ],
+      "entry": "index.html",
+      "source": "W-唯捷创芯/WJ-Sales-BI-Prototype",
+      "featured": false,
+      "family": "weijie-sales",
+      "version_label": "完整多页版",
+      "is_latest": true,
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "added_at": "2026-06-03"
+    },
+    {
+      "id": "weijie-sales-lite",
+      "title": "唯捷 · 销售驾驶舱单页",
+      "client": "唯捷创芯",
+      "industry": "半导体",
+      "hall": "ops",
+      "type": "单页 Demo",
+      "summary": "轻量单页销售驾驶舱，适合快速打开讲故事。",
+      "tags": [
+        "半导体",
+        "销售管理",
+        "销售驾驶舱",
+        "单页"
+      ],
+      "entry": "销售管理驾驶舱demo.html",
+      "source": "W-唯捷创芯",
+      "source_files": [
+        "销售管理驾驶舱demo.html"
+      ],
+      "featured": false,
+      "family": "weijie-sales",
+      "version_label": "单页轻量版",
+      "is_latest": false,
+      "archived": true,
+      "added_at": "2026-06-05"
+    },
+    {
+      "id": "yinguang-efficiency",
+      "title": "隐冠 · 人效看板",
+      "client": "隐冠半导体",
+      "industry": "半导体",
+      "hall": "ops",
+      "type": "行业 DEMO",
+      "summary": "人效主题优化版看板，面向半导体组织效能讨论。",
+      "tags": [
+        "半导体",
+        "组织人效",
+        "人效分析",
+        "编制结构"
+      ],
+      "entry": "隐冠人效看板-优化版.html",
+      "source": "Y-隐冠半导体",
+      "source_files": [
+        "隐冠人效看板-优化版.html"
+      ],
+      "featured": false,
+      "version_label": "最新",
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "added_at": "2026-06-18"
+    },
+    {
+      "id": "yinguang-hours",
+      "title": "隐冠 · 工时与成本",
+      "client": "隐冠半导体",
+      "industry": "半导体",
+      "hall": "ops",
+      "type": "行业 DEMO",
+      "summary": "工时与成本分析 DEMO，连接项目投入与费用视角。",
+      "tags": [
+        "半导体",
+        "组织人效",
+        "工时成本",
+        "项目投入"
+      ],
+      "entry": "隐冠工时与成本分析DEMO.html",
+      "source": "Y-隐冠半导体",
+      "source_files": [
+        "隐冠工时与成本分析DEMO.html"
+      ],
+      "featured": false,
+      "version_label": "最新",
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "added_at": "2026-06-20"
+    },
+    {
+      "id": "yinguang-ipd",
+      "title": "隐冠 · IPD 流程蓝图",
+      "client": "隐冠半导体",
+      "industry": "半导体",
+      "hall": "ops",
+      "type": "方案看板",
+      "summary": "IPD 数字化流程蓝图与售前讲稿页，适合产品研发体系讨论。",
+      "tags": [
+        "半导体",
+        "产品研发",
+        "IPD",
+        "流程蓝图"
+      ],
+      "entry": "隐冠IPD流程蓝图看板.html",
+      "source": "Y-隐冠半导体",
+      "source_files": [
+        "隐冠IPD流程蓝图看板.html",
+        "半导体IPD数字化方案-帆软售前讲稿.html"
+      ],
+      "featured": false,
+      "version_label": "最新",
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "added_at": "2026-06-22"
+    },
+    {
+      "id": "jiangyuan-rd-pm",
+      "title": "江原科技 · 研发项目管理（简道云原型）",
+      "client": "江原科技",
+      "industry": "半导体",
+      "hall": "ops",
+      "type": "交互原型",
+      "summary": "简道云式工作台壳，覆盖立项、计划、任务验收、Signoff、Exit、结项/中止，以及工时、费用与待办闭环。",
+      "tags": [
+        "半导体",
+        "研发运营",
+        "项目管理",
+        "简道云"
+      ],
+      "entry": "index.html",
+      "source": "J-江原科技/研发管理/jiangyuan-rd-pm-prototype",
+      "featured": true,
+      "audience": "client",
+      "version_label": "v5",
+      "form_factor": "desktop",
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "version": 5,
+      "added_at": "2026-07-28"
+    },
+    {
+      "id": "uih-poc",
+      "title": "联影 · PoC 工作台",
+      "client": "联影医疗",
+      "industry": "医疗器械",
+      "hall": "poc",
+      "type": "客户 POC",
+      "summary": "PoC 前端入口、演示工作台与 Runbook，覆盖知识检索与数据查看路径。",
+      "tags": [
+        "医疗器械",
+        "客户PoC",
+        "知识检索",
+        "Runbook"
+      ],
+      "entry": "00-PoC前端入口.html",
+      "source": "L-联影医疗器械/POC与技术参数/deploy/web",
+      "featured": true,
+      "version_label": "最新",
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "added_at": "2026-07-02"
+    },
+    {
+      "id": "luomu-extractor",
+      "title": "洛钼 · 标杆报告提取台",
+      "client": "洛阳钼业",
+      "industry": "矿业",
+      "hall": "poc",
+      "type": "POC 工具",
+      "summary": "同行年报/季报抽取前端（静态页可浏览；完整抽取需后端）。",
+      "tags": [
+        "矿业",
+        "客户PoC",
+        "年报抽取",
+        "FBN"
+      ],
+      "entry": "index.html",
+      "source": "L-洛阳钼业/洛钼FBN-POC/peer-report-extractor/static",
+      "featured": false,
+      "version_label": "最新",
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "added_at": "2026-07-10"
+    },
+    {
+      "id": "fde-carousel",
+      "title": "FDE · Agentic 演示轮播",
+      "client": "帆软 / 横向",
+      "industry": "平台",
+      "hall": "platform",
+      "type": "产品演示",
+      "summary": "Agentic 问数与场景轮播（不含超大视频素材，保留页面与轻量资源）。",
+      "tags": [
+        "平台",
+        "智能问数",
+        "Agentic",
+        "场景轮播"
+      ],
+      "entry": "index.html",
+      "source": "专项方案/FDE",
+      "featured": false,
+      "family": "fde-platform",
+      "version_label": "Agentic 轮播",
+      "is_latest": true,
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "audience": "internal",
+      "added_at": "2026-04-08"
+    },
+    {
+      "id": "jiandaoyun-carousel",
+      "title": "简道云 · AI 动图轮播",
+      "client": "帆软 / 横向",
+      "industry": "平台",
+      "hall": "platform",
+      "type": "产品演示",
+      "summary": "简道云 AI 能力动图轮播页，适合平台能力秀。",
+      "tags": [
+        "平台",
+        "低代码",
+        "简道云",
+        "AI轮播"
+      ],
+      "entry": "index.html",
+      "source": "专项方案/FDE/简道云",
+      "featured": false,
+      "family": "fde-platform",
+      "version_label": "简道云 AI 轮播",
+      "is_latest": false,
+      "archived": true,
+      "audience": "internal",
+      "added_at": "2026-04-10"
+    },
+    {
+      "id": "ammo-finance",
+      "title": "造弹药 · 财务专项",
+      "client": "内部",
+      "industry": "财务",
+      "hall": "platform",
+      "type": "内部弹药",
+      "summary": "财务 FICO 知识弹药浏览页，支撑售前与交付快速取用。",
+      "tags": [
+        "财务",
+        "知识弹药",
+        "FICO",
+        "售前取用"
+      ],
+      "entry": "index.html",
+      "source": "造弹药专项/财务专项",
+      "featured": false,
+      "version_label": "最新",
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "added_at": "2026-01-15"
+    },
+    {
+      "id": "ammo-unified-v10",
+      "title": "造弹药 · 统一检索 v10",
+      "client": "内部",
+      "industry": "知识检索",
+      "hall": "platform",
+      "type": "内部产品",
+      "summary": "统一检索迭代最新版页面，展示检索交互演进。",
+      "tags": [
+        "知识检索",
+        "知识弹药",
+        "统一检索",
+        "Knowhow"
+      ],
+      "entry": "v10.html",
+      "source": "造弹药专项/统一检索",
+      "featured": false,
+      "family": "ammo-search",
+      "version_label": "统一检索 v10",
+      "is_latest": true,
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "added_at": "2026-02-10"
+    },
+    {
+      "id": "ammo-search",
+      "title": "造弹药 · 通用检索工作台",
+      "client": "内部",
+      "industry": "知识检索",
+      "hall": "platform",
+      "type": "内部产品",
+      "summary": "统一检索工作台入口，聚合 Knowhow / 知识库检索体验。",
+      "tags": [
+        "知识检索",
+        "知识弹药",
+        "检索工作台",
+        "Knowhow"
+      ],
+      "entry": "通用检索工作台.html",
+      "source": "造弹药专项",
+      "source_files": [
+        "通用检索工作台.html",
+        "弹药检索工作台.html",
+        "Knowhow快速查询.html",
+        "造弹药专项-一页纸说明.html"
+      ],
+      "featured": false,
+      "family": "ammo-search",
+      "version_label": "通用检索工作台",
+      "is_latest": false,
+      "archived": true,
+      "added_at": "2026-02-20"
+    },
+    {
+      "id": "poc-mindmap",
+      "title": "POC 脑图",
+      "client": "内部",
+      "industry": "方法论",
+      "hall": "misc",
+      "type": "方法可视化",
+      "summary": "POC 方法论脑图，便于内部对齐与对外讲清验证路径。",
+      "tags": [
+        "方法论",
+        "售前方法",
+        "POC路径",
+        "脑图"
+      ],
+      "entry": "POC脑图.html",
+      "source": "POC脑图",
+      "source_files": [
+        "POC脑图.html"
+      ],
+      "featured": false,
+      "version_label": "最新",
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "added_at": "2025-11-12"
+    },
+    {
+      "id": "visit-board",
+      "title": "销售拜访记录分析看板",
+      "client": "内部",
+      "industry": "销售运营",
+      "hall": "misc",
+      "type": "内部看板",
+      "summary": "拜访记录分析看板，用于销售过程复盘。",
+      "tags": [
+        "销售运营",
+        "销售管理",
+        "拜访分析",
+        "过程复盘"
+      ],
+      "entry": "销售部拜访记录分析看板.html",
+      "source": ".",
+      "source_files": [
+        "销售部拜访记录分析看板.html"
+      ],
+      "featured": false,
+      "version_label": "最新",
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "added_at": "2025-12-03"
+    },
+    {
+      "id": "finance-qc-arch",
+      "title": "财经数据质检 AI · 一页版",
+      "client": "内部",
+      "industry": "财务",
+      "hall": "misc",
+      "type": "架构一页纸",
+      "summary": "财经数据质检 AI 平台架构一页版，方案沟通用。",
+      "tags": [
+        "财务",
+        "数据治理",
+        "质检AI",
+        "架构图"
+      ],
+      "entry": "财经数据质检AI平台架构-一页版.html",
+      "source": ".",
+      "source_files": [
+        "财经数据质检AI平台架构-一页版.html"
+      ],
+      "featured": false,
+      "version_label": "最新",
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "added_at": "2026-03-05"
+    },
+    {
+      "id": "kms-semi",
+      "title": "半导体知识库站点",
+      "client": "内部",
+      "industry": "半导体",
+      "hall": "misc",
+      "type": "知识站",
+      "summary": "半导体 Knowhow 静态知识站，可按细分赛道浏览。",
+      "tags": [
+        "半导体",
+        "知识检索",
+        "Knowhow",
+        "知识站"
+      ],
+      "entry": "知识库首页.html",
+      "source": "知识库/Knowhow-Wenhao/半导体知识库/build",
+      "featured": false,
+      "version_label": "最新",
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "added_at": "2026-03-18"
+    }
+  ]
+}

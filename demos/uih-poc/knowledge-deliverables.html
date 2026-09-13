@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>联影 PoC · 场景三知识产出交付</title>
+  <style>
+    :root {
+      --text:#1b2940; --muted:#63748b; --line:#d7e1ef; --navy:#173b69;
+      --blue:#1f55cc; --teal:#0d8a7a; --purple:#5a3fd4; --green:#0d9a6a;
+      --orange:#d4820a; --red:#e04560; --gray:#eef3f9;
+    }
+    *{box-sizing:border-box;margin:0}
+    body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#f0f4fa;color:var(--text);font-size:14px;min-height:100vh}
+    .header{background:linear-gradient(135deg,#0f2952,#1a4a85 50%,#5a3fd4);color:#fff;padding:14px 24px}
+    .header-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;max-width:1680px;margin:0 auto}
+    .header h1{font-size:20px;font-weight:700}
+    .header p{font-size:12px;opacity:.88;margin-top:4px;max-width:820px}
+    .header-links{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .header-link{font-size:11px;font-weight:600;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;text-decoration:none}
+    .header-link:hover{background:rgba(255,255,255,.25)}
+    .header-link.active{background:rgba(255,255,255,.28);border-color:rgba(255,255,255,.45)}
+    .conn{font-size:10px;padding:4px 10px;border-radius:999px;background:rgba(16,185,129,.25);border:1px solid rgba(110,231,183,.4)}
+    .conn.err{background:rgba(239,68,68,.2);border-color:rgba(252,165,165,.5)}
+    .wrap{max-width:1680px;margin:0 auto;padding:14px 18px 32px}
+    .overview{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+    @media(max-width:1100px){.overview{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:560px){.overview{grid-template-columns:1fr}}
+    .dcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+    .dcard:hover,.dcard.active{border-color:#93c5fd;box-shadow:0 4px 14px rgba(31,85,204,.08)}
+    .dcard .num{font-size:10px;font-weight:800;color:var(--purple)}
+    .dcard .title{font-size:13px;font-weight:700;color:var(--navy);margin-top:4px}
+    .dcard .sub{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.45}
+    .badge{display:inline-block;font-size:9px;font-weight:700;padding:2px 8px;border-radius:999px;margin-top:6px}
+    .b-done{background:#d1fae5;color:#065f46}
+    .b-part{background:#fef3c7;color:#92400e}
+    .b-todo{background:#fee2e2;color:#991b1b}
+    .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+    .tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font-size:12px;font-weight:700;color:var(--navy);cursor:pointer}
+    .tab.active{background:var(--purple);color:#fff;border-color:var(--purple)}
+    .panel{display:none;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(22,52,95,.06);overflow:hidden}
+    .panel.show{display:block}
+    .panel-head{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+    .panel-head h2{font-size:14px;font-weight:700;color:var(--navy)}
+    .panel-head .hint{font-size:11px;color:var(--muted)}
+    .panel-body{padding:14px 16px 18px}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media(max-width:960px){.grid2{grid-template-columns:1fr}}
+    .subpanel{border:1px solid var(--line);border-radius:10px;overflow:hidden}
+    .subhead{padding:8px 12px;background:var(--gray);font-size:12px;font-weight:700;color:var(--navy);border-bottom:1px solid var(--line)}
+    table{width:100%;border-collapse:collapse;font-size:11px}
+    th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+    th{background:#f8fafc;font-weight:700;color:var(--muted)}
+    tr.click{cursor:pointer}
+    tr.click:hover{background:#f0f5ff}
+    tr.click.active{background:#e8efff}
+    code{font-size:10px;background:var(--gray);padding:1px 5px;border-radius:4px;font-family:ui-monospace,Menlo,monospace}
+    .btn{border:none;border-radius:8px;padding:7px 12px;font-size:11px;font-weight:700;cursor:pointer;background:var(--blue);color:#fff}
+    .btn.secondary{background:#fff;border:1px solid var(--line);color:var(--navy)}
+    .btn.purple{background:var(--purple)}
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+    .toolbar select,.toolbar input{padding:6px 10px;border:1px solid var(--line);border-radius:8px;font-size:11px}
+    .result-box{margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fafcff;font-size:11px;line-height:1.55;max-height:220px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+    .conf-high{background:#d1fae5;color:#065f46}
+    .conf-mid{background:#fef3c7;color:#92400e}
+    .conf-low{background:#fee2e2;color:#991b1b}
+    .mini-graph{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+    .chip{font-size:10px;padding:4px 8px;border-radius:6px;border:1px solid var(--line);background:#fff}
+    .chip.eq{background:#eef2ff;border-color:#c7d2fe}
+    .chip.fault{background:#fffbeb;border-color:#fcd34d}
+    .chip.sol{background:#ecfdf5;border-color:#6ee7b7}
+    .chip.exp{background:#fdf4ff;border-color:#d8b4fe}
+    .link{color:var(--blue);text-decoration:none;font-weight:600}
+    .link:hover{text-decoration:underline}
+    .empty{color:var(--muted);font-size:11px;text-align:center;padding:20px}
+    .stat-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+    .stat{font-size:11px;padding:6px 10px;border-radius:8px;background:var(--gray);border:1px solid var(--line)}
+    .stat b{color:var(--navy)}
+  </style>
+  <script src="poc-paths.js"></script>
+  <script src="poc-catalog.js"></script>
+</head>
+<body>
+<header class="header">
+  <div class="header-top">
+    <div>
+      <h1>联影 PoC · 场景三知识产出交付视图</h1>
+      <p>四类交付物（本体 / 故障图谱 / SOP 库 / 经验库）与现有 Doris 入库、故障图谱、MCP RAG、Dora Agent 能力对齐 · 数据来自 live API + 配置 JSON</p>
+    </div>
+    <div class="header-links">
+      <span class="conn" id="connBadge">连接中…</span>
+      <a class="header-link" id="linkHub" href="scene-front.html">入口 hub</a>
+      <a class="header-link" id="linkWorkbench" href="index.html">工作台</a>
+      <a class="header-link" id="linkGraph" href="knowledge-graph.html">故障图谱</a>
+      <a class="header-link" id="linkDoris" href="doris-data.html">Doris 数据</a>
+      <a class="header-link active" href="knowledge-deliverables.html">知识产出</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="overview" id="overviewCards"></div>
+
+  <div class="tabs" id="tabBar">
+    <button class="tab active" data-tab="ontology">① 本体与关系矩阵</button>
+    <button class="tab" data-tab="fault_graph">② 故障诊断知识图谱</button>
+    <button class="tab" data-tab="sop_kb">③ 维修 SOP 知识库</button>
+    <button class="tab" data-tab="experience_kb">④ 经验知识库</button>
+  </div>
+
+  <!-- ① 本体 -->
+  <section class="panel show" id="panel-ontology">
+    <div class="panel-head">
+      <h2>① 本体建模 · 设备 / 故障 / 方案 / 经验</h2>
+      <span class="hint">映射 <code>service-fault-graph.json</code> node type → Doris doc_type</span>
+    </div>
+    <div class="panel-body">
+      <div class="grid2">
+        <div class="subpanel">
+          <div class="subhead">四类本体实体</div>
+          <table id="ontologyEntities"><tbody></tbody></table>
+        </div>
+        <div class="subpanel">
+          <div class="subhead">关系矩阵（PoC 版）</div>
+          <table id="ontologyRelations"><tbody></tbody></table>
+        </div>
+      </div>
+      <p style="font-size:11px;color:var(--muted);margin-top:12px">
+        说明：正式本体 OWL/矩阵文档为二期项；本页从图谱 JSON 反推，与 Dora <code>service_fault_graph_lookup</code> 节点类型一致。
+      </p>
+    </div>
+  </section>
+
+  <!-- ② 图谱 -->
+  <section class="panel" id="panel-fault_graph">
+    <div class="panel-head">
+      <h2>② 故障诊断知识图谱 · 节点 / 边 / 权重</h2>
+      <a class="btn purple" id="btnOpenGraph" href="knowledge-graph.html">打开完整可视化图谱 →</a>
+    </div>
+    <div class="panel-body">
+      <div class="stat-row" id="graphStats"></div>
+      <div class="toolbar">
+        <label style="font-size:11px;font-weight:700">故障码 lookup（MCP 同款 API）</label>
+        <select id="lookupCode"><option value="E1001">E1001</option><option value="E1002">E1002</option></select>
+        <button class="btn" id="btnLookup">查询路由</button>
+        <button class="btn secondary" id="btnMcpHint">MCP 调用示例</button>
+      </div>
+      <div class="grid2">
+        <div class="subpanel">
+          <div class="subhead">节点清单</div>
+          <div style="max-height:320px;overflow:auto"><table id="graphNodes"><tbody></tbody></table></div>
+        </div>
+        <div class="subpanel">
+          <div class="subhead">边与权重（priority / share_pct）</div>
+          <div style="max-height:320px;overflow:auto"><table id="graphEdges"><tbody></tbody></table></div>
+        </div>
+      </div>
+      <div class="result-box" id="lookupResult" style="display:none"></div>
+    </div>
+  </section>
+
+  <!-- ③ SOP -->
+  <section class="panel" id="panel-sop_kb">
+    <div class="panel-head">
+      <h2>③ 维修 SOP 知识库 · 机型 × 故障码索引</h2>
+      <span class="hint">Doris <code>doc_type=SOP|manual</code> + RAG · 联动入库状态</span>
+    </div>
+    <div class="panel-body">
+      <table id="sopTable"><thead><tr>
+        <th>机型</th><th>故障码</th><th>document_id</th><th>Doris 状态</th><th>chunks</th><th>操作</th>
+      </tr></thead><tbody></tbody></table>
+      <div class="result-box" id="sopRetrieveResult" style="display:none;margin-top:12px"></div>
+    </div>
+  </section>
+
+  <!-- ④ 经验 -->
+  <section class="panel" id="panel-experience_kb">
+    <div class="panel-head">
+      <h2>④ 经验知识库 · 置信度标签</h2>
+      <span class="hint">经验文档 RAG + 案例统计置信度 · 与图谱 share_pct 对齐</span>
+    </div>
+    <div class="panel-body">
+      <table id="expTable"><thead><tr>
+        <th>document_id</th><th>标题</th><th>故障码</th><th>置信度</th><th>来源</th><th>操作</th>
+      </tr></thead><tbody></tbody></table>
+      <div class="result-box" id="expRetrieveResult" style="display:none;margin-top:12px"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function () {
+  const $ = (s, r) => (r || document).querySelector(s);
+  const esc = (s) => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  let meta = null;
+  let faultGraph = null;
+  let registryMap = {};
+  let catalogFlat = [];
+
+  function base() { return POC_PATHS.getWorkerBase(); }
+
+  function setConn(ok, msg) {
+    const el = $('#connBadge');
+    el.textContent = msg;
+    el.classList.toggle('err', !ok);
+  }
+
+  async function fetchJson(path) {
+    const r = await fetch(base() + path, { signal: AbortSignal.timeout(12000) });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  }
+
+  async function loadMeta() {
+    const urls = [base() + '/knowledge-deliverables.json', 'knowledge-deliverables.json'];
+    for (const u of urls) {
+      try {
+        const r = await fetch(u, { signal: AbortSignal.timeout(8000) });
+        if (r.ok) { meta = await r.json(); return; }
+      } catch (_) {}
+    }
+    meta = { deliverables: [], ontology: { entities: [], relations: [] }, sop_index: [], experience_index: [] };
+  }
+
+  async function loadLive() {
+    try {
+      const [health, reg, graph] = await Promise.all([
+        fetchJson('/health'),
+        fetchJson('/api/v1/data/registry?domain=service&limit=100'),
+        fetchJson('/api/v1/service/fault-graph'),
+      ]);
+      faultGraph = graph;
+      const dor = health.doris || {};
+      setConn(true, `Doris ${esc(dor.version || 'OK')} · ${dor.chunk_rows ?? '—'} chunks`);
+      (reg.items || []).forEach((row) => {
+        registryMap[row.document_id] = row;
+      });
+    } catch (e) {
+      setConn(false, 'Worker 不可达 · 仅展示静态配置');
+      try {
+        const r = await fetch('service-fault-graph.json');
+        if (r.ok) faultGraph = await r.json();
+      } catch (_) {}
+    }
+  }
+
+  function badgeClass(st) {
+    return st === 'done' ? 'b-done' : st === 'partial' ? 'b-part' : 'b-todo';
+  }
+
+  function renderOverview() {
+    const el = $('#overviewCards');
+    el.innerHTML = (meta.deliverables || []).map((d) => `
+      <div class="dcard" data-tab="${esc(d.id)}">
+        <div class="num">${esc(d.num)} ${esc(d.title)}</div>
+        <div class="sub">${esc(d.status_label)}</div>
+        <span class="badge ${badgeClass(d.status)}">${d.status === 'done' ? '已交付' : d.status === 'partial' ? 'PoC 简化' : '未做'}</span>
+      </div>`).join('');
+    el.querySelectorAll('.dcard').forEach((c) => {
+      c.addEventListener('click', () => switchTab(c.dataset.tab));
+    });
+  }
+
+  function renderOntology() {
+    const ent = meta.ontology?.entities || [];
+    $('#ontologyEntities tbody').innerHTML = ent.map((e) => `
+      <tr><td><b>${esc(e.label_zh)}</b><br><span style="color:var(--muted)">${esc(e.label_en)}</span></td>
+      <td><code>${esc((e.graph_node_types || []).join(', '))}</code><br>${esc((e.examples || []).join(' · '))}</td></tr>`).join('');
+    const rel = meta.ontology?.relations || [];
+    $('#ontologyRelations tbody').innerHTML = rel.map((r) => `
+      <tr><td>${esc(r.from)} → ${esc(r.to)}</td><td>${esc(r.relation_zh)}</td>
+      <td><code>${esc(r.graph_edge)}</code>${r.has_weight ? ' · 含权重' : ''}</td></tr>`).join('');
+  }
+
+  function renderGraph() {
+    const nodes = faultGraph?.nodes || [];
+    const edges = faultGraph?.edges || [];
+    $('#graphStats').innerHTML = `
+      <span class="stat">节点 <b>${nodes.length}</b></span>
+      <span class="stat">边 <b>${edges.length}</b></span>
+      <span class="stat">lookup 码 <b>${Object.keys(faultGraph?.lookup || {}).length}</b></span>`;
+    $('#graphNodes tbody').innerHTML = nodes.map((n) => {
+      const w = n.share_pct != null ? `share ${n.share_pct}%` : (n.price_cny ? `${n.price_cny/10000}万` : '');
+      return `<tr><td><code>${esc(n.id)}</code></td><td>${esc(n.type)}</td><td>${esc(n.label)}</td><td>${esc(w)}</td></tr>`;
+    }).join('') || '<tr><td colspan="4" class="empty">无图谱数据</td></tr>';
+    $('#graphEdges tbody').innerHTML = edges.map((e) => {
+      const w = e.priority != null ? `P${e.priority}` : (e.relation || '');
+      return `<tr><td>${esc(e.from)}</td><td>→ ${esc(e.to)}</td><td><code>${esc(e.relation)}</code></td><td>${esc(w)}</td></tr>`;
+    }).join('') || '<tr><td colspan="4" class="empty">无边数据</td></tr>';
+  }
+
+  function regStatus(docId) {
+    const r = registryMap[docId];
+    if (!r) return '<span class="badge b-todo">未入库</span>';
+    const st = r.status || 'pending';
+    return st === 'indexed'
+      ? `<span class="badge b-done">indexed</span>`
+      : `<span class="badge b-part">${esc(st)}</span>`;
+  }
+
+  function renderSop() {
+    const rows = POC_CATALOG.sopIndexFromCatalog(catalogFlat);
+    $('#sopTable tbody').innerHTML = rows.map((s) => {
+      const r = registryMap[s.document_id];
+      const chunks = r?.chunk_count ?? '—';
+      const dt = s.doc_type === 'SOP' ? 'SOP' : 'manual';
+      const q = (s.demo_queries && s.demo_queries[0]) || s.document_id;
+      const models = (s.device_models || []).join(', ') || '—';
+      const codes = (s.fault_codes || []).join(', ') || '—';
+      return `<tr class="click" data-doc="${esc(s.document_id)}">
+        <td>${esc(models)}</td>
+        <td>${esc(codes)}</td>
+        <td><code>${esc(s.document_id)}</code><br><span style="color:var(--muted);font-size:10px">${esc(s.title || s.file)}</span></td>
+        <td>${regStatus(s.document_id)}</td>
+        <td>${esc(chunks)}</td>
+        <td><button class="btn secondary btn-rag" data-q="${esc(q)}" data-dt="${esc(dt)}">RAG 试检索</button></td>
+      </tr>`;
+    }).join('') || '<tr><td colspan="6" class="empty">catalog 中无 SOP/manual 文档</td></tr>';
+    $('#sopTable').querySelectorAll('.btn-rag').forEach((btn) => {
+      btn.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        runRetrieve(btn.dataset.q, btn.dataset.dt, '#sopRetrieveResult');
+      });
+    });
+  }
+
+  function confBadge(c, label) {
+    const cls = c >= 0.85 ? 'conf-high' : c >= 0.7 ? 'conf-mid' : 'conf-low';
+    return `<span class="badge ${cls}">${esc(label)} ${Math.round(c * 100)}%</span>`;
+  }
+
+  function renderExp() {
+    const rows = POC_CATALOG.experienceIndexFromCatalog(catalogFlat);
+    $('#expTable tbody').innerHTML = rows.map((e) => {
+      const q = (e.demo_queries && e.demo_queries[0]) || e.document_id;
+      const conf = e.confidence != null ? e.confidence : 0.7;
+      const label = e.confidence_label || '中';
+      const src = e.confidence_source || 'catalog';
+      return `
+      <tr>
+        <td><code>${esc(e.document_id)}</code></td>
+        <td>${esc(e.title || e.file)}</td>
+        <td>${esc((e.fault_codes || []).join(', ') || '—')}</td>
+        <td>${confBadge(conf, label)}</td>
+        <td style="font-size:10px;color:var(--muted)">${esc(src)}</td>
+        <td><button class="btn secondary btn-exp" data-q="${esc(q)}">RAG 试检索</button></td>
+      </tr>`;
+    }).join('') || '<tr><td colspan="6" class="empty">catalog 中无 experience/report 文档</td></tr>';
+    $('#expTable').querySelectorAll('.btn-exp').forEach((btn) => {
+      btn.addEventListener('click', () => runRetrieve(btn.dataset.q, null, '#expRetrieveResult'));
+    });
+  }
+
+  async function runRetrieve(query, docType, outSel) {
+    const box = $(outSel);
+    box.style.display = 'block';
+    box.textContent = '检索中…';
+    try {
+      const body = { query, domain: 'service', top_k: 3, mode: 'hybrid', include_trace: true };
+      if (docType) body.doc_type = docType;
+      const r = await fetch(base() + '/api/v1/retrieve/explain', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+        signal: AbortSignal.timeout(20000),
+      });
+      const d = await r.json();
+      const lines = (d.evidence || []).map((ev, i) =>
+        `${i + 1}. [${ev.document_id}] score=${ev.score} (${ev.source})\n${(ev.snippet || '').slice(0, 120)}…`);
+      box.textContent = (d.trace?.narrative_zh || '') + '\n\n' + (lines.join('\n\n') || '无结果');
+    } catch (e) {
+      box.textContent = '检索失败: ' + e.message;
+    }
+  }
+
+  async function doLookup() {
+    const code = $('#lookupCode').value;
+    const box = $('#lookupResult');
+    box.style.display = 'block';
+    box.textContent = '查询中…';
+    try {
+      const d = await fetchJson('/api/v1/service/fault-graph/lookup?error_code=' + encodeURIComponent(code));
+      box.textContent = JSON.stringify(d, null, 2);
+    } catch (e) {
+      box.textContent = 'lookup 失败: ' + e.message;
+    }
+  }
+
+  function switchTab(id) {
+    document.querySelectorAll('.tab').forEach((t) => t.classList.toggle('active', t.dataset.tab === id));
+    document.querySelectorAll('.panel').forEach((p) => p.classList.toggle('show', p.id === 'panel-' + id));
+    document.querySelectorAll('.dcard').forEach((c) => c.classList.toggle('active', c.dataset.tab === id));
+  }
+
+  document.querySelectorAll('.tab').forEach((t) => {
+    t.addEventListener('click', () => switchTab(t.dataset.tab));
+  });
+
+  $('#btnLookup').addEventListener('click', doLookup);
+  $('#btnMcpHint').addEventListener('click', () => {
+    $('#lookupResult').style.display = 'block';
+    $('#lookupResult').textContent =
+      'MCP tools/call → service_fault_graph_lookup\n' +
+      'URL: ' + base() + '/service-mcp\n' +
+      'arguments: { "error_code": "E1001" }';
+  });
+
+  $('#linkHub').href = POC_PATHS.pageUrl('hub');
+  $('#linkWorkbench').href = POC_PATHS.pageUrl('workbench');
+  $('#linkGraph').href = POC_PATHS.pageUrl('graph');
+  $('#linkDoris').href = POC_PATHS.pageUrl('doris');
+  $('#btnOpenGraph').href = POC_PATHS.pageUrl('graph');
+
+  (async function init() {
+    await loadMeta();
+    try {
+      const cat = await POC_CATALOG.loadCatalog();
+      catalogFlat = cat.flat;
+    } catch (_) {}
+    renderOverview();
+    renderOntology();
+    await loadLive();
+    renderGraph();
+    renderSop();
+    renderExp();
+    const hash = (location.hash || '').replace('#', '');
+    if (hash && $('#panel-' + hash)) switchTab(hash);
+  })();
+})();
+</script>
+</body>
+</html>

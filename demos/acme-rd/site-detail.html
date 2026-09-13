@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Site 立项项目明细 - 盛美半导体研发运营看板</title>
+<link rel="stylesheet" href="assets/style.css?v=67">
+<link rel="stylesheet" href="assets/req-spec.css?v=67">
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+    <div class="brand">
+    <div class="brand-logo">ACM</div>
+    <h1>研发运营看板</h1>
+    <p>盛美半导体 · 演示原型 v4.4</p>
+  </div>
+  <nav class="nav">
+    <div class="nav-section">业务模块</div>
+    <a href="index.html" class="" data-page="index">总览</a>
+    <a href="hr.html" class="" data-page="hr">人力资源</a>
+    <a href="site-product.html" class="active" data-page="site-product">Site 与产品</a>
+    <a href="case.html" class="" data-page="case">Case 追踪</a>
+    <a href="change.html" class="" data-page="change">变更管理</a>
+    <a href="wet-rd.html" class="" data-page="wet-rd">Wet-RD</a>
+    <a href="lingang.html" class="" data-page="lingang">临港研发线</a>
+    <a href="oa-monitor.html" class="" data-page="oa-monitor">OA 流程监控</a>
+    <a href="knowledge.html" class="" data-page="knowledge">知识库<span class="nav-badge">预览</span></a>
+  </nav>
+  <div class="footer-note">演示数据，口径以业务确认为准</div>
+</aside>
+<main class="main">
+  <header class="topbar">
+    <div class="breadcrumb"><a href="index.html">总览</a><span class="sep">/</span><a href="site-product.html">Site与产品</a><span class="sep">/</span><span class="current">立项明细</span></div>
+    <div class="topbar-actions">
+                  <div class="topbar-period" data-period-mode="month">
+        <span>时间</span>
+    <select data-period-year aria-label="年份">
+      <option value="2025">2025 年</option>
+      <option value="2026" selected>2026 年</option>
+    </select>
+    <select data-period-month aria-label="月份">
+    <option value="all">全年</option>
+    <option value="01">1 月</option>
+    <option value="02">2 月</option>
+    <option value="03">3 月</option>
+    <option value="04">4 月</option>
+    <option value="05">5 月</option>
+    <option value="06" selected>6 月</option>
+    <option value="07">7 月</option>
+    <option value="08">8 月</option>
+    <option value="09">9 月</option>
+    <option value="10">10 月</option>
+    <option value="11">11 月</option>
+    <option value="12">12 月</option>
+    </select>
+      </div>
+      <span class="chip">演示数据</span>
+      <button class="btn" data-action="export"><span class="bi"></span>导出数据</button>
+      <button class="btn btn-primary" data-action="monthly-report">月度运营报告</button>
+    </div>
+  </header>
+  <div class="content">
+    <div class="page-header">
+      <div class="ph-titles"><h2>Site 立项项目明细</h2><p>按 Site 查看立项项目</p></div>
+    </div>
+    <div class="sub-tabs" style="margin-bottom:18px">
+      <button class="sub-tab active" data-sub-group="sd" data-sub-target="sd-lx">项目立项流程 (客户名称)</button>
+      <button class="sub-tab" data-sub-group="sd" data-sub-target="sd-qd">项目启动流程 (产品类别)</button>
+    </div>
+    <div class="sub-panel" data-sub-group="sd" data-sub-target="sd-lx">
+<div class="alert-box info">Site 数量较多（100+），通过 Top N 排名或筛选条件进入查看具体项目明细</div>
+<div class="filter-bar">
+  <div class="filter-group"><label>搜索</label><input type="text" placeholder="项目号 / 客户名称" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:var(--font);min-width:160px"></div>
+  <div class="filter-group"><label>Site</label><select><option>TSMC (12)</option><option>SMIC (9)</option><option>Intel (8)</option></select></div>
+  <div class="filter-group"><label>机台类型</label><select><option>全部</option><option>成熟</option><option>量产</option><option>研发</option></select></div>
+  <div class="filter-group"><label>产品类别</label><select><option>全部</option><option>WET</option><option>ECP</option></select></div>
+  <button class="btn-apply" type="button">应用</button>
+</div>
+<div class="panel">
+  <div class="panel-head"><h3>TSMC · 立项项目列表</h3><a class="link" href="site-product.html">← 返回 Site 看板</a></div>
+  <div class="panel-body flush">
+    <table>
+      <tr><th>项目号</th><th>客户名称</th><th>产品类别</th><th>机台类型</th><th>立项日期</th><th>状态</th></tr>
+      <tr><td>P-2026-0142</td><td>TSMC-N28</td><td>WET-CMP</td><td><span class="tag tag-p0">量产</span></td><td>2026-03-15</td><td><span class="tag tag-close">进行中</span></td></tr>
+      <tr><td>P-2026-0098</td><td>TSMC-N22</td><td>WET-Clean</td><td><span class="tag tag-p1">成熟</span></td><td>2026-02-08</td><td><span class="tag tag-close">已归档</span></td></tr>
+      <tr><td>P-2026-0201</td><td>TSMC-A16</td><td>ECP</td><td><span class="tag tag-p2">研发</span></td><td>2026-05-22</td><td><span class="tag tag-open">验证中</span></td></tr>
+      <tr><td>P-2025-0887</td><td>TSMC-N16</td><td>Track</td><td><span class="tag tag-p0">量产</span></td><td>2025-11-30</td><td><span class="tag tag-close">已归档</span></td></tr>
+    </table>
+  </div>
+</div>
+    </div>
+    <div class="sub-panel" data-sub-group="sd" data-sub-target="sd-qd" style="display:none">
+<div class="filter-bar">
+  <div class="filter-group"><label>产品类别</label><select><option>全部</option><option>WET-CMP</option><option>ECP</option></select></div>
+  <div class="filter-group"><label>机台类型</label><select><option>全部</option><option>成熟</option><option>量产</option><option>研发</option></select></div>
+</div>
+<div class="panel">
+  <div class="panel-head"><h3>项目启动 · 按产品类别明细</h3></div>
+  <div class="panel-body flush">
+    <table>
+      <tr><th>项目号</th><th>产品类别</th><th>机台类型</th><th>Site</th><th>启动日期</th><th>状态</th></tr>
+      <tr><td>P-2026-0142</td><td>WET-CMP</td><td>量产</td><td>TSMC-N28</td><td>2026-03-15</td><td><span class="tag tag-close">进行中</span></td></tr>
+      <tr><td>P-2026-0201</td><td>ECP</td><td>研发</td><td>Intel-A16</td><td>2026-05-22</td><td><span class="tag tag-open">验证中</span></td></tr>
+    </table>
+  </div>
+</div>
+    </div>
+  </div>
+</main>
+</div>
+<script src="assets/charts.js?v=67"></script>
+<script src="assets/app.js?v=67"></script>
+<script>setActiveNav('site-product');</script>
+
+<script
+  src="http://120.55.184.234:8787/embed.js?v=20260801acme4"
+  data-demo-id="acme-rd"
+  data-mode="basic"
+  data-api="http://120.55.184.234:8787"
+  async defer></script>
+
+</body>
+</html>

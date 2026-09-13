@@ -1,0 +1,12 @@
+{
+  "demo_id": "biren-finance",
+  "revision": "rev2",
+  "revision_demo_id": "biren-finance__rev2",
+  "title": "rev1 · 订单总览日期维度",
+  "note": "rev1 · 订单总览日期维度",
+  "comment_ids": [
+    "c_4b708b57e5d15533"
+  ],
+  "created_at": "20260731_223004",
+  "immutable": true
+}

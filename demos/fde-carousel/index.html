@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FDE 视频轮播</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --border: #2a2f3d;
+      --text: #e8eaef;
+      --muted: #8b92a5;
+      --accent: #4f8cff;
+      --accent-hover: #6ba0ff;
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    header .meta {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 0;
+      min-height: 0;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+      }
+    }
+
+    .player-wrap {
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      gap: 16px;
+      min-height: 0;
+    }
+
+    .video-frame {
+      position: relative;
+      flex: 1;
+      background: #000;
+      border-radius: var(--radius);
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+      max-height: calc(100vh - 220px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+    }
+
+    .video-frame video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      background: #000;
+    }
+
+    .video-title {
+      font-size: 1.1rem;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .progress-bar {
+      flex: 1;
+      position: relative;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      touch-action: none;
+      user-select: none;
+    }
+
+    .progress-bar .track {
+      width: 100%;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-bar .fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      border-radius: 2px;
+      transition: width 0.1s linear;
+      pointer-events: none;
+    }
+
+    .progress-bar.dragging .fill {
+      transition: none;
+    }
+
+    .progress-bar .thumb {
+      position: absolute;
+      top: 50%;
+      left: 0%;
+      width: 14px;
+      height: 14px;
+      margin-left: -7px;
+      margin-top: -7px;
+      background: #fff;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      opacity: 0;
+      transform: scale(0.85);
+      transition: opacity 0.15s, transform 0.15s;
+      pointer-events: none;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+    }
+
+    .progress-bar:hover .thumb,
+    .progress-bar.dragging .thumb {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .player-wrap:fullscreen,
+    .player-wrap:-webkit-full-screen {
+      width: 100%;
+      height: 100%;
+      padding: 24px;
+      background: var(--bg);
+      box-sizing: border-box;
+    }
+
+    .player-wrap:fullscreen .video-frame,
+    .player-wrap:-webkit-full-screen .video-frame {
+      max-height: none;
+      flex: 1;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    button:hover:not(:disabled) {
+      background: #252936;
+      border-color: #3d4458;
+    }
+
+    button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    button.primary:hover:not(:disabled) {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+
+    button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    button.icon {
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    label.toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    label.toggle input {
+      accent-color: var(--accent);
+    }
+
+    aside {
+      border-left: 1px solid var(--border);
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    @media (max-width: 900px) {
+      aside {
+        border-left: none;
+        border-top: 1px solid var(--border);
+        max-height: 240px;
+      }
+    }
+
+    aside h2 {
+      padding: 16px 18px 10px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .playlist {
+      list-style: none;
+      overflow-y: auto;
+      flex: 1;
+      padding: 0 10px 14px;
+    }
+
+    .playlist li {
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      line-height: 1.35;
+      color: var(--muted);
+      border: 1px solid transparent;
+      margin-bottom: 4px;
+      transition: background 0.12s, color 0.12s;
+      word-break: break-all;
+    }
+
+    .playlist li:hover {
+      background: rgba(79, 140, 255, 0.08);
+      color: var(--text);
+    }
+
+    .playlist li.active {
+      background: rgba(79, 140, 255, 0.18);
+      color: var(--text);
+      border-color: rgba(79, 140, 255, 0.35);
+    }
+
+    .playlist li .idx {
+      display: inline-block;
+      width: 1.6em;
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .empty, .error {
+      padding: 40px 24px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .error {
+      color: #ff8a8a;
+    }
+
+    .kbd {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-left: auto;
+    }
+
+    @media (max-width: 700px) {
+      .kbd { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>FDE 演示视频轮播</h1>
+    <span class="meta" id="counter">加载中…</span>
+  </header>
+
+  <main>
+    <section class="player-wrap" id="playerWrap">
+      <div class="video-frame">
+        <video id="player" playsinline preload="metadata"></video>
+      </div>
+      <p class="video-title" id="title">—</p>
+      <div class="progress-row">
+        <span id="timeCurrent">0:00</span>
+        <div class="progress-bar" id="progressBar" title="点击或拖动快进">
+          <div class="track">
+            <div class="fill" id="progressFill"></div>
+          </div>
+          <div class="thumb" id="progressThumb"></div>
+        </div>
+        <span id="timeDuration">0:00</span>
+      </div>
+      <div class="controls">
+        <button type="button" class="icon" id="btnPrev" title="上一个 (←)">◀</button>
+        <button type="button" class="icon primary" id="btnPlay" title="播放/暂停 (空格)">▶</button>
+        <button type="button" class="icon" id="btnNext" title="下一个 (→)">▶</button>
+        <button type="button" class="icon" id="btnFullscreen" title="全屏">⛶</button>
+        <label class="toggle">
+          <input type="checkbox" id="autoNext" checked />
+          播完自动下一个
+        </label>
+        <label class="toggle">
+          <input type="checkbox" id="loopAll" checked />
+          列表循环
+        </label>
+        <span class="kbd">← → 切换 · 空格 播放/暂停</span>
+      </div>
+    </section>
+
+    <aside>
+      <h2>播放列表</h2>
+      <ul class="playlist" id="playlist"></ul>
+    </aside>
+  </main>
+
+  <script>
+    const VIDEO_EXT = /\.(mp4|webm|mov|mkv|avi|m4v)$/i;
+
+    let videos = [];
+    let index = 0;
+    let isDragging = false;
+
+    function getDuration() {
+      const d = player.duration;
+      return Number.isFinite(d) && d > 0 ? d : 0;
+    }
+
+    function ratioFromClientX(clientX) {
+      const rect = progressBar.getBoundingClientRect();
+      if (!rect.width) return 0;
+      return Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+    }
+
+    function updateSeekUI(ratio) {
+      const pct = `${ratio * 100}%`;
+      progressFill.style.width = pct;
+      progressThumb.style.left = pct;
+      const dur = getDuration();
+      if (dur) timeCurrent.textContent = formatTime(ratio * dur);
+    }
+
+    function applySeek(ratio) {
+      const dur = getDuration();
+      if (!dur) return;
+      player.currentTime = ratio * dur;
+    }
+
+    function onSeekStart(e) {
+      if (!getDuration()) return;
+      isDragging = true;
+      progressBar.classList.add("dragging");
+      progressBar.setPointerCapture(e.pointerId);
+      const ratio = ratioFromClientX(e.clientX);
+      updateSeekUI(ratio);
+      applySeek(ratio);
+    }
+
+    function onSeekMove(e) {
+      if (!isDragging) return;
+      e.preventDefault();
+      const ratio = ratioFromClientX(e.clientX);
+      updateSeekUI(ratio);
+      applySeek(ratio);
+    }
+
+    function onSeekEnd(e) {
+      if (!isDragging) return;
+      isDragging = false;
+      progressBar.classList.remove("dragging");
+      try {
+        progressBar.releasePointerCapture(e.pointerId);
+      } catch (_) {}
+      const ratio = ratioFromClientX(e.clientX);
+      updateSeekUI(ratio);
+      applySeek(ratio);
+    }
+
+    const player = document.getElementById("player");
+    const titleEl = document.getElementById("title");
+    const playlistEl = document.getElementById("playlist");
+    const counterEl = document.getElementById("counter");
+    const progressBar = document.getElementById("progressBar");
+    const progressFill = document.getElementById("progressFill");
+    const progressThumb = document.getElementById("progressThumb");
+    const timeCurrent = document.getElementById("timeCurrent");
+    const timeDuration = document.getElementById("timeDuration");
+    const btnPrev = document.getElementById("btnPrev");
+    const btnNext = document.getElementById("btnNext");
+    const btnPlay = document.getElementById("btnPlay");
+    const btnFullscreen = document.getElementById("btnFullscreen");
+    const playerWrap = document.getElementById("playerWrap");
+    const autoNext = document.getElementById("autoNext");
+    const loopAll = document.getElementById("loopAll");
+
+    function formatTime(sec) {
+      if (!Number.isFinite(sec) || sec < 0) return "0:00";
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m}:${String(s).padStart(2, "0")}`;
+    }
+
+    function displayName(path) {
+      const name = path.split("/").pop() || path;
+      return name.replace(/\.[^.]+$/, "");
+    }
+
+    function renderPlaylist() {
+      playlistEl.innerHTML = "";
+      videos.forEach((v, i) => {
+        const li = document.createElement("li");
+        li.innerHTML = `<span class="idx">${i + 1}.</span>${displayName(v.name)}`;
+        li.addEventListener("click", () => goTo(i, true));
+        playlistEl.appendChild(li);
+      });
+      updateCounter();
+    }
+
+    function updateCounter() {
+      if (!videos.length) {
+        counterEl.textContent = "暂无视频";
+        return;
+      }
+      counterEl.textContent = `第 ${index + 1} / ${videos.length} 个`;
+    }
+
+    function setActiveItem() {
+      [...playlistEl.children].forEach((li, i) => {
+        li.classList.toggle("active", i === index);
+      });
+      const active = playlistEl.children[index];
+      if (active) active.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }
+
+    function updatePlayButton() {
+      btnPlay.textContent = player.paused ? "▶" : "⏸";
+    }
+
+    function loadCurrent(autoplay = true) {
+      if (!videos.length) return;
+      const item = videos[index];
+      player.src = item.url;
+      titleEl.textContent = displayName(item.name);
+      setActiveItem();
+      updateCounter();
+      if (autoplay) {
+        player.play().catch(() => {});
+      }
+      updatePlayButton();
+    }
+
+    function goTo(i, autoplay = true) {
+      if (!videos.length) return;
+      index = ((i % videos.length) + videos.length) % videos.length;
+      loadCurrent(autoplay);
+    }
+
+    function next() {
+      if (!videos.length) return;
+      if (index < videos.length - 1) goTo(index + 1);
+      else if (loopAll.checked) goTo(0);
+    }
+
+    function prev() {
+      if (!videos.length) return;
+      if (index > 0) goTo(index - 1);
+      else if (loopAll.checked) goTo(videos.length - 1);
+    }
+
+    function togglePlay() {
+      if (!videos.length) return;
+      if (player.paused) player.play();
+      else player.pause();
+    }
+
+    function getFullscreenElement() {
+      return document.fullscreenElement || document.webkitFullscreenElement;
+    }
+
+    function updateFullscreenButton() {
+      const isFs = getFullscreenElement() === playerWrap;
+      btnFullscreen.textContent = isFs ? "⤡" : "⛶";
+      btnFullscreen.title = isFs ? "退出全屏" : "全屏";
+    }
+
+    async function toggleFullscreen() {
+      try {
+        if (getFullscreenElement()) {
+          if (document.exitFullscreen) await document.exitFullscreen();
+          else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        } else if (playerWrap.requestFullscreen) {
+          await playerWrap.requestFullscreen();
+        } else if (playerWrap.webkitRequestFullscreen) {
+          playerWrap.webkitRequestFullscreen();
+        }
+      } catch (_) {}
+    }
+
+    player.addEventListener("play", updatePlayButton);
+    player.addEventListener("pause", updatePlayButton);
+    player.addEventListener("ended", () => {
+      if (autoNext.checked) next();
+    });
+    player.addEventListener("timeupdate", () => {
+      if (isDragging) return;
+      const cur = player.currentTime;
+      const dur = getDuration();
+      timeCurrent.textContent = formatTime(cur);
+      timeDuration.textContent = formatTime(dur);
+      const pct = dur ? (cur / dur) * 100 : 0;
+      progressFill.style.width = `${pct}%`;
+      progressThumb.style.left = `${pct}%`;
+    });
+    player.addEventListener("loadedmetadata", () => {
+      timeDuration.textContent = formatTime(getDuration());
+    });
+
+    progressBar.addEventListener("pointerdown", onSeekStart);
+    progressBar.addEventListener("pointermove", onSeekMove);
+    progressBar.addEventListener("pointerup", onSeekEnd);
+    progressBar.addEventListener("pointercancel", onSeekEnd);
+
+    btnPrev.addEventListener("click", prev);
+    btnNext.addEventListener("click", next);
+    btnPlay.addEventListener("click", togglePlay);
+    btnFullscreen.addEventListener("click", toggleFullscreen);
+    document.addEventListener("fullscreenchange", updateFullscreenButton);
+    document.addEventListener("webkitfullscreenchange", updateFullscreenButton);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.target.tagName === "INPUT") return;
+      if (e.code === "ArrowRight") { e.preventDefault(); next(); }
+      if (e.code === "ArrowLeft") { e.preventDefault(); prev(); }
+      if (e.code === "Space") { e.preventDefault(); togglePlay(); }
+    });
+
+    async function loadVideos() {
+      try {
+        const res = await fetch("/api/videos");
+        if (!res.ok) throw new Error("API 不可用");
+        videos = await res.json();
+      } catch {
+        videos = [
+          { name: "redpandacompress_111.mp4", url: "DEMO/redpandacompress_111.mp4" },
+          { name: "redpandacompress_公牛.mp4", url: "DEMO/redpandacompress_公牛.mp4" },
+          { name: "智能派单协作.mov", url: "DEMO/智能派单协作.mov" },
+          { name: "帆查查.mov", url: "DEMO/帆查查.mov" },
+          { name: "智能机电运维.mov", url: "DEMO/智能机电运维.mov" },
+          { name: "销售个人业绩智能报告.mov", url: "DEMO/销售个人业绩智能报告.mov" },
+          { name: "redpandacompress_墨迹.mp4", url: "DEMO/redpandacompress_墨迹.mp4" },
+          { name: "经营助理.mov", url: "DEMO/经营助理.mov" },
+          { name: "redpandacompress_方太.mp4", url: "DEMO/redpandacompress_方太.mp4" },
+        ];
+      }
+
+      if (!videos.length) {
+        titleEl.textContent = "未找到视频文件";
+        counterEl.textContent = "请将视频放在 DEMO 文件夹";
+        return;
+      }
+
+      renderPlaylist();
+      goTo(0, false);
+    }
+
+    loadVideos();
+  </script>
+</body>
+</html>

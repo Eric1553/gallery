@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>合见 · 计划与生产驾驶舱（L2）原型</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { background:#eef3f9; }
+  body { font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif; color:#23314c; -webkit-font-smoothing:antialiased; }
+  .stage { width:1600px; height:986px; position:relative; background:linear-gradient(165deg,#ffffff,#eef4fb); }
+  .ribbon { position:absolute; right:0; top:0; background:#e2574c; color:#fff; font-size:12px; font-weight:700; padding:5px 16px; border-bottom-left-radius:10px; z-index:3; }
+  .top { background:linear-gradient(135deg,#1f6f7e,#2aa3b8); color:#fff; padding:14px 28px; display:flex; justify-content:space-between; align-items:center; }
+  .top h1 { font-size:21px; font-weight:800; letter-spacing:1px; }
+  .top h1 .en { font-size:12px; opacity:.85; font-weight:600; margin-left:8px; }
+  .top .meta { font-size:12.5px; opacity:.92; }
+  .body { padding:16px 28px 12px; }
+  .lab { font-size:12px; font-weight:800; color:#1f6f7e; letter-spacing:1px; margin:2px 0 10px; display:flex; align-items:center; gap:8px; }
+  .lab::before { content:""; width:5px; height:14px; background:#2aa3b8; border-radius:2px; }
+  .lab .tg { font-size:10.5px; font-weight:700; color:#8a93a6; background:#eef2f8; padding:1px 8px; border-radius:10px; }
+  .kpis { display:grid; grid-template-columns:repeat(6,1fr); gap:13px; margin-bottom:14px; }
+  .kpi { background:#fff; border:1px solid #e4ebf4; border-radius:11px; padding:12px 16px; box-shadow:0 3px 9px rgba(40,70,120,.05); position:relative; overflow:hidden; }
+  .kpi::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; }
+  .kpi.b::before{background:#3f7fc4;} .kpi.g::before{background:#2e8b57;} .kpi.o::before{background:#e8855a;} .kpi.r::before{background:#e2574c;} .kpi.c::before{background:#2aa3b8;}
+  .kpi .t { font-size:11.5px; color:#7c869a; }
+  .kpi .v { font-size:25px; font-weight:800; color:#1c2c4a; margin-top:3px; }
+  .kpi .v small { font-size:13px; font-weight:700; }
+  .kpi .d { font-size:11px; margin-top:3px; }
+  .kpi .d.up { color:#2e8b57; } .kpi .d.dn { color:#e2574c; }
+  .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:13px; }
+  .panel { background:#fff; border:1px solid #e4ebf4; border-radius:11px; padding:11px 14px 6px; box-shadow:0 3px 10px rgba(40,70,120,.05); }
+  .panel .ph { font-size:13.5px; font-weight:800; color:#1c2c4a; display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+  .panel .ph .sub { font-size:10.5px; color:#9aa3b5; font-weight:600; }
+  .chart { width:100%; height:196px; }
+  .note { background:linear-gradient(90deg,#eaf6f8,#f3fafb); border:1px dashed #a9d6de; border-left:4px solid #2aa3b8; border-radius:8px; padding:9px 16px; font-size:12.5px; color:#3a4660; line-height:1.5; }
+  .note b { color:#1f6f7e; }
+</style>
+  <link rel="stylesheet" href="nav.css">
+</head>
+<body data-page="06">
+<div class="proto-app">
+  <aside id="proto-nav" class="proto-nav"></aside>
+  <div class="proto-main">
+<div class="stage">
+  <div class="ribbon">原型设计稿</div>
+  <div class="top">
+    <h1>合见计划与生产驾驶舱<span class="en">Plan &amp; Production Cockpit · L2 OTD 上游</span></h1>
+    <div class="meta">主线：需求 → 主计划 → 排产 → 工单 → 质检 → 入库　|　示意数据</div>
+  </div>
+  <div class="body">
+    <div class="lab">计划 / 生产 / 质量 KPI <span class="tg">计划 / 生产 / 质量负责人</span></div>
+    <div class="kpis">
+      <div class="kpi b"><div class="t">计划达成率</div><div class="v">88<small>%</small></div><div class="d up">▲ 2pct</div></div>
+      <div class="kpi c"><div class="t">工单准时完工率</div><div class="v">84<small>%</small></div><div class="d dn">▼ 1.5pct</div></div>
+      <div class="kpi o"><div class="t">在制 WIP（台）</div><div class="v">156</div><div class="d">在制委外</div></div>
+      <div class="kpi g"><div class="t">质量一次通过率</div><div class="v">96.2<small>%</small></div><div class="d up">▲ 0.6pct</div></div>
+      <div class="kpi r"><div class="t">质量 Hold（台）</div><div class="v">9</div><div class="d">待放行</div></div>
+      <div class="kpi r"><div class="t">供给缺口影响订单</div><div class="v">22</div><div class="d">笔</div></div>
+    </div>
+    <div class="grid3">
+      <div class="panel"><div class="ph">产销平衡（需求 / 产出 / 库存）<span class="sub">计划</span></div><div class="chart" id="e1"></div></div>
+      <div class="panel"><div class="ph">工单进度（已完工/在制/待产）<span class="sub">按产品</span></div><div class="chart" id="e2"></div></div>
+      <div class="panel"><div class="ph">在制 WIP 趋势<span class="sub">生产</span></div><div class="chart" id="e3"></div></div>
+    </div>
+    <div class="grid3">
+      <div class="panel"><div class="ph">质量一次通过率 &amp; Hold<span class="sub">TQM</span></div><div class="chart" id="e4"></div></div>
+      <div class="panel"><div class="ph">计划达成率<span class="sub">目标待校准</span></div><div class="chart" id="e5"></div></div>
+      <div class="panel"><div class="ph">影响交付的供给缺口归因<span class="sub">缺货上游</span></div><div class="chart" id="e6"></div></div>
+    </div>
+    <div class="note"><b>分析思路：</b>以 OTD 上游「需求 → 主计划 → 排产 → 工单 → 质检 → 入库」为主线，做<b>产销平衡与工单进度跟踪</b>；把缺货<b>归因到供给侧</b>（计划未排 / 生产未完工 / 质量 Hold），让「完工释放可售」的时点可视，支撑下游满足率提升。</div>
+  </div>
+</div>
+<script>
+  var BLUE='#3f7fc4',LBLUE='#7bb0e6',GREEN='#2e8b57',ORANGE='#e8855a',RED='#e2574c',CYAN='#2aa3b8',GREY='#c6cdda';
+  var M=['1月','2月','3月','4月','5月','6月'];
+  function init(id,opt){echarts.init(document.getElementById(id)).setOption(opt);}
+  var L={top:0,itemWidth:10,itemHeight:10,textStyle:{fontSize:10,color:'#6b7790'}};
+  init('e1',{animation:false,legend:Object.assign({data:['需求','产出','期末库存']},L),grid:{left:46,right:16,top:26,bottom:22},xAxis:{type:'category',data:M,axisLabel:{fontSize:10,color:'#8a93a6'}},yAxis:{type:'value',splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:10,color:'#8a93a6'}},series:[{name:'需求',type:'bar',data:[120,135,128,150,162,158],barWidth:11,itemStyle:{color:LBLUE,borderRadius:[3,3,0,0]}},{name:'产出',type:'bar',data:[110,128,120,138,150,148],barWidth:11,itemStyle:{color:CYAN,borderRadius:[3,3,0,0]}},{name:'期末库存',type:'line',data:[60,53,45,33,21,11],smooth:true,itemStyle:{color:ORANGE},lineStyle:{width:2.5}}]});
+  init('e2',{animation:false,legend:Object.assign({data:['已完工','在制','待产']},L),grid:{left:60,right:16,top:26,bottom:18},xAxis:{type:'value',splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:9,color:'#8a93a6'}},yAxis:{type:'category',data:['模组','子卡','UV APS','UVHS','UVHP'],axisLabel:{fontSize:10,color:'#6b7790'}},series:[{name:'已完工',type:'bar',stack:'w',data:[40,55,28,32,18],itemStyle:{color:GREEN},barWidth:13},{name:'在制',type:'bar',stack:'w',data:[18,22,16,20,12],itemStyle:{color:CYAN},barWidth:13},{name:'待产',type:'bar',stack:'w',data:[10,14,8,12,9],itemStyle:{color:GREY,borderRadius:[0,4,4,0]},barWidth:13}]});
+  init('e3',{animation:false,grid:{left:42,right:16,top:18,bottom:22},xAxis:{type:'category',data:M,axisLabel:{fontSize:10,color:'#8a93a6'}},yAxis:{type:'value',splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:10,color:'#8a93a6'}},series:[{type:'line',data:[180,172,165,160,158,156],smooth:true,areaStyle:{color:'rgba(42,163,184,.15)'},itemStyle:{color:CYAN},lineStyle:{width:2.5}}]});
+  init('e4',{animation:false,legend:Object.assign({data:['一次通过率','质量Hold']},L),grid:{left:44,right:44,top:26,bottom:22},xAxis:{type:'category',data:M,axisLabel:{fontSize:10,color:'#8a93a6'}},yAxis:[{type:'value',max:100,splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:10,color:'#8a93a6',formatter:'{value}%'}},{type:'value',axisLabel:{fontSize:10,color:'#8a93a6'},splitLine:{show:false}}],series:[{name:'一次通过率',type:'line',data:[95,95.4,95.8,96,96.2,96.2],smooth:true,itemStyle:{color:GREEN},lineStyle:{width:2.5}},{name:'质量Hold',type:'bar',yAxisIndex:1,data:[14,12,11,10,9,9],barWidth:16,itemStyle:{color:RED,borderRadius:[4,4,0,0]}}]});
+  init('e5',{animation:false,series:[{type:'gauge',startAngle:200,endAngle:-20,min:0,max:100,radius:'86%',center:['50%','60%'],progress:{show:true,width:14,itemStyle:{color:CYAN}},axisLine:{lineStyle:{width:14,color:[[1,'#eef2f8']]}},axisLabel:{fontSize:9,color:'#9aa3b5'},axisTick:{show:false},splitLine:{show:false},pointer:{width:4,length:'60%',itemStyle:{color:CYAN}},detail:{fontSize:24,fontWeight:800,color:'#1c2c4a',offsetCenter:[0,'32%'],formatter:'{value}%'},data:[{value:88}]}]});
+  init('e6',{animation:false,grid:{left:44,right:16,top:14,bottom:22},xAxis:{type:'category',data:['计划未排','生产未完工','质量Hold','委外延迟'],axisLabel:{fontSize:10,color:'#8a93a6'}},yAxis:{type:'value',splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:10,color:'#8a93a6'}},series:[{type:'bar',data:[8,7,4,3],barWidth:30,itemStyle:{color:function(p){return ['#7bb0e6','#2aa3b8','#7e6cc4','#e8855a'][p.dataIndex];},borderRadius:[5,5,0,0]},label:{show:true,position:'top',fontSize:11,color:'#1f6f7e',formatter:'{c} 笔'}}]});
+</script>
+  </div>
+</div>
+<script src="nav.js"></script>
+</body>
+</html>

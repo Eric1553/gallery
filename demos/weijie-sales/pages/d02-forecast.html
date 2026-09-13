@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>D-02 销售预测全链路管理 · 唯捷创芯</title>
+<link rel="stylesheet" href="../assets/style.css" />
+<script src="../assets/echarts.min.js"></script>
+</head>
+<body>
+<div id="content">
+
+  <div class="grid r-23" style="margin-bottom:4px">
+    <div class="card"><div class="card-b" style="padding:12px 16px">
+      <div class="flow">
+        <div class="step"><span class="sn">1</span>总览</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">2</span>版本</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">3</span>价格</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">4</span>拆解</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">5</span>明细</div>
+      </div>
+    </div></div>
+    <div class="card"><div class="card-b" style="padding:12px 16px">
+      <div class="meta-strip">
+        <span class="ms">预测数据 <b>SAP</b></span>
+        <span class="ms">价格 <b>SAP预测价 / 订单成交价</b></span>
+        <span class="ms">目标维度 <b>销售组·产品·总数</b></span>
+        <span class="ms">FCST对照 <b>暂缓·形式待重设</b></span>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="grid g5" id="kpi"></div>
+
+  <div class="section-head"><span class="bar"></span><h2>预测总览 · 准确率与变动趋势</h2>
+    <span class="desc">月内多版本 / 跨月对比，默认对比月初第一版</span><span class="line"></span></div>
+  <div class="card" style="margin-bottom:14px"><div class="card-b" style="padding:12px 16px">
+    <div class="meta-strip">
+      <span class="ms">达成率口径 <b>待确认</b></span>
+      <span class="ms">示意公式 <b>准确率 = 1 − |实际 − 预测| ÷ 预测</b></span>
+      <span class="ms">对比基准 <b>默认月初第一版</b></span>
+      <span class="ms">说明 <b>分子分母是否含退货/取消单待业务确认</b></span>
+    </div>
+  </div></div>
+  <div class="grid r-21">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>预测准确率趋势（滚动预测 vs 实际）</div>
+        <div class="card-tools"><div class="seg"><span class="on">月度</span><span>季度</span></div></div></div>
+      <div class="card-b"><div id="c1" class="chart" style="height:262px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>预测准确率</div><span class="cx">本月最新版</span></div>
+      <div class="card-b"><div id="c2" class="chart" style="height:262px"></div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>版本管理 · 月度预测版本差异对比</h2>
+    <span class="desc">过程变更原因需留痕（月度内多次规则调整）</span><span class="line"></span></div>
+  <div class="grid r-32">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>各版本预测收入差异（瀑布）</div><span class="cx">单位：万元</span></div>
+      <div class="card-b"><div id="c3" class="chart" style="height:248px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>版本变更原因分布</div></div>
+      <div class="card-b"><div id="c4" class="chart" style="height:248px"></div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>价格分析 · 滚动预测价 vs BP 价</h2>
+    <span class="desc">BP价格管报侧输出；预测价格取自 SAP</span><span class="line"></span></div>
+  <div class="grid g2">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>预测价格 vs BP 价格（按大类）</div></div>
+      <div class="card-b"><div id="c5" class="chart" style="height:240px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>预测收入变动 = 价格影响 + 数量影响</div></div>
+      <div class="card-b"><div id="c6" class="chart" style="height:240px"></div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>月度滚动预测填报</h2>
+    <span class="desc">单价 × 数量 = 销售收入；按销售组 / 产品 / 总数填报</span>
+    <span class="tag tag-green" style="margin-left:8px">一期 P0</span><span class="line"></span></div>
+  <div class="card">
+    <div class="card-h"><div class="ct"><span class="ci"></span>2026-07 预测填报（V3 草稿）</div>
+      <div class="card-tools"><button class="btn-ghost">暂存</button><button class="btn-primary">提交版本</button></div></div>
+    <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl" id="tblForm"></table></div></div>
+  </div>
+
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+renderLayout("d02",{chapter:"第一章 · 看经营结果",
+ sub:"面向销售运营及预测管理岗：预测填报→版本修订→价格对比→预测达成（FCST对照分析暂缓，形式待重设）。",
+ batchTags:'<span class="tag tag-green" style="margin-left:8px">一期 P0</span>'});
+
+const kpi=[
+ {t:"本月预测收入",v:"7,120",u:"万元",f:'<span class="lbl">V3 最新版</span>',c:"",sc:"#2468f2",sp:[68,69,70,70,71,71,71.2]},
+ {t:"预测准确率",v:"92.4",u:"%",f:'<span class="trend-up">▲1.8pct</span>',c:"k-green",sc:"#25a36c",sp:[86,88,89,90,91,92,92.4]},
+ {t:"版本变动幅度",v:"-2.6",u:"%",f:'<span class="trend-down">V2→V3</span>',c:"k-gold",sc:"#e0a106",sp:[2,1,-1,-2,-2.4,-2.5,-2.6]},
+ {t:"预测价 vs BP",v:"+1.4",u:"%",f:'<span class="trend-up">高于BP</span>',c:"k-violet",sc:"#7a6ff0",sp:[0,0.5,0.8,1,1.2,1.3,1.4]},
+ {t:"变更原因记录",v:"18",u:"条",f:'<span class="lbl">本月过程留痕</span>',c:"k-cyan",sc:"#16b8c8",sp:[8,10,12,14,15,17,18]},
+];
+document.getElementById("kpi").innerHTML=kpi.map((k,i)=>`
+ <div class="kpi ${k.c}"><div class="kt"><span class="dot" style="background:${k.sc}"></span>${k.t}</div>
+ <div class="kv">${k.v}<small>${k.u}</small></div><div class="kf">${k.f}</div><div class="spark" id="s${i}"></div></div>`).join("");
+kpi.forEach((k,i)=>spark("s"+i,k.sp,k.sc));
+
+const M=["1月","2月","3月","4月","5月","6月"];
+mk("c1",{tooltip:tip(),legend:legend({data:["滚动预测","实际","准确率"]}),grid:baseGrid({top:34,right:46}),
+ xAxis:catAxis(M),yAxis:[valAxis({name:"万元"}),valAxis({name:"准确率%",max:100,min:70,splitLine:{show:false}})],
+ series:[
+  {name:"滚动预测",type:"line",smooth:true,symbol:"none",lineStyle:{width:2.5,color:"#2468f2"},areaStyle:{color:areaGrad("36,104,242",.22,.01)},data:[5300,5500,6000,6100,6300,6900]},
+  {name:"实际",type:"line",smooth:true,symbol:"circle",symbolSize:6,lineStyle:{width:2.5,color:"#f07a1d"},itemStyle:{color:"#f07a1d"},data:[5200,5600,6100,5900,6400,6800]},
+  {name:"准确率",type:"line",yAxisIndex:1,smooth:true,symbol:"circle",symbolSize:5,lineStyle:{width:2,type:"dashed",color:"#25a36c"},itemStyle:{color:"#25a36c"},data:[86,88,89,90,91,92.4]},
+ ]});
+
+mk("c2",gaugeOpt(92.4,gradient("#5bd0a6","#25a36c"),{name:"预测准确率"}));
+
+mk("c3",{tooltip:tip(),grid:baseGrid({top:24}),xAxis:catAxis(["V1初版","价格调整","订单流失","新增需求","V3最新"]),
+ yAxis:valAxis({name:"万元"}),
+ series:[
+  {type:"bar",stack:"t",itemStyle:{color:"transparent"},data:[0,7000,6800,6800,0]},
+  {type:"bar",stack:"t",barWidth:30,itemStyle:{borderRadius:[3,3,0,0]},
+   data:[
+    {value:7300,itemStyle:{color:"#2468f2"}},
+    {value:-300,itemStyle:{color:"#e2544a"}},
+    {value:-180,itemStyle:{color:"#e2544a"}},
+    {value:320,itemStyle:{color:"#25a36c"}},
+    {value:7120,itemStyle:{color:"#7a6ff0"}}],
+   label:{show:true,position:"top",formatter:function(p){return p.value>0&&p.dataIndex!==0&&p.dataIndex!==4?"+"+p.value:p.value},color:"#46586c",fontSize:11}},
+ ]});
+
+mk("c4",{tooltip:{trigger:"item",formatter:"{b}: {d}%"},legend:legend({bottom:0,icon:"circle"}),
+ series:[{type:"pie",radius:["40%","66%"],center:["50%","44%"],itemStyle:{borderColor:"#fff",borderWidth:2},
+  label:{show:false},data:[{value:38,name:"市场需求变化"},{value:26,name:"价格调整"},{value:18,name:"订单变更"},{value:12,name:"产能约束"},{value:6,name:"其他"}]}]});
+
+mk("c5",{tooltip:tip(),legend:legend({data:["滚动预测价","BP价"]}),grid:baseGrid({top:30}),
+ xAxis:catAxis(["消费电子","工业控制","汽车电子","通信","其他"]),yAxis:valAxis({name:"元/颗"}),
+ series:[
+  {name:"滚动预测价",type:"bar",barWidth:13,itemStyle:{borderRadius:[3,3,0,0],color:"#2468f2"},data:[2.36,3.10,4.82,1.95,2.20]},
+  {name:"BP价",type:"bar",barWidth:13,itemStyle:{borderRadius:[3,3,0,0],color:"#dbe8ff"},data:[2.30,3.05,4.90,2.00,2.18]},
+ ]});
+
+mk("c6",{tooltip:tip(),grid:baseGrid({top:24}),xAxis:catAxis(["BP收入","价格影响","数量影响","预测收入"]),yAxis:valAxis({name:"万元"}),
+ series:[
+  {type:"bar",stack:"t",itemStyle:{color:"transparent"},data:[0,6900,6900,0]},
+  {type:"bar",stack:"t",barWidth:34,itemStyle:{borderRadius:[3,3,0,0]},
+   data:[{value:6900,itemStyle:{color:"#dbe8ff"}},{value:96,itemStyle:{color:"#25a36c"}},{value:124,itemStyle:{color:"#16b8c8"}},{value:7120,itemStyle:{color:"#2468f2"}}],
+   label:{show:true,position:"top",formatter:function(p){return p.dataIndex===1||p.dataIndex===2?"+"+p.value:p.value},color:"#46586c"}},
+ ]});
+
+const fr=[
+ ["华东一组","消费电子","2.36","3,200","7,552","V2: 7,420"],
+ ["华南一组","工业控制","3.10","1,480","4,588","V2: 4,610"],
+ ["华北一组","汽车电子","4.82","860","4,145","V2: 3,980"],
+ ["西南一组","通信","1.95","1,560","3,042","V2: 3,120"],
+];
+const fh=["销售组","产品大类","预测单价(元)","预测数量(万颗)","预测收入(万元)","上一版本"];
+document.getElementById("tblForm").innerHTML=
+ "<thead><tr>"+fh.map((h,i)=>`<th class="${i>=2&&i<=4?'num':''}">${h}</th>`).join("")+"</tr></thead><tbody>"+
+ fr.map(r=>"<tr>"+r.map((c,i)=>`<td class="${i>=2&&i<=4?'num':''} ${i===0?'strong':''}">${c}</td>`).join("")+"</tr>").join("")+"</tbody>";
+</script>
+</body>
+</html>

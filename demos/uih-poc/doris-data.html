@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>联影 PoC · Doris 入库数据查看</title>
+  <style>
+    :root{--navy:#0a1f3d;--blue:#1f55cc;--teal:#0d9488;--bg:#f4f6fb;--line:#e2e8f0;--muted:#64748b;--ok:#059669;--warn:#d97706;--err:#dc2626}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:#1e293b;line-height:1.5}
+    .header{background:linear-gradient(135deg,var(--navy),#123a6e);color:#fff;padding:16px 20px}
+    .header-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;max-width:1400px;margin:0 auto}
+    .header h1{font-size:18px;font-weight:700}
+    .header p{font-size:12px;opacity:.85;margin-top:4px}
+    .header-link{font-size:11px;font-weight:600;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;text-decoration:none}
+    .header-link:hover{background:rgba(255,255,255,.2)}
+    .wrap{max-width:1400px;margin:0 auto;padding:16px 20px 32px}
+    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+    .stat{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+    .stat .k{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+    .stat .v{font-size:22px;font-weight:800;color:var(--navy);margin-top:2px}
+    .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+    .toolbar input,.toolbar select{padding:7px 10px;border:1px solid var(--line);border-radius:8px;font-size:12px;background:#fff}
+    .toolbar input{min-width:180px}
+    .btn{padding:7px 14px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;background:var(--blue);color:#fff}
+    .btn.secondary{background:#fff;color:var(--navy);border:1px solid var(--line)}
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .status{font-size:12px;padding:8px 12px;border-radius:8px;margin-bottom:12px;display:none}
+    .status.show{display:block}
+    .status.ok{background:#ecfdf5;color:var(--ok);border:1px solid #a7f3d0}
+    .status.err{background:#fef2f2;color:var(--err);border:1px solid #fecaca}
+    .status.warn{background:#fffbeb;color:var(--warn);border:1px solid #fde68a}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media(max-width:960px){.grid{grid-template-columns:1fr}}
+    .panel{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+    .panel-head{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);background:#f8fafc}
+    .panel-head h2{font-size:13px;font-weight:700;color:var(--navy)}
+    .panel-head span{font-size:11px;color:var(--muted)}
+    .panel-body{padding:0;max-height:520px;overflow:auto}
+    table{width:100%;border-collapse:collapse;font-size:11px}
+    th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+    th{position:sticky;top:0;background:#f1f5f9;font-weight:700;color:var(--muted);z-index:1}
+    tr.doc-row{cursor:pointer}
+    tr.doc-row:hover{background:#f0f5ff}
+    tr.doc-row.active{background:#e0ecff}
+    .badge{display:inline-block;padding:2px 7px;border-radius:999px;font-size:9px;font-weight:700}
+    .badge-indexed{background:#d1fae5;color:#065f46}
+    .badge-pending{background:#fef3c7;color:#92400e}
+    .badge-failed{background:#fee2e2;color:#991b1b}
+    .chunk-item{padding:10px 14px;border-bottom:1px solid var(--line)}
+    .chunk-item:last-child{border-bottom:none}
+    .chunk-id{font-size:10px;color:var(--muted);font-family:ui-monospace,monospace}
+    .chunk-text{font-size:12px;margin-top:4px;white-space:pre-wrap;word-break:break-word}
+    .chunk-meta{font-size:10px;color:var(--muted);margin-top:4px}
+    .empty{padding:32px;text-align:center;color:var(--muted);font-size:12px}
+    .pager{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
+    .mini-stats{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+    .mini-tag{font-size:10px;padding:4px 8px;border-radius:6px;background:#fff;border:1px solid var(--line)}
+  </style>
+  <script src="poc-paths.js"></script>
+</head>
+<body>
+<header class="header">
+  <div class="header-top">
+    <div>
+      <h1>联影 PoC · Doris 入库数据查看</h1>
+      <p>只读查看 <code>kb.kb_document_registry</code> 与 <code>kb.uih_doc_chunks</code>，无需登录 SelectDB 控制台</p>
+    </div>
+    <a class="header-link" id="linkWorkbench" href="index.html">← 返回工作台</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <div id="connStatus" class="status warn show">连接 Worker 中…</div>
+
+  <div class="stats" id="summaryStats">
+    <div class="stat"><div class="k">Registry 文档</div><div class="v" id="statReg">—</div></div>
+    <div class="stat"><div class="k">Chunk 总数</div><div class="v" id="statChunks">—</div></div>
+    <div class="stat"><div class="k">业务域</div><div class="v" id="statDomains">—</div></div>
+    <div class="stat"><div class="k">已 indexed</div><div class="v" id="statIndexed">—</div></div>
+  </div>
+
+  <div class="mini-stats" id="domainTags"></div>
+
+  <div class="toolbar">
+    <select id="filterDomain"><option value="">全部 domain</option></select>
+    <select id="filterDocType"><option value="">全部 doc_type</option></select>
+    <input type="text" id="searchText" placeholder="搜索 chunk 正文关键词…" />
+    <button class="btn" id="btnRefresh">刷新</button>
+    <button class="btn secondary" id="btnClearFilter">清除筛选</button>
+  </div>
+
+  <div class="grid">
+    <section class="panel">
+      <div class="panel-head">
+        <h2>文档注册表</h2>
+        <span id="regCount">0 条</span>
+      </div>
+      <div class="panel-body">
+        <table>
+          <thead>
+            <tr>
+              <th>document_id</th>
+              <th>domain</th>
+              <th>chunks</th>
+              <th>status</th>
+              <th>indexed_at</th>
+            </tr>
+          </thead>
+          <tbody id="regBody"></tbody>
+        </table>
+        <div class="empty" id="regEmpty" style="display:none">暂无 registry 数据</div>
+      </div>
+      <div class="pager">
+        <button class="btn secondary" id="regPrev" disabled>上一页</button>
+        <span id="regPager">—</span>
+        <button class="btn secondary" id="regNext" disabled>下一页</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2 id="chunkTitle">Chunk 明细</h2>
+        <span id="chunkCount">选择左侧文档</span>
+      </div>
+      <div class="panel-body" id="chunkBody">
+        <div class="empty">点击左侧文档查看已入库切片</div>
+      </div>
+      <div class="pager">
+        <button class="btn secondary" id="chunkPrev" disabled>上一页</button>
+        <span id="chunkPager">—</span>
+        <button class="btn secondary" id="chunkNext" disabled>下一页</button>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+(() => {
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const PAGE = 50;
+
+  let selectedDoc = null;
+  let regOffset = 0, regTotal = 0;
+  let chunkOffset = 0, chunkTotal = 0;
+
+  function getBase() {
+    return POC_PATHS.getWorkerBase();
+  }
+
+  function setStatus(type, msg) {
+    const el = $('#connStatus');
+    el.className = 'status show ' + type;
+    el.textContent = msg;
+  }
+
+  async function api(path) {
+    const resp = await fetch(getBase() + path, { signal: AbortSignal.timeout(15000) });
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok) throw new Error(data.detail || data.message || 'HTTP ' + resp.status);
+    return data;
+  }
+
+  function badgeClass(st) {
+    if (st === 'indexed') return 'badge-indexed';
+    if (st === 'failed') return 'badge-failed';
+    return 'badge-pending';
+  }
+
+  async function loadSummary() {
+    const s = await api('/api/v1/data/summary');
+    $('#statReg').textContent = s.registry_rows ?? 0;
+    $('#statChunks').textContent = s.chunk_rows ?? 0;
+    $('#statDomains').textContent = (s.by_domain || []).length;
+    const indexed = (s.by_status || []).find(x => x.status === 'indexed');
+    $('#statIndexed').textContent = indexed ? indexed.count : 0;
+
+    const domainSel = $('#filterDomain');
+    const types = new Set();
+    (s.by_domain || []).forEach(d => {
+      if (![...domainSel.options].some(o => o.value === d.domain)) {
+        const opt = document.createElement('option');
+        opt.value = d.domain; opt.textContent = `${d.domain} (${d.chunks})`;
+        domainSel.appendChild(opt);
+      }
+    });
+    (s.by_doc_type || []).forEach(t => types.add(t.doc_type));
+    const typeSel = $('#filterDocType');
+    types.forEach(t => {
+      if (![...typeSel.options].some(o => o.value === t)) {
+        const opt = document.createElement('option');
+        opt.value = t; opt.textContent = t;
+        typeSel.appendChild(opt);
+      }
+    });
+
+    $('#domainTags').innerHTML = (s.chunks_per_doc || []).map(d =>
+      `<span class="mini-tag">${esc(d.document_id)}: ${d.chunks} chunks</span>`
+    ).join('') || '<span class="mini-tag">无 chunk 数据</span>';
+  }
+
+  async function loadRegistry() {
+    const q = new URLSearchParams({ limit: PAGE, offset: regOffset });
+    const domain = $('#filterDomain').value;
+    const docType = $('#filterDocType').value;
+    if (domain) q.set('domain', domain);
+    if (docType) q.set('doc_type', docType);
+    const data = await api('/api/v1/data/registry?' + q);
+    regTotal = data.total || 0;
+    $('#regCount').textContent = `${regTotal} 条`;
+    $('#regPager').textContent = `${regOffset + 1}–${Math.min(regOffset + PAGE, regTotal)} / ${regTotal}`;
+    $('#regPrev').disabled = regOffset <= 0;
+    $('#regNext').disabled = regOffset + PAGE >= regTotal;
+
+    const body = $('#regBody');
+    if (!data.items?.length) {
+      body.innerHTML = '';
+      $('#regEmpty').style.display = 'block';
+      return;
+    }
+    $('#regEmpty').style.display = 'none';
+    body.innerHTML = data.items.map(r => `
+      <tr class="doc-row ${selectedDoc === r.document_id ? 'active' : ''}" data-id="${esc(r.document_id)}">
+        <td><strong>${esc(r.document_id)}</strong><br><span style="color:var(--muted);font-size:10px">${esc(r.title || '')}</span></td>
+        <td>${esc(r.domain)}<br><span style="color:var(--muted)">${esc(r.doc_type)}</span></td>
+        <td>${r.chunk_count ?? 0}</td>
+        <td><span class="badge ${badgeClass(r.status)}">${esc(r.status)}</span></td>
+        <td style="font-size:10px;color:var(--muted)">${esc(r.indexed_at || '—')}</td>
+      </tr>`).join('');
+
+    body.querySelectorAll('.doc-row').forEach(row => {
+      row.addEventListener('click', () => selectDoc(row.dataset.id));
+    });
+  }
+
+  async function loadChunks() {
+    if (!selectedDoc && !$('#searchText').value.trim()) {
+      $('#chunkBody').innerHTML = '<div class="empty">点击左侧文档，或输入关键词搜索 chunk</div>';
+      $('#chunkCount').textContent = '—';
+      return;
+    }
+    const q = new URLSearchParams({ limit: PAGE, offset: chunkOffset });
+    if (selectedDoc) q.set('document_id', selectedDoc);
+    const domain = $('#filterDomain').value;
+    const search = $('#searchText').value.trim();
+    if (domain) q.set('domain', domain);
+    if (search) q.set('search', search);
+
+    const data = await api('/api/v1/data/chunks?' + q);
+    chunkTotal = data.total || 0;
+    $('#chunkTitle').textContent = selectedDoc ? `Chunk · ${selectedDoc}` : 'Chunk 搜索结果';
+    $('#chunkCount').textContent = `${chunkTotal} 条`;
+    $('#chunkPager').textContent = chunkTotal ? `${chunkOffset + 1}–${Math.min(chunkOffset + PAGE, chunkTotal)} / ${chunkTotal}` : '—';
+    $('#chunkPrev').disabled = chunkOffset <= 0;
+    $('#chunkNext').disabled = chunkOffset + PAGE >= chunkTotal;
+
+    if (!data.items?.length) {
+      $('#chunkBody').innerHTML = '<div class="empty">无匹配 chunk</div>';
+      return;
+    }
+    $('#chunkBody').innerHTML = data.items.map(c => `
+      <div class="chunk-item">
+        <div class="chunk-id">${esc(c.chunk_id)} · ${esc(c.domain)}/${esc(c.doc_type)} · ${c.token_count} tokens · vec ${c.embed_dim}d</div>
+        <div class="chunk-text">${esc(c.content || '')}${(c.content || '').length >= 500 ? '…' : ''}</div>
+        <div class="chunk-meta">${esc(c.title || '')} · page ${c.page_no} · ${esc(c.indexed_at || '')}</div>
+      </div>`).join('');
+  }
+
+  function selectDoc(id) {
+    selectedDoc = id;
+    chunkOffset = 0;
+    loadRegistry();
+    loadChunks();
+  }
+
+  async function refreshAll() {
+    try {
+      setStatus('warn', '连接 Worker 中…');
+      if (POC_PATHS.shouldWaitForTunnel()) await POC_PATHS.waitForTunnel();
+      setStatus('warn', '加载中…');
+      await loadSummary();
+      await loadRegistry();
+      await loadChunks();
+      setStatus('ok', `已连接 · ${getBase()} · Doris kb 库`);
+    } catch (e) {
+      setStatus('err', '加载失败: ' + e.message + ' · 请确认已运行 deploy/start-poc-local.sh');
+    }
+  }
+
+  $('#btnRefresh').addEventListener('click', () => { regOffset = 0; chunkOffset = 0; refreshAll(); });
+  $('#btnClearFilter').addEventListener('click', () => {
+    $('#filterDomain').value = '';
+    $('#filterDocType').value = '';
+    $('#searchText').value = '';
+    selectedDoc = null;
+    regOffset = chunkOffset = 0;
+    refreshAll();
+  });
+  $('#filterDomain').addEventListener('change', () => { regOffset = chunkOffset = 0; loadRegistry(); loadChunks(); });
+  $('#filterDocType').addEventListener('change', () => { regOffset = chunkOffset = 0; loadRegistry(); loadChunks(); });
+  $('#searchText').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { chunkOffset = 0; loadChunks(); }
+  });
+  $('#regPrev').addEventListener('click', () => { regOffset = Math.max(0, regOffset - PAGE); loadRegistry(); });
+  $('#regNext').addEventListener('click', () => { regOffset += PAGE; loadRegistry(); });
+  $('#chunkPrev').addEventListener('click', () => { chunkOffset = Math.max(0, chunkOffset - PAGE); loadChunks(); });
+  $('#chunkNext').addEventListener('click', () => { chunkOffset += PAGE; loadChunks(); });
+
+  refreshAll();
+  $('#linkWorkbench').href = POC_PATHS.pageUrl('workbench');
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>联影 PoC · 演示思路与进展汇总（对齐计划 docx）</title>
+  <style>
+    :root {
+      --navy:#0f2952; --blue:#1f55cc; --teal:#0d9488; --purple:#5a3fd4; --orange:#c27803;
+      --done:#0d7a3e; --done-bg:#e8f5ee;
+      --wip:#b8860b; --wip-bg:#fef8e8;
+      --todo:#c0392b; --todo-bg:#fdecea;
+      --pending:#64748b; --pending-bg:#f1f5f9;
+      --line:#d7e1ef; --muted:#63748b; --text:#1b2940;
+      --shadow:0 8px 24px rgba(22,52,95,.07);
+    }
+    *{box-sizing:border-box;margin:0}
+    body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:var(--text);background:#f4f8fc;line-height:1.6;font-size:14px}
+    .wrap{max-width:1240px;margin:0 auto;padding:24px 24px 48px}
+
+    .hero{background:linear-gradient(135deg,var(--navy),#1a4a85);color:#fff;border-radius:16px;padding:28px 32px;box-shadow:var(--shadow);margin-bottom:28px}
+    .hero h1{font-size:24px;font-weight:700;margin-bottom:8px}
+    .hero .lead{font-size:14px;opacity:.92;max-width:920px}
+    .hero-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+    .hero-meta span{font-size:11px;padding:4px 12px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18)}
+    .ref{font-size:12px;color:var(--muted);margin:-8px 0 24px;padding:10px 14px;background:#fff;border:1px solid var(--line);border-radius:8px}
+
+    h2{font-size:17px;color:var(--navy);margin:32px 0 14px;padding-left:12px;border-left:4px solid var(--blue);font-weight:700}
+    h3{font-size:14px;color:var(--navy);margin:18px 0 10px;font-weight:700}
+    h4{font-size:13px;color:var(--navy);margin:14px 0 8px;font-weight:700}
+    p,li{font-size:13px}
+    ul,ol{margin:6px 0 6px 20px} li{margin:4px 0}
+
+    .badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;vertical-align:middle;white-space:nowrap}
+    .b-done{background:var(--done-bg);color:var(--done)}
+    .b-wip{background:var(--wip-bg);color:var(--wip)}
+    .b-todo{background:var(--todo-bg);color:var(--todo)}
+    .b-pending{background:var(--pending-bg);color:var(--pending)}
+    .b-ok{background:#dbeafe;color:#1e40af}
+
+    .panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow)}
+    .panel-accent{border-left:4px solid var(--blue)}
+    .panel-done{border-left:4px solid var(--done)}
+    .panel-wip{border-left:4px solid var(--wip)}
+    .panel-pending{border-left:4px solid var(--pending);background:#fafbfc}
+    .panel-todo{border-left:4px solid var(--todo)}
+
+    .scene-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+    @media(max-width:900px){.scene-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.scene-grid{grid-template-columns:1fr}}
+    .scene-card{border:1.5px solid var(--line);border-radius:10px;padding:14px;background:#fff}
+    .scene-card h4{margin:0 0 6px;font-size:13px}
+    .scene-card .sub{font-size:10px;color:var(--muted);margin-bottom:8px}
+    .scene-card ul{margin:0;padding-left:16px;font-size:11px}
+    .sc1{border-top:3px solid var(--blue)}.sc2{border-top:3px solid var(--teal)}
+    .sc3{border-top:3px solid var(--purple)}.sc4{border-top:3px solid var(--orange)}
+
+    .pct{font-size:20px;font-weight:800;margin:4px 0}
+    .pct.good{color:var(--done)}.pct.mid{color:var(--wip)}.pct.low{color:var(--todo)}
+
+    .flow{display:flex;flex-wrap:wrap;align-items:stretch;margin:12px 0}
+    .fb{flex:1;min-width:90px;border:1.5px solid var(--line);border-radius:8px;padding:10px 8px;text-align:center;background:#fafbfc;font-size:11px}
+    .fb .t{font-weight:700;font-size:11px;margin-bottom:3px}
+    .fb .s{font-size:10px;color:var(--muted);line-height:1.35}
+    .fb.done{border-color:var(--done);background:var(--done-bg)}
+    .fb.wip{border-color:var(--wip);background:var(--wip-bg)}
+    .fb.pending{border-color:#cbd5e1;background:var(--pending-bg)}
+    .fb.todo{border-color:var(--todo);background:var(--todo-bg)}
+    .arr{display:flex;align-items:center;padding:0 4px;color:var(--muted);font-size:16px}
+
+    .arch{font-family:ui-monospace,Menlo,monospace;font-size:12px;line-height:1.75;background:#0d1117;color:#e6edf3;padding:16px 20px;border-radius:10px;margin:12px 0;overflow-x:auto}
+    .arch .p{color:#58a6ff;font-weight:700}.arch .u{color:#3fb950}.arch .b{color:#a371f7}.arch .c{color:#8b949e}
+
+    table{width:100%;border-collapse:collapse;font-size:12px;margin:10px 0}
+    th,td{border:1px solid var(--line);padding:8px 10px;vertical-align:top;text-align:left}
+    th{background:#eef3f9;color:var(--navy);font-weight:700}
+    tr:nth-child(even) td{background:#fafcff}
+    td.yes{color:var(--done);font-weight:700}
+    td.gap{color:var(--todo);font-weight:700}
+    td.part{color:var(--wip)}
+
+    .scene-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+    .scene-head .num{font-size:11px;font-weight:800;color:#fff;width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .s1 .num{background:var(--blue)}.s2 .num{background:var(--teal)}
+    .s3 .num{background:var(--purple)}.s4 .num{background:var(--orange)}
+    .scene-head h3{margin:0;font-size:16px;flex:1}
+
+    .callout{padding:12px 16px;border-radius:8px;font-size:13px;margin:12px 0;line-height:1.65}
+    .callout-ok{background:var(--done-bg);border:1px solid #a7d9b8}
+    .callout-warn{background:var(--wip-bg);border:1px solid #f0d78c}
+    .callout-gray{background:var(--pending-bg);border:1px solid #cbd5e1;color:#475569}
+
+    .legend{display:flex;flex-wrap:wrap;gap:14px;font-size:11px;margin:10px 0 20px}
+    .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:4px;vertical-align:middle}
+    .i-done{background:var(--done-bg);border:1.5px solid var(--done)}
+    .i-wip{background:var(--wip-bg);border:1.5px solid var(--wip)}
+    .i-pending{background:var(--pending-bg);border:1.5px solid var(--pending)}
+    .i-gap{background:var(--todo-bg);border:1.5px solid var(--todo)}
+
+    code{font-size:11px;background:#eef3f9;padding:1px 5px;border-radius:3px;font-family:ui-monospace,Menlo,monospace}
+    a{color:var(--blue);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .footer{text-align:center;font-size:11px;color:var(--muted);margin-top:36px;padding-top:16px;border-top:1px solid var(--line)}
+    .td-points{margin:4px 0 0;padding-left:16px;font-size:12px;line-height:1.55}
+    .td-points li{margin:3px 0}
+    .process-steps{margin:8px 0 0;padding-left:20px;font-size:13px;line-height:1.65}
+    .process-steps li{margin:6px 0}
+    .process-steps code{font-size:11px}
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <h1>联影数据平台 PoC · 演示思路与进展汇总</h1>
+    <p class="lead">
+      以《联影数据平台选型PoC计划docx.docx》为<strong>唯一场景定义来源</strong>（四场景：财务 / OTD / 售后 Agent / 存储底座）。
+      本页整合：演示叙事、8890 统一入口、验收用例对齐、交付状态与 6.22 汇报 Runbook。
+    </p>
+    <div class="hero-meta">
+      <span>权威来源 · PoC计划 docx</span>
+      <span>统一入口 · 47.99.198.211:8890</span>
+      <span>Doris 285 chunks · 11 文档 indexed</span>
+      <span>目录规范化 · SSOT 清单 v2.0</span>
+      <span>前端全链路验收通过</span>
+      <span>Dora Scene1/3 联调确认</span>
+      <span>更新 2026-06-19</span>
+    </div>
+  </header>
+
+  <div class="ref">
+    <strong>主文档：</strong><code>POC测试执行/00-计划与项目管理/联影数据平台选型PoC计划docx.docx</code><br>
+    <strong>文档清单（SSOT）：</strong><code>POC测试执行/01-数据资产/catalog/poc-chunk-profiles.json</code><br>
+    <strong>技术说明（今日）：</strong><a href="/poc-tech-brief.html" data-page="techBrief">PoC 技术说明</a>（<code>/poc-tech-brief.html</code>）<br>
+    <strong>汇报 Runbook：</strong><a href="/poc-demo-runbook.html" data-page="demoRunbook">PoC 汇报演示 Runbook</a>（<code>/poc-demo-runbook.html</code>）<br>
+    <strong>技术架构：</strong><a href="/poc-architecture.html" data-page="architecture">PoC 技术架构与栈说明</a>（<code>/poc-architecture.html</code>）<br>
+    <strong>辅助：</strong><code>03-PoC场景技术路线说明.html</code>（计划排期） ·
+    <code>04-验收与演示/demo-scripts/scene1-acceptance-qa.json</code> ·
+    <code>04-验收与演示/demo-scripts/scene3-acceptance-qa.json</code>
+  </div>
+
+  <div class="legend">
+    <span><i class="i-done"></i> 已完成 / 有验收用例且已覆盖</span>
+    <span><i class="i-wip"></i> 部分覆盖 / 待优化</span>
+    <span><i class="i-pending"></i> 待确认（不下结论）</span>
+    <span><i class="i-gap"></i> docx 要求但缺验收项</span>
+  </div>
+
+  <!-- 今日 -->
+  <h2>今日进展 · 2026-06-19</h2>
+  <div class="panel panel-done">
+    <p>
+      当日完成 PoC 工程目录规范化、文档清单 SSOT 落地，以及前端页面与 Dora Agent 的联调整体验收。
+      演示入口统一为 <code>8890</code> 端口；文档元数据采用单一清单维护，各消费端自动对齐。
+      新增待入库文档已纳入标准作业流程（SOP），详见下文要点。
+    </p>
+    <table>
+      <tr><th>交付项</th><th>状态</th><th>要点说明</th></tr>
+      <tr>
+        <td><code>POC测试执行/</code> 目录规范化</td>
+        <td class="yes">✅</td>
+        <td>
+          <ul class="td-points">
+            <li>按职能划分 00–05 子目录：计划、数据资产、前端、Dora、验收、飞书</li>
+            <li>各目录职责与引用关系见 <code>README.md</code></li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td>文档清单 SSOT</td>
+        <td class="yes">✅</td>
+        <td>
+          <ul class="td-points">
+            <li>主数据：<code>01-数据资产/catalog/poc-chunk-profiles.json</code>（v2.0）</li>
+            <li>公共加载器：<code>poc-catalog.js</code>，统一文档 flatten 与 SOP/经验索引规则</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td>前端页面与清单联动</td>
+        <td class="yes">✅</td>
+        <td>
+          <ul class="td-points">
+            <li>工作台、知识产出、故障图谱、Doris 数据查看共用同一 catalog</li>
+            <li>通过 <code>sync_web_from_scene.sh</code> 同步至 <code>deploy/web</code>，再上传 ECS 静态目录</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td>ECS 8890 验收</td>
+        <td class="yes">✅</td>
+        <td>
+          <ul class="td-points">
+            <li>7 个 HTML 页面及 JSON/JS 静态资源均返回 200</li>
+            <li>附件可读：场景一 5 份、场景三 8 份</li>
+            <li>检索接口 <code>/api/v1/retrieve</code> 与溯源接口 <code>/retrieve/explain</code> 正常</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td>知识产出交付视图</td>
+        <td class="yes">✅</td>
+        <td>
+          <ul class="td-points">
+            <li>部署路径：<a href="/knowledge-deliverables.html">/knowledge-deliverables.html</a></li>
+            <li>覆盖本体、故障图谱、SOP 库、经验库四类产出，与 Doris / MCP / 图谱配置联动</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td>Dora Agent 联调</td>
+        <td class="yes">✅</td>
+        <td>
+          <ul class="td-points">
+            <li>场景一：MCP <code>/mcp</code>，技能 scene1-finance</li>
+            <li>场景三：MCP <code>/service-mcp</code>，技能 scene3-service</li>
+            <li>用户侧验收问答通过；trace 类工具已部署可用</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td>Doris 混合检索与溯源</td>
+        <td class="yes">✅</td>
+        <td>
+          <ul class="td-points">
+            <li>混合检索：场景预筛 → BM25 全文 + HNSW 向量，双通道合并排序</li>
+            <li>溯源输出：预筛条件、各通道命中、SQL 预览、中文 narrative 摘要</li>
+            <li>MCP 工具：<code>finance_policy_retrieve_trace</code>、<code>service_manual_retrieve_trace</code></li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td>数据资产上传脚本</td>
+        <td class="yes">✅</td>
+        <td>
+          <ul class="td-points">
+            <li>脚本：<code>deploy/upload_data_assets_to_ecs.py</code></li>
+            <li>同步范围：<code>attachments/</code> 附件文件 + catalog 清单至 ECS Worker 路径</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+    <div class="callout callout-ok" style="margin-top:12px">
+      <strong>新增待入库文档 · 标准作业流程（SOP）</strong>
+      <ol class="process-steps">
+        <li><strong>附件落盘</strong> — 将 Word/PDF 等源文件放入 <code>01-数据资产/attachments/</code></li>
+        <li><strong>登记清单</strong> — 在 <code>poc-chunk-profiles.json</code> 对应场景的 <code>documents</code> 数组追加条目（含文件名、切片策略、场景归属）</li>
+        <li><strong>同步部署</strong> — 依次执行：
+          <code>sync_web_from_scene.sh</code> →
+          <code>upload_web_to_ecs.py</code> →
+          <code>upload_data_assets_to_ecs.py</code>（有新附件时）
+        </li>
+        <li><strong>入库执行</strong> — 演示工作台「加载附件」→「场景一键入库」，写入 Doris</li>
+        <li><strong>按需扩展</strong> —
+          场景三涉及故障码时更新 <code>service-fault-graph.json</code>；
+          Dora 需路由至新文档时更新 <code>03-Dora-Agent/.../02-knowledge-rules.txt</code>
+        </li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- 00 -->
+  <h2>00 · PoC 总体目标（docx §1）</h2>
+  <div class="panel panel-accent">
+    <ol>
+      <li>验证结构化与非结构化数据的<strong>统一纳管</strong>，重点是非结构化如何供 Agent 用数；</li>
+      <li>验证源数据 → 指标的<strong>端到端链路</strong>（集成 → 开发 → 治理 → 服务 → 应用）；</li>
+      <li>验证<strong>数据 + 知识</strong>结合支撑 Agent 场景；</li>
+      <li>场景四单独验证<strong>多模态存储底座</strong>（TP/AP、QPS、混合检索）。</li>
+    </ol>
+    <div class="scene-grid">
+      <div class="scene-card sc1">
+        <h4>场景一 · Data for AI</h4>
+        <p class="sub">财务多模态融合分析</p>
+        <div class="pct good">~80%</div>
+        <p class="sub">验收符合度（对 docx）</p>
+        <span class="badge b-done">Dora 联调通过</span>
+      </div>
+      <div class="scene-card sc2">
+        <h4>场景二 · BI 分析</h4>
+        <p class="sub">营销 OTD 全链路</p>
+        <p class="sub">验收范围与演示深度</p>
+        <span class="badge b-pending">待确认</span>
+      </div>
+      <div class="scene-card sc3">
+        <h4>场景三 · 数据+知识</h4>
+        <p class="sub">售后维修智能助手</p>
+        <div class="pct good">~85%</div>
+        <p class="sub">8 题验收 + 图谱 + 知识产出页</p>
+        <span class="badge b-done">Dora 联调通过</span>
+      </div>
+      <div class="scene-card sc4">
+        <h4>场景四 · 存储底座</h4>
+        <p class="sub">性能与混合检索</p>
+        <p class="sub">验收范围与演示深度</p>
+        <span class="badge b-pending">待确认</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 01 -->
+  <h2>01 · 统一入口与架构（8890）</h2>
+  <div class="panel">
+    <div class="callout callout-ok">
+      <strong>演示统一从 8890 进入</strong>（ECS 公网或本地 <code>start-poc-local.sh</code> 代理）。
+      工作台 / Doris 查看 / 故障图谱 / 知识产出 / 本页均走同一 origin；文档清单由 <code>poc-chunk-profiles.json</code> 单点维护。
+    </div>
+    <div class="arch">
+<span class="p">http://47.99.198.211:8890</span>
+├── <span class="u">/</span> <span class="u">/scene-front.html</span> <span class="u">/poc-status.html</span>  <span class="c">工作台 · 入口 hub · 本页</span>
+├── <span class="u">/doris-data.html</span> <span class="u">/knowledge-graph.html</span> <span class="u">/knowledge-deliverables.html</span>
+├── <span class="u">/poc-chunk-profiles.json</span> <span class="u">/poc-catalog.js</span>  <span class="c">SSOT catalog（sync 同步）</span>
+├── <span class="u">/api/v1/*</span>              → Worker <span class="b">8790</span>  <span class="c">入库 / RAG / trace</span>
+├── <span class="u">/mcp</span>                   → 财务 MCP <span class="b">8791</span>
+├── <span class="u">/service-mcp</span>           → 售后 MCP <span class="b">8793</span>
+└── <span class="u">/feishu-mcp</span>              → 飞书 Wiki MCP <span class="b">8792</span>  <span class="c">待优化对接</span>
+    </div>
+  </div>
+
+  <!-- 02 Scene 1 -->
+  <h2>02 · 场景一：财务多模态融合（docx §2）</h2>
+  <div class="panel s1 panel-done">
+    <div class="scene-head">
+      <span class="num">01</span>
+      <h3>财务预算智能助手</h3>
+      <span class="badge b-done">Agent 就绪</span>
+      <span class="badge b-wip">飞书路径待优化</span>
+    </div>
+    <p><strong>docx 目标：</strong>预算申请 + 执行 + 制度；结构化 / RAG / 融合；evidence 追溯；飞书+线下文档。</p>
+
+    <h4>演示流程（建议 8 分钟）</h4>
+    <div class="flow">
+      <div class="fb done"><div class="t">① 工作台</div><div class="s">Scene1 入库<br/>finance 85 chunks</div></div>
+      <div class="arr">→</div>
+      <div class="fb done"><div class="t">② 制度 RAG</div><div class="s">超预算 747 万<br/>BG-2023-012</div></div>
+      <div class="arr">→</div>
+      <div class="fb done"><div class="t">③ 结构化</div><div class="s">Q1 差旅申请<br/>SUBMIT/REJECT</div></div>
+      <div class="arr">→</div>
+      <div class="fb done"><div class="t">④ 融合</div><div class="s">拦截+制度<br/>双源 evidence</div></div>
+      <div class="arr">→</div>
+      <div class="fb done"><div class="t">⑤ 追问</div><div class="s">驳回原因<br/>先明细后归因</div></div>
+    </div>
+
+    <h4>验收用例对齐（scene1-acceptance-qa.json · 7 题）</h4>
+    <table>
+      <tr><th>#</th><th>类型</th><th>问句摘要</th><th>docx 能力</th><th>状态</th></tr>
+      <tr><td>1</td><td>RAG</td><td>超预算 747 万审批流程</td><td>制度检索</td><td class="yes">✅</td></tr>
+      <tr><td>2</td><td>RAG</td><td>出差 5 天谁审批</td><td>差旅制度</td><td class="yes">✅</td></tr>
+      <tr><td>3</td><td>RAG</td><td>执行率 100%-120% 如何处理</td><td>预算管理办法</td><td class="yes">✅</td></tr>
+      <tr><td>4</td><td>结构化</td><td>Q1 国内差旅申请笔数</td><td>预算申请数据</td><td class="yes">✅</td></tr>
+      <tr><td>5</td><td>结构化</td><td>Q1 国际差旅执行扣减总额</td><td>预算执行数据</td><td class="yes">✅</td></tr>
+      <tr><td>6</td><td>融合</td><td>差旅为何拦截 + 制度如何处理</td><td>融合问数</td><td class="yes">✅</td></tr>
+      <tr><td>7</td><td>追问</td><td>两笔驳回具体原因</td><td>多轮 + 归因</td><td class="yes">✅</td></tr>
+    </table>
+
+    <h4>docx 要求但尚未单列验收项</h4>
+    <table>
+      <tr><th>缺口</th><th>建议补法</th></tr>
+      <tr><td class="gap">预算执行率单独问数</td><td>case 8 · finance_budget_operation_metric</td></tr>
+      <tr><td class="gap">超预算金额问数</td><td>case 9 · MCP 日志工具</td></tr>
+      <tr><td class="gap">.log/.jsonl 日志接入演示</td><td>case 10 · Agent MCP 双格式解析</td></tr>
+      <tr><td class="gap">权限 / 血缘展示</td><td>汇报 Checklist 演示项</td></tr>
+      <tr><td class="part">飞书多维表 + Wiki</td><td><code>feishu-scene1/03</code> F1–F9 + 飞书原生 Agent（待优化）</td></tr>
+    </table>
+
+    <p><strong>Dora：</strong>MCP <code>/mcp</code> · 技能 scene1-finance · 分析主题数据查询 ·
+    trace 工具 <code>finance_policy_retrieve_trace</code> ·
+    配置 <code>03-Dora-Agent/scene1-finance/</code> · <span class="badge b-done">联调通过</span></p>
+  </div>
+
+  <!-- 03 Scene 2 -->
+  <h2>03 · 场景二：营销 OTD 全链路 BI（docx §3）</h2>
+  <div class="panel s2 panel-pending">
+    <div class="scene-head">
+      <span class="num">02</span>
+      <h3>OTD · 线索→商机→订单→发运→签收</h3>
+      <span class="badge b-pending">待确认</span>
+    </div>
+    <p><strong>docx 目标：</strong>多源集成 → OTD 宽表 → 指标语义层 → 两层 BI 看板 → 下钻 → 血缘；核心 KPI：OTD 达成率、延期率、平均延期天数；数据质量探查。</p>
+
+    <div class="callout callout-gray">
+      <strong>说明：</strong>本场景<strong>验收范围、演示深度与完成度均待项目组确认</strong>。本页不对场景二下结论；下列内容仅摘录 docx §3 要求，供对齐使用。
+    </div>
+
+    <h4>docx 要求的验收维度（待确认）</h4>
+    <table>
+      <tr><th>维度</th><th>docx 描述</th><th>状态</th></tr>
+      <tr><td>五段宽表</td><td>线索/商机/订单/发运/签收关联</td><td class="part">待确认</td></tr>
+      <tr><td>OTD 达成率 / 延期率</td><td>指标中心统一口径</td><td class="part">待确认</td></tr>
+      <tr><td>管理层 + 业务层看板</td><td>下钻到订单明细</td><td class="part">待确认</td></tr>
+      <tr><td>指标血缘追溯</td><td>点击指标看口径链路</td><td class="part">待确认</td></tr>
+      <tr><td>数据质量探查</td><td>稽核规则 + 告警</td><td class="part">待确认</td></tr>
+      <tr><td>流批一体</td><td>定时 + 实时接入演示</td><td class="part">待确认</td></tr>
+      <tr><td>Dora 指标问答（可选）</td><td>「本月 OTD 平均交付周期？」</td><td class="part">待确认</td></tr>
+    </table>
+
+    <h4>建议演示叙事（docx §3.5 · 待确认是否纳入汇报）</h4>
+    <div class="flow">
+      <div class="fb pending"><div class="t">FDL 接入</div><div class="s">定时+实时</div></div>
+      <div class="arr">→</div>
+      <div class="fb pending"><div class="t">OTD 宽表</div><div class="s">五段关联</div></div>
+      <div class="arr">→</div>
+      <div class="fb pending"><div class="t">质量探查</div><div class="s">规则告警</div></div>
+      <div class="arr">→</div>
+      <div class="fb pending"><div class="t">指标中心</div><div class="s">otd_rate 等</div></div>
+      <div class="arr">→</div>
+      <div class="fb pending"><div class="t">FineBI</div><div class="s">两层看板</div></div>
+      <div class="arr">→</div>
+      <div class="fb pending"><div class="t">下钻+血缘</div><div class="s">订单明细</div></div>
+    </div>
+  </div>
+
+  <!-- 04 Scene 3 -->
+  <h2>04 · 场景三：售后维修智能助手（docx §4）</h2>
+  <div class="panel s3 panel-done">
+    <div class="scene-head">
+      <span class="num">03</span>
+      <h3>数据 + 知识 · 诊断链 Agent</h3>
+      <span class="badge b-done">Agent 就绪</span>
+    </div>
+    <p><strong>docx 目标：</strong>报修/工单/日志 + 手册/经验/备件；知识图谱 + SOP + 经验库；Agent 诊断链（docx 示例 E-4023 → PoC 改编为 E1001/uCT960）。</p>
+
+    <h4>演示故事线（PoC 改编 · uCT960 · 王工-CT2）</h4>
+    <div class="flow">
+      <div class="fb done"><div class="t">① 入库</div><div class="s">8 文档 200 chunks</div></div>
+      <div class="arr">→</div>
+      <div class="fb done"><div class="t">② 图谱</div><div class="s">E1001/E1002 路由</div></div>
+      <div class="arr">→</div>
+      <div class="fb done"><div class="t">③ 诊断 RAG</div><div class="s">EXP-2024-015</div></div>
+      <div class="arr">→</div>
+      <div class="fb done"><div class="t">④ SOP</div><div class="s">RM-2023-001</div></div>
+      <div class="arr">→</div>
+      <div class="fb done"><div class="t">⑤ 备件+风险</div><div class="s">SP-2024-001/025</div></div>
+      <div class="arr">→</div>
+      <div class="fb done"><div class="t">⑥ 融合+工单</div><div class="s">Q1 量 + RPR001508</div></div>
+    </div>
+
+    <h4>验收用例对齐（scene3-acceptance-qa.json · 8 题）</h4>
+    <table>
+      <tr><th>#</th><th>类型</th><th>问句摘要</th><th>docx 映射</th><th>状态</th></tr>
+      <tr><td>1</td><td>诊断 RAG</td><td>E1001/E1002 旋转阳极 9600rpm</td><td>③ 知识平台检索</td><td class="yes">✅</td></tr>
+      <tr><td>2</td><td>SOP</td><td>球管更换第一步</td><td>维修 SOP 知识库</td><td class="yes">✅</td></tr>
+      <tr><td>3</td><td>备件</td><td>UI-CT-TUBE-960 价格</td><td>备件手册</td><td class="yes">✅</td></tr>
+      <tr><td>4</td><td>融合</td><td>Q1 更换量大吗</td><td>② 数据 + ③ 知识</td><td class="yes">✅</td></tr>
+      <tr><td>5</td><td>风险</td><td>备件供应风险</td><td>备件预警</td><td class="yes">✅</td></tr>
+      <tr><td>6</td><td>图谱</td><td>E1002 应查哪些文档</td><td>故障诊断知识图谱</td><td class="yes">✅</td></tr>
+      <tr><td>7</td><td>结构化</td><td>最近报修 repair_id</td><td>CRM 报修/派工</td><td class="yes">✅</td></tr>
+      <tr><td>8</td><td>扩展</td><td>uMR 液氦异常</td><td>多设备扩展</td><td class="yes">✅</td></tr>
+    </table>
+
+    <h4>docx 要求但尚未单列验收项</h4>
+    <table>
+      <tr><th>缺口</th><th>说明</th></tr>
+      <tr><td class="gap">MTBF / MTTR 指标问数</td><td>case 9–10 · metrics-catalog.json</td></tr>
+      <tr><td class="gap">30 天运行日志汇总</td><td>case 11 · device_operation_log</td></tr>
+      <tr><td class="part">自动生成工单 / 备件预配</td><td>docx ⑤⑥，PoC 范围外可口头说明</td></tr>
+      <tr><td class="part">实时管道 vs 离线 ETL</td><td>FDL 演示项，非 Agent 题</td></tr>
+    </table>
+
+    <p><strong>Dora：</strong>MCP <code>/service-mcp</code>（uih-service-rag）· 技能 scene3-service ·
+    trace 工具 <code>service_manual_retrieve_trace</code> ·
+    图谱 <a href="/knowledge-graph.html">/knowledge-graph.html</a> ·
+    知识产出 <a href="/knowledge-deliverables.html">/knowledge-deliverables.html</a> ·
+    <span class="badge b-done">联调通过</span></p>
+  </div>
+
+  <!-- 05 Scene 4 -->
+  <h2>05 · 场景四：多模态存储底座（docx §5）</h2>
+  <div class="panel s4 panel-pending">
+    <div class="scene-head">
+      <span class="num">04</span>
+      <h3>性能 · TP/AP · 混合检索</h3>
+      <span class="badge b-pending">待确认</span>
+    </div>
+    <p><strong>docx 目标：</strong>高并发 QPS；TPC-C（TP）/ TPC-H·DS（AP）；向量+全文+结构化过滤组合检索；存储效率；TP/AP 一体。</p>
+
+    <div class="callout callout-gray">
+      <strong>说明：</strong>本场景<strong>验收范围、演示深度与完成度均待项目组确认</strong>。本页不对场景四下结论；下列内容仅摘录 docx §5 要求，供对齐使用。
+    </div>
+
+    <h4>docx 要求的验证维度（待确认）</h4>
+    <table>
+      <tr><th>维度</th><th>docx 描述</th><th>状态</th></tr>
+      <tr><td>高并发 QPS</td><td>P95/P99 时延、资源占用</td><td class="part">待确认</td></tr>
+      <tr><td>TP 性能</td><td>TPC-C 类：写入吞吐、点查</td><td class="part">待确认</td></tr>
+      <tr><td>AP 性能</td><td>TPC-H·DS 类：复杂聚合、多表关联</td><td class="part">待确认</td></tr>
+      <tr><td>混合检索</td><td>全文 + 向量 + 结构化过滤组合</td><td class="part">待确认</td></tr>
+      <tr><td>存储效率</td><td>列存、压缩、索引占用</td><td class="part">待确认</td></tr>
+      <tr><td>入库可检索</td><td>文档当日入库、Agent 可引用</td><td class="part">待确认</td></tr>
+    </table>
+
+    <h4>docx 建议演示叙事（§5.6 · 待确认是否纳入汇报）</h4>
+    <div class="flow">
+      <div class="fb pending"><div class="t">入库</div><div class="s">待确认</div></div>
+      <div class="arr">→</div>
+      <div class="fb pending"><div class="t">混合检索</div><div class="s">待确认</div></div>
+      <div class="arr">→</div>
+      <div class="fb pending"><div class="t">基准测试</div><div class="s">QPS/TPC</div></div>
+      <div class="arr">→</div>
+      <div class="fb pending"><div class="t">索引解耦</div><div class="s">Tool 零改动</div></div>
+    </div>
+  </div>
+
+  <!-- 06 Feishu -->
+  <h2>06 · 飞书对接（场景一补充 · 待优化）</h2>
+  <div class="panel panel-wip">
+    <p>docx 场景一要求飞书知识库 + 飞书表格与 Doris 版并行。当前主路径（Doris RAG + 宽表）已就绪；飞书原生路径素材齐全，Dora 对接仍待优化。</p>
+    <table>
+      <tr><th>模块</th><th>状态</th><th>验收文件</th></tr>
+      <tr><td>飞书 Wiki 4 篇制度 push</td><td><span class="badge b-done">完成</span></td><td>push_report.json</td></tr>
+      <tr><td>飞书多维表预算数据</td><td><span class="badge b-done">完成</span></td><td>feishu-scene1 数据</td></tr>
+      <tr><td>/feishu-mcp 服务</td><td><span class="badge b-done">完成</span></td><td>8792</td></tr>
+      <tr><td>飞书原生 Dora Agent</td><td><span class="badge b-wip">待优化</span></td><td>feishu-native acceptance 6 题</td></tr>
+      <tr><td>飞书表结构化问数 F1–F9</td><td><span class="badge b-wip">待并入主清单</span></td><td>feishu-scene1/03</td></tr>
+    </table>
+  </div>
+
+  <!-- 07 Matrix -->
+  <h2>07 · 验收符合度总矩阵（对照 docx）</h2>
+  <table>
+    <tr>
+      <th>场景</th><th>docx 章节</th><th>正式验收文件</th><th>题数/项</th><th>符合度</th><th>交付状态</th>
+    </tr>
+    <tr>
+      <td>一 财务</td><td>§2</td><td>scene1-acceptance-qa.json</td><td>7 题</td><td class="yes">~80%</td>
+      <td><span class="badge b-done">Dora 联调通过</span></td>
+    </tr>
+    <tr>
+      <td>二 OTD</td><td>§3</td><td><em>待确认</em></td><td>—</td><td>—</td>
+      <td><span class="badge b-pending">待确认</span></td>
+    </tr>
+    <tr>
+      <td>三 售后</td><td>§4</td><td>scene3-acceptance-qa.json</td><td>8 题</td><td class="yes">~85%</td>
+      <td><span class="badge b-done">Dora 联调通过</span></td>
+    </tr>
+    <tr>
+      <td>四 存储</td><td>§5</td><td><em>待确认</em></td><td>—</td><td>—</td>
+      <td><span class="badge b-pending">待确认</span></td>
+    </tr>
+    <tr>
+      <td>飞书补充</td><td>§2 数据源</td><td>feishu 分散 2 套</td><td>6+9 题</td><td class="part">—</td>
+      <td><span class="badge b-wip">待优化</span></td>
+    </tr>
+  </table>
+
+  <!-- 08 Runbook -->
+  <h2>08 · 6.22 汇报演示 Runbook</h2>
+  <div class="panel">
+    <p style="margin-bottom:12px;font-size:13px">
+      <strong>完整演示脚本（推荐）：</strong>
+      <a href="/poc-demo-runbook.html" data-page="demoRunbook">PoC 汇报演示 Runbook</a>（45–55 分钟 · 含重复能力节奏） ·
+      <a href="/poc-architecture.html" data-page="architecture">技术架构与栈说明</a>
+    </p>
+    <table>
+      <tr><th>顺序</th><th>时长</th><th>内容</th><th>入口 / 验收</th></tr>
+      <tr>
+        <td>1</td><td>2 min</td><td>PoC 四场景总览 + 8890 架构 + 今日工程交付</td><td>本页 §今日 + §01</td>
+      </tr>
+      <tr>
+        <td>2</td><td>3 min</td><td>知识层工程演示（可选）</td><td>工作台入库 · <a href="/knowledge-deliverables.html">知识产出四视图</a> · catalog SSOT</td>
+      </tr>
+      <tr>
+        <td>3</td><td>—</td><td><strong>场景四</strong>存储底座（docx §5）</td><td><span class="badge b-pending">待确认</span></td>
+      </tr>
+      <tr>
+        <td>4</td><td>10 min</td><td><strong>场景三</strong>售后 Agent 诊断链 + 知识图谱</td><td>Dora CS Agent · scene3 验收 8 题选 4 · 可追问检索说明</td>
+      </tr>
+      <tr>
+        <td>5</td><td>8 min</td><td><strong>场景一</strong>财务融合问数</td><td>Dora 财务 Agent · scene1 验收 7 题选 4 · 融合+trace</td>
+      </tr>
+      <tr>
+        <td>6</td><td>5 min</td><td><strong>场景二</strong>OTD BI</td><td>FineBI 看板 · <span class="badge b-pending">待确认</span></td>
+      </tr>
+      <tr>
+        <td>7</td><td>3 min</td><td>飞书路径对比（可选）</td><td><span class="badge b-wip">待优化</span></td>
+      </tr>
+      <tr>
+        <td>8</td><td>Q&A</td><td>场景二/四范围待确认项说明</td><td>—</td>
+      </tr>
+    </table>
+    <div class="callout callout-ok">
+      <strong>讲解原则：</strong>期望答案只在验收 JSON / 本页对照，<strong>不写入 Agent Prompt</strong>；
+      现场强调 evidence（document_id、app_no、repair_id）来自查询而非背诵。
+    </div>
+  </div>
+
+  <!-- 09 Gaps -->
+  <h2>09 · 待补验收项（下一步）</h2>
+  <div class="panel panel-todo">
+    <table>
+      <tr><th>优先级</th><th>动作</th><th>对齐 docx</th><th>状态</th></tr>
+      <tr><td><span class="badge b-done">—</span></td><td>目录规范化 + SSOT 清单 + 前端/Dora 联调</td><td>工程交付</td><td class="yes">✅ 06-19</td></tr>
+      <tr><td><span class="badge b-pending">P0</span></td><td>场景二、场景四正式验收范围与演示深度（待项目组确认）</td><td>§3 · §5</td><td class="gap">待确认</td></tr>
+      <tr><td><span class="badge b-wip">P1</span></td><td>scene1 补 3 题：执行率、超预算、log/json（已写入验收 JSON）</td><td>§2</td><td class="yes">✅ 已补</td></tr>
+      <tr><td><span class="badge b-wip">P1</span></td><td>scene3 补 MTBF/MTTR + 30天日志（已写入验收 JSON）</td><td>§4</td><td class="yes">✅ 已补</td></tr>
+      <tr><td><span class="badge b-wip">P2</span></td><td>从 deploy/dora-skills 打包 skill zip 并上传 Dora</td><td>Agent 运维</td><td class="part">素材在库</td></tr>
+      <tr><td><span class="badge b-wip">P2</span></td><td>合并飞书验收为「场景一总表」</td><td>§2 数据源</td><td class="gap">待补</td></tr>
+      <tr><td><span class="badge b-wip">P2</span></td><td>完成飞书原生 Dora Agent + /feishu-mcp 绑定</td><td>§2 文档融合</td><td class="part">待优化</td></tr>
+    </table>
+  </div>
+
+  <!-- 10 Files -->
+  <h2>10 · 关键文件索引</h2>
+  <table>
+    <tr><th>类别</th><th>路径</th></tr>
+    <tr><td>权威计划</td><td><code>00-计划与项目管理/联影数据平台选型PoC计划docx.docx</code></td></tr>
+    <tr><td>目录说明</td><td><code>POC测试执行/README.md</code></td></tr>
+    <tr><td>本页（8890）</td><td><code>/poc-status.html</code></td></tr>
+    <tr><td>技术说明（2026-06-19）</td><td><code>/poc-tech-brief.html</code></td></tr>
+    <tr><td>汇报 Runbook</td><td><a href="/poc-demo-runbook.html" data-page="demoRunbook"><code>/poc-demo-runbook.html</code></a></td></tr>
+    <tr><td>技术架构说明</td><td><a href="/poc-architecture.html" data-page="architecture"><code>/poc-architecture.html</code></a></td></tr>
+    <tr><td>入口 hub</td><td><code>/scene-front.html</code></td></tr>
+    <tr><td>工作台</td><td><code>http://47.99.198.211:8890/</code></td></tr>
+    <tr><td>知识产出四视图</td><td><code>/knowledge-deliverables.html</code></td></tr>
+    <tr><td>同步脚本</td><td><code>deploy/sync_web_from_scene.sh</code> · <code>deploy/upload_data_assets_to_ecs.py</code></td></tr>
+    <tr><td>场景一验收</td><td><code>04-验收与演示/demo-scripts/scene1-acceptance-qa.json</code></td></tr>
+    <tr><td>场景三验收</td><td><code>04-验收与演示/demo-scripts/scene3-acceptance-qa.json</code></td></tr>
+    <tr><td>场景一口播</td><td><code>04-验收与演示/demo-scripts/scene1-demo-script.md</code></td></tr>
+    <tr><td>飞书表验收</td><td><code>01-数据资产/feishu-scene1/03-Dora问数验收用例.md</code></td></tr>
+    <tr><td>飞书 Wiki 验收</td><td><code>05-飞书原生场景/demo-scripts/acceptance-qa.json</code></td></tr>
+    <tr><td>文档清单（SSOT）</td><td><code>01-数据资产/catalog/poc-chunk-profiles.json</code></td></tr>
+    <tr><td>Scene1 Agent</td><td><code>03-Dora-Agent/scene1-finance/</code></td></tr>
+    <tr><td>Scene3 Agent</td><td><code>03-Dora-Agent/scene3-service/</code></td></tr>
+  </table>
+
+  <h2 id="glossary">附录 · 术语速查</h2>
+  <div class="panel panel-accent">
+    <p style="font-size:13px;margin-bottom:12px">
+      文中 <span style="border-bottom:1px dotted #64748b;cursor:help">带下划点</span> 的术语（如
+      <code>poc-catalog.js</code>、<code>finance_policy_retrieve_trace</code>）可<strong>鼠标悬停</strong>查看释义。
+      下表为完整索引，按分类列出。
+    </p>
+    <div id="poc-glossary-table"></div>
+  </div>
+
+  <div class="footer">
+    联影数据平台 PoC · 演示思路与进展汇总 · 对齐 PoC计划 docx 四场景 · 2026-06-19 修订<br>
+    今日：目录规范化 + SSOT 落地 + 前端验收 + Dora 联调通过 · 场景二/四正式验收待确认 · 飞书路径待优化
+  </div>
+
+</div>
+<script src="poc-paths.js"></script>
+<script src="poc-glossary.js"></script>
+<script>
+  if (window.POC_PATHS) POC_PATHS.bindPageLinks();
+  POC_GLOSSARY.init({ table: '#poc-glossary-table' });
+</script>
+</body>
+</html>

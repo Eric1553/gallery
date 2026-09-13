@@ -1,0 +1,741 @@
+{
+  "saved_at": "2026-07-30T10:57:08+08:00",
+  "mode": "moss_live",
+  "item_count": 22,
+  "errors": [],
+  "packs": {
+    "morning": {
+      "bundle_id": "BIREN-MORNING-LIVE-20260730-1057",
+      "bundle_type": "morning_pack",
+      "org": "biren",
+      "timezone": "Asia/Shanghai",
+      "generated_at": "2026-07-30T10:56:43+08:00",
+      "client_refreshed_at": "2026-07-30T10:56:43+08:00",
+      "source": "moss_live",
+      "items": [
+        {
+          "topic_id": "BR-CMP",
+          "item_id": "CMP-20260730-04",
+          "title": "大模型价格战下半场：将推理价格打下去",
+          "summary": "推理才是难题，推理才是难题。 作者|司库财经 质子“买一批设备回来，10个月收回成本就够了，希望能以合理价格买到芯片，这样就不用自己做芯片了”，近日在投资会上，DeepSeek 创始人梁文峰道出了自己的苦恼，现在的芯片价格太贵了，无法满足DeepSeek对于大模型低成本的需求",
+          "source_name": "lanjinger",
+          "source_url": "https://www.lanjinger.com/d/1784891691203214217",
+          "sources": [
+            {
+              "name": "lanjinger",
+              "url": "https://www.lanjinger.com/d/1784891691203214217"
+            }
+          ],
+          "published_at": "2026-07-30T10:48:00+08:00",
+          "collected_at": "2026-07-30T10:56:43+08:00",
+          "impact_level": "medium",
+          "impact_type": "chain",
+          "impact_label": "上下游",
+          "priority_score": 44,
+          "confidence": "low",
+          "confidence_label": "低",
+          "source_tier": "unknown",
+          "tags": [
+            "上游",
+            "推理场景",
+            "大模型"
+          ],
+          "related_metric_tags": [],
+          "biren_relevance": "推理算力需求结构变化，关注客户整机配置与推理卡出货节奏。",
+          "category": "external",
+          "desk_eligible": false
+        },
+        {
+          "topic_id": "BR-IND",
+          "item_id": "IND-20260730-06",
+          "title": "和众汇富研究手记：算力配电架构迭代 固态变压器迎风口",
+          "summary": "AI 算力建设持续提速，智算中心单机柜功率密度不断抬升，传统供配电体系短板逐步暴露，多级转换带来的能耗损耗、设备占地过大、响应速度不足等问题，已经难以匹配超高功率 GPU 集群的运行需求，供配电系统迎来系统性架构革新，固态变压器作为新一代核心电力装备，快速站上产业风口，成为 2026 年算力基础设施领域关注度较高的硬件赛道",
+          "source_name": "hy",
+          "source_url": "http://hy.stock.cnfol.com/hangyejingcui/20260730/32321448.shtml",
+          "sources": [
+            {
+              "name": "hy",
+              "url": "http://hy.stock.cnfol.com/hangyejingcui/20260730/32321448.shtml"
+            }
+          ],
+          "published_at": "2026-07-30T10:44:02+08:00",
+          "collected_at": "2026-07-30T10:56:43+08:00",
+          "impact_level": "medium",
+          "impact_type": "chain",
+          "impact_label": "上下游",
+          "priority_score": 44,
+          "confidence": "low",
+          "confidence_label": "低",
+          "source_tier": "unknown",
+          "tags": [
+            "上游",
+            "下游",
+            "集群网络"
+          ],
+          "related_metric_tags": [],
+          "biren_relevance": "智算基建扩张拉动 GPU 集群需求，关注区域集采与 POC 节奏。",
+          "category": "external",
+          "desk_eligible": false
+        },
+        {
+          "topic_id": "BR-CMP",
+          "item_id": "CMP-20260730-02",
+          "title": "液冷赋能新算力 2026亚洲大数据技术展",
+          "summary": "2026年11月26日至28日，第二十八届中国国际高新技术成果交易会将在深圳国际会展中心（宝安）盛大启幕",
+          "source_name": "mbd",
+          "source_url": "https://mbd.baidu.com/newspage/data/landingshare?nid=news_9293670772899237085",
+          "sources": [
+            {
+              "name": "mbd",
+              "url": "https://mbd.baidu.com/newspage/data/landingshare?nid=news_9293670772899237085"
+            }
+          ],
+          "published_at": "2026-07-30T10:50:00+08:00",
+          "collected_at": "2026-07-30T10:56:43+08:00",
+          "impact_level": "medium",
+          "impact_type": "competitor",
+          "impact_label": "竞品压力",
+          "priority_score": 40,
+          "confidence": "low",
+          "confidence_label": "低",
+          "source_tier": "unknown",
+          "tags": [
+            "竞品压力",
+            "竞品雷达"
+          ],
+          "related_metric_tags": [],
+          "biren_relevance": "「液冷赋能新算力 2026亚洲大数据技术展」：竞品节奏抬升客户对比维度，需刷新性能/能效/交付三维对标。",
+          "category": "external",
+          "desk_eligible": false
+        },
+        {
+          "topic_id": "BR-CMP",
+          "item_id": "CMP-20260730-03",
+          "title": "比「算力荒」更致命，「数据荒」正在带来灾难？",
+          "summary": "作者|深眸财经 郑施婧 当下，AI行业最常被提及的焦虑，非算力短缺莫属。英伟达GPU一卡难求的新闻屡见不鲜，价格也随之高涨",
+          "source_name": "sohu",
+          "source_url": "https://www.sohu.com/a/1056576529_250147",
+          "sources": [
+            {
+              "name": "sohu",
+              "url": "https://www.sohu.com/a/1056576529_250147"
+            }
+          ],
+          "published_at": "2026-07-30T10:48:00+08:00",
+          "collected_at": "2026-07-30T10:56:43+08:00",
+          "impact_level": "medium",
+          "impact_type": "competitor",
+          "impact_label": "竞品压力",
+          "priority_score": 40,
+          "confidence": "low",
+          "confidence_label": "低",
+          "source_tier": "tabloid",
+          "tags": [
+            "竞品压力",
+            "竞品对标"
+          ],
+          "related_metric_tags": [],
+          "biren_relevance": "英伟达平台升级抬升集群成本，利好国产性价比叙事。",
+          "category": "external",
+          "desk_eligible": false
+        },
+        {
+          "topic_id": "BR-CMP",
+          "item_id": "CMP-20260730-05",
+          "title": "AI智能体手机的下一个赛点，不在大模型",
+          "summary": "手机从“被人操作”到“替人办事”，还要迈几道坎。 作者 | 趣解商业 张语格最近一个月，最热闹的智能硬件赛道当属AI智能体手机",
+          "source_name": "lanjinger",
+          "source_url": "https://www.lanjinger.com/d/1784870111654227121",
+          "sources": [
+            {
+              "name": "lanjinger",
+              "url": "https://www.lanjinger.com/d/1784870111654227121"
+            }
+          ],
+          "published_at": "2026-07-30T10:47:28+08:00",
+          "collected_at": "2026-07-30T10:56:43+08:00",
+          "impact_level": "medium",
+          "impact_type": "competitor",
+          "impact_label": "竞品压力",
+          "priority_score": 40,
+          "confidence": "low",
+          "confidence_label": "低",
+          "source_tier": "unknown",
+          "tags": [
+            "竞品压力",
+            "大模型"
+          ],
+          "related_metric_tags": [],
+          "biren_relevance": "推理算力需求结构变化，关注客户整机配置与推理卡出货节奏。",
+          "category": "external",
+          "desk_eligible": false
+        },
+        {
+          "topic_id": "BR-CUS",
+          "item_id": "CUS-20260730-01",
+          "title": "深耕硅光技术 赛勒科技乘AI算力东风快速发展",
+          "summary": "今年以来，全球领先的硅光芯片研发设计公司——上海赛勒光电子科技有限公司（以下简称“赛勒科技”）凭借在硅光芯片及CPO（光电共封装）等前沿解决方案领域的深厚积累，迎来了营收的爆发式增长",
+          "source_name": "finance",
+          "source_url": "https://finance.sina.cn/tech/2026-07-30/detail-inikpxkt2066304.d.html",
+          "sources": [
+            {
+              "name": "finance",
+              "url": "https://finance.sina.cn/tech/2026-07-30/detail-inikpxkt2066304.d.html"
+            }
+          ],
+          "published_at": "2026-07-30T10:50:04+08:00",
+          "collected_at": "2026-07-30T10:56:43+08:00",
+          "impact_level": "medium",
+          "impact_type": "context",
+          "impact_label": "环境观察",
+          "priority_score": 20,
+          "confidence": "low",
+          "confidence_label": "低",
+          "source_tier": "unknown",
+          "tags": [
+            "环境观察",
+            "客户动态"
+          ],
+          "related_metric_tags": [],
+          "biren_relevance": "「深耕硅光技术 赛勒科技乘AI算力东风快…」：客户侧算力投入节奏调整，关注是否带来替换或扩容机会。",
+          "category": "external",
+          "desk_eligible": false
+        },
+        {
+          "topic_id": "BR-SEN",
+          "item_id": "SEN-20260730-07",
+          "title": "国内芯片测试接口龙头韬盛科技主动撤回材料，科创板 IPO 审核终止",
+          "summary": "“ 7 月 29 日，上海证券交易所发布公告，上海韬盛电子科技股份有限公司（韬盛科技）科创板 IPO 审核正式终止",
+          "source_name": "news",
+          "source_url": "https://news.eccn.com/news_2026073009470981.htm",
+          "sources": [
+            {
+              "name": "news",
+              "url": "https://news.eccn.com/news_2026073009470981.htm"
+            }
+          ],
+          "published_at": "2026-07-30T10:31:09+08:00",
+          "collected_at": "2026-07-30T10:56:43+08:00",
+          "impact_level": "low",
+          "impact_type": "context",
+          "impact_label": "环境观察",
+          "priority_score": 12,
+          "confidence": "low",
+          "confidence_label": "低",
+          "source_tier": "unknown",
+          "tags": [
+            "环境观察",
+            "舆情品牌"
+          ],
+          "related_metric_tags": [],
+          "biren_relevance": "资本市场热度上升，经营侧保持交付叙事聚焦，避免噪音干扰商务节奏。",
+          "category": "external",
+          "desk_eligible": false
+        }
+      ]
+    },
+    "noon": {
+      "bundle_id": "BIREN-NOON-LIVE-20260730-1057",
+      "bundle_type": "noon_delta",
+      "org": "biren",
+      "timezone": "Asia/Shanghai",
+      "generated_at": "2026-07-30T10:56:43+08:00",
+      "client_refreshed_at": "2026-07-30T10:56:43+08:00",
+      "source": "moss_live",
+      "items": [
+        {
+          "topic_id": "BR-CMP",
+          "item_id": "CMP-20260730-04",
+          "title": "大模型价格战下半场：将推理价格打下去",
+          "summary": "推理才是难题，推理才是难题。 作者|司库财经 质子“买一批设备回来，10个月收回成本就够了，希望能以合理价格买到芯片，这样就不用自己做芯片了”，近日在投资会上，DeepSeek 创始人梁文峰道出了自己的苦恼，现在的芯片价格太贵了，无法满足DeepSeek对于大模型低成本的需求",
+          "source_name": "lanjinger",
+          "source_url": "https://www.lanjinger.com/d/1784891691203214217",
+          "sources": [
+            {
+              "name": "lanjinger",
+              "url": "https://www.lanjinger.com/d/1784891691203214217"
+            }
+          ],
+          "published_at": "2026-07-30T10:48:00+08:00",
+          "collected_at": "2026-07-30T10:56:43+08:00",
+          "impact_level": "medium",
+          "impact_type": "chain",
+          "impact_label": "上下游",
+          "priority_score": 44,
+          "confidence": "low",
+          "confidence_label": "低",
+          "source_tier": "unknown",
+          "tags": [
+            "上游",
+            "推理场景",
+            "大模型"
+          ],
+          "related_metric_tags": [],
+          "biren_relevance": "推理算力需求结构变化，关注客户整机配置与推理卡出货节奏。",
+          "category": "external",
+          "desk_eligible": false
+        },
+        {
+          "topic_id": "BR-IND",
+          "item_id": "IND-20260730-06",
+          "title": "和众汇富研究手记：算力配电架构迭代 固态变压器迎风口",
+          "summary": "AI 算力建设持续提速，智算中心单机柜功率密度不断抬升，传统供配电体系短板逐步暴露，多级转换带来的能耗损耗、设备占地过大、响应速度不足等问题，已经难以匹配超高功率 GPU 集群的运行需求，供配电系统迎来系统性架构革新，固态变压器作为新一代核心电力装备，快速站上产业风口，成为 2026 年算力基础设施领域关注度较高的硬件赛道",
+          "source_name": "hy",
+          "source_url": "http://hy.stock.cnfol.com/hangyejingcui/20260730/32321448.shtml",
+          "sources": [
+            {
+              "name": "hy",
+              "url": "http://hy.stock.cnfol.com/hangyejingcui/20260730/32321448.shtml"
+            }
+          ],
+          "published_at": "2026-07-30T10:44:02+08:00",
+          "collected_at": "2026-07-30T10:56:43+08:00",
+          "impact_level": "medium",
+          "impact_type": "chain",
+          "impact_label": "上下游",
+          "priority_score": 44,
+          "confidence": "low",
+          "confidence_label": "低",
+          "source_tier": "unknown",
+          "tags": [
+            "上游",
+            "下游",
+            "集群网络"
+          ],
+          "related_metric_tags": [],
+          "biren_relevance": "智算基建扩张拉动 GPU 集群需求，关注区域集采与 POC 节奏。",
+          "category": "external",
+          "desk_eligible": false
+        },
+        {
+          "topic_id": "BR-CMP",
+          "item_id": "CMP-20260730-02",
+          "title": "液冷赋能新算力 2026亚洲大数据技术展",
+          "summary": "2026年11月26日至28日，第二十八届中国国际高新技术成果交易会将在深圳国际会展中心（宝安）盛大启幕",
+          "source_name": "mbd",
+          "source_url": "https://mbd.baidu.com/newspage/data/landingshare?nid=news_9293670772899237085",
+          "sources": [
+            {
+              "name": "mbd",
+              "url": "https://mbd.baidu.com/newspage/data/landingshare?nid=news_9293670772899237085"
+            }
+          ],
+          "published_at": "2026-07-30T10:50:00+08:00",
+          "collected_at": "2026-07-30T10:56:43+08:00",
+          "impact_level": "medium",
+          "impact_type": "competitor",
+          "impact_label": "竞品压力",
+          "priority_score": 40,
+          "confidence": "low",
+          "confidence_label": "低",
+          "source_tier": "unknown",
+          "tags": [
+            "竞品压力",
+            "竞品雷达"
+          ],
+          "related_metric_tags": [],
+          "biren_relevance": "「液冷赋能新算力 2026亚洲大数据技术展」：竞品节奏抬升客户对比维度，需刷新性能/能效/交付三维对标。",
+          "category": "external",
+          "desk_eligible": false
+        },
+        {
+          "topic_id": "BR-CMP",
+          "item_id": "CMP-20260730-03",
+          "title": "比「算力荒」更致命，「数据荒」正在带来灾难？",
+          "summary": "作者|深眸财经 郑施婧 当下，AI行业最常被提及的焦虑，非算力短缺莫属。英伟达GPU一卡难求的新闻屡见不鲜，价格也随之高涨",
+          "source_name": "sohu",
+          "source_url": "https://www.sohu.com/a/1056576529_250147",
+          "sources": [
+            {
+              "name": "sohu",
+              "url": "https://www.sohu.com/a/1056576529_250147"
+            }
+          ],
+          "published_at": "2026-07-30T10:48:00+08:00",
+          "collected_at": "2026-07-30T10:56:43+08:00",
+          "impact_level": "medium",
+          "impact_type": "competitor",
+          "impact_label": "竞品压力",
+          "priority_score": 40,
+          "confidence": "low",
+          "confidence_label": "低",
+          "source_tier": "tabloid",
+          "tags": [
+            "竞品压力",
+            "竞品对标"
+          ],
+          "related_metric_tags": [],
+          "biren_relevance": "英伟达平台升级抬升集群成本，利好国产性价比叙事。",
+          "category": "external",
+          "desk_eligible": false
+        },
+        {
+          "topic_id": "BR-CUS",
+          "item_id": "CUS-20260729-B07",
+          "title": "第一财经：头部云厂商加码智算中心建设，推理卡需求上行",
+          "summary": "阿里云、字节等云厂商继续扩容智算资源，推理场景对高能效算力卡需求上升，行业集采与 POC 节奏加快，国产卡获得更多验证窗口。",
+          "source_name": "第一财经",
+          "source_url": "https://www.yicai.com/",
+          "sources": [
+            {
+              "name": "第一财经",
+              "url": "https://www.yicai.com/"
+            }
+          ],
+          "published_at": "2026-07-28T11:09:14+08:00",
+          "collected_at": "2026-07-29T14:09:14+08:00",
+          "impact_level": "high",
+          "impact_type": "opportunity",
+          "impact_label": "新机会",
+          "priority_score": 103,
+          "confidence": "high",
+          "confidence_label": "高",
+          "source_tier": "official",
+          "tags": [
+            "新机会",
+            "推理场景",
+            "头部客户"
+          ],
+          "related_metric_tags": [],
+          "biren_relevance": "智算基建扩张拉动 GPU 集群需求，关注区域集采与 POC 节奏。",
+          "category": "external",
+          "desk_eligible": true,
+          "from_baseline": true,
+          "content_stale": true
+        },
+        {
+          "topic_id": "BR-IND",
+          "item_id": "IND-20260729-B08",
+          "title": "集微网：先进封装与HBM供给仍是国产GPU交付关键瓶颈",
+          "summary": "行业调研显示，先进封装产能与 HBM 供给紧张继续影响国产 AI 芯片交付节奏，整机厂商正调整下半年排产计划，封测厂扩产进度成为关键变量。",
+          "source_name": "集微网",
+          "source_url": "https://www.laoyaoba.com/",
+          "sources": [
+            {
+              "name": "集微网",
+              "url": "https://www.laoyaoba.com/"
+            }
+          ],
+          "published_at": "2026-07-28T08:09:14+08:00",
+          "collected_at": "2026-07-29T14:09:14+08:00",
+          "impact_level": "high",
+          "impact_type": "chain",
+          "impact_label": "供应链传导",
+          "priority_score": 102,
+          "confidence": "high",
+          "confidence_label": "高",
+          "source_tier": "trade",
+          "tags": [
+            "封测上游",
+            "存储互连",
+            "供应链传导"
+          ],
+          "related_metric_tags": [],
+          "biren_relevance": "封装与 HBM 排期直接决定交付兑现，需核对关键物料锁量与备选产能。",
+          "category": "external",
+          "desk_eligible": true,
+          "from_baseline": true,
+          "content_stale": true
+        }
+      ]
+    },
+    "evening": {
+      "bundle_id": "BIREN-EVENING-LIVE-20260730-1057",
+      "bundle_type": "evening_pack",
+      "org": "biren",
+      "timezone": "Asia/Shanghai",
+      "generated_at": "2026-07-30T10:56:43+08:00",
+      "client_refreshed_at": "2026-07-30T10:56:43+08:00",
+      "source": "moss_live",
+      "items": [
+        {
+          "topic_id": "BR-CMP",
+          "item_id": "CMP-20260730-04",
+          "title": "大模型价格战下半场：将推理价格打下去",
+          "summary": "推理才是难题，推理才是难题。 作者|司库财经 质子“买一批设备回来，10个月收回成本就够了，希望能以合理价格买到芯片，这样就不用自己做芯片了”，近日在投资会上，DeepSeek 创始人梁文峰道出了自己的苦恼，现在的芯片价格太贵了，无法满足DeepSeek对于大模型低成本的需求",
+          "source_name": "lanjinger",
+          "source_url": "https://www.lanjinger.com/d/1784891691203214217",
+          "sources": [
+            {
+              "name": "lanjinger",
+              "url": "https://www.lanjinger.com/d/1784891691203214217"
+            }
+          ],
+          "published_at": "2026-07-30T10:48:00+08:00",
+          "collected_at": "2026-07-30T10:56:43+08:00",
+          "impact_level": "medium",
+          "impact_type": "chain",
+          "impact_label": "上下游",
+          "priority_score": 44,
+          "confidence": "low",
+          "confidence_label": "低",
+          "source_tier": "unknown",
+          "tags": [
+            "上游",
+            "推理场景",
+            "大模型"
+          ],
+          "related_metric_tags": [],
+          "biren_relevance": "推理算力需求结构变化，关注客户整机配置与推理卡出货节奏。",
+          "category": "external",
+          "desk_eligible": false
+        },
+        {
+          "topic_id": "BR-IND",
+          "item_id": "IND-20260730-06",
+          "title": "和众汇富研究手记：算力配电架构迭代 固态变压器迎风口",
+          "summary": "AI 算力建设持续提速，智算中心单机柜功率密度不断抬升，传统供配电体系短板逐步暴露，多级转换带来的能耗损耗、设备占地过大、响应速度不足等问题，已经难以匹配超高功率 GPU 集群的运行需求，供配电系统迎来系统性架构革新，固态变压器作为新一代核心电力装备，快速站上产业风口，成为 2026 年算力基础设施领域关注度较高的硬件赛道",
+          "source_name": "hy",
+          "source_url": "http://hy.stock.cnfol.com/hangyejingcui/20260730/32321448.shtml",
+          "sources": [
+            {
+              "name": "hy",
+              "url": "http://hy.stock.cnfol.com/hangyejingcui/20260730/32321448.shtml"
+            }
+          ],
+          "published_at": "2026-07-30T10:44:02+08:00",
+          "collected_at": "2026-07-30T10:56:43+08:00",
+          "impact_level": "medium",
+          "impact_type": "chain",
+          "impact_label": "上下游",
+          "priority_score": 44,
+          "confidence": "low",
+          "confidence_label": "低",
+          "source_tier": "unknown",
+          "tags": [
+            "上游",
+            "下游",
+            "集群网络"
+          ],
+          "related_metric_tags": [],
+          "biren_relevance": "智算基建扩张拉动 GPU 集群需求，关注区域集采与 POC 节奏。",
+          "category": "external",
+          "desk_eligible": false
+        },
+        {
+          "topic_id": "BR-CMP",
+          "item_id": "CMP-20260730-02",
+          "title": "液冷赋能新算力 2026亚洲大数据技术展",
+          "summary": "2026年11月26日至28日，第二十八届中国国际高新技术成果交易会将在深圳国际会展中心（宝安）盛大启幕",
+          "source_name": "mbd",
+          "source_url": "https://mbd.baidu.com/newspage/data/landingshare?nid=news_9293670772899237085",
+          "sources": [
+            {
+              "name": "mbd",
+              "url": "https://mbd.baidu.com/newspage/data/landingshare?nid=news_9293670772899237085"
+            }
+          ],
+          "published_at": "2026-07-30T10:50:00+08:00",
+          "collected_at": "2026-07-30T10:56:43+08:00",
+          "impact_level": "medium",
+          "impact_type": "competitor",
+          "impact_label": "竞品压力",
+          "priority_score": 40,
+          "confidence": "low",
+          "confidence_label": "低",
+          "source_tier": "unknown",
+          "tags": [
+            "竞品压力",
+            "竞品雷达"
+          ],
+          "related_metric_tags": [],
+          "biren_relevance": "「液冷赋能新算力 2026亚洲大数据技术展」：竞品节奏抬升客户对比维度，需刷新性能/能效/交付三维对标。",
+          "category": "external",
+          "desk_eligible": false
+        },
+        {
+          "topic_id": "BR-CMP",
+          "item_id": "CMP-20260730-03",
+          "title": "比「算力荒」更致命，「数据荒」正在带来灾难？",
+          "summary": "作者|深眸财经 郑施婧 当下，AI行业最常被提及的焦虑，非算力短缺莫属。英伟达GPU一卡难求的新闻屡见不鲜，价格也随之高涨",
+          "source_name": "sohu",
+          "source_url": "https://www.sohu.com/a/1056576529_250147",
+          "sources": [
+            {
+              "name": "sohu",
+              "url": "https://www.sohu.com/a/1056576529_250147"
+            }
+          ],
+          "published_at": "2026-07-30T10:48:00+08:00",
+          "collected_at": "2026-07-30T10:56:43+08:00",
+          "impact_level": "medium",
+          "impact_type": "competitor",
+          "impact_label": "竞品压力",
+          "priority_score": 40,
+          "confidence": "low",
+          "confidence_label": "低",
+          "source_tier": "tabloid",
+          "tags": [
+            "竞品压力",
+            "竞品对标"
+          ],
+          "related_metric_tags": [],
+          "biren_relevance": "英伟达平台升级抬升集群成本，利好国产性价比叙事。",
+          "category": "external",
+          "desk_eligible": false
+        },
+        {
+          "topic_id": "BR-CMP",
+          "item_id": "CMP-20260730-05",
+          "title": "AI智能体手机的下一个赛点，不在大模型",
+          "summary": "手机从“被人操作”到“替人办事”，还要迈几道坎。 作者 | 趣解商业 张语格最近一个月，最热闹的智能硬件赛道当属AI智能体手机",
+          "source_name": "lanjinger",
+          "source_url": "https://www.lanjinger.com/d/1784870111654227121",
+          "sources": [
+            {
+              "name": "lanjinger",
+              "url": "https://www.lanjinger.com/d/1784870111654227121"
+            }
+          ],
+          "published_at": "2026-07-30T10:47:28+08:00",
+          "collected_at": "2026-07-30T10:56:43+08:00",
+          "impact_level": "medium",
+          "impact_type": "competitor",
+          "impact_label": "竞品压力",
+          "priority_score": 40,
+          "confidence": "low",
+          "confidence_label": "低",
+          "source_tier": "unknown",
+          "tags": [
+            "竞品压力",
+            "大模型"
+          ],
+          "related_metric_tags": [],
+          "biren_relevance": "推理算力需求结构变化，关注客户整机配置与推理卡出货节奏。",
+          "category": "external",
+          "desk_eligible": false
+        },
+        {
+          "topic_id": "BR-CUS",
+          "item_id": "CUS-20260730-01",
+          "title": "深耕硅光技术 赛勒科技乘AI算力东风快速发展",
+          "summary": "今年以来，全球领先的硅光芯片研发设计公司——上海赛勒光电子科技有限公司（以下简称“赛勒科技”）凭借在硅光芯片及CPO（光电共封装）等前沿解决方案领域的深厚积累，迎来了营收的爆发式增长",
+          "source_name": "finance",
+          "source_url": "https://finance.sina.cn/tech/2026-07-30/detail-inikpxkt2066304.d.html",
+          "sources": [
+            {
+              "name": "finance",
+              "url": "https://finance.sina.cn/tech/2026-07-30/detail-inikpxkt2066304.d.html"
+            }
+          ],
+          "published_at": "2026-07-30T10:50:04+08:00",
+          "collected_at": "2026-07-30T10:56:43+08:00",
+          "impact_level": "medium",
+          "impact_type": "context",
+          "impact_label": "环境观察",
+          "priority_score": 20,
+          "confidence": "low",
+          "confidence_label": "低",
+          "source_tier": "unknown",
+          "tags": [
+            "环境观察",
+            "客户动态"
+          ],
+          "related_metric_tags": [],
+          "biren_relevance": "「深耕硅光技术 赛勒科技乘AI算力东风快…」：客户侧算力投入节奏调整，关注是否带来替换或扩容机会。",
+          "category": "external",
+          "desk_eligible": false
+        },
+        {
+          "topic_id": "BR-SEN",
+          "item_id": "SEN-20260730-07",
+          "title": "国内芯片测试接口龙头韬盛科技主动撤回材料，科创板 IPO 审核终止",
+          "summary": "“ 7 月 29 日，上海证券交易所发布公告，上海韬盛电子科技股份有限公司（韬盛科技）科创板 IPO 审核正式终止",
+          "source_name": "news",
+          "source_url": "https://news.eccn.com/news_2026073009470981.htm",
+          "sources": [
+            {
+              "name": "news",
+              "url": "https://news.eccn.com/news_2026073009470981.htm"
+            }
+          ],
+          "published_at": "2026-07-30T10:31:09+08:00",
+          "collected_at": "2026-07-30T10:56:43+08:00",
+          "impact_level": "low",
+          "impact_type": "context",
+          "impact_label": "环境观察",
+          "priority_score": 12,
+          "confidence": "low",
+          "confidence_label": "低",
+          "source_tier": "unknown",
+          "tags": [
+            "环境观察",
+            "舆情品牌"
+          ],
+          "related_metric_tags": [],
+          "biren_relevance": "资本市场热度上升，经营侧保持交付叙事聚焦，避免噪音干扰商务节奏。",
+          "category": "external",
+          "desk_eligible": false
+        },
+        {
+          "topic_id": "BR-POL",
+          "item_id": "POL-20260729-B13",
+          "title": "工信部：加快人工智能算力基础设施高质量发展",
+          "summary": "工业和信息化部印发通知，要求统筹推进智算中心建设与算力资源调度，明确国产芯片在新建智算中心中的配套比例要求，并对集群能效提出约束。",
+          "source_name": "工信部",
+          "source_url": "https://www.gov.cn/zhengce/",
+          "sources": [
+            {
+              "name": "工信部",
+              "url": "https://www.gov.cn/zhengce/"
+            }
+          ],
+          "published_at": "2026-07-27T17:09:14+08:00",
+          "collected_at": "2026-07-29T14:09:14+08:00",
+          "impact_level": "high",
+          "impact_type": "direct",
+          "impact_label": "直接影响",
+          "priority_score": 97,
+          "confidence": "high",
+          "confidence_label": "高",
+          "source_tier": "official",
+          "tags": [
+            "政策监管",
+            "国产化",
+            "能效约束"
+          ],
+          "related_metric_tags": [],
+          "biren_relevance": "国产配套比例与能效门槛直接影响投标资格，需法务与产品线同步核对合规口径。",
+          "category": "external",
+          "desk_eligible": true,
+          "from_baseline": true,
+          "content_stale": true
+        },
+        {
+          "topic_id": "BR-CUS",
+          "item_id": "CUS-20260729-B14",
+          "title": "第一财经：头部云厂商加码智算中心建设，推理卡需求上行",
+          "summary": "阿里云、字节等云厂商继续扩容智算资源，推理场景对高能效算力卡需求上升，行业集采与 POC 节奏加快，国产卡获得更多验证窗口。",
+          "source_name": "第一财经",
+          "source_url": "https://www.yicai.com/",
+          "sources": [
+            {
+              "name": "第一财经",
+              "url": "https://www.yicai.com/"
+            }
+          ],
+          "published_at": "2026-07-27T14:09:14+08:00",
+          "collected_at": "2026-07-29T14:09:14+08:00",
+          "impact_level": "high",
+          "impact_type": "opportunity",
+          "impact_label": "新机会",
+          "priority_score": 96,
+          "confidence": "high",
+          "confidence_label": "高",
+          "source_tier": "official",
+          "tags": [
+            "新机会",
+            "推理场景",
+            "头部客户"
+          ],
+          "related_metric_tags": [],
+          "biren_relevance": "智算基建扩张拉动 GPU 集群需求，关注区域集采与 POC 节奏。",
+          "category": "external",
+          "desk_eligible": true,
+          "from_baseline": true,
+          "content_stale": true
+        }
+      ]
+    }
+  }
+}

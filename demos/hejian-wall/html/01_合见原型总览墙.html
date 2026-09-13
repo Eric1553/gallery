@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>合见运营数字化 · 原型总览墙</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { background:#e9eef6; }
+  body { font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif; color:#23314c; -webkit-font-smoothing:antialiased; }
+
+  .stage {
+    width:1920px; height:1080px; position:relative;
+    background:linear-gradient(160deg,#fafcfe 0%,#eef3fa 100%);
+    padding:20px 28px 16px; overflow:hidden;
+    display:flex; flex-direction:column;
+  }
+
+  .head {
+    flex-shrink:0; display:flex; justify-content:space-between; align-items:flex-end;
+    padding-bottom:12px; border-bottom:2px solid #1a3a7a;
+  }
+  .head .ttl { font-size:24px; font-weight:800; color:#12203b; letter-spacing:.3px; }
+  .head .ttl .hl { color:#3f7fc4; }
+  .head .sub { font-size:12px; color:#69748c; margin-top:4px; }
+  .head .tags { display:flex; gap:8px; }
+  .head .tag {
+    font-size:10.5px; font-weight:700; color:#2a5ea0; background:#fff;
+    border:1px solid #c5d9ef; border-radius:6px; padding:4px 10px;
+    box-shadow:0 1px 4px rgba(42,94,160,.06);
+  }
+
+  .wall { flex:1; display:flex; flex-direction:column; justify-content:space-between; margin-top:14px; min-height:0; }
+
+  .row { display:flex; align-items:stretch; gap:14px; min-height:0; }
+
+  .rbadge {
+    width:68px; flex-shrink:0; border-radius:10px; color:#fff;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:8px 6px; text-align:center;
+    box-shadow:0 4px 12px rgba(40,70,120,.15);
+  }
+  .rbadge .lv { font-size:22px; font-weight:800; line-height:1; letter-spacing:.5px; }
+  .rbadge .nm { font-size:10px; font-weight:700; margin-top:5px; line-height:1.3; opacity:.95; }
+  .rbadge .au { font-size:8.5px; opacity:.75; margin-top:4px; }
+
+  .cards { flex:1; display:flex; gap:12px; align-items:stretch; min-width:0; }
+  .cards.center-one { justify-content:flex-start; }
+
+  .card-link { text-decoration:none; color:inherit; flex:1; min-width:0; max-width:100%; }
+  .cards.center-one .card-link { flex:0 0 calc((100% - 48px) / 5); max-width:320px; }
+  .cards.pair-two .card-link { flex:0 0 calc((100% - 12px) / 5); max-width:320px; }
+
+  .card {
+    height:100%; background:#fff; border-radius:10px; overflow:hidden;
+    border:1px solid #dce4ef; box-shadow:0 3px 14px rgba(30,55,110,.09);
+    display:flex; flex-direction:column; transition:transform .15s, box-shadow .15s;
+  }
+  .card-link:hover .card { transform:translateY(-2px); box-shadow:0 8px 22px rgba(30,55,110,.14); }
+  .card-link:hover .cap { color:#3f7fc4; }
+
+  .card .stripe { height:3px; flex-shrink:0; }
+  .card .preview {
+    position:relative; width:100%; aspect-ratio:16/9; flex-shrink:0;
+    background:#f0f4fa; overflow:hidden;
+  }
+  .card .preview img {
+    width:100%; height:100%; display:block;
+    object-fit:cover; object-position:top center;
+  }
+  .card .idx {
+    position:absolute; left:8px; top:8px; z-index:2;
+    font-size:10px; font-weight:800; color:#fff;
+    background:rgba(18,32,59,.72); backdrop-filter:blur(4px);
+    padding:2px 7px; border-radius:5px; letter-spacing:.3px;
+  }
+  .card .cap {
+    padding:8px 10px 9px; font-size:11.5px; font-weight:800; color:#1c2c4a;
+    line-height:1.3; text-align:center; flex:1;
+    display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(180deg,#fff,#f8fafd);
+    border-top:1px solid #eef2f8;
+  }
+
+  .c-l1 .stripe { background:linear-gradient(90deg,#0f2547,#1c3f74); }
+  .c-l2 .stripe { background:linear-gradient(90deg,#1d4373,#3f7fc4); }
+  .c-l3 .stripe { background:linear-gradient(90deg,#2a5ea0,#5fa0db); }
+  .c-l4 .stripe { background:linear-gradient(90deg,#5a4b9e,#7e6cc4); }
+  .c-l5 .stripe { background:linear-gradient(90deg,#3163a0,#5b8fcf); }
+
+  .foot {
+    flex-shrink:0; margin-top:12px; padding-top:10px; border-top:1px solid #dde5f0;
+    display:flex; align-items:center; gap:12px; font-size:11px; color:#5a6580;
+  }
+  .foot .chain-lbl { font-weight:800; color:#1c2c4a; display:flex; align-items:center; gap:6px; }
+  .foot .chain-lbl i { width:10px; height:10px; border-radius:2px; background:#e2574c; display:inline-block; }
+  .foot a { color:#2a5ea0; font-weight:700; text-decoration:none; padding:3px 8px; border-radius:5px; background:#eef4fb; }
+  .foot a:hover { background:#dce8f6; }
+  .foot .arrow { color:#e2574c; font-weight:800; }
+  .foot .note { margin-left:auto; font-size:10px; color:#9aa3b5; }
+</style>
+  <link rel="stylesheet" href="nav.css">
+</head>
+<body data-page="01">
+<div class="proto-app">
+  <aside id="proto-nav" class="proto-nav"></aside>
+  <div class="proto-main">
+<div class="stage">
+  <div class="head">
+    <div>
+      <div class="ttl">合见运营数字化 · <span class="hl">原型总览墙（L1–L5）</span></div>
+      <div class="sub">12 张运营原型 · LTC / OTD 双主线 · 借测转销 · 工作台 → 清单 → 卡片 三级穿透</div>
+    </div>
+    <div class="tags">
+      <span class="tag">LTC / OTD</span>
+      <span class="tag">卖 → 借 → 转/还 → 收</span>
+      <span class="tag">金蝶 + FDL + FR/FVS</span>
+    </div>
+  </div>
+
+  <div class="wall">
+    <!-- L1 -->
+    <div class="row">
+      <div class="rbadge" style="background:linear-gradient(160deg,#0f2547,#1c3f74);"><div class="lv">L1</div><div class="nm">经营总览</div><div class="au">决策层</div></div>
+      <div class="cards center-one">
+        <a class="card-link" href="02_合见L1_公司经营总览_原型.html"><div class="card c-l1"><div class="stripe"></div><div class="preview"><span class="idx">02</span><img src="previews/02_合见L1_公司经营总览_原型.webp" loading="lazy" decoding="async" alt=""></div><div class="cap">公司经营总览</div></div></a>
+      </div>
+    </div>
+
+    <!-- L2 -->
+    <div class="row">
+      <div class="rbadge" style="background:linear-gradient(160deg,#1d4373,#2a5ea0);"><div class="lv">L2</div><div class="nm">主题驾驶舱</div><div class="au">×5</div></div>
+      <div class="cards">
+        <a class="card-link" href="03_合见运营驾驶舱_原型.html"><div class="card c-l2"><div class="stripe"></div><div class="preview"><span class="idx">03</span><img src="previews/03_合见运营驾驶舱_原型.webp" loading="lazy" decoding="async" alt=""></div><div class="cap">运营工作台</div></div></a>
+        <a class="card-link" href="04_合见L2_库存驾驶舱_原型.html"><div class="card c-l2"><div class="stripe"></div><div class="preview"><span class="idx">04</span><img src="previews/04_合见L2_库存驾驶舱_原型.webp" loading="lazy" decoding="async" alt=""></div><div class="cap">库存驾驶舱</div></div></a>
+        <a class="card-link" href="05_合见L2_销售驾驶舱_原型.html"><div class="card c-l2"><div class="stripe"></div><div class="preview"><span class="idx">05</span><img src="previews/05_合见L2_销售驾驶舱_原型.webp" loading="lazy" decoding="async" alt=""></div><div class="cap">销售驾驶舱</div></div></a>
+        <a class="card-link" href="06_合见L2_计划生产驾驶舱_原型.html"><div class="card c-l2"><div class="stripe"></div><div class="preview"><span class="idx">06</span><img src="previews/06_合见L2_计划生产驾驶舱_原型.webp" loading="lazy" decoding="async" alt=""></div><div class="cap">计划与生产</div></div></a>
+        <a class="card-link" href="07_合见L2_财务驾驶舱_原型.html"><div class="card c-l2"><div class="stripe"></div><div class="preview"><span class="idx">07</span><img src="previews/07_合见L2_财务驾驶舱_原型.webp" loading="lazy" decoding="async" alt=""></div><div class="cap">财务驾驶舱</div></div></a>
+      </div>
+    </div>
+
+    <!-- L3 + L4 -->
+    <div class="row">
+      <div class="rbadge" style="background:linear-gradient(160deg,#2a5ea0,#3f78bd);"><div class="lv">L3</div><div class="nm">专题看板</div><div class="au">×2</div></div>
+      <div class="cards" style="flex:0.46;">
+        <a class="card-link" href="08_合见L3_借测生命周期专题_原型.html"><div class="card c-l3"><div class="stripe"></div><div class="preview"><span class="idx">08</span><img src="previews/08_合见L3_借测生命周期专题_原型.webp" loading="lazy" decoding="async" alt=""></div><div class="cap">借测生命周期</div></div></a>
+        <a class="card-link" href="09_合见L4_缺货归因专题_原型.html"><div class="card c-l3"><div class="stripe"></div><div class="preview"><span class="idx">09</span><img src="previews/09_合见L4_缺货归因专题_原型.webp" loading="lazy" decoding="async" alt=""></div><div class="cap">缺货归因专题</div></div></a>
+      </div>
+      <div class="rbadge" style="background:linear-gradient(160deg,#5a4b9e,#7e6cc4);"><div class="lv">L4</div><div class="nm">分析下钻</div><div class="au">×2</div></div>
+      <div class="cards" style="flex:0.46;">
+        <a class="card-link" href="10_合见L4_多维分析下钻_原型.html"><div class="card c-l4"><div class="stripe"></div><div class="preview"><span class="idx">10</span><img src="previews/10_合见L4_多维分析下钻_原型.webp" loading="lazy" decoding="async" alt=""></div><div class="cap">多维分析下钻</div></div></a>
+        <a class="card-link" href="11_合见L4_借转销回款归因_原型.html"><div class="card c-l4"><div class="stripe"></div><div class="preview"><span class="idx">11</span><img src="previews/11_合见L4_借转销回款归因_原型.webp" loading="lazy" decoding="async" alt=""></div><div class="cap">借转销回款归因</div></div></a>
+      </div>
+    </div>
+
+    <!-- L5 -->
+    <div class="row">
+      <div class="rbadge" style="background:linear-gradient(160deg,#3163a0,#5b8fcf);"><div class="lv">L5</div><div class="nm">明细穿透</div><div class="au">×2</div></div>
+      <div class="cards pair-two">
+        <a class="card-link" href="12_合见运营_穿透清单_原型.html"><div class="card c-l5"><div class="stripe"></div><div class="preview"><span class="idx">12</span><img src="previews/12_合见运营_穿透清单_原型.webp" loading="lazy" decoding="async" alt=""></div><div class="cap">穿透明细清单</div></div></a>
+        <a class="card-link" href="13_合见运营_订单卡片_原型.html"><div class="card c-l5"><div class="stripe"></div><div class="preview"><span class="idx">13</span><img src="previews/13_合见运营_订单卡片_原型.webp" loading="lazy" decoding="async" alt=""></div><div class="cap">订单 360° 卡片</div></div></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span class="chain-lbl"><i></i>穿透链路</span>
+    <a href="03_合见运营驾驶舱_原型.html">① 运营工作台</a><span class="arrow">→</span>
+    <a href="12_合见运营_穿透清单_原型.html">② 明细清单</a><span class="arrow">→</span>
+    <a href="13_合见运营_订单卡片_原型.html">③ 360° 卡片</a>
+    <span class="note">示意数据 · 分析思路框架见导航索引 14–18</span>
+  </div>
+</div>
+  </div>
+</div>
+<script src="nav.js"></script>
+</body>
+</html>

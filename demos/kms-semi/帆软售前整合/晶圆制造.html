@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>晶圆制造 — 半导体知识库</title>
+<meta name="description" content="# 🏭 晶圆制造 · 帆软售前桥接  > 桥接页定位：连接「行业笔记中的知识点」与「帆软产品的售前切入点」。 > 本页不修改原笔记，仅提取映射关系。  ---  ## 🏭 行业画像  晶圆制造（Fab/Foundry）是半导体产业链中资本最密集、技术壁垒最高的环节。一座先进制程晶圆厂投资超 200 ">
+<link rel="stylesheet" href="/kb/assets/style.css">
+</head>
+<body>
+<div class="top-accent"></div>
+<header class="page-header">
+  <a href="/kb/首页.html" class="home-link">🔬 半导体知识库</a>
+</header>
+<main class="container">
+<nav class="breadcrumb"><a href="/kb/首页.html">半导体知识库</a> <span class="sep">›</span> <a href="/kb//帆软售前整合/index.html">帆软售前整合</a></nav>
+<article class="note">
+<header class="note-header">
+  <h1>晶圆制造</h1>
+  <div class="meta-line"><span class="meta-item">📅 2026-07-09</span> · <span class="meta-item" style="color:#059669">⭐ high</span> · <span class="meta-item">🏷️ <span class="tag">桥接页</span> <span class="tag">晶圆制造</span> <span class="tag">售前整合</span></span></div>
+</header>
+<div class="note-body">
+<h1 id="_1">🏭 晶圆制造 · 帆软售前桥接</h1>
+<blockquote>
+<p>桥接页定位：连接「行业笔记中的知识点」与「帆软产品的售前切入点」。
+本页不修改原笔记，仅提取映射关系。</p>
+</blockquote>
+<hr />
+<h2 id="_2">🏭 行业画像</h2>
+<p>晶圆制造（Fab/Foundry）是半导体产业链中资本最密集、技术壁垒最高的环节。一座先进制程晶圆厂投资超 200 亿美元，每天产生数 PB 数据。良率 1% 的波动意味着数千万利润差异。</p>
+<p><strong>晶圆厂典型特征：</strong>
+- 高度自动化（数千台设备、数百道工序）
+- 多系统并存（MES/EAP/SPC/FDC/YMS），数据孤岛严重
+- 良率是核心 KPI，质量追溯是客户稽核重点
+- 24×7 不间断生产，设备 OEE 直接决定产能</p>
+<hr />
+<h2 id="_3">📋 笔记 → 帆软切入点映射</h2>
+<h3 id="_4">🟢 核心方案</h3>
+<h4 id="1-x">1. <a href="/kb/导航/帆软产品x半导体行业矩阵">导航/帆软产品x半导体行业矩阵</a> · 晶圆制造部分</h4>
+<p>核心内容已在本页下方「产品×场景速查」中提取。晶圆制造在五条产品线上均有明确切入，其中 FineReport + FineBI 的良率分析体系是最强切入点。</p>
+<h4 id="2-">2. <a href="/kb/帆软售前引擎/数据分析场景/数据分析-半导体场景矩阵">帆软售前引擎/数据分析场景/数据分析-半导体场景矩阵</a></h4>
+<table>
+<thead>
+<tr>
+<th>知识点</th>
+<th>帆软产品</th>
+<th>售前场景描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>良率数据分散在 MES/EAP/SPC 多个系统，工程师手工汇总 Excel</td>
+<td>FineReport + FineBI</td>
+<td><strong>良率日/周/月报自动化</strong>：FineReport 自动生成良率报表 + WIP 看板大屏；FineBI 做良率根因分析（按设备/工艺步骤/班次/材料批次下钻）。售前话术："晶圆厂一个百分点的良率提升价值千万，FineBI 帮工程师从'凭经验调参数'变成'看数据做决策'"</td>
+</tr>
+<tr>
+<td>多厂区对标（上海/北京/天津良率不一致）</td>
+<td>FineReport + FDL</td>
+<td><strong>多厂区统一平台</strong>：FDL 统一各厂区 MES 数据格式，FineReport 做多厂区良率对标报表。售前话术："为什么北京厂的良率比上海高 2%？FDL 把两个厂的数据拉到一张表上，BI 帮你们找到差异点"</td>
+</tr>
+<tr>
+<td>工艺窗口优化</td>
+<td>FineBI</td>
+<td><strong>工艺参数推荐分析</strong>：FineBI 分析历史批次数据，找到良率最优的工艺参数组合（温度/压力/气体流量窗口）</td>
+</tr>
+</tbody>
+</table>
+<h4 id="3-">3. <a href="/kb/帆软售前引擎/数据底座场景/数据底座-半导体场景矩阵">帆软售前引擎/数据底座场景/数据底座-半导体场景矩阵</a></h4>
+<table>
+<thead>
+<tr>
+<th>知识点</th>
+<th>帆软产品</th>
+<th>售前场景描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>良率数据汇聚（MES+EAP+SPC+YMS → 统一主题层）</td>
+<td>FineDataLink</td>
+<td><strong>FDL 五层数据管道</strong>：从 MES（批次级）→ EAP（事件级）→ FDC（毫秒级 Trace Data）→ 统一到分析平台。售前话术："你们有 MES 但数据还是靠 Excel 传？FDL 自动把 5 个系统的数据汇聚到一张报表上"</td>
+</tr>
+<tr>
+<td>多厂区数据合并</td>
+<td>FineDataLink</td>
+<td><strong>集团统一数据平台</strong>：FDL 做跨厂区数据映射（不同厂可能用不同版本 MES），构建集团级数据底座</td>
+</tr>
+</tbody>
+</table>
+<h4 id="4-aiai-">4. <a href="/kb/帆软售前引擎/AI场景/AI-半导体场景矩阵">帆软售前引擎/AI场景/AI-半导体场景矩阵</a></h4>
+<table>
+<thead>
+<tr>
+<th>知识点</th>
+<th>帆软产品</th>
+<th>售前场景描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>质量异常预警（制程参数偏离 → 自动告警）</td>
+<td>AI Agent</td>
+<td><strong>实时良率预警</strong>：AI Agent 监控 SPC 控制图中的参数漂移，在批量报废前发出告警。售前话术："以前是出了批量问题才发现，现在是参数刚刚漂移就告警"</td>
+</tr>
+<tr>
+<td>工艺参数推荐（历史数据 → 最优工艺窗口）</td>
+<td>AI Agent + FineBI</td>
+<td><strong>AI 辅助工艺决策</strong>：AI Agent 分析 FineBI 中的历史良率数据，推荐最优 Recipe 参数组合</td>
+</tr>
+<tr>
+<td>智能问数（自然语言查产能/良率）</td>
+<td>智能问数</td>
+<td><strong>厂长手机查询</strong>："昨天 A 厂区 5nm 良率多少？哪个设备缺陷最多？" → AI 直接回答</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="_5">🟡 行业笔记支撑</h3>
+<h4 id="5-01-cambriconai">5. <a href="/kb/04-IC设计/行业动态/寒武纪（Cambricon）：中国AI芯片的先驱与挑战">01-晶圆制造/行业动态/寒武纪（Cambricon）：中国AI芯片的先驱与挑战</a></h4>
+<blockquote>
+<p>⚠️ 注：寒武纪本质是 Fabless IC 设计公司（存储于 01-晶圆制造 目录），其知识点可同时服务晶圆制造（代工客户）和 IC 设计两个桥接页。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>知识点</th>
+<th>帆软产品</th>
+<th>售前场景描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>寒武纪从 IP 授权转向自研芯片（思元系列），与华为分手后失去最大客户</td>
+<td>FineBI</td>
+<td><strong>客户依赖度分析</strong>：Fab 厂面对客户集中度风险时，FineBI 做客户收入占比/趋势分析。售前话术："你们的客户里，前三大占多少营收？如果最大客户走了，影响多大？FineBI 帮你们量化这个风险"</td>
+</tr>
+<tr>
+<td>思元系列芯片 7nm 制程依赖台积电/中芯国际代工</td>
+<td>FineReport + FineBI</td>
+<td><strong>代工业务视角</strong>：晶圆厂用 FineReport 做代工客户（Fabless）的投片量/良率/交付跟踪报表。售前场景：寒武纪这样的 AI 芯片客户投片量波动大、制程要求高 → 晶圆厂需要精准的产能规划和客户分级</td>
+</tr>
+<tr>
+<td>BANG 软件栈 vs CUDA 生态差距 — 软件生态是比硬件更大的护城河</td>
+<td>FDL + FineBI</td>
+<td><strong>研发效能对标</strong>：Fab 厂内部也有软件团队（做 YMS、自动化脚本等），FDL+FineBI 帮他们量化软件研发效率，对标行业水平</td>
+</tr>
+</tbody>
+</table>
+<h4 id="6-02-cpftate">6. <a href="/kb/02-封装测试/行业动态/半导体测试技术：CP、FT与ATE体系">02-封装测试/行业动态/半导体测试技术：CP、FT与ATE体系</a></h4>
+<table>
+<thead>
+<tr>
+<th>知识点</th>
+<th>帆软产品</th>
+<th>售前场景描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CP 测试在晶圆切割前筛出坏 Die，Bin 分类决定芯片最终售价</td>
+<td>FineReport + FineBI</td>
+<td><strong>CP Bin 分析看板</strong>：FineReport 生成 CP Map（晶圆图，红绿点显示 Pass/Fail）+ Bin 分布报告；FineBI 做不同产品/批次/机台的 Bin 比例趋势分析。售前场景：一批晶圆 Bin1（最高等级）比例从 70% 降到 50% → 哪个工艺步骤出了问题？</td>
+</tr>
+<tr>
+<td>ATE 测试数据格式碎片化（V93000 vs J750 vs 国产 ATE 输出不同）</td>
+<td>FineDataLink</td>
+<td><strong>ATE 数据统一</strong>：FDL 解析不同 ATE 输出格式（STDF/ATDF）→ FineReport 统一测试报告模板。售前话术："你们有 Advantest 也有 Teradyne，测试数据格式不一样——FDL 帮你们统一"</td>
+</tr>
+<tr>
+<td>KGD 测试（先进封装必须每颗 Die 先测试）→ 测试量×2</td>
+<td>FineReport + FDL</td>
+<td><strong>全流程数据追溯</strong>：FDL 从 CP→KGD→封装→FT 追踪单颗 Die，FineReport 一键生成客户稽核报告</td>
+</tr>
+</tbody>
+</table>
+<h4 id="7-01-spc">7. <a href="/kb/01-晶圆制造/行业动态/SPC与良率管理：半导体制造的质量控制体系">01-晶圆制造/行业动态/SPC与良率管理：半导体制造的质量控制体系</a></h4>
+<table>
+<thead>
+<tr>
+<th>知识点</th>
+<th>帆软产品</th>
+<th>售前场景描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SPC 控制图（Xbar-R/p/np/c/u 图），人工绘制效率低</td>
+<td>FineReport + FineBI</td>
+<td><strong>SPC 自动生成</strong>：FineReport 自动生成标准化控制图（含 Western Electric Rules 判异规则），FineBI 做多变量 SPC 分析（Hotelling T²）。售前话术："你们的质量工程师还在 Excel 里手动画控制图？FineReport 自动生成+自动判异+自动推送告警"</td>
+</tr>
+<tr>
+<td>Cp/Cpk 过程能力指数，需区分短期和长期</td>
+<td>FineBI</td>
+<td><strong>过程能力趋势分析</strong>：FineBI 按产品/设备/时间段做 Cpk 趋势，识别过程能力退化的设备</td>
+</tr>
+<tr>
+<td>YMS 做从晶圆级→Die级→缺陷级的逐级钻取</td>
+<td>FDL + FineBI</td>
+<td><strong>轻量 YMS</strong>：对于没预算买 PDF Solutions/Synopsys YMS 的 Fab，FDL+FineBI 提供可选替代</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_6">🏢 该行业关键企业（知识库内）</h2>
+<table>
+<thead>
+<tr>
+<th>企业</th>
+<th>路径</th>
+<th>与帆软关联</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>台积电</td>
+<td><a href="/kb/行业知识体系/01-晶圆制造/关键企业/台积电_TSMC">行业知识体系/01-晶圆制造/关键企业/台积电_TSMC</a></td>
+<td>行业标杆，CoWoS 先进封装</td>
+</tr>
+<tr>
+<td>中芯国际</td>
+<td><a href="/kb/行业知识体系/01-晶圆制造/关键企业/中芯国际_SMIC">行业知识体系/01-晶圆制造/关键企业/中芯国际_SMIC</a></td>
+<td>国产 Fab 龙头</td>
+</tr>
+<tr>
+<td>华虹半导体</td>
+<td><a href="/kb/行业知识体系/01-晶圆制造/关键企业/华虹半导体">行业知识体系/01-晶圆制造/关键企业/华虹半导体</a></td>
+<td>特色工艺 Fab</td>
+</tr>
+<tr>
+<td>三星半导体</td>
+<td><a href="/kb/行业知识体系/01-晶圆制造/关键企业/三星半导体_Samsung">行业知识体系/01-晶圆制造/关键企业/三星半导体_Samsung</a></td>
+<td>存储+代工双线</td>
+</tr>
+<tr>
+<td>寒武纪</td>
+<td><a href="/kb/04-IC设计/行业动态/寒武纪（Cambricon）：中国AI芯片的先驱与挑战">01-晶圆制造/行业动态/寒武纪（Cambricon）：中国AI芯片的先驱与挑战</a></td>
+<td>AI 芯片 Fabless</td>
+</tr>
+<tr>
+<td>长江存储</td>
+<td><a href="/kb/01-晶圆制造/行业动态/长江存储（YMTC）：Xtacking架构与3D NAND的自主之路">03-半导体设备/行业动态/长江存储（YMTC）：Xtacking架构与3D NAND的自主之路</a></td>
+<td>存储 IDM，制裁场景</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_7">📊 产品 × 场景速查（晶圆制造专属）</h2>
+<table>
+<thead>
+<tr>
+<th>产品线</th>
+<th>场景</th>
+<th style="text-align: center;">优先级</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FineReport</td>
+<td>良率日报/周报、WIP 看板、SPC 控制图、多厂区对标报表</td>
+<td style="text-align: center;">🟢 最高</td>
+</tr>
+<tr>
+<td>FineBI</td>
+<td>良率根因分析（按设备/步骤/班次/材料下钻）、缺陷 Pareto、工艺窗口优化</td>
+<td style="text-align: center;">🟢 最高</td>
+</tr>
+<tr>
+<td>FDL</td>
+<td>MES+EAP+SPC+YMS 汇聚、多厂区数据合并、ERP 只读副本</td>
+<td style="text-align: center;">🟢 最高</td>
+</tr>
+<tr>
+<td>AI Agent</td>
+<td>质量异常预警、工艺参数推荐、智能问数</td>
+<td style="text-align: center;">🟡 高</td>
+</tr>
+<tr>
+<td>简道云</td>
+<td>非核心流程（巡检、备件领用、访客管理）</td>
+<td style="text-align: center;">🟡 中</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_8">📊 覆盖度自评</h2>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th style="text-align: center;">状态</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🎯 方案</td>
+<td style="text-align: center;">✅ 完整</td>
+<td><a href="/kb/帆软售前引擎/数据分析场景/数据分析-半导体场景矩阵">数据分析-半导体场景矩阵</a> + <a href="/kb/帆软售前引擎/数据底座场景/数据底座-半导体场景矩阵">数据底座-半导体场景矩阵</a> + <a href="/kb/帆软售前引擎/AI场景/AI-半导体场景矩阵">AI-半导体场景矩阵</a> 覆盖</td>
+</tr>
+<tr>
+<td>🎤 话术</td>
+<td style="text-align: center;">✅ 有</td>
+<td><a href="/kb/帆软售前引擎/话术方案/售前话术与方案库">售前话术与方案库</a> 含厂长角色话术；电梯演讲已写</td>
+</tr>
+<tr>
+<td>📋 案例</td>
+<td style="text-align: center;">✅ 有</td>
+<td>华润微（FMEA 80W + CP&amp;FT 73W + 董事长驾驶舱 30W）、楚兴技术（工厂可视化 44W）</td>
+</tr>
+<tr>
+<td>⚔️ 竞品</td>
+<td style="text-align: center;">⚪ 缺</td>
+<td>竞品在晶圆制造暂无系统追踪</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_9">🔗 关联</h2>
+<ul>
+<li>产品线速查：<a href="/kb/帆软售前整合/产品线速查矩阵">帆软售前整合/产品线速查矩阵</a></li>
+<li>总索引：<a href="/kb/帆软售前整合/README">帆软售前整合/README</a></li>
+<li>行业矩阵：<a href="/kb/导航/帆软产品x半导体行业矩阵">导航/帆软产品x半导体行业矩阵</a></li>
+<li>行业知识体系：<a href="/kb/行业知识体系/01-晶圆制造/01-晶圆制造-MOC">行业知识体系/01-晶圆制造/01-晶圆制造-MOC</a></li>
+</ul>
+<hr />
+<p><em>创建于 2026-07-09 · 桥接内容不修改原笔记</em></p>
+</div>
+</article>
+<footer class="note-footer">
+  <a href="/kb/帆软售前整合/index.html">← 返回目录</a>
+</footer>
+</main>
+</body>
+</html>

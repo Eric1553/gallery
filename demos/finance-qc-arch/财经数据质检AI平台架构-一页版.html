@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>财经数据质检 AI 智能平台架构 · 一页版</title>
+<style>
+  :root{
+    --ink:#1f2430; --ink2:#4a5468; --ink3:#6b7688;
+    --line:#c9d2e3;
+    --blue-bg:#eaf1fd; --blue-bd:#a9c2ea;
+    --pink-bg:#fdeaee; --pink-bd:#f0b6c2;
+    --green-bg:#e6f4ea; --green-bd:#a8d5b5;
+    --infra-bg:#e3e9f7; --infra-bd:#a6b6d9;
+    --amber-bg:#fdf3dc; --amber-bd:#e6c583;
+    --purple-bg:#eee7fa; --purple-bd:#b9a5e3;
+    --white:#fff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#5a6274;display:flex;align-items:center;justify-content:center;min-height:100vh;
+       font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;color:var(--ink)}
+
+  /* 一页 PPT：16:9 = 1280×720 */
+  .slide{width:1280px;height:720px;background:#fff;padding:14px 18px 12px;display:flex;flex-direction:column;
+         gap:7px;box-shadow:0 14px 40px rgba(0,0,0,.35)}
+
+  header{display:flex;align-items:baseline;gap:12px;border-bottom:2px solid #2f3a52;padding-bottom:5px}
+  header h1{font-size:23px;letter-spacing:.5px}
+  header .sub{font-size:12px;color:var(--ink3)}
+  header .flow{margin-left:auto;font-size:11px;color:var(--ink3)}
+  header .flow b{color:#2f5fbf}
+  header .flow i{font-style:normal;color:#b06a2c}
+
+  .band{display:flex;gap:8px;align-items:stretch}
+  .tag{flex:0 0 52px;border-radius:5px;display:flex;align-items:center;justify-content:center;text-align:center;
+       font-size:12px;font-weight:700;line-height:1.15;color:#33405c;letter-spacing:.5px;padding:2px}
+  .body{flex:1;border-radius:6px;padding:7px 9px;display:flex;gap:8px;align-items:stretch}
+
+  .t-blue{background:var(--blue-bg);border:1px solid var(--blue-bd)}
+  .t-pink{background:var(--pink-bg);border:1px solid var(--pink-bd)}
+  .t-infra{background:var(--infra-bg);border:1px solid var(--infra-bd)}
+  .t-amber{background:var(--amber-bg);border:1px solid var(--amber-bd)}
+  .t-purple{background:var(--purple-bg);border:1px solid var(--purple-bd)}
+  .t-white{background:#f7f9fd;border:1px solid var(--line)}
+
+  .chip{flex:1;background:var(--white);border:1px solid var(--blue-bd);border-radius:5px;
+        display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+        font-size:13px;line-height:1.2;padding:4px 3px}
+  .chip.dash{border-style:dashed;border-color:#8fa8d8}
+  .chip.pk{border-color:#e39aab}
+  .chip.pp{border-color:var(--purple-bd)}
+  .chip.am{border-color:#dcb774}
+  .chip.gn{border-color:#8dc79f;border-radius:12px;font-size:12px}
+  .chip small{display:block;font-size:10.5px;color:var(--ink3);margin-top:1px}
+
+  /* 双引擎 */
+  .engine{flex:1;border:1.5px dashed #6f86bb;border-radius:6px;background:#fbfcff;padding:6px 10px}
+  .engine h3{font-size:13px;margin-bottom:3px;color:#243a66}
+  .engine ul{list-style:none;display:flex;flex-direction:column;gap:2px}
+  .engine li{font-size:12px;color:var(--ink2);line-height:1.25;padding-left:9px;position:relative}
+  .engine li::before{content:"•";position:absolute;left:0;color:#7b93c8}
+  .router{flex:0 0 122px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+  .router .cap{font-size:12px;font-weight:700;color:#243a66}
+  .router .ico{font-size:30px;line-height:1}
+  .router .arrows{font-size:15px;color:#5c6f9c;letter-spacing:8px}
+  .router .note{font-size:10px;color:var(--ink3);text-align:center;line-height:1.2}
+
+  /* 数据处理 + 知识库 */
+  .grp{border:1px solid var(--blue-bd);border-radius:6px;background:#f4f7fe;padding:5px 7px;display:flex;flex-direction:column;gap:4px}
+  .grp>h3{font-size:12.5px;text-align:center;color:#243a66}
+  .grp .row{display:flex;gap:7px;flex:1}
+  .card{flex:1;background:#fff;border:1px solid var(--blue-bd);border-radius:5px;padding:4px 7px}
+  .card h4{font-size:11.5px;margin-bottom:2px;color:#2b3a5c}
+  .card ul{list-style:none}
+  .card li{font-size:11.5px;color:var(--ink2);line-height:1.3;padding-left:8px;position:relative}
+  .card li::before{content:"·";position:absolute;left:1px;font-weight:700;color:#8ba3d3}
+  .kb{flex:0 0 226px;background:var(--green-bg);border-color:var(--green-bd)}
+  .kb .col{display:flex;flex-direction:column;gap:4px;flex:1}
+
+  /* 采集通道 */
+  .chan{flex:1;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:6px;padding:5px 8px;
+        display:flex;flex-direction:column;gap:4px}
+  .chan h3{font-size:12.5px;text-align:center;color:#6d4c14}
+  .chan .row{display:flex;gap:7px}
+  .chan .use{font-size:10.5px;color:#8a6a2a;text-align:center}
+
+  .dw{display:flex;gap:8px}
+  .dw .box{border-radius:6px;padding:6px 10px;display:flex;align-items:center;justify-content:center;
+           font-size:14px;font-weight:700;letter-spacing:.5px}
+  .dw .b1{flex:1;background:var(--blue-bg);border:1.5px solid #7f9fd8;color:#20356b}
+  .dw .b2{flex:0 0 40%;background:#f1f2f6;border:1.5px solid #a8b0c2;color:#3c4557}
+
+  .up{flex:0 0 14px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#8d97ab}
+  .arrowrow{display:flex;gap:8px;height:13px;align-items:center;padding-left:60px}
+  .arrowrow span{flex:1;text-align:center;font-size:11px;color:#8d97ab;letter-spacing:2px}
+
+  @media print{
+    @page{size:1280px 720px;margin:0}
+    body{background:#fff;min-height:auto}
+    .slide{box-shadow:none}
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <header>
+    <h1>财经数据质检 AI 智能平台架构</h1>
+    <span class="sub">规则引擎 + ReAct 双引擎 · Skill 化执行 · 全链路血缘归因</span>
+    <span class="flow">数据流 <b>自下而上</b> ↑&nbsp;&nbsp;&nbsp;调度指令 <i>自上而下</i> ↓</span>
+  </header>
+
+  <!-- 接入层 -->
+  <div class="band" style="flex:1 0 40px">
+    <div class="tag t-blue">接入层</div>
+    <div class="body t-blue" style="padding:5px 8px">
+      <div class="chip">Web 管理控制台</div>
+      <div class="chip">钉钉</div>
+      <div class="chip">邮件通知系统</div>
+      <div class="chip">API 开放平台</div>
+    </div>
+  </div>
+
+  <!-- 双引擎 -->
+  <div class="band" style="flex:2 0 106px">
+    <div class="tag t-white">决策层</div>
+    <div class="body t-white">
+      <div class="engine">
+        <h3>规则引擎 Workflow<span style="font-size:10.5px;color:var(--ink3);font-weight:400"> · 确定性场景</span></h3>
+        <ul>
+          <li>差异类型匹配</li>
+          <li>血缘查询 → 数据拉取</li>
+          <li>差异分解 → 输出结论</li>
+        </ul>
+      </div>
+      <div class="router">
+        <div class="cap">双引擎路由决策</div>
+        <div class="ico">🤖</div>
+        <div class="arrows">⇦&nbsp;⇨</div>
+        <div class="note">按差异是否可归类<br>分流至确定/探索路径</div>
+      </div>
+      <div class="engine">
+        <h3>ReAct 智能流程<span style="font-size:10.5px;color:var(--ink3);font-weight:400"> · 未知场景</span></h3>
+        <ul>
+          <li>LLM 动态查询规划</li>
+          <li>SKILL 层执行探索</li>
+          <li>结果评估：根因是否定位</li>
+          <li>未定位 → 修改 Memory → 循环</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skill 执行层 -->
+  <div class="band" style="flex:1 0 44px">
+    <div class="tag t-pink">Skill<br>执行层</div>
+    <div class="body t-pink" style="padding:5px 8px">
+      <div class="chip pk dash">血缘查询 SKILL</div>
+      <div class="chip pk dash">数据拉取 SKILL</div>
+      <div class="chip pk dash">差异分解 SKILL</div>
+      <div class="chip pk dash">日志分析 SKILL</div>
+      <div class="chip pk dash">报告生成 SKILL</div>
+      <div class="chip pk dash">预警推送 SKILL</div>
+    </div>
+  </div>
+
+  <!-- 数据处理标准化层 + 知识库 -->
+  <div class="band" style="flex:2 0 104px">
+    <div class="tag t-blue">处理层</div>
+    <div class="body" style="padding:0;gap:8px">
+      <div class="grp" style="flex:1">
+        <h3>数据处理标准化层</h3>
+        <div class="row">
+          <div class="card">
+            <h4>数据清洗 Skill</h4>
+            <ul><li>格式统一</li><li>异常值处理</li><li>缺失值填充</li></ul>
+          </div>
+          <div class="card">
+            <h4>数据标准化 Skill</h4>
+            <ul><li>字段映射</li><li>编码转换</li><li>时间对齐</li></ul>
+          </div>
+          <div class="card">
+            <h4>数据校验 Skill</h4>
+            <ul><li>完整性校验</li><li>逻辑校验</li><li>范围校验</li></ul>
+          </div>
+        </div>
+      </div>
+      <div class="grp kb">
+        <h3 style="color:#215c33">知识库</h3>
+        <div class="col">
+          <div class="chip gn">数据关系知识图谱</div>
+          <div class="chip gn">历史案例知识库</div>
+          <div class="chip gn">异常模式知识库</div>
+          <div class="chip gn">业务规则知识库</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 基建层 -->
+  <div class="band" style="flex:1 0 40px">
+    <div class="tag t-infra">基建层</div>
+    <div class="body t-infra" style="padding:5px 8px">
+      <div class="chip">数据库</div>
+      <div class="chip">MinIO</div>
+      <div class="chip">Sandbox</div>
+      <div class="chip">Redis</div>
+      <div class="chip">向量库</div>
+    </div>
+  </div>
+
+  <div class="arrowrow"><span>↑ 标准化后数据入湖</span><span>↑ 日志指标入湖</span></div>
+
+  <!-- 采集通道 -->
+  <div class="band" style="flex:2 0 78px">
+    <div class="tag t-amber">采集层</div>
+    <div class="body" style="padding:0;gap:8px">
+      <div class="chan">
+        <h3>定时批量通道</h3>
+        <div class="row">
+          <div class="chip am">REST API 拉取</div>
+          <div class="chip am">定时 SQL 查询</div>
+          <div class="chip am">文件导入</div>
+        </div>
+        <div class="use">适用：结算单、订单、工单</div>
+      </div>
+      <div class="chan">
+        <h3>接口日志通道</h3>
+        <div class="row">
+          <div class="chip am">调用日志采集</div>
+          <div class="chip am">报错日志采集</div>
+          <div class="chip am">性能指标采集</div>
+        </div>
+        <div class="use">适用：接口监控、异常检测</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrowrow"><span>↑ 业务数据</span><span>↑ 日志数据</span></div>
+
+  <!-- 数仓 / 日志 -->
+  <div class="band" style="flex:1 0 34px">
+    <div class="tag t-white">汇聚层</div>
+    <div class="body" style="padding:0">
+      <div class="dw" style="flex:1">
+        <div class="box b1">数仓统一汇总业务数据</div>
+        <div class="box b2">日志数据</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 数据源层 -->
+  <div class="band" style="flex:1 0 44px">
+    <div class="tag t-purple">数据<br>源层</div>
+    <div class="body t-purple" style="padding:5px 8px">
+      <div class="chip pp">SAP 系统<small>财务底账</small></div>
+      <div class="chip pp">工程 LTC</div>
+      <div class="chip pp">电商 DRP</div>
+      <div class="chip pp">零售 DMS</div>
+      <div class="chip pp">服务 CSM</div>
+      <div class="chip pp">交付 DCS</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

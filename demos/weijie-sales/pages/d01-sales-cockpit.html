@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>D-01 销售经营驾驶舱 · 唯捷创芯</title>
+<link rel="stylesheet" href="../assets/style.css" />
+<script src="../assets/echarts.min.js"></script>
+</head>
+<body>
+<div id="content">
+
+  <div class="grid r-23" style="margin-bottom:4px">
+    <div class="card"><div class="card-b" style="padding:12px 16px">
+      <div class="flow">
+        <div class="step"><span class="sn">1</span>总盘</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">2</span>销售组</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">3</span>渠道</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">4</span>产品</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">5</span>大客户</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">6</span>个人映射</div>
+      </div>
+    </div></div>
+    <div class="card"><div class="card-b" style="padding:12px 16px">
+      <div class="meta-strip">
+        <span class="ms">BP <b>线下上传 · 到销售组</b></span>
+        <span class="ms">预测/实际 <b>SAP</b></span>
+        <span class="ms">大客户 <b>按销售组</b></span>
+        <span class="ms">其他客户 <b>映射到个人</b></span>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="grid g5" id="kpi"></div>
+
+  <div class="section-head"><span class="bar"></span><h2>总盘经营概览</h2>
+    <span class="desc">销售规模 · 环比 · 预测达成（同比增长率本期不展示）</span><span class="line"></span></div>
+  <div class="grid r-21">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>销售额 / 销售量 月度走势</div>
+        <div class="card-tools"><div class="seg"><span class="on">本年</span><span>环比</span></div></div></div>
+      <div class="card-b"><div id="c1" class="chart" style="height:264px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>预测达成率</div><span class="cx">年度累计</span></div>
+      <div class="card-b">
+        <div id="c2" class="chart" style="height:150px"></div>
+        <div class="bar-row"><span class="bn">BP 达成率</span><div class="bar-track"><div class="bar-fill" style="width:94%"></div></div><span class="bv">94.1%</span></div>
+        <div class="bar-row"><span class="bn">年度预测达成</span><div class="bar-track"><div class="bar-fill" style="width:97%;background:linear-gradient(90deg,#5bd0a6,#25a36c)"></div></div><span class="bv">96.8%</span></div>
+        <div class="bar-row"><span class="bn">季度预测达成</span><div class="bar-track"><div class="bar-fill" style="width:98%;background:linear-gradient(90deg,#7ab0ff,#2468f2)"></div></div><span class="bv">98.1%</span></div>
+        <div class="bar-row"><span class="bn">月度预测达成</span><div class="bar-track"><div class="bar-fill" style="width:99%;background:linear-gradient(90deg,#ffc879,#f07a1d)"></div></div><span class="bv">99.2%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>结构分析 · 产品 / 渠道</h2>
+    <span class="desc">产品销售额占比 · 直供 vs 经销渠道结构</span><span class="line"></span></div>
+  <div class="grid g3">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>产品大类销售额占比</div></div>
+      <div class="card-b"><div id="c3" class="chart" style="height:230px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>收入占比 vs 销售额占比</div></div>
+      <div class="card-b"><div id="c4" class="chart" style="height:230px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>渠道结构 · 直供 vs 经销</div></div>
+      <div class="card-b"><div id="cCh" class="chart" style="height:230px"></div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>大客户收入结构</h2>
+    <span class="desc">按大客户定义展示收入结构；各客户分类下销售额 TOP 客户</span><span class="line"></span></div>
+  <div class="grid r-21">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>大客户销售额结构（按客户分类）</div><span class="cx">单位：万元</span></div>
+      <div class="card-b"><div id="c5" class="chart" style="height:260px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>各分类 TOP 大客户</div></div>
+      <div class="card-b"><div class="rank" id="rank"></div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>销售组 BP vs 实际营收</h2>
+    <span class="desc">目标只到销售组；大客户按小组核算</span><span class="line"></span></div>
+  <div class="grid r-21">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>销售组 BP 与实际营业收入对比</div><span class="cx">单位：万元</span></div>
+      <div class="card-b"><div id="c6" class="chart" style="height:280px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>销售组贡献排名</div></div>
+      <div class="card-b"><div id="c7" class="chart" style="height:280px"></div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>其他客户 · 销售组 → 个人映射</h2>
+    <span class="desc">线下提供销售组与个人映射；其他客户销售确认到个人（示意）</span><span class="line"></span></div>
+  <div class="card"><div class="card-b" style="padding:0">
+    <div class="tbl-wrap"><table class="tbl" id="tblMap"></table></div>
+  </div></div>
+
+  <div class="section-head"><span class="bar"></span><h2>下钻明细</h2>
+    <span class="desc">销售组 / 渠道 / 产品 / 大客户多维明细</span><span class="line"></span></div>
+  <div class="card"><div class="card-b" style="padding:0">
+    <div class="tbl-wrap"><table class="tbl" id="tbl"></table></div>
+  </div></div>
+
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+renderLayout("d01", {
+  chapter: "第一章 · 看经营结果",
+  sub: "面向销售管理层、运营及大区负责人的月度经营会入口：看清销售规模、预测达成、大客户结构与销售组BP。",
+  batchTags: '<span class="tag tag-green" style="margin-left:8px">一期 P0</span><span class="tag tag-blue">一期 P1</span>'
+});
+
+const kpi=[
+ {t:"销售总额",v:"38,642",u:"万元",f:'<span class="trend-up">环比 +3.1%</span>',c:"",sc:"#2468f2",sp:[31,33,32,35,34,36,38]},
+ {t:"销售量",v:"1.86",u:"亿颗",f:'<span class="trend-up">环比 +2.4%</span>',c:"k-cyan",sc:"#16b8c8",sp:[1.5,1.6,1.62,1.7,1.74,1.8,1.86]},
+ {t:"年度预测达成率",v:"96.8",u:"%",f:'<span class="trend-up">▲2.3pct</span>',c:"k-green",sc:"#25a36c",sp:[88,90,92,91,94,95,96.8]},
+ {t:"BP 达成率",v:"94.1",u:"%",f:'<span class="trend-flat">达标线 95%</span>',c:"k-gold",sc:"#e0a106",sp:[90,91,92,93,93.5,94,94.1]},
+ {t:"大客户销售额",v:"24,860",u:"万元",f:'<span class="lbl">占总盘 64.3%</span>',c:"k-violet",sc:"#7a6ff0",sp:[20,21,22,23,23.5,24,24.8]},
+];
+document.getElementById("kpi").innerHTML=kpi.map((k,i)=>`
+ <div class="kpi ${k.c}"><div class="kt"><span class="dot" style="background:${k.sc}"></span>${k.t}</div>
+ <div class="kv">${k.v}<small>${k.u}</small></div><div class="kf">${k.f}</div>
+ <div class="spark" id="s${i}"></div></div>`).join("");
+kpi.forEach((k,i)=>spark("s"+i,k.sp,k.sc));
+
+const M=["1月","2月","3月","4月","5月","6月","7月","8月","9月"];
+mk("c1",{tooltip:tip(),legend:legend({data:["销售额(万元)","销售量(百万颗)","环比"]}),
+ grid:baseGrid({top:34,right:46}),xAxis:catAxis(M),
+ yAxis:[valAxis({name:"万元"}),valAxis({name:"环比%",splitLine:{show:false}})],
+ series:[
+  {name:"销售额(万元)",type:"bar",barWidth:16,itemStyle:{borderRadius:[4,4,0,0],color:gradient("#5b9bff","#2468f2")},
+   data:[5200,5600,6100,5900,6400,6800,null,null,null]},
+  {name:"销售量(百万颗)",type:"line",smooth:true,symbol:"circle",symbolSize:6,lineStyle:{width:2.5,color:"#16b8c8"},itemStyle:{color:"#16b8c8"},
+   data:[152,160,170,166,178,186,null,null,null]},
+  {name:"环比",type:"line",yAxisIndex:1,smooth:true,symbol:"none",lineStyle:{width:2,type:"dashed",color:"#f07a1d"},
+   data:[3,7.7,8.9,-3.3,8.5,6.3,null,null,null]},
+ ]});
+
+mk("c2",gaugeOpt(96.8,gradient("#5bd0a6","#25a36c"),{name:"年度预测达成"}));
+
+mk("c3",{tooltip:{trigger:"item",formatter:"{b}<br/>{c} 万元 ({d}%)"},
+ legend:legend({orient:"vertical",right:0,top:"center",icon:"circle"}),
+ series:[{type:"pie",radius:["44%","70%"],center:["36%","52%"],itemStyle:{borderColor:"#fff",borderWidth:2,borderRadius:4},
+  label:{show:false},emphasis:{label:{show:true,fontWeight:700,formatter:"{b}\n{d}%"}},
+  data:[{value:13800,name:"消费电子"},{value:9600,name:"工业控制"},{value:7200,name:"汽车电子"},{value:5100,name:"通信"},{value:2942,name:"其他"}]}]});
+
+mk("c4",{tooltip:tip(),legend:legend({data:["销售额占比","收入占比"]}),grid:baseGrid({top:30}),
+ xAxis:catAxis(["消费电子","工业控制","汽车电子","通信","其他"]),yAxis:valAxis({name:"%",max:45}),
+ series:[
+  {name:"销售额占比",type:"bar",barWidth:12,itemStyle:{borderRadius:[3,3,0,0],color:"#2468f2"},data:[36,25,19,13,7]},
+  {name:"收入占比",type:"bar",barWidth:12,itemStyle:{borderRadius:[3,3,0,0],color:"#16b8c8"},data:[33,27,21,12,7]},
+ ]});
+
+mk("cCh",{tooltip:{trigger:"item",formatter:"{b}<br/>{c} 万元 ({d}%)"},legend:legend({bottom:0,icon:"circle"}),
+ series:[{type:"pie",radius:["48%","72%"],center:["50%","44%"],itemStyle:{borderColor:"#fff",borderWidth:3,borderRadius:6},
+  label:{show:true,formatter:"{b}\n{d}%",fontSize:12,fontWeight:700},
+  data:[{value:22180,name:"直供"},{value:16462,name:"经销"}]}]});
+
+mk("c5",{tooltip:tip(),legend:legend({data:["大客户销售额","大客户占比"]}),grid:baseGrid({top:34,right:46}),
+ xAxis:catAxis(["车载","手机","物联网","工业","消费"]),
+ yAxis:[valAxis({name:"万元"}),valAxis({name:"%",max:100,splitLine:{show:false}})],
+ series:[
+  {name:"大客户销售额",type:"bar",barWidth:22,itemStyle:{borderRadius:[4,4,0,0],color:gradient("#9a8ff5","#7a6ff0")},data:[8200,6400,4200,3600,2460]},
+  {name:"大客户占比",type:"line",yAxisIndex:1,smooth:true,symbol:"circle",symbolSize:6,lineStyle:{width:2.5,color:"#f07a1d"},itemStyle:{color:"#f07a1d"},data:[78,72,65,58,52]},
+ ]});
+
+const rk=[["车载 · 比亚迪半导","3,260"],["手机 · 汇顶科技","2,860"],["物联网 · 中颖电子","1,940"],["工业 · 汇川技术","1,560"],["消费 · Tier-1 ODM","1,180"]];
+document.getElementById("rank").innerHTML=rk.map((r,i)=>`
+ <div class="ri ${i<3?'top'+(i+1):''}"><span class="rn">${i+1}</span><span class="rl">${r[0]}</span>
+ <span class="rv">${r[1]}</span></div>`).join("");
+
+mk("c6",{tooltip:tip(),legend:legend({data:["实际营收","销售组BP","达成率"]}),grid:baseGrid({top:34,right:46,left:16}),
+ xAxis:catAxis(["华东一组","华南一组","华北一组","西南一组","海外一组","华东二组"]),
+ yAxis:[valAxis({name:"万元"}),valAxis({name:"达成%",max:140,splitLine:{show:false}})],
+ series:[
+  {name:"销售组BP",type:"bar",barGap:"-100%",barWidth:18,itemStyle:{color:"#dbe8ff",borderRadius:[4,4,0,0]},data:[6800,5200,4100,2800,2400,2100]},
+  {name:"实际营收",type:"bar",barWidth:18,itemStyle:{borderRadius:[4,4,0,0],color:gradient("#5b9bff","#2468f2")},data:[7200,4980,4380,2650,2520,2280]},
+  {name:"达成率",type:"line",yAxisIndex:1,smooth:true,symbol:"circle",symbolSize:6,lineStyle:{width:2,color:"#f07a1d"},itemStyle:{color:"#f07a1d"},data:[106,96,107,95,105,109]},
+ ]});
+
+mk("c7",{tooltip:tip(),grid:baseGrid({top:12,left:16}),
+ xAxis:valAxis({name:"万元"}),yAxis:catAxis(["华东一组","华南一组","华北一组","西南一组","海外一组","华东二组"],{boundaryGap:true,inverse:true,axisLine:{show:false}}),
+ series:[{type:"bar",barWidth:16,itemStyle:{borderRadius:[0,4,4,0],color:gradient("#16c2c8","#2468f2")},
+  label:{show:true,position:"right",formatter:"{c}",color:"#46586c"},data:[7200,4980,4380,2650,2520,2280]}]});
+
+const mapRows=[
+ ["华东一组","张伟","其他客户","苏州微纳","直供","186","个人业绩"],
+ ["华东一组","李敏","其他客户","杭州传感","经销","142","个人业绩"],
+ ["华南一组","王强","其他客户","深圳联芯","直供","168","个人业绩"],
+ ["华北一组","陈静","其他客户","天津工控","经销","124","个人业绩"],
+ ["西南一组","刘洋","其他客户","成都光电","直供","98","个人业绩"],
+];
+const mapHead=["销售组","销售员","客户类型","客户","渠道","销售额(万元)","核算口径"];
+document.getElementById("tblMap").innerHTML=
+ "<thead><tr>"+mapHead.map((h,i)=>`<th class="${i===5?'num':''}">${h}</th>`).join("")+"</tr></thead><tbody>"+
+ mapRows.map(r=>"<tr>"+r.map((c,i)=>`<td class="${i===5?'num':''} ${i===0?'strong':''}">${i===2?'<span class="tag tag-gray">'+c+'</span>':c}</td>`).join("")+"</tr>").join("")+"</tbody>";
+
+const rows=[
+ ["华东一组","直供","消费电子","汇顶科技","6,820","108%"],
+ ["华南一组","经销","工业控制","汇川技术","4,510","96%"],
+ ["华北一组","经销","汽车电子","比亚迪半导","3,260","107%"],
+ ["西南一组","直供","通信","紫光展锐","2,140","95%"],
+ ["海外一组","直供","消费电子","Tier-1 ODM","1,120","105%"],
+];
+const head=["销售组","渠道","产品大类","大客户","销售额(万元)","BP达成"];
+document.getElementById("tbl").innerHTML=
+ "<thead><tr>"+head.map((h,i)=>`<th class="${i>=4?'num':''}">${h}</th>`).join("")+"</tr></thead><tbody>"+
+ rows.map(r=>"<tr>"+r.map((c,i)=>`<td class="${i>=4?'num':''} ${i===0?'strong':''}">${c}</td>`).join("")+"</tr>").join("")+"</tbody>";
+</script>
+</body>
+</html>

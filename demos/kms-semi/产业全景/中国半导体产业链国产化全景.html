@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>中国半导体产业链国产化全景 — 半导体知识库</title>
+<meta name="description" content="# 中国半导体产业链国产化全景：各环节进展与替代时间线  > 本文与 <a href="/kb/产业全景/中国半导体产业现状">中国半导体产业现状</a>（侧重宏观自给率与三大政策驱动力）、<a href="/kb/产业全景/中国半导体产业政策与大基金体系">中国半导体产业政策与大基金体系</a>（">
+<link rel="stylesheet" href="/kb/assets/style.css">
+</head>
+<body>
+<div class="top-accent"></div>
+<header class="page-header">
+  <a href="/kb/首页.html" class="home-link">🔬 半导体知识库</a>
+</header>
+<main class="container">
+<nav class="breadcrumb"><a href="/kb/首页.html">半导体知识库</a> <span class="sep">›</span> <a href="/kb//产业全景/index.html">产业全景</a></nav>
+<article class="note">
+<header class="note-header">
+  <h1>中国半导体产业链国产化全景</h1>
+  
+</header>
+<div class="note-body">
+<h1 id="_1">中国半导体产业链国产化全景：各环节进展与替代时间线</h1>
+<blockquote>
+<p>本文与 <a href="/kb/产业全景/中国半导体产业现状">中国半导体产业现状</a>（侧重宏观自给率与三大政策驱动力）、<a href="/kb/产业全景/中国半导体产业政策与大基金体系">中国半导体产业政策与大基金体系</a>（侧重政策逻辑与大基金体系结构）互补。
+本文聚焦：<strong>各环节国产化率细化数据、按制程/品类的突破预期年份、龙头企业国产替代进展详表、大基金三期投向深描</strong>。</p>
+</blockquote>
+<hr />
+<h2 id="2025-2026">一、各环节国产化率现状（2025-2026年）</h2>
+<p>以下数据综合 ICWise、中国半导体行业协会及券商研报交叉验证。需注意：国产化率因统计口径不同（"国产企业营收占比" vs "国内需求由国产满足的比例" vs "含外资在华产能"）差异显著，本表采用<strong>"国产企业在国内市场的实际供应占比"</strong>口径——它比"含外资在华产能"的自给率低，但更能反映自主可控真实进展。</p>
+<table>
+<thead>
+<tr>
+<th>环节</th>
+<th style="text-align: center;">国产化率（狭义口径）</th>
+<th style="text-align: center;">含外资在华产能的自给率</th>
+<th>关键瓶颈</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>IC设计</strong></td>
+<td style="text-align: center;">15-20%</td>
+<td style="text-align: center;">25-30%</td>
+<td>高端CPU/GPU/FPGA仍依赖进口；手机SoC仅海思/展锐有规模；模拟芯片国产化率&lt;10%</td>
+</tr>
+<tr>
+<td><strong>晶圆制造</strong></td>
+<td style="text-align: center;">8-10%</td>
+<td style="text-align: center;">16-20%</td>
+<td>先进制程（14nm以下）几乎为0；成熟制程国产化~25%；光刻机断供是核心约束</td>
+</tr>
+<tr>
+<td><strong>封装测试</strong></td>
+<td style="text-align: center;">25-30%</td>
+<td style="text-align: center;">35-40%</td>
+<td>传统封装国产化率较高（~40%），先进封装（CoWoS/3D堆叠/混合键合）国产化率&lt;10%</td>
+</tr>
+<tr>
+<td><strong>半导体设备</strong></td>
+<td style="text-align: center;">5-15%（按品类差异极大）</td>
+<td style="text-align: center;">&lt;20%</td>
+<td>光刻机&lt;1%、离子注入&lt;5%、检测&lt;5%、涂胶显影&lt;10%、刻蚀~20%、清洗~30%、CMP~25%</td>
+</tr>
+<tr>
+<td><strong>半导体材料</strong></td>
+<td style="text-align: center;">10-20%（按品类差异大）</td>
+<td style="text-align: center;">20-25%</td>
+<td>硅片~15%、光刻胶&lt;5%、电子特气~30%、靶材~20%、CMP抛光液~25%、掩模版&lt;5%</td>
+</tr>
+<tr>
+<td><strong>EDA工具</strong></td>
+<td style="text-align: center;">5-10%（点工具）</td>
+<td style="text-align: center;">—</td>
+<td>全流程EDA国产化率≈0%；点工具（仿真/版图）有突破但覆盖率&lt;15%</td>
+</tr>
+<tr>
+<td><strong>核心IP</strong></td>
+<td style="text-align: center;">&lt;5%</td>
+<td style="text-align: center;">—</td>
+<td>处理器IP（ARM/x86/RISC-V）、高速SerDes、DDR PHY、PCIe等接口IP几乎全部依赖进口</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_2">各环节国产化率细拆（关键品类）</h3>
+<h4 id="_3">半导体设备</h4>
+<table>
+<thead>
+<tr>
+<th>设备类型</th>
+<th style="text-align: center;">国产化率</th>
+<th>代表国产品牌</th>
+<th>2025年进展</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>刻蚀设备</td>
+<td style="text-align: center;">~20%</td>
+<td>中微公司、北方华创</td>
+<td>中微5nm刻蚀已进入台积电验证；北方华创在成熟制程刻蚀批量交付</td>
+</tr>
+<tr>
+<td>薄膜沉积（CVD/PVD/ALD）</td>
+<td style="text-align: center;">~15%</td>
+<td>北方华创、拓荆科技、中微公司</td>
+<td>拓荆PECVD在长江存储/长鑫存储批量应用；ALD差距仍大</td>
+</tr>
+<tr>
+<td>清洗设备</td>
+<td style="text-align: center;">~30%</td>
+<td>盛美上海、北方华创、至纯科技</td>
+<td>盛美SAPS/TEBO清洗技术差异化，进入SK海力士</td>
+</tr>
+<tr>
+<td>CMP设备</td>
+<td style="text-align: center;">~25%</td>
+<td>华海清科</td>
+<td>华海清科12寸CMP在长江存储/中芯国际批量应用</td>
+</tr>
+<tr>
+<td>涂胶显影（Track）</td>
+<td style="text-align: center;">~10%</td>
+<td>芯源微</td>
+<td>前道Track在28nm产线验证中；后道Track批量交付</td>
+</tr>
+<tr>
+<td>离子注入机</td>
+<td style="text-align: center;">~5%</td>
+<td>凯世通（万业企业）、中科信</td>
+<td>中束流注入机开始导入产线；高束流/超低能差距大</td>
+</tr>
+<tr>
+<td>量测检测</td>
+<td style="text-align: center;">&lt;5%</td>
+<td>中科飞测、上海睿励、东方晶源</td>
+<td>光学检测有突破；电子束检测仍几乎空白</td>
+</tr>
+<tr>
+<td>光刻机</td>
+<td style="text-align: center;">&lt;1%</td>
+<td>上海微电子（SMEE）</td>
+<td>90nm光刻机可小批量交付；28nm浸没式仍在研发中（预计2027年送样）</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_4">半导体材料</h4>
+<table>
+<thead>
+<tr>
+<th>材料类型</th>
+<th style="text-align: center;">国产化率</th>
+<th>代表国产品牌</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>12寸大硅片</td>
+<td style="text-align: center;">~10%</td>
+<td>沪硅产业、立昂微、中环领先</td>
+</tr>
+<tr>
+<td>8寸硅片</td>
+<td style="text-align: center;">~30%</td>
+<td>沪硅产业、立昂微、中环领先</td>
+</tr>
+<tr>
+<td>光刻胶（g/i线）</td>
+<td style="text-align: center;">~35%</td>
+<td>晶瑞电材、北京科华</td>
+</tr>
+<tr>
+<td>光刻胶（KrF）</td>
+<td style="text-align: center;">~10%</td>
+<td>北京科华、徐州博康</td>
+</tr>
+<tr>
+<td>光刻胶（ArF）</td>
+<td style="text-align: center;">&lt;3%</td>
+<td>南大光电（ArF干式验证中）、徐州博康</td>
+</tr>
+<tr>
+<td>光刻胶（EUV）</td>
+<td style="text-align: center;">0%</td>
+<td>暂无</td>
+</tr>
+<tr>
+<td>CMP抛光液</td>
+<td style="text-align: center;">~25%</td>
+<td>安集科技</td>
+</tr>
+<tr>
+<td>溅射靶材</td>
+<td style="text-align: center;">~20%</td>
+<td>江丰电子、有研新材</td>
+</tr>
+<tr>
+<td>电子特气</td>
+<td style="text-align: center;">~30%</td>
+<td>华特气体、金宏气体、雅克科技</td>
+</tr>
+<tr>
+<td>掩模版（光罩）</td>
+<td style="text-align: center;">&lt;5%</td>
+<td>清溢光电、路维光电</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_5">二、国产替代时间线预测（按制程/品类的突破预期年份）</h2>
+<p>基于各企业当前研发进度、大基金三期投向节奏和出口管制约束强度，行业共识预测如下：</p>
+<h3 id="_6">晶圆制造制程突破时间线</h3>
+<table>
+<thead>
+<tr>
+<th>制程节点</th>
+<th style="text-align: center;">当前状态（2026）</th>
+<th style="text-align: center;">2027-2028E</th>
+<th style="text-align: center;">2029-2030E</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>28nm及以上</strong></td>
+<td style="text-align: center;">已实现规模量产（中芯国际/华虹/晶合/粤芯）</td>
+<td style="text-align: center;">产能扩张期，自给率有望从~25%→~40%</td>
+<td style="text-align: center;">成熟制程国产化率达到50-60%</td>
+</tr>
+<tr>
+<td><strong>14nm</strong></td>
+<td style="text-align: center;">中芯国际FinFET有量产（良率据传50-70%），产能有限</td>
+<td style="text-align: center;">良率提升至可商用水平（&gt;85%），产能扩充</td>
+<td style="text-align: center;">成为国产先进制程的主力节点</td>
+</tr>
+<tr>
+<td><strong>7nm</strong></td>
+<td style="text-align: center;">中芯国际有试产（用DUV多重曝光），良率低、成本高</td>
+<td style="text-align: center;">7nm用DUV量产化（类似台积电N7初代），代价是成本和良率</td>
+<td style="text-align: center;">中芯7nm产能有望达到月产2-3万片</td>
+</tr>
+<tr>
+<td><strong>5nm</strong></td>
+<td style="text-align: center;">不可行</td>
+<td style="text-align: center;">极低概率用DUV实现（需牺牲太多成本和良率）</td>
+<td style="text-align: center;">若EUV仍不可得，5nm仍几乎不可能量产</td>
+</tr>
+<tr>
+<td><strong>3nm及以下</strong></td>
+<td style="text-align: center;">不可行</td>
+<td style="text-align: center;">不可行</td>
+<td style="text-align: center;">若无EUV突破，在2030年前几乎无解</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ 以上预测的前提是当前出口管制格局不变。若ASML对华DUV管制进一步收紧（目前1980i仍可出口），14nm及以上时间线都将推迟。</p>
+</blockquote>
+<h3 id="_7">半导体设备突破时间线</h3>
+<table>
+<thead>
+<tr>
+<th>设备品类</th>
+<th style="text-align: center;">当前国产化率</th>
+<th style="text-align: center;">2027E</th>
+<th style="text-align: center;">2030E</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>刻蚀</td>
+<td style="text-align: center;">20%</td>
+<td style="text-align: center;">30-35%</td>
+<td style="text-align: center;">45-50%（5nm/3nm刻蚀突破）</td>
+</tr>
+<tr>
+<td>薄膜沉积</td>
+<td style="text-align: center;">15%</td>
+<td style="text-align: center;">20-25%</td>
+<td style="text-align: center;">35-40%</td>
+</tr>
+<tr>
+<td>清洗</td>
+<td style="text-align: center;">30%</td>
+<td style="text-align: center;">40-45%</td>
+<td style="text-align: center;">55-60%</td>
+</tr>
+<tr>
+<td>CMP</td>
+<td style="text-align: center;">25%</td>
+<td style="text-align: center;">35-40%</td>
+<td style="text-align: center;">50%+</td>
+</tr>
+<tr>
+<td>涂胶显影（Track）</td>
+<td style="text-align: center;">10%</td>
+<td style="text-align: center;">20%</td>
+<td style="text-align: center;">35%（前道28nm突破）</td>
+</tr>
+<tr>
+<td>离子注入</td>
+<td style="text-align: center;">5%</td>
+<td style="text-align: center;">10-15%</td>
+<td style="text-align: center;">20-25%</td>
+</tr>
+<tr>
+<td>量测检测</td>
+<td style="text-align: center;">&lt;5%</td>
+<td style="text-align: center;">8-10%</td>
+<td style="text-align: center;">15-20%</td>
+</tr>
+<tr>
+<td><strong>光刻机（28nm浸没式）</strong></td>
+<td style="text-align: center;">0%</td>
+<td style="text-align: center;">首台样机（预期2027-2028）</td>
+<td style="text-align: center;">小批量交付（2030-2032）</td>
+</tr>
+<tr>
+<td><strong>光刻机（EUV）</strong></td>
+<td style="text-align: center;">0%</td>
+<td style="text-align: center;">不可行</td>
+<td style="text-align: center;">距离实用化仍需至少10年以上</td>
+</tr>
+</tbody>
+</table>
+<h3 id="eda">EDA工具突破时间线</h3>
+<table>
+<thead>
+<tr>
+<th>环节</th>
+<th style="text-align: center;">当前</th>
+<th style="text-align: center;">2027E</th>
+<th style="text-align: center;">2030E</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>模拟IC设计全流程</td>
+<td style="text-align: center;">华大九天可覆盖~70%流程</td>
+<td style="text-align: center;">可覆盖~85%</td>
+<td style="text-align: center;">基本实现全流程替代</td>
+</tr>
+<tr>
+<td>数字IC设计点工具</td>
+<td style="text-align: center;">华大九天/芯华章在仿真/验证有产品</td>
+<td style="text-align: center;">点工具覆盖率达30-40%</td>
+<td style="text-align: center;">覆盖率达50-60%</td>
+</tr>
+<tr>
+<td>数字IC全流程</td>
+<td style="text-align: center;">0%（Synopsys/Cadence全流程仍不可替代）</td>
+<td style="text-align: center;">∼5%（非最先进节点）</td>
+<td style="text-align: center;">∼15%（28nm及以上节点）</td>
+</tr>
+<tr>
+<td>先进制程（7nm以下）</td>
+<td style="text-align: center;">0%</td>
+<td style="text-align: center;">0%（需要Foundry认证周期）</td>
+<td style="text-align: center;">&lt;5%（仅个别点工具）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_8">三、各环节龙头企业国产替代进展详表</h2>
+<h3 id="ic">IC设计</h3>
+<table>
+<thead>
+<tr>
+<th>企业</th>
+<th>核心品类</th>
+<th>国产替代进展（2025-2026）</th>
+<th>下一里程碑</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>华为海思</strong></td>
+<td>手机AP/基带/AI芯片</td>
+<td>麒麟9100（等效5nm）回归，用SMIC 7nm+DUV多重曝光；昇腾910C AI芯片性能达NVIDIA H100的60-80%</td>
+<td>麒麟9200（等效3nm级）设计完成，等待制造能力配套；昇腾下一代对标B200</td>
+</tr>
+<tr>
+<td><strong>紫光展锐</strong></td>
+<td>手机SoC/物联网</td>
+<td>唐古拉T820（6nm）量产，全球手机SoC市占~10%，中低端市场仅次于联发科</td>
+<td>唐古拉下一代4nm级SoC；5G基带持续迭代</td>
+</tr>
+<tr>
+<td><strong>韦尔股份</strong></td>
+<td>CMOS图像传感器</td>
+<td>豪威OV50H进入高端手机供应链（小米14 Ultra），车载CIS全球第二（~30%份额）</td>
+<td>高端手机CIS对标Sony IMX系列；车载800万像素CIS放量</td>
+</tr>
+<tr>
+<td><strong>兆易创新</strong></td>
+<td>NOR Flash + MCU</td>
+<td>NOR Flash全球第三（~15%）；GD32 MCU是国内ST STM32替代主力</td>
+<td>DRAM（通过CXMT经销）上量；汽车级MCU认证</td>
+</tr>
+<tr>
+<td><strong>卓胜微</strong></td>
+<td>射频前端</td>
+<td>射频开关/LNA已进入三星/小米/OPPO/vivo；SAW滤波器开始小批量</td>
+<td>BAW滤波器突破（最大挑战）；射频模组化</td>
+</tr>
+<tr>
+<td><strong>寒武纪</strong></td>
+<td>AI训练/推理芯片</td>
+<td>思元590（7nm）堪用，但软件生态与CUDA差距显著；营收集中于少数大客户</td>
+<td>软件栈成熟度提升；客户多元化</td>
+</tr>
+<tr>
+<td><strong>地平线</strong></td>
+<td>智能驾驶SoC</td>
+<td>征程6（J6）定点超200款车型，累计出货超500万颗；白盒模式 vs Mobileye形成差异化</td>
+<td>征程7（5nm级）设计；出海获取海外OEM定点</td>
+</tr>
+<tr>
+<td><strong>澜起科技</strong></td>
+<td>内存接口芯片</td>
+<td>DDR5 RCD/MDB全球唯三供应商（与Rambus/Renesas并列），毛利率&gt;60%</td>
+<td>DDR5渗透率从40%→70%的放量红利；PCIe Retimer</td>
+</tr>
+<tr>
+<td><strong>乐鑫科技</strong></td>
+<td>WiFi/BLE MCU</td>
+<td>ESP32系列全球IoT WiFi芯片出货量第一（累计超10亿颗），RISC-V架构差异化</td>
+<td>WiFi 6/6E芯片；Thread/Matter协议支持</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_9">晶圆制造</h3>
+<table>
+<thead>
+<tr>
+<th>企业</th>
+<th>定位</th>
+<th>国产替代进展（2025-2026）</th>
+<th>下一里程碑</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>中芯国际</strong></td>
+<td>逻辑代工（全制程）</td>
+<td>14nm FinFET量产（良率待提升）；7nm用DUV多重曝光试产；N+2工艺等效7nm有限出货（主要为海思）</td>
+<td>14nm良率爬坡至&gt;85%；7nm DUV路径量产化；28nm产能翻倍（京城/深圳/临港新厂）</td>
+</tr>
+<tr>
+<td><strong>华虹半导体</strong></td>
+<td>特色工艺（功率/模拟/CIS/嵌入式存储）</td>
+<td>12寸厂（无锡）月产能达9.5万片，55nm-90nm特色工艺国内领先</td>
+<td>无锡二期扩产至月产15万片；IGBT/SiC代工</td>
+</tr>
+<tr>
+<td><strong>晶合集成</strong></td>
+<td>显示驱动IC（DDIC）代工</td>
+<td>全球最大DDIC代工基地之一，55nm-150nm；2025年营收约80亿</td>
+<td>28nm DDIC平台开发；CIS/PMIC品类扩展</td>
+</tr>
+<tr>
+<td><strong>粤芯半导体</strong></td>
+<td>模拟芯片/特色工艺</td>
+<td>12寸月产约4万片，填补华南Fab空白；三期扩产中</td>
+<td>三期扩产完成后月产8万片；车规级工艺认证</td>
+</tr>
+<tr>
+<td><strong>华润微电子</strong></td>
+<td>功率半导体IDM</td>
+<td>MOSFET/IGBT/MEMS国内产品线最全；重庆12寸功率半导体产线投产</td>
+<td>SiC/GaN器件量产规模扩大；车规级IGBT突破</td>
+</tr>
+<tr>
+<td><strong>长江存储</strong></td>
+<td>3D NAND</td>
+<td>Xtacking 3.0架构232层NAND量产（受制裁后设备受限，扩产放缓）；在消费级SSD市场已有竞争力</td>
+<td>300层NAND研发；Xtacking 4.0；设备国产替代（刻蚀/沉积已有部分替代）</td>
+</tr>
+<tr>
+<td><strong>长鑫存储</strong></td>
+<td>DRAM</td>
+<td>17nm DRAM量产，DDR4/DDR5均可出货；月产约14万片</td>
+<td>1β制程（~14nm级）研发；HBM（高带宽内存）从0→1突破</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_10">封装测试</h3>
+<table>
+<thead>
+<tr>
+<th>企业</th>
+<th>定位</th>
+<th>国产替代进展（2025-2026）</th>
+<th>下一里程碑</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>长电科技</strong></td>
+<td>综合封测（全球前三）</td>
+<td>先进封装收入占比~35%；Fan-out/2.5D/3D堆叠技术成熟；CoWoS同路线产品研发中</td>
+<td>对标台积电CoWoS的国产方案量产（大基金三期重点支持）；Chiplet生态构建</td>
+</tr>
+<tr>
+<td><strong>通富微电</strong></td>
+<td>AMD主力封测伙伴</td>
+<td>深度绑定AMD（占营收~50%），先进封装受益于AMD Ryzen/EPYC出货增长</td>
+<td>非AMD客户拓展；存储封装能力提升</td>
+</tr>
+<tr>
+<td><strong>华天科技</strong></td>
+<td>综合封测（全球前六）</td>
+<td>南京先进封装基地投产；CIS封装全球领先；Fan-out技术积累中</td>
+<td>2.5D/3D堆叠技术突破；车规级封装认证</td>
+</tr>
+<tr>
+<td><strong>甬矽电子</strong></td>
+<td>高端SiP封测新锐</td>
+<td>Fan-out/SiP封装量产，聚焦射频前端和IoT芯片客户；2022年上市后高速增长</td>
+<td>拓展更多品类的SiP封装；混合键合（Hybrid Bonding）研发</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_11">半导体设备</h3>
+<table>
+<thead>
+<tr>
+<th>企业</th>
+<th>核心产品</th>
+<th>国产替代进展（2025-2026）</th>
+<th>下一里程碑</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>北方华创</strong></td>
+<td>刻蚀/薄膜沉积/清洗/热处理（综合平台型）</td>
+<td>成熟制程（28nm+）多品类批量交付；14nm部分设备验证中；2025年营收超250亿</td>
+<td>14nm刻蚀/薄膜沉积量产验证；7nm设备研发</td>
+</tr>
+<tr>
+<td><strong>中微公司</strong></td>
+<td>等离子体刻蚀/MOCVD</td>
+<td>5nm刻蚀进入台积电验证（CCP刻蚀）；MOCVD全球LED市场占主导</td>
+<td>7nm/5nm刻蚀量产导入；3nm刻蚀研发；ALE原子层刻蚀</td>
+</tr>
+<tr>
+<td><strong>盛美上海</strong></td>
+<td>清洗设备（差异化技术）</td>
+<td>SAPS/TEBO清洗进入SK海力士；12寸清洗批量交付国内Fab</td>
+<td>超临界清洗（Scrubber替代）；先进封装清洗</td>
+</tr>
+<tr>
+<td><strong>拓荆科技</strong></td>
+<td>PECVD/SACVD/ALD</td>
+<td>PECVD在长江存储/长鑫存储批量应用；2025年营收~30亿</td>
+<td>ALD设备突破；14nm以下薄膜沉积</td>
+</tr>
+<tr>
+<td><strong>华海清科</strong></td>
+<td>CMP设备</td>
+<td>12寸CMP在长江存储/中芯国际批量应用；国内CMP市占第一</td>
+<td>14nm以下CMP验证；CMP耗材（抛光垫/液）一体化</td>
+</tr>
+<tr>
+<td><strong>芯源微</strong></td>
+<td>涂胶显影（Track）/去胶</td>
+<td>前道Track在28nm产线验证中；后道Track已批量交付</td>
+<td>前道14nm Track验证；浸没式ArF Track研发</td>
+</tr>
+<tr>
+<td><strong>万业企业/凯世通</strong></td>
+<td>离子注入机</td>
+<td>中束流注入机开始导入产线；光伏离子注入已大规模交付</td>
+<td>高束流注入机突破；28nm逻辑注入机验证</td>
+</tr>
+<tr>
+<td><strong>中科飞测</strong></td>
+<td>光学量测检测</td>
+<td>无图形缺陷检测/OCD量测开始进入产线</td>
+<td>图形缺陷检测；电子束检测技术储备</td>
+</tr>
+<tr>
+<td><strong>上海微电子</strong></td>
+<td>光刻机</td>
+<td>90nm光刻机可小批量交付；28nm浸没式DUV在研（预计2027年送样）</td>
+<td>28nm浸没式光刻机首台样机（2027-2028年）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_12">半导体材料</h3>
+<table>
+<thead>
+<tr>
+<th>企业</th>
+<th>核心产品</th>
+<th>国产替代进展（2025-2026）</th>
+<th>下一里程碑</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>沪硅产业</strong></td>
+<td>12寸/8寸大硅片</td>
+<td>12寸硅片月产能达30万片；8寸硅片国产龙头</td>
+<td>12寸月产能扩至60万片；SOI硅片突破</td>
+</tr>
+<tr>
+<td><strong>安集科技</strong></td>
+<td>CMP抛光液/清洗液</td>
+<td>CMP抛光液国内市占率~25%，铜/钨抛光液批量交付</td>
+<td>14nm以下CMP抛光液验证；氧化铈抛光液</td>
+</tr>
+<tr>
+<td><strong>江丰电子</strong></td>
+<td>溅射靶材</td>
+<td>高纯金属靶材进入台积电/中芯国际供应链；全球靶材市占第二（次于日矿金属）</td>
+<td>7nm/5nm先进制程靶材认证</td>
+</tr>
+<tr>
+<td><strong>鼎龙股份</strong></td>
+<td>CMP抛光垫</td>
+<td>12寸CMP抛光垫在长江存储/中芯国际验证通过并批量供货（替代陶氏DOW）</td>
+<td>14nm以下抛光垫；全品类抛光垫覆盖</td>
+</tr>
+<tr>
+<td><strong>天科合达</strong></td>
+<td>SiC衬底</td>
+<td>6寸SiC衬底量产（国内最大供应商）；8寸SiC衬底研发中</td>
+<td>8寸SiC衬底量产；缺陷密度降至&lt;1/cm²</td>
+</tr>
+<tr>
+<td><strong>南大光电</strong></td>
+<td>前驱体/光刻胶</td>
+<td>ArF干式光刻胶验证中；MO源全球市占~30%</td>
+<td>ArF浸没式光刻胶研发；EUV光刻胶基础研发</td>
+</tr>
+<tr>
+<td><strong>华特气体</strong></td>
+<td>电子特气</td>
+<td>高纯氟碳类气体批量供应；进入台积电/Intel供应链</td>
+<td>更多品类特气国产化；先进制程用高纯气体</td>
+</tr>
+</tbody>
+</table>
+<h3 id="eda_1">EDA工具</h3>
+<table>
+<thead>
+<tr>
+<th>企业</th>
+<th>核心产品</th>
+<th>国产替代进展（2025-2026）</th>
+<th>下一里程碑</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>华大九天</strong></td>
+<td>模拟IC全流程EDA</td>
+<td>模拟IC设计平台可覆盖~70%设计流程（原理图→版图→验证）；营收~15亿</td>
+<td>模拟全流程覆盖率提升至85%+；数字IC部分点工具突破</td>
+</tr>
+<tr>
+<td><strong>概伦电子</strong></td>
+<td>SPICE仿真/建模</td>
+<td>器件建模和SPICE仿真工具在国内Fab和设计公司批量使用</td>
+<td>先进制程（7nm以下）模型支持；与华大九天生态整合</td>
+</tr>
+<tr>
+<td><strong>芯华章</strong></td>
+<td>数字验证</td>
+<td>FPGA原型验证/形式验证工具发布；部分工具在28nm+设计验证中应用</td>
+<td>更高覆盖率的形式验证；与头部IC设计公司深度合作</td>
+</tr>
+<tr>
+<td><strong>合见工软</strong></td>
+<td>数字前端</td>
+<td>EDA工具链布局中（仿真/综合/布局布线方向）</td>
+<td>完整数字前端工具链发布</td>
+</tr>
+<tr>
+<td><strong>广立微</strong></td>
+<td>良率分析/测试芯片</td>
+<td>WAT测试和良率分析工具在国内Fab批量使用</td>
+<td>大数据良率分析平台（YMS类产品）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_13">四、大基金投资重点方向与三期待落地领域</h2>
+<h3 id="20243440">大基金三期（2024起，总规模3,440亿元人民币）的核心投向转移</h3>
+<p>三期相比一期（制造为主）和二期（设备材料补短板）发生了根本性结构调整，体现为<strong>"AI驱动 + 先进制造攻坚 + 生态体系构建"</strong>的三重逻辑：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">优先级</th>
+<th>投向领域</th>
+<th>具体方向</th>
+<th>代表性企业（已知/预期）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>P0</strong></td>
+<td>AI芯片</td>
+<td>国产GPU/NPU训练推理芯片、配套软件栈（对标NVIDIA CUDA）、Chiplet互联标准</td>
+<td>华为昇腾、寒武纪、海光信息、壁仞科技、摩尔线程</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>P0</strong></td>
+<td>先进制造设备</td>
+<td>光刻机（28nm浸没式+EUV光源预研）、离子注入机、量测检测设备、ALD/ALE</td>
+<td>上海微电子、凯世通/万业企业、中科飞测、拓荆科技</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>P1</strong></td>
+<td>先进封装</td>
+<td>国产CoWoS同路线方案（2.5D/3D堆叠）、混合键合设备/材料、FC-BGA基板</td>
+<td>长电科技、通富微电、甬矽电子、盛美上海</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>P1</strong></td>
+<td>EDA工具与核心IP</td>
+<td>数字IC全流程攻坚、先进制程点工具、RISC-V处理器IP、高速SerDes IP</td>
+<td>华大九天、芯华章、概伦电子、合见工软、芯来科技</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>P1</strong></td>
+<td>HBM（高带宽内存）</td>
+<td>HBM堆叠DRAM的国产化（设计+制造+封装全链条）</td>
+<td>长鑫存储（DRAM） + 长电/通富（封装）</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>P2</strong></td>
+<td>第三代半导体</td>
+<td>SiC衬底/外延/器件、GaN功率/RF器件</td>
+<td>天科合达、天岳先进、三安集成、士兰微</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>P2</strong></td>
+<td>关键材料</td>
+<td>光刻胶（KrF/ArF）、掩模版、12寸大硅片、先进封装材料</td>
+<td>南大光电、北京科华、清溢光电、沪硅产业、安集科技</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_14">三期待落地的关键信号</h3>
+<p>三期运作的显著特征是<strong>更市场化、更强调投资回报</strong>：</p>
+<ol>
+<li><strong>引入专业GP（普通合伙人）管理人</strong>：不同于一期/二期的"母基金直投"模式，三期引入市场化投资管理机构负责子基金运作，对项目IRR有明确要求</li>
+<li><strong>允许适度退出</strong>：IPO、并购、老股转让等退出通道被明确纳入运作框架</li>
+<li><strong>"补链+强链"并重</strong>：不再单纯补齐空白，而是在已有突破领域追求国际竞争力（如刻蚀设备从"能用"→"好用"→"全球竞争"）</li>
+<li><strong>与地方国资协同</strong>：三期资金撬动的地方配套投资预计超过1万亿，形成"国家+地方"联动格局</li>
+</ol>
+<hr />
+<h2 id="_15">五、帆软关联度与售前场景</h2>
+<h3 id="_16">帆软关联度矩阵</h3>
+<table>
+<thead>
+<tr>
+<th>环节</th>
+<th style="text-align: center;">FineReport</th>
+<th style="text-align: center;">FineBI</th>
+<th style="text-align: center;">FDL</th>
+<th style="text-align: center;">AI Agent</th>
+<th style="text-align: center;">简道云</th>
+<th style="text-align: center;">综合关联度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IC设计</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🔶</td>
+<td style="text-align: center;">🔶</td>
+<td style="text-align: center;">🟡 有方案缺案例</td>
+</tr>
+<tr>
+<td>晶圆制造</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟢 完整</td>
+</tr>
+<tr>
+<td>封装测试</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🔶</td>
+<td style="text-align: center;">🔶</td>
+<td style="text-align: center;">🟡 有方案缺话术</td>
+</tr>
+<tr>
+<td>半导体设备</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟢</td>
+<td style="text-align: center;">🟡</td>
+<td style="text-align: center;">🟢 完整</td>
+</tr>
+<tr>
+<td>半导体材料</td>
+<td style="text-align: center;">🔶</td>
+<td style="text-align: center;">🔶</td>
+<td style="text-align: center;">🔶</td>
+<td style="text-align: center;">🔶</td>
+<td style="text-align: center;">🔶</td>
+<td style="text-align: center;">🔶 未覆盖</td>
+</tr>
+<tr>
+<td>EDA工具</td>
+<td style="text-align: center;">🔶</td>
+<td style="text-align: center;">🔶</td>
+<td style="text-align: center;">🔶</td>
+<td style="text-align: center;">🔶</td>
+<td style="text-align: center;">🔶</td>
+<td style="text-align: center;">🔶 未覆盖</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_17">售前场景（按国产替代叙事整合）</h3>
+<h4 id="_18">场景一：国产替代是售前的"钩子叙事"</h4>
+<p>在与半导体企业客户的售前开场中，"国产替代"是最有效的行业洞察钩子。三层叙事逻辑：</p>
+<ol>
+<li><strong>宏观层</strong>："中国半导体自给率仅16-20%，纯国产化率&lt;10%——你们正好处在国产替代加速的窗口期"</li>
+<li><strong>业务层</strong>："国产替代不只是买国产设备/材料，更意味着质量数据、供应链数据的重新构建——这正是帆软擅长的"</li>
+<li><strong>产品层</strong>：FineReport → 质量追溯报表（客户稽核刚需）；FineBI → 国产vs进口材料/设备的良率对标分析；FDL → 国产供应商数据集成到统一平台</li>
+</ol>
+<h4 id="_19">场景二：按客户环节的差异化切入</h4>
+<table>
+<thead>
+<tr>
+<th>客户环节</th>
+<th>国产替代叙事</th>
+<th>帆软产品切入</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>晶圆厂</strong></td>
+<td>"国产化率从10%向25%爬坡期间，每一批国产材料/设备导入都需要数据验证——良率变化、缺陷分布、设备OEE"</td>
+<td>FineReport良率报表 + FineBI良率根因分析 + FDL多系统数据汇聚</td>
+</tr>
+<tr>
+<td><strong>封测厂</strong></td>
+<td>"先进封装是国产封测从'大而不强'到'又大又强'的跳板——CoWoS国产化过程中，测试数据和封装质量的追溯是客户稽核的核心"</td>
+<td>FineReport稽核报告包 + FineBI测试良率多维分析 + FDL多ATE平台统一</td>
+</tr>
+<tr>
+<td><strong>设备商</strong></td>
+<td>"设备国产化从成熟制程向先进制程推进，每进一个节点需要2-3年的客户验证和数据积累"</td>
+<td>FineReport出货/服务报表 + FineBI设备OEE/SLA分析 + FDL CRM+ERP+服务系统对接 → AI Agent预测性维护</td>
+</tr>
+<tr>
+<td><strong>IC设计公司</strong></td>
+<td>"Fabless的国产替代是'两条腿走路'——国产代工厂（SMIC/华虹）的选择和EDA工具的替代。两种替代都需要数据支撑决策"</td>
+<td>FineBI研发效能分析 + FineReport投片追踪报表 + FDL供应链数据集成</td>
+</tr>
+<tr>
+<td><strong>材料商</strong></td>
+<td>"材料国产化的核心挑战是'认证周期'——从送样到量产需要12-18个月，数十个批次的数据追踪"</td>
+<td>FineReport批次追溯报表 + FDL多产线批次数据汇聚（待建设）</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_20">场景三：大基金话题的售前价值</h4>
+<p>在售前对话中引入大基金三期信息有三个价值：</p>
+<ol>
+<li><strong>判断客户资金充裕度</strong>：如果客户是大基金三期重点支持领域（AI芯片/先进封装/设备材料），其IT预算充裕程度通常高于行业平均</li>
+<li><strong>识别行业窗口</strong>：大基金三期的六大投向（见上文）指明了未来3-5年中国半导体投资最密集的领域——这些领域的IT需求增速高于行业均值</li>
+<li><strong>建立行业信用</strong>：在售前对话中自然提及"大基金三期3400亿，你们的XX领域是优先级"——展示对行业资金流向的精准把握</li>
+</ol>
+<hr />
+<h2 id="_21">六、风险与不确定性</h2>
+<ol>
+<li><strong>出口管制进一步收紧</strong>：若美国将中芯国际的"耗材服务"也纳入管制（即阻止ASML等对已售设备提供备件和服务），14nm及以上现有产能的维持都将受威胁</li>
+<li><strong>国产化率统计泡沫</strong>："已通过验证"≠"批量使用"≠"可替代进口"。部分国产设备/材料企业公告的"进入XX客户供应链"可能只是少量验证订单</li>
+<li><strong>先进制程的时间窗口</strong>：用DUV做7nm在经济性上无法与EUV竞争，SMIC的7nm产能最终是一个"可用但贵"的方案</li>
+<li><strong>人才瓶颈</strong>：设备、材料、EDA三大短板领域的高端人才极度匮乏，大基金三期的资金可以买设备建产线，但买不到十年经验的工程师</li>
+</ol>
+<hr />
+<h2 id="_22">🔗 关联</h2>
+<ul>
+<li><a href="/kb/产业全景/中国半导体产业现状">中国半导体产业现状</a></li>
+<li><a href="/kb/产业全景/中国半导体产业政策与大基金体系">中国半导体产业政策与大基金体系</a></li>
+<li><a href="/kb/产业全景/全球半导体产业格局">全球半导体产业格局</a></li>
+<li><a href="/kb/产业全景/半导体产业链上下游关系">半导体产业链上下游关系</a></li>
+<li><a href="/kb/01-晶圆制造/行业动态/美国对华半导体出口管制体系演变（2022-2026）">美国对华半导体出口管制体系演变（2022-2026）</a></li>
+<li><a href="/kb/行业知识体系/01-晶圆制造/基础概念/先进制程vs成熟制程">先进制程vs成熟制程</a></li>
+<li><a href="/kb/03-半导体设备/行业动态/国产半导体设备新锐企业概览">国产半导体设备新锐企业概览</a></li>
+<li><a href="/kb/01-晶圆制造/行业动态/中国半导体材料头部企业：沪硅、安集、江丰、鼎龙">中国半导体材料头部企业：沪硅、安集、江丰、鼎龙</a></li>
+<li><a href="/kb/04-IC设计/行业动态/EDA工具市场格局">EDA工具市场格局</a></li>
+<li><a href="/kb/导航/帆软产品x半导体行业矩阵">导航/帆软产品x半导体行业矩阵</a></li>
+<li><a href="/kb/帆软售前引擎/话术方案/售前话术与方案库">帆软售前引擎/话术方案/售前话术与方案库</a></li>
+</ul>
+</div>
+</article>
+<footer class="note-footer">
+  <a href="/kb/产业全景/index.html">← 返回目录</a>
+</footer>
+</main>
+</body>
+</html>

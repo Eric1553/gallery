@@ -1,0 +1,193 @@
+{
+  "meta": {
+    "title": "FICO 财务知识库体系索引",
+    "source": "FICO MCP (KB + Stages)",
+    "syncedAt": "2026-07-09",
+    "endpoint": "http://47.116.68.38:8747/mcp",
+    "totalModules": 4,
+    "estimatedDocuments": 273
+  },
+  "summary": {
+    "01_基础财务": { "docs": 45, "updated": "2026-07-04" },
+    "02_财务分析": { "docs": 38, "updated": "2026-07-04" },
+    "03_财务咨询": { "docs": 152, "updated": "2026-07-04" },
+    "04_实战案例": { "docs": 38, "updated": "2026-07-04" }
+  },
+  "modules": [
+    {
+      "id": "01",
+      "name": "基础财务",
+      "path": "01_基础财务",
+      "docs": 45,
+      "purpose": "财务核算、税务、管理会计与 SAP 系统落地的底层知识",
+      "submodules": [
+        {
+          "name": "SAP财务",
+          "path": "01_基础财务/01_SAP财务",
+          "docs": 6,
+          "topics": ["FI总账/AR/AP", "CO成本中心与内部订单", "FI-CO集成", "月结关账", "S/4HANA变革", "产品成本核算"],
+          "documents": [
+            { "title": "SAP FI 财务会计核心知识", "file": "SAP-FI-财务会计核心知识.md", "type": "tutorial" },
+            { "title": "SAP 成本管理知识库", "file": "SAP-成本管理知识.md", "type": "tutorial" },
+            { "title": "SAP CO产品成本核算实战深度拆解", "file": "SAP-CO产品成本核算实战深度拆解.md", "type": "tutorial" },
+            { "title": "SAP FI/CO集成与业财一体化", "file": "SAP-FI-CO集成与业财一体化.md", "type": "methodology" },
+            { "title": "SAP FI月结与S/4HANA变革实战", "file": "SAP-FI月结与S4HANA变革实战.md", "type": "tutorial" },
+            { "title": "SAP S/4HANA财务核心变革与新特性", "file": "SAP-S4HANA财务核心变革.md", "type": "methodology" }
+          ]
+        },
+        {
+          "name": "税务管理",
+          "path": "01_基础财务/01_税务管理",
+          "docs": 7,
+          "topics": ["金税四期合规", "增值税/所得税", "递延所得税", "转让定价", "税收优惠", "税务风险指标"],
+          "documents": [
+            { "title": "税务管理深度实战", "file": "税务管理深度实战.md", "type": "tutorial" },
+            { "title": "递延所得税与税会差异处理", "file": "递延所得税与税会差异处理.md", "type": "tutorial" },
+            { "title": "转让定价深度实战", "file": "转让定价深度实战.md", "type": "tutorial" },
+            { "title": "企业税务筹划与优化策略报告", "file": "税务筹划与转让定价.md", "type": "client-deliverable" },
+            { "title": "税务风险管理系统通用方案", "file": "008税务风险管理系统通用方案.md", "type": "concept" },
+            { "title": "税收优惠申请与税务稽查应对实操", "file": "税收优惠申请与税务稽查应对实操.md", "type": "practicalguide" }
+          ]
+        },
+        {
+          "name": "管理会计",
+          "path": "01_基础财务/01_管理会计",
+          "docs": 13,
+          "topics": ["全面预算", "零基预算ZBB", "滚动预测", "ABC作业成本", "标准成本", "BSC平衡计分卡", "KPI设计"],
+          "documents": [
+            { "title": "KPI预算管控与偏差分析框架", "file": "全面预算管理-实战指南.md", "type": "methodology" },
+            { "title": "作业成本法(ABC)与多维成本分析", "file": "作业成本法(ABC)-实战指南.md", "type": "methodology" },
+            { "title": "标准成本与差异分析深度实战", "file": "标准成本体系-构建与差异分析.md", "type": "reference" },
+            { "title": "全面预算管理_零基预算与滚动预测实战", "file": "零基预算ZBB-落地指南.md", "type": "reference" }
+          ]
+        },
+        {
+          "name": "财务会计",
+          "path": "01_基础财务/01_财务会计",
+          "docs": 19,
+          "topics": ["合并报表", "IFRS 10控制判断", "内部交易抵销", "商誉与少数股东权益", "合并范围变更"],
+          "documents": [
+            { "title": "合并报表 (Financial Consolidation)", "file": "合并报表知识.md", "type": "tutorial" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "name": "财务分析",
+      "path": "02_财务分析",
+      "docs": 38,
+      "purpose": "行业对标、财务指标体系与专题分析框架",
+      "submodules": [
+        {
+          "name": "行业研究",
+          "path": "02_财务分析/01_行业对标/01_行业研究",
+          "topics": ["半导体", "制造业", "生物医药", "零售电商", "游戏", "教育", "医疗", "旅游酒店"],
+          "documents": [
+            { "title": "半导体行业财务分析框架", "file": "半导体行业财务分析框架.md", "type": "industry-analysis" },
+            { "title": "制造业财务分析框架", "file": "制造业财务分析框架.md", "type": "industry-analysis" },
+            { "title": "生物医药行业财务分析框架", "file": "deliverable-05-biotech-pharma-industry.md", "type": "deliverable" },
+            { "title": "电商与零售行业财务分析框架", "file": "deliverable-16-ecommerce-retail-industry.md", "type": "deliverable" },
+            { "title": "游戏行业财务分析框架", "file": "deliverable-17-gaming-industry.md", "type": "deliverable" },
+            { "title": "医疗服务行业财务分析框架", "file": "deliverable-15-healthcare-services-industry.md", "type": "deliverable" },
+            { "title": "教育与EdTech行业财务分析框架", "file": "deliverable-08-edtech-education-industry.md", "type": "deliverable" },
+            { "title": "竞争格局财务分析框架", "file": "deliverable-06-competitive-landscape-analysis.md", "type": "deliverable" }
+          ]
+        },
+        {
+          "name": "专题对标",
+          "path": "02_财务分析/01_行业对标/02_专题对标",
+          "topics": ["单位经济", "ROIC", "产能利用率", "毛利率结构", "行业周期"]
+        }
+      ]
+    },
+    {
+      "id": "03",
+      "name": "财务咨询",
+      "path": "03_财务咨询",
+      "docs": 152,
+      "purpose": "咨询交付、项目管理、方法论与财务BP转型",
+      "submodules": [
+        {
+          "name": "交付物模板",
+          "path": "03_财务咨询/01_交付物模板",
+          "docs": 6,
+          "topics": ["Board Deck", "BLUF沟通法", "BI Dashboard设计", "PPT/HTML交付规范"],
+          "documents": [
+            { "title": "咨询交付物写作训练", "file": "咨询交付物写作训练.md", "type": "framework" },
+            { "title": "Board Deck 模板（可填空）", "file": "Board-Deck-BLUF沟通法.md", "type": "template" },
+            { "title": "交付物模板库", "file": "交付物模板库.md", "type": "deliverable-collection" },
+            { "title": "BI与Dashboard设计规范", "file": "BI与Dashboard设计规范.md", "type": "practicalguide" }
+          ]
+        },
+        {
+          "name": "项目管理",
+          "path": "03_财务咨询/02_项目管理",
+          "docs": 6,
+          "topics": ["咨询项目管理", "客户对话", "项目救火", "Agent落地", "财务BP能力模型"],
+          "documents": [
+            { "title": "咨询项目管理实操", "file": "咨询项目管理实操.md", "type": "framework" },
+            { "title": "客户对话与项目救火指南", "file": "客户对话与项目救火指南.md", "type": "framework" },
+            { "title": "财务BP实战能力模型", "file": "财务BP实战能力模型.md", "type": "framework" },
+            { "title": "从传统分析到财务BP转型", "file": "从传统分析到财务BP转型+解锁财务BI分析新技能.md", "type": "methodology" }
+          ]
+        },
+        {
+          "name": "方法论框架",
+          "path": "03_财务咨询/03_方法论框架",
+          "docs": 14,
+          "topics": ["差异归因分析", "数据治理与ETL", "合并报表需求分级", "新能源车企扭亏"],
+          "documents": [
+            { "title": "差异分析与归因分析方法论", "file": "差异分析与归因分析方法论.md", "type": "practicalguide" },
+            { "title": "数据治理与ETL方法论", "file": "数据治理与ETL方法论.md", "type": "practicalguide" },
+            { "title": "合并报表需求分级与系统架构设计", "file": "合并报表需求分级.md", "type": "client-deliverable" },
+            { "title": "新能源车企价格战扭亏实战", "file": "新能源车企扭亏-战略财务规划.md", "type": "client-deliverable" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "04",
+      "name": "实战案例",
+      "path": "04_实战案例",
+      "docs": 38,
+      "purpose": "标杆客户案例与综合财务诊断实战",
+      "submodules": [
+        {
+          "name": "标杆案例",
+          "path": "04_实战案例/标杆案例",
+          "collections": [
+            { "industry": "制造业", "file": "标杆案例-制造业.md", "cases": 60, "highlight": "TCL集团财务共享与合并报表" },
+            { "industry": "零售消费", "file": "标杆案例-零售消费.md", "cases": 37, "highlight": "古井贡酒数字化经营平台" },
+            { "industry": "能源矿产", "file": "标杆案例-能源矿产.md", "cases": 19, "highlight": "特变电工应收账款分析" },
+            { "industry": "金融", "file": "标杆案例-金融.md", "cases": 15, "highlight": "五矿期货投研平台" },
+            { "industry": "水务公用", "file": "标杆案例-水务公用.md", "cases": null, "highlight": "IPO财务规范/SaaS财务建模" }
+          ]
+        },
+        {
+          "name": "综合诊断",
+          "path": "04_实战案例/实战案例",
+          "docs": 26,
+          "topics": ["IPO规范", "SaaS建模", "创新药+医保谈判", "制造业产能优化"],
+          "documents": [
+            { "title": "综合财务诊断案例", "file": "综合财务诊断案例.md", "type": "comprehensivecase" },
+            { "title": "制造业定量建模案例", "file": "标杆案例-制造业.md", "type": "client-deliverable" }
+          ]
+        }
+      ]
+    }
+  ],
+  "queryPlaybook": [
+    { "scenario": "客户拜访前行业弹药", "query": "@fico {行业}财务分析框架 核心指标", "module": "02_财务分析" },
+    { "scenario": "SAP实施/月结问题", "query": "@fico SAP FI月结 {具体问题}", "module": "01_基础财务/SAP财务" },
+    { "scenario": "税务合规与筹划", "query": "@fico 递延所得税/金税四期/转让定价", "module": "01_基础财务/税务管理" },
+    { "scenario": "合并报表方案", "query": "@fico 合并报表 抵销逻辑/合并范围", "module": "01_基础财务/财务会计" },
+    { "scenario": "预算管理方法论", "query": "@fico 零基预算/滚动预测/BSC", "module": "01_基础财务/管理会计" },
+    { "scenario": "交付物写作", "query": "@fico Board Deck/咨询交付物模板", "module": "03_财务咨询" },
+    { "scenario": "找同类标杆案例", "query": "@fico 标杆案例 {行业} {主题}", "module": "04_实战案例" }
+  ],
+  "sources": [
+    "McKinsey", "Deloitte", "PwC", "BCG", "KPMG", "EY", "Accenture",
+    "SAP官方文档", "knowhow.fanruan.com", "OECD", "Gartner"
+  ]
+}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>下钻 · 销售管道与订单</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">一把手总览</a> / 下钻：销售管道与订单</div>
+    <div id="param-banner" class="param-banner" hidden></div>
+    <nav class="top-nav">
+      <a href="index.html">页1 总览</a>
+      <span class="current">管道与订单</span>
+    </nav>
+
+    <h1>下钻：销售管道与在手订单</h1>
+    <p class="sub">承接页1「C」· FineBI 中漏斗点击阶段 → 本页自动筛选；列表字段需脱敏</p>
+
+    <div class="toolbar">
+      <div><span class="lbl">管道阶段</span><span class="fake-select" data-sync-param="stage">全部 ▾</span></div>
+      <div><span class="lbl">区域</span><span class="fake-select">全部 ▾</span></div>
+    </div>
+
+    <section>
+      <div class="kpis">
+        <div class="kpi"><div class="label">阶段金额（总额）</div><div class="val">7.2 亿</div><div class="hint">未加权</div></div>
+        <div class="kpi"><div class="label">阶段金额（加权）</div><div class="val">3.1 亿</div><div class="hint">× 赢率</div></div>
+        <div class="kpi"><div class="label">预计关单（90天内）</div><div class="val">2.4 亿</div><div class="delta neu">需交付评审</div></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-title" style="margin-bottom:10px">商机清单（关键字段 · 虚构）</div>
+      <table class="table-ph">
+        <thead>
+          <tr>
+            <th>商机ID</th><th>区域</th><th>产品线</th><th class="num">金额（万）</th>
+            <th>预计关单</th><th>阶段</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>OPP-2026-0891</td><td>欧洲</td><td>光储充一体</td><td class="num">6,200</td><td>2026-04-18</td><td>谈判</td></tr>
+          <tr><td>OPP-2026-0904</td><td>澳大利亚</td><td>储能栈</td><td class="num">4,850</td><td>2026-05-02</td><td>谈判</td></tr>
+          <tr><td>OPP-2026-0912</td><td>其他海外</td><td>逆变器</td><td class="num">2,100</td><td>2026-04-28</td><td>谈判</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <div class="sec-title" style="margin-bottom:10px">在手订单账龄（按预计发货月）</div>
+      <table class="table-ph">
+        <thead><tr><th>预计发货月</th><th class="num">金额（亿）</th><th class="num">占 Backlog</th></tr></thead>
+        <tbody>
+          <tr><td>2026-04</td><td class="num">18.2</td><td class="num">21%</td></tr>
+          <tr><td>2026-05</td><td class="num">22.6</td><td class="num">26%</td></tr>
+          <tr><td>2026-06+</td><td class="num">45.6</td><td class="num">53%</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <footer><a href="index.html" style="color:var(--link)">← 返回总览</a> · <a href="drill-region.html" style="color:var(--link)">按区域</a></footer>
+  </div>
+  <script src="drill-context.js"></script>
+</body>
+</html>

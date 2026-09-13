@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>合见运营 · 单笔订单 / 序列号 360°卡片 · 原型</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { background:#eef3f9; }
+  body { font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif; color:#23314c; -webkit-font-smoothing:antialiased; }
+  .stage { width:1280px; height:852px; position:relative; background:linear-gradient(165deg,#ffffff,#eef4fb); padding:0 0 18px; }
+  .ribbon { position:absolute; right:0; top:0; background:#e2574c; color:#fff; font-size:12px; font-weight:700; padding:5px 16px; border-bottom-left-radius:10px; z-index:3; }
+  .top { background:linear-gradient(135deg,#3f7fc4,#5fa0db); color:#fff; padding:13px 26px; }
+  .top h1 { font-size:18px; font-weight:800; }
+  .top h1 .en { font-size:12px; opacity:.85; font-weight:600; margin-left:8px; }
+  .top .crumb { font-size:12px; opacity:.9; margin-top:3px; }
+  .top .crumb b { background:rgba(255,255,255,.2); padding:1px 8px; border-radius:5px; }
+
+  .wrap { padding:16px 26px; display:grid; grid-template-columns:1.1fr 1.4fr; gap:16px; }
+  .card { background:#fff; border:1px solid #e4ebf4; border-radius:12px; box-shadow:0 3px 10px rgba(40,70,120,.05); padding:14px 16px; }
+  .card h3 { font-size:13.5px; font-weight:800; color:#1c2c4a; margin-bottom:11px; display:flex; align-items:center; gap:8px; }
+  .card h3::before { content:""; width:5px; height:14px; background:#5fa0db; border-radius:2px; }
+
+  .hd { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
+  .hd .oid { font-size:20px; font-weight:800; color:#1c2c4a; }
+  .hd .cust { font-size:13px; color:#5a6580; margin-top:3px; }
+  .hd .stat { font-size:12px; font-weight:800; padding:5px 13px; border-radius:20px; background:#fef0e2; color:#cf6a2e; }
+
+  .kv { display:grid; grid-template-columns:1fr 1fr; gap:9px 14px; }
+  .kv .k { font-size:11px; color:#8a93a6; }
+  .kv .v { font-size:14px; font-weight:700; color:#23314c; margin-top:1px; }
+  .kv .v.hl { color:#c0392b; }
+
+  /* timeline */
+  .tl { position:relative; padding-left:6px; }
+  .tl .node { display:flex; gap:12px; position:relative; padding-bottom:14px; }
+  .tl .node::before { content:""; position:absolute; left:7px; top:18px; bottom:-2px; width:2px; background:#dfe7f2; }
+  .tl .node:last-child::before { display:none; }
+  .tl .dot { width:16px; height:16px; border-radius:50%; background:#fff; border:3px solid #5fa0db; flex-shrink:0; margin-top:2px; z-index:1; }
+  .tl .dot.done { background:#2e8b57; border-color:#2e8b57; }
+  .tl .dot.cur { background:#e8855a; border-color:#e8855a; box-shadow:0 0 0 4px rgba(232,133,90,.18); }
+  .tl .dot.wait { border-color:#c6cdda; }
+  .tl .tc .tt { font-size:13px; font-weight:700; color:#23314c; }
+  .tl .tc .td { font-size:11px; color:#8a93a6; margin-top:1px; }
+
+  .chips { display:flex; flex-wrap:wrap; gap:7px; }
+  .chip { font-size:11.5px; font-weight:700; padding:4px 11px; border-radius:7px; background:#eef4fb; color:#2a5ea0; border:1px solid #d4e2f2; }
+  .chip.g{background:#e8f3ec;color:#1c6b40;border-color:#bfe3cd;} .chip.r{background:#fde8e6;color:#c0392b;border-color:#f3c4bd;}
+
+  .bars .row { display:flex; align-items:center; gap:10px; margin-bottom:9px; }
+  .bars .lb { width:88px; font-size:11.5px; color:#5a6580; }
+  .bars .tk { flex:1; height:10px; background:#eef2f8; border-radius:6px; overflow:hidden; }
+  .bars .fi { height:100%; border-radius:6px; }
+  .bars .vl { width:54px; text-align:right; font-size:11.5px; font-weight:700; color:#23314c; }
+  .twocol { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+</style>
+  <link rel="stylesheet" href="nav.css">
+</head>
+<body data-page="13">
+<div class="proto-app">
+  <aside id="proto-nav" class="proto-nav"></aside>
+  <div class="proto-main">
+<div class="stage">
+  <div class="ribbon">原型设计稿</div>
+  <div class="top">
+    <h1>单笔订单 / 序列号 360° 卡片<span class="en">Order &amp; SN 360° Card · 穿透单笔</span></h1>
+    <div class="crumb">穿透来源：<b>明细清单 › SO-2026-0418 / SN-3389</b> · 借测全链路可追溯</div>
+  </div>
+
+  <div class="wrap">
+    <!-- 左列 -->
+    <div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="hd">
+          <div><div class="oid">SO-2026-0418</div><div class="cust">客户 A · 数据中心 / 华东 · 直销</div></div>
+          <div class="stat">超期在借 126 天</div>
+        </div>
+        <div class="kv">
+          <div><div class="k">产品 / 平台</div><div class="v">UVHS-2</div></div>
+          <div><div class="k">序列号</div><div class="v">SN-3389</div></div>
+          <div><div class="k">订单类型</div><div class="v">借用 → 待借转销</div></div>
+          <div><div class="k">法人主体</div><div class="v">合见工软（上海）</div></div>
+          <div><div class="k">订单金额</div><div class="v">320 万元</div></div>
+          <div><div class="k">借出日期</div><div class="v hl">2026-02-01</div></div>
+          <div><div class="k">销售负责人</div><div class="v">张 XX</div></div>
+          <div><div class="k">在借天数</div><div class="v hl">126 天（超阈）</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>履约 / 借测全链路状态</h3>
+        <div class="tl">
+          <div class="node"><div class="dot done"></div><div class="tc"><div class="tt">合同评审 / 销售订单</div><div class="td">2026-01-20 已完成</div></div></div>
+          <div class="node"><div class="dot done"></div><div class="tc"><div class="tt">借测出库（销售借测仓）</div><div class="td">2026-02-01 已出库 · SN-3389</div></div></div>
+          <div class="node"><div class="dot done"></div><div class="tc"><div class="tt">物流送达 / 现场装机调试</div><div class="td">2026-02-08 客户现场验证中</div></div></div>
+          <div class="node"><div class="dot cur"></div><div class="tc"><div class="tt">在借追踪（当前）</div><div class="td">已在借 126 天 · 超 90 天阈值 · 待督办</div></div></div>
+          <div class="node"><div class="dot wait"></div><div class="tc"><div class="tt">借转销 / 归还</div><div class="td">待决策：转销售出库 或 归还复检</div></div></div>
+          <div class="node"><div class="dot wait"></div><div class="tc"><div class="tt">收入确认 · 成本 · 回款</div><div class="td">借转销后触发收入确认</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右列 -->
+    <div>
+      <div class="card" style="margin-bottom:16px;">
+        <h3>关键属性 · 标签</h3>
+        <div class="chips">
+          <span class="chip">数据中心行业</span><span class="chip">华东区域</span><span class="chip">硬件平台</span>
+          <span class="chip r">超期在借</span><span class="chip r">借测占用</span><span class="chip">直销渠道</span>
+          <span class="chip g">高价值（320万）</span><span class="chip">借转销候选</span>
+        </div>
+      </div>
+
+      <div class="twocol">
+        <div class="card">
+          <h3>借转销转化预测</h3>
+          <div class="bars">
+            <div class="row"><div class="lb">转化概率</div><div class="tk"><div class="fi" style="width:72%;background:linear-gradient(90deg,#7bb0e6,#3f7fc4);"></div></div><div class="vl">72%</div></div>
+            <div class="row"><div class="lb">客户活跃度</div><div class="tk"><div class="fi" style="width:85%;background:linear-gradient(90deg,#7bd6a8,#2e8b57);"></div></div><div class="vl">高</div></div>
+            <div class="row"><div class="lb">超期风险</div><div class="tk"><div class="fi" style="width:80%;background:linear-gradient(90deg,#f0a98a,#e2574c);"></div></div><div class="vl">高</div></div>
+          </div>
+          <div style="font-size:11.5px;color:#8a93a6;margin-top:6px;line-height:1.5;">建议：30 天内推动借转销，否则启动归还复检，释放可售库存。</div>
+        </div>
+
+        <div class="card">
+          <h3>收入 / 成本（借转销后）</h3>
+          <div class="kv" style="grid-template-columns:1fr;">
+            <div><div class="k">预计收入（DF）</div><div class="v">320 万元</div></div>
+            <div><div class="k">硬件成本</div><div class="v">196 万元</div></div>
+            <div><div class="k">预计毛利</div><div class="v" style="color:#1c6b40;">124 万元 · 38.8%</div></div>
+            <div><div class="k">收入确认口径</div><div class="v" style="font-size:12.5px;">硬件 · 金蝶销售订单</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px;">
+        <h3>关联单据（金蝶 / 泛微 / 填报）</h3>
+        <div class="chips">
+          <span class="chip">销售订单 SO-2026-0418</span><span class="chip">借测出库单 CK-8841</span>
+          <span class="chip">序列号主档 SN-3389</span><span class="chip">泛微项目编码 PJ-2026-221</span>
+          <span class="chip">借测仓维护(填报)</span><span class="chip">DF 收入预测(填报)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin:0 26px; background:linear-gradient(90deg,#eef4fb,#f6f9fd); border:1px dashed #b9cce4; border-left:4px solid #3f7fc4; border-radius:8px; padding:9px 16px; font-size:12.5px; color:#3a4660; line-height:1.5;"><b style="color:#2a5ea0;">分析思路：</b>单笔 360°——<b style="color:#2a5ea0;">借测全链路时间轴 + 借转销转化预测 + 收入成本 + 关联单据</b>，支撑单点根因定位与「借转销 / 归还」决策，是穿透链路的终点与行动起点。</div>
+</div>
+  </div>
+</div>
+<script src="nav.js"></script>
+</body>
+</html>

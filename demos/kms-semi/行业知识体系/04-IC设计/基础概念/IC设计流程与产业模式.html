@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IC设计流程与产业模式 — 半导体知识库</title>
+<meta name="description" content="# IC设计流程与产业模式  ### IC设计基本流程 ``` 规格定义 → 架构设计 → RTL编码 → 功能验证 → 逻辑综合 →  布局布线 → 时序验证 → 物理验证 → Tape-out → 流片 ```  ### 三种产业模式  | 模式 | 说明 | 代表企业 | |------|--">
+<link rel="stylesheet" href="/kb/assets/style.css">
+</head>
+<body>
+<div class="top-accent"></div>
+<header class="page-header">
+  <a href="/kb/首页.html" class="home-link">🔬 半导体知识库</a>
+</header>
+<main class="container">
+<nav class="breadcrumb"><a href="/kb/首页.html">半导体知识库</a> <span class="sep">›</span> <a href="/kb//行业知识体系/index.html">行业知识体系</a> <span class="sep">›</span> <a href="/kb//行业知识体系/04-IC设计/index.html">04-IC设计</a> <span class="sep">›</span> <a href="/kb//行业知识体系/04-IC设计/基础概念/index.html">基础概念</a></nav>
+<article class="note">
+<header class="note-header">
+  <h1>IC设计流程与产业模式</h1>
+  <div class="meta-line"><span class="meta-item">📅 2026-07-08</span> · <span class="meta-item">📂 04-IC设计</span> · <span class="meta-item" style="color:#059669">⭐ high</span> · <span class="meta-item">🏷️ <span class="tag">IC设计</span> <span class="tag">基础概念</span> <span class="tag">Fabless</span> <span class="tag">EDA</span></span></div>
+</header>
+<div class="note-body">
+<h1 id="ic">IC设计流程与产业模式</h1>
+<h3 id="ic_1">IC设计基本流程</h3>
+<div class="codehilite"><pre><span></span><code>规格定义 → 架构设计 → RTL编码 → 功能验证 → 逻辑综合 → 
+布局布线 → 时序验证 → 物理验证 → Tape-out → 流片
+</code></pre></div>
+
+<h3 id="_1">三种产业模式</h3>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>说明</th>
+<th>代表企业</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Fabless</strong></td>
+<td>只设计不制造，委托Foundry代工</td>
+<td>NVIDIA、AMD、高通、海思</td>
+</tr>
+<tr>
+<td><strong>IDM</strong></td>
+<td>设计+制造一体化</td>
+<td>Intel、三星、TI、ST</td>
+</tr>
+<tr>
+<td><strong>Foundry</strong></td>
+<td>只制造不设计，为Fabless代工</td>
+<td>TSMC、中芯国际、联电</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ai">AI时代的模式变化</h3>
+<ul>
+<li>NVIDIA 从纯Fabless变为"平台公司"（GPU+CUDA+网络+软件）</li>
+<li>云厂商（Google、Amazon、Microsoft）开始自研芯片（TPU、Trainium、Graviton）</li>
+<li>OpenAI/Apple等也开始探索自研AI芯片</li>
+</ul>
+<h3 id="eda">EDA工具三巨头</h3>
+<table>
+<thead>
+<tr>
+<th>公司</th>
+<th>主力工具</th>
+<th>市场份额</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Synopsys</td>
+<td>综合、验证、仿真</td>
+<td>~30%</td>
+</tr>
+<tr>
+<td>Cadence</td>
+<td>布局布线、物理验证</td>
+<td>~30%</td>
+</tr>
+<tr>
+<td>Siemens EDA (Mentor)</td>
+<td>验证、DFT</td>
+<td>~15%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_2">架构趋势</h3>
+<ul>
+<li><strong>RISC-V</strong>：开源指令集架构，挑战ARM和x86</li>
+<li><strong>Chiplet设计</strong>：把大芯片拆成小芯片，通过UCIe互联</li>
+<li><strong>AI辅助EDA</strong>：用AI优化布局布线，提升设计效率</li>
+</ul>
+<h2 id="_3">📊 关键数据</h2>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>数据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NVIDIA 2025Q1营收</td>
+<td>~260亿美元（数据中心占85%+）</td>
+</tr>
+<tr>
+<td>全球IC设计市场规模</td>
+<td>~2000亿美元（不含IDM）</td>
+</tr>
+<tr>
+<td>中国IC设计企业数量</td>
+<td>3000+家（年增长15%）</td>
+</tr>
+<tr>
+<td>一款5nm芯片设计成本</td>
+<td>4-6亿美元</td>
+</tr>
+<tr>
+<td>一款3nm芯片设计成本</td>
+<td>6-10亿美元</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_4">🔗 来源</h2>
+<ul>
+<li>NVIDIA/AMD/Synopsys公开资料</li>
+<li>中国半导体行业协会</li>
+<li>入库时间：2026-07-08</li>
+</ul>
+</div>
+</article>
+<footer class="note-footer">
+  <a href="/kb/行业知识体系/04-IC设计/基础概念/index.html">← 返回目录</a>
+</footer>
+</main>
+</body>
+</html>

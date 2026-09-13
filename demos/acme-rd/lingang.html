@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>临港研发线看板 - 盛美半导体研发运营看板</title>
+<link rel="stylesheet" href="assets/style.css?v=67">
+<link rel="stylesheet" href="assets/req-spec.css?v=67">
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+    <div class="brand">
+    <div class="brand-logo">ACM</div>
+    <h1>研发运营看板</h1>
+    <p>盛美半导体 · 演示原型 v4.4</p>
+  </div>
+  <nav class="nav">
+    <div class="nav-section">业务模块</div>
+    <a href="index.html" class="" data-page="index">总览</a>
+    <a href="hr.html" class="" data-page="hr">人力资源</a>
+    <a href="site-product.html" class="" data-page="site-product">Site 与产品</a>
+    <a href="case.html" class="" data-page="case">Case 追踪</a>
+    <a href="change.html" class="" data-page="change">变更管理</a>
+    <a href="wet-rd.html" class="" data-page="wet-rd">Wet-RD</a>
+    <a href="lingang.html" class="active" data-page="lingang">临港研发线</a>
+    <a href="oa-monitor.html" class="" data-page="oa-monitor">OA 流程监控</a>
+    <a href="knowledge.html" class="" data-page="knowledge">知识库<span class="nav-badge">预览</span></a>
+  </nav>
+  <div class="footer-note">演示数据，口径以业务确认为准</div>
+</aside>
+<main class="main">
+  <header class="topbar">
+    <div class="breadcrumb"><a href="index.html">总览</a><span class="sep">/</span><span class="current">临港研发线</span></div>
+    <div class="topbar-actions">
+                  <div class="topbar-period" data-period-mode="month">
+        <span>时间</span>
+    <select data-period-year aria-label="年份">
+      <option value="2025">2025 年</option>
+      <option value="2026" selected>2026 年</option>
+    </select>
+    <select data-period-month aria-label="月份">
+    <option value="all">全年</option>
+    <option value="01">1 月</option>
+    <option value="02">2 月</option>
+    <option value="03">3 月</option>
+    <option value="04">4 月</option>
+    <option value="05">5 月</option>
+    <option value="06" selected>6 月</option>
+    <option value="07">7 月</option>
+    <option value="08">8 月</option>
+    <option value="09">9 月</option>
+    <option value="10">10 月</option>
+    <option value="11">11 月</option>
+    <option value="12">12 月</option>
+    </select>
+      </div>
+      <span class="chip">演示数据</span>
+      <button class="btn" data-action="export"><span class="bi"></span>导出数据</button>
+      <a class="btn btn-primary" href="report.html">月度运营报告</a>
+    </div>
+  </header>
+  <div class="content">
+    <div class="page-header">
+      <div class="ph-titles"><h2>临港研发线看板</h2><p>外部需求 · 功能变更 · 夜莺计划 · 物料 · 设备</p></div>
+      <div class="ph-actions"><button class="btn" data-action="req">需求说明</button></div>
+    </div>
+    
+    
+
+<div id="req-spec-data" data-title="临港研发线看板 · 需求说明" data-sub="对应客户原始需求（外部需求 / 功能变更 / 夜莺计划 / 物料 / 设备）" style="display:none">
+  <div class="req-list">
+    <div class="req-item"><div class="req-idx">1</div><div class="req-body2"><div class="req-item-t">研发线外部需求导入</div><div class="req-item-d">研发线外部需求导入流程：已归档 / 未归档（除发起节点）；来源为客户信息；统计近半年所有部门；二级页展示关联其他流程。</div></div></div>
+    <div class="req-item"><div class="req-idx">2</div><div class="req-body2"><div class="req-item-t">临港机台功能变更</div><div class="req-item-d">临港机台功能性变更改造申请：归档 + 未归档数量；发起人顶级部门分布；统计一年内所有部门。</div></div></div>
+    <div class="req-item"><div class="req-idx">3</div><div class="req-body2"><div class="req-item-t">夜莺计划</div><div class="req-item-d">夜莺计划项目数及各阶段——立项（节点 01-04）、中期（04-07）、延期（06）、结案（12 归档）；按顶级部门分析。</div></div></div>
+    <div class="req-item"><div class="req-idx">4</div><div class="req-body2"><div class="req-item-t">物料情况</div><div class="req-item-d">Wafer / FOUP / 耗材种类、数量；流程中 / 已结案；各设备 / 腔体状态；统计近 3 个月；范围为临港张江研发 + Wet-RD 新工艺研发部发起。</div></div></div>
+    <div class="req-item"><div class="req-idx">5</div><div class="req-body2"><div class="req-item-t">设备状态</div><div class="req-item-d">临港研发线设备 / 腔体（来源 CRM）：机台状态、种类、部门分类及明细。</div></div></div>
+  </div>
+</div>
+<div class="tab-shell">
+<div class="tabs">
+  <button class="tab active" data-target="tab-ext" data-group="lg">外部需求</button>
+  <button class="tab" data-target="tab-func" data-group="lg">功能变更</button>
+  <button class="tab" data-target="tab-yeying" data-group="lg">夜莺计划</button>
+  <button class="tab" data-target="tab-material" data-group="lg">物料采购</button>
+  <button class="tab" data-target="tab-device" data-group="lg">设备状态</button>
+</div>
+<div id="tab-ext" class="tab-content active" data-group="lg">
+  <div class="filter-bar" data-filter-live="true">
+    <div class="filter-group"><label>时间口径</label><select>
+      <option>申请日</option>
+      <option>完成日</option>
+    </select></div>
+    <span class="chip">区间见页顶年/季/月 · 本页按申请数量</span>
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi-card accent-blue"><div class="kpi-label">需求总数</div><div class="kpi-value">45</div><div class="kpi-sub">近半年</div></div>
+    <div class="kpi-card accent-green"><div class="kpi-label">已完成</div><div class="kpi-value">32</div></div>
+    <div class="kpi-card accent-amber"><div class="kpi-label">进行中</div><div class="kpi-value">13</div></div>
+    <div class="kpi-card accent-purple"><div class="kpi-label">完成率</div><div class="kpi-value">71.1%</div><div class="kpi-sub">已完成 / 总数 · 口径待确认</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-left"><h3>客户来源分布</h3></div><a class="link" href="lingang-ext-detail.html">关联流程明细 →</a></div>
+      <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"客户A","v":18},{"l":"客户B","v":12},{"l":"客户C","v":8},{"l":"其他","v":7}]'></div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-left"><h3>月度需求导入趋势</h3></div></div>
+      <div class="panel-body"><div class="chart-wrap" data-line='{"labels":["1月","2月","3月","4月","5月","6月"],"series":[{"name":"需求数","data":[6,8,7,9,8,7],"c":"#2563eb"}]}'></div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>外部需求 · 近半年 按部门</h3></div></div>
+    <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"研发一部","v":14},{"l":"研发二部","v":11},{"l":"工艺部","v":9},{"l":"应用部","v":7},{"l":"湿法-CMP","v":5},{"l":"湿法-Clean","v":4},{"l":"湿法-ECP","v":3}]'></div>
+      <p class="chart-footnote">湿法-CMP / Clean / ECP</p>
+    </div>
+  </div>
+</div>
+
+<div id="tab-func" class="tab-content" data-group="lg">
+  <div class="kpi-grid">
+    <div class="kpi-card accent-blue"><div class="kpi-label">变更总数</div><div class="kpi-value">34</div><div class="kpi-sub">一年内</div></div>
+    <div class="kpi-card accent-green"><div class="kpi-label">已归档</div><div class="kpi-value">26</div></div>
+    <div class="kpi-card accent-amber"><div class="kpi-label">进行中</div><div class="kpi-value">8</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-left"><h3>发起人部门分布 (顶级部门)</h3></div></div>
+      <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"研发一部","v":12},{"l":"研发二部","v":9},{"l":"工艺部","v":7},{"l":"应用部","v":6}]'></div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-left"><h3>功能变更状态</h3></div></div>
+      <div class="panel-body"><div class="chart-wrap" data-donut='[{"l":"已归档","v":76,"c":"#5b7c99"},{"l":"进行中","v":24,"c":"#d97706"}]' data-total="34" data-label="变更总数"></div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-yeying" class="tab-content" data-group="lg">
+  <div class="kpi-grid">
+    <div class="kpi-card accent-purple"><div class="kpi-label">夜莺项目总数</div><div class="kpi-value">28</div></div>
+    <div class="kpi-card"><div class="kpi-label">立项 (01-04)</div><div class="kpi-value">8</div></div>
+    <div class="kpi-card accent-blue"><div class="kpi-label">中期 (04-07)</div><div class="kpi-value">12</div></div>
+    <div class="kpi-card accent-amber"><div class="kpi-label">延期 (06)</div><div class="kpi-value">3</div></div>
+    <div class="kpi-card accent-green"><div class="kpi-label">结案 (12)</div><div class="kpi-value">8</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-left"><h3>夜莺计划 · 按顶级部门</h3></div></div>
+      <div class="panel-body"><div class="chart-wrap" data-group-bars='{"groups":[{"label":"研发一部 · VP 陈**","values":[3,5,1,2]},{"label":"研发二部 · VP 李**","values":[2,4,1,2]},{"label":"工艺部 · VP 王**","values":[2,2,1,3]},{"label":"应用部 · VP 刘**","values":[1,1,0,1]}],"series":["立项","中期","延期","结案"]}'></div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h3>项目进度分布</h3></div>
+    <div class="panel-body flush">
+      <table>
+        <tr><th>项目</th><th>顶级部门</th><th>实际负责人</th><th>当前节点</th><th>进度</th><th>状态</th></tr>
+        <tr><td>夜莺-2026-01</td><td>研发一部 · VP 陈**</td><td>周**</td><td>04 中期评审</td><td><div class="progress-bar"><div class="progress-fill" style="width:55%"></div></div></td><td><span class="tag tag-close">中期</span></td></tr>
+        <tr class="highlight-row"><td>夜莺-2026-05</td><td>研发二部 · VP 李**</td><td>吴**</td><td>06 延期</td><td><div class="progress-bar"><div class="progress-fill" style="width:40%;background:#f59e0b"></div></div></td><td><span class="tag tag-warn">延期</span></td></tr>
+        <tr><td>夜莺-2025-12</td><td>工艺部 · VP 王**</td><td>赵**</td><td>12 归档</td><td><div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div></td><td><span class="tag tag-close">结案</span></td></tr>
+      </table>
+    </div>
+  </div>
+  </div>
+</div>
+
+<div id="tab-material" class="tab-content" data-group="lg">
+  <div class="alert-box info">物料情况（Wafer / FOUP / 耗材）· 近 3 个月 · 范围：临港张江研发 + Wet-RD 新工艺研发部发起</div>
+  <div class="kpi-grid">
+    <div class="kpi-card accent-blue"><div class="kpi-label">Wafer 申请</div><div class="kpi-value">86</div><div class="kpi-sub">片</div></div>
+    <div class="kpi-card accent-green"><div class="kpi-label">FOUP</div><div class="kpi-value">24</div><div class="kpi-sub">个</div></div>
+    <div class="kpi-card accent-purple"><div class="kpi-label">耗材种类</div><div class="kpi-value">38</div></div>
+    <div class="kpi-card accent-amber"><div class="kpi-label">流程中 / 已结案</div><div class="kpi-value">12 / 46</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-left"><h3>物料种类数量</h3></div></div>
+      <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"Wafer","v":86},{"l":"FOUP","v":24},{"l":"化学耗材","v":38},{"l":"备件","v":29}]'></div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-left"><h3>流程状态分布</h3></div></div>
+      <div class="panel-body"><div class="chart-wrap" data-donut='[{"l":"已结案","v":79,"c":"#5b7c99"},{"l":"流程中","v":21,"c":"#d97706"}]' data-total="58" data-label="物料流程"></div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>各设备 / 腔体状态 (物料 Tab)</h3></div></div>
+    <div class="panel-body flush">
+      <table>
+        <tr><th>设备</th><th>物料类型</th><th>腔体</th><th>流程状态</th><th>机台/腔体状态</th></tr>
+        <tr><td>LG-WET-01</td><td>Wafer</td><td>CMP × 2</td><td><span class="tag tag-close">已结案</span></td><td>运行 / 正常</td></tr>
+        <tr><td>LG-ECP-02</td><td>FOUP</td><td>Plating × 4</td><td><span class="tag tag-open">流程中</span></td><td>维护 / 正常</td></tr>
+        <tr class="highlight-row"><td>LG-TRK-01</td><td>耗材</td><td>Coater × 4</td><td><span class="tag tag-open">流程中</span></td><td>停机 / 2 腔异常</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="tab-device" class="tab-content" data-group="lg">
+  <div class="alert-box info">演示设备数据（含张江实验室）· 真实 CRM / 设备台账待数据接入</div>
+  <div class="toolbar" style="margin-bottom:14px;justify-content:flex-end">
+    <button class="btn" disabled title="待 CRM / 设备台账接入">数据导入（待接入）</button>
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi-card accent-green"><div class="kpi-label">运行中</div><div class="kpi-value">16</div></div>
+    <div class="kpi-card accent-amber"><div class="kpi-label">维护中</div><div class="kpi-value">4</div></div>
+    <div class="kpi-card"><div class="kpi-label">停机</div><div class="kpi-value">1</div></div>
+    <div class="kpi-card accent-blue"><div class="kpi-label">腔体正常率</div><div class="kpi-value">92%</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-left"><h3>设备状态分布</h3></div></div>
+      <div class="panel-body"><div class="chart-wrap" data-donut='[{"l":"运行","v":76,"c":"#5b7c99"},{"l":"维护","v":19,"c":"#d97706"},{"l":"停机","v":5,"c":"#dc2626"}]' data-total="21" data-label="设备总数"></div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-left"><h3>设备种类分布</h3></div></div>
+      <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"WET","v":9},{"l":"ECP","v":5},{"l":"Track","v":4},{"l":"实验室","v":3}]'></div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><h3>设备 / 腔体状态明细</h3><span class="chip">含张江实验室</span></div>
+    <div class="panel-body flush">
+      <table>
+        <tr><th>设备</th><th>种类</th><th>部门</th><th>机台状态</th><th>腔体状态</th></tr>
+        <tr><td>LG-WET-01</td><td>WET</td><td>临港张江</td><td><span class="tag tag-close">运行</span></td><td>6/8 正常</td></tr>
+        <tr><td>LG-ECP-02</td><td>ECP</td><td>Wet-RD</td><td><span class="tag tag-open">维护</span></td><td>4/4 正常</td></tr>
+        <tr><td>LG-WET-03</td><td>WET</td><td>临港张江</td><td><span class="tag tag-close">运行</span></td><td>8/8 正常</td></tr>
+        <tr class="highlight-row"><td>LG-TRK-01</td><td>Track</td><td>Wet-RD</td><td><span class="tag tag-warn">停机</span></td><td>2/4 异常</td></tr>
+        <tr><td>ZJ-LAB-SEM-01</td><td>实验室</td><td>张江实验室</td><td><span class="tag tag-close">运行</span></td><td>SEM 正常</td></tr>
+        <tr><td>ZJ-LAB-ICP-02</td><td>实验室</td><td>张江实验室</td><td><span class="tag tag-open">维护</span></td><td>ICPMS 校准中</td></tr>
+        <tr><td>ZJ-LAB-WET-01</td><td>WET</td><td>张江实验室</td><td><span class="tag tag-close">运行</span></td><td>4/4 正常</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+  </div>
+</main>
+</div>
+<script src="assets/charts.js?v=67"></script>
+<script src="assets/app.js?v=67"></script>
+<script>setActiveNav('lingang');</script>
+
+<script
+  src="http://120.55.184.234:8787/embed.js?v=20260801acme4"
+  data-demo-id="acme-rd"
+  data-mode="basic"
+  data-api="http://120.55.184.234:8787"
+  async defer></script>
+
+</body>
+</html>

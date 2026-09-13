@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>半导体产业链上下游关系 — 半导体知识库</title>
+<meta name="description" content="# 半导体产业链上下游关系  ## 产业链全景  ``` ┌─────────────────────────────────────────────────────────────┐ │  上游：材料与设备                                             │">
+<link rel="stylesheet" href="/kb/assets/style.css">
+</head>
+<body>
+<div class="top-accent"></div>
+<header class="page-header">
+  <a href="/kb/首页.html" class="home-link">🔬 半导体知识库</a>
+</header>
+<main class="container">
+<nav class="breadcrumb"><a href="/kb/首页.html">半导体知识库</a> <span class="sep">›</span> <a href="/kb//产业全景/index.html">产业全景</a></nav>
+<article class="note">
+<header class="note-header">
+  <h1>半导体产业链上下游关系</h1>
+  <div class="meta-line"><span class="meta-item">📅 2026-07-09</span> · <span class="meta-item" style="color:#059669">⭐ high</span> · <span class="meta-item">🏷️ <span class="tag">产业全景</span> <span class="tag">产业链</span></span></div>
+</header>
+<div class="note-body">
+<h1 id="_1">半导体产业链上下游关系</h1>
+<h2 id="_2">产业链全景</h2>
+<div class="codehilite"><pre><span></span><code>┌─────────────────────────────────────────────────────────────┐
+│  上游：材料与设备                                             │
+│  ┌──────────┐  ┌──────────────┐  ┌──────────┐              │
+│  │ 硅片/材料  │  │  半导体设备    │  │ EDA/IP   │              │
+│  │ 信越/SUMCO│  │ ASML/AMAT/Lam │  │ Synopsys │              │
+│  └──────────┘  └──────────────┘  └──────────┘              │
+├─────────────────────────────────────────────────────────────┤
+│  中游：设计与制造                                             │
+│  ┌──────────┐  ┌──────────────┐  ┌──────────┐              │
+│  │ IC设计    │→│ 晶圆制造       │→│ 封装测试   │              │
+│  │ NVIDIA    │  │ TSMC/中芯国际  │  │ 日月光/长电│              │
+│  │ AMD/海思   │  │ 三星/华虹      │  │ 安靠/通富  │              │
+│  └──────────┘  └──────────────┘  └──────────┘              │
+├─────────────────────────────────────────────────────────────┤
+│  下游：应用市场                                               │
+│  手机 │ PC │ 服务器/AI │ 汽车 │ IoT │ 工业                    │
+└─────────────────────────────────────────────────────────────┘
+</code></pre></div>
+
+<h2 id="_3">产业链各环节特征</h2>
+<h3 id="_4">上游：半导体设备和材料</h3>
+<p>这是产业链中<strong>进入壁垒最高</strong>的环节。设备商如ASML、AMAT、Lam Research各自在特定领域建立了数十年的技术积累和专利壁垒。材料商的壁垒在于化学和材料科学的深厚基础——日本企业（信越化学、SUMCO、东京应化）凭借数十年的精密化工资历在全球半导体材料市场占据主导。</p>
+<p>关键企业见：<a href="/kb/行业知识体系/03-半导体设备/基础概念/半导体设备分类与市场格局">半导体设备分类与市场格局</a>、<a href="/kb/01-晶圆制造/行业动态/半导体材料市场格局与关键品类">半导体材料市场格局与关键品类</a></p>
+<h3 id="ic">中游：IC设计+晶圆制造+封装测试</h3>
+<p>这是半导体价值创造的核心链条：
+- <strong>IC设计公司</strong>（Fabless）完成芯片的功能定义和物理设计，然后将GDSII版图文件交给代工厂
+- <strong>晶圆代工厂</strong>（Foundry）在硅片上实现设计，经过数百道工艺形成裸芯片（Die）
+- <strong>封装测试厂</strong>（OSAT）将Die封装为可使用的芯片并完成测试</p>
+<p>详细内容见：<a href="/kb/行业知识体系/04-IC设计/基础概念/IC设计流程与产业模式">IC设计流程与产业模式</a>、<a href="/kb/行业知识体系/01-晶圆制造/基础概念/晶圆制造全流程">晶圆制造全流程</a>、<a href="/kb/行业知识体系/02-封装测试/基础概念/封装技术概述">封装技术概述</a></p>
+<h3 id="_5">下游：终端应用</h3>
+<p>半导体芯片的最终去向覆盖几乎所有电子信息产品。2025年最大的单一芯片消费市场是智能手机（约25%），其次是PC/服务器（约20%）、汽车（约15%）、工业/IoT（约15%）。</p>
+<h2 id="_6">产业链中的价值分配</h2>
+<p>以一颗典型的高端手机SoC（如Apple A19 Pro）为例：</p>
+<table>
+<thead>
+<tr>
+<th>环节</th>
+<th style="text-align: center;">价值占比</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IC设计（Apple）</td>
+<td style="text-align: center;">40-50%</td>
+<td>芯片价值的主要创造者</td>
+</tr>
+<tr>
+<td>晶圆代工（TSMC 3nm）</td>
+<td style="text-align: center;">25-30%</td>
+<td>制造费用（含设备和材料成本）</td>
+</tr>
+<tr>
+<td>封装测试</td>
+<td style="text-align: center;">5-10%</td>
+<td>后道工序</td>
+</tr>
+<tr>
+<td>EDA/IP许可</td>
+<td style="text-align: center;">3-5%</td>
+<td>Synopsys/Cadence/ARM的许可费</td>
+</tr>
+<tr>
+<td>设备折旧</td>
+<td style="text-align: center;">10-15%</td>
+<td>已含在代工价格中，单独列出体现设备价值</td>
+</tr>
+</tbody>
+</table>
+<p>价值最高的环节是<strong>IC设计</strong>（产品定义+品牌溢价）和<strong>设备/EDA</strong>（技术垄断带来的定价权）。制造和封测的利润率远低于设计，但它们是不可或缺的物理实现环节。</p>
+<h2 id="_7">产业链中的权力结构</h2>
+<p>半导体产业链的权力集中在少数掌握"不可替代"能力的节点上：</p>
+<ol>
+<li><strong>EUV光刻机（ASML）</strong>：绝对的供应垄断。没有ASML的光刻机，整个先进制程就无法运转。</li>
+<li><strong>先进制程代工（TSMC）</strong>：虽然面临三星和Intel的追赶，但TSMC在先进制程良率和客户生态上的优势仍然显著。</li>
+<li><strong>EDA三巨头（Synopsys/Cadence/Siemens EDA）</strong>：芯片设计的工具链垄断。没有他们，就设计不出现代芯片。</li>
+<li><strong>AI芯片设计（NVIDIA）</strong>：虽然不是垄断，但CUDA生态的锁定效应创造了极其强大的议价权。</li>
+</ol>
+<p>这些节点的共同特征是"不可替代"——客户在短期内没有其他选择。</p>
+<h2 id="_8">🔗 关联</h2>
+<ul>
+<li><a href="/kb/产业全景/全球半导体产业格局">全球半导体产业格局</a></li>
+<li><a href="/kb/产业全景/中国半导体产业现状">中国半导体产业现状</a></li>
+<li><a href="/kb/01-晶圆制造/行业动态/IDM、Fabless与Foundry：半导体商业模式的三种形态">IDM、Fabless与Foundry：半导体商业模式的三种形态</a></li>
+</ul>
+<h2 id="_9">📊 帆软关联度分析</h2>
+<table>
+<thead>
+<tr>
+<th>产品</th>
+<th style="text-align: center;">关联度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FineReport</td>
+<td style="text-align: center;">🟢 高</td>
+<td>产业链价值分布图/供应链依赖度矩阵的静态可视化、产业链各环节关键指标大屏——FineReport在"产业链全景展示"场景中是最佳载体</td>
+</tr>
+<tr>
+<td>FineBI</td>
+<td style="text-align: center;">🟢 高</td>
+<td>供应链替代分析（"如果某日本材料断供，影响多少家中国Fab？"）、产业链各环节利润率趋势对比——多维钻取分析是BI的强项</td>
+</tr>
+<tr>
+<td>FineDataLink</td>
+<td style="text-align: center;">🟢 高</td>
+<td>供应链多源数据汇聚——从硅片供应商到终端应用的数据链路打通，让"一颗芯片从沙子到手机"的全链路数据可追溯</td>
+</tr>
+<tr>
+<td>简道云</td>
+<td style="text-align: center;">⚪ 无</td>
+<td>产业链宏观分析偏战略层级，简道云的零代码流程管理场景在此主题中无直接切入点</td>
+</tr>
+<tr>
+<td>AI Agent</td>
+<td style="text-align: center;">🟡 中</td>
+<td>产业链知识问答（"光刻胶的国产替代进展如何？"→从知识库检索汇总）、供应链风险预警自动推送——适合售前自我赋能和客户高层简报场景</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_10">💼 售前场景</h2>
+<h3 id="1">场景1：售前开场白——用产业链全局观建立信任</h3>
+<p><strong>使用方式</strong>：这篇笔记是售前去见任何半导体客户前的"产业链框架速查"——帮你在开场时展示"我不仅懂帆软产品，我还懂你的产业链位置"。</p>
+<p><strong>售前话术模板：</strong></p>
+<blockquote>
+<p>"半导体产业链有四个不可替代的权力节点——ASML的光刻机、TSMC的先进制程、Synopsys的EDA、NVIDIA的CUDA。你们公司在这张产业链地图上的位置是XX，上下游关系是XX。我今天带来的方案，就是帮你们在自己这个环节上做数据驱动——不是泛泛的BI，而是针对你们这个位置的数据痛点。"</p>
+<p>"一颗Apple A19 Pro从设计到手机，价值分配是：设计45%、代工28%、封测8%、EDA授权5%。帆软的产品覆盖了从设计公司的项目看板到封测厂的良率报表——你们在哪个环节，我们就有对应方案。"</p>
+</blockquote>
+<h3 id="2">场景2：供应链风险分析——"不可替代性"是最强话术锚点</h3>
+<p><strong>客户画像</strong>：晶圆厂供应链部门、IDM采购团队、封测厂材料采购。</p>
+<p><strong>售前切入点：</strong>
+- "你们用的ABF基板材料——全球90%以上来自日本味之素一家。如果这家供应商出问题，你们能多快评估替代材料？FineBI把供应商依赖度、替代验证进度、断供影响范围放在一张看板上——供应链负责人每天打开就知道风险在哪。"
+- 核心方案：FineReport供应链风险大屏 + FDL对接SRM/ERP数据 + FineBI供应商依赖度多维分析</p>
+<h3 id="3">场景3：新客户拓展——用产业链位置快速匹配方案</h3>
+<p><strong>使用方式</strong>：售前拿到一个新客户的名称时，先判断它在产业链的哪个环节，然后快速匹配对应的帆软方案模板。</p>
+<table>
+<thead>
+<tr>
+<th>客户所处环节</th>
+<th>快速匹配方案</th>
+<th>参考笔记</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>上游设备商</td>
+<td>设备OEE分析+出货质量报告+预测性维护</td>
+<td><a href="/kb/行业知识体系/03-半导体设备/基础概念/半导体设备分类与市场格局">半导体设备分类与市场格局</a></td>
+</tr>
+<tr>
+<td>上游材料商</td>
+<td>批次追溯报表+多产线验证数据汇聚</td>
+<td><a href="/kb/01-晶圆制造/行业动态/半导体材料市场格局与关键品类">半导体材料市场格局与关键品类</a></td>
+</tr>
+<tr>
+<td>中游Fabless</td>
+<td>多项目进度看板+流片成本管理+良率反馈闭环</td>
+<td><a href="/kb/行业知识体系/04-IC设计/基础概念/IC设计流程与产业模式">IC设计流程与产业模式</a></td>
+</tr>
+<tr>
+<td>中游Fab</td>
+<td>SPC良率分析+设备OEE+FDC异常监控</td>
+<td><a href="/kb/行业知识体系/01-晶圆制造/基础概念/晶圆制造全流程">晶圆制造全流程</a></td>
+</tr>
+<tr>
+<td>中游封测</td>
+<td>测试良率分析+客户稽核报告+多ATE平台统一</td>
+<td><a href="/kb/行业知识体系/02-封装测试/基础概念/封装技术概述">封装技术概述</a></td>
+</tr>
+<tr>
+<td>下游终端</td>
+<td>芯片采购策略分析+供应链风险管理</td>
+<td>按具体下游行业匹配</td>
+</tr>
+</tbody>
+</table>
+</div>
+</article>
+<footer class="note-footer">
+  <a href="/kb/产业全景/index.html">← 返回目录</a>
+</footer>
+</main>
+</body>
+</html>

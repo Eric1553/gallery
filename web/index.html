@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Private Atelier</title>
+  <meta name="description" content="Private space. Password required on untrusted devices." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/gallery.css?v=20260903k51" />
+</head>
+<body class="gated">
+  <div class="stage-bg" aria-hidden="true">
+    <div class="aurora a1"></div>
+    <div class="aurora a2"></div>
+    <div class="aurora a3"></div>
+    <div class="grid-fade"></div>
+    <div class="sparkles"></div>
+  </div>
+
+  <div id="auth-gate" class="auth-gate">
+    <div class="auth-card">
+      <p class="auth-kicker">Private · Trusted device only</p>
+      <h2>私人空间</h2>
+      <p class="auth-copy">未授信设备须输入访问密码。本机授信后可自动进入；他人电脑即使打开此页也无法跳过密码。</p>
+      <label class="auth-field">
+        <span>访问密码</span>
+        <input id="gate-password" type="password" autocomplete="current-password" placeholder="仅主人可知" />
+      </label>
+      <div class="auth-actions">
+        <button type="button" class="btn" id="gate-submit">验证并进入</button>
+        <button type="button" class="btn ghost" id="gate-bio-login" hidden>本机指纹解锁</button>
+      </div>
+      <button type="button" class="btn ghost tiny" id="gate-bio-register" hidden>把此电脑设为授信设备（可选指纹）</button>
+      <p class="auth-hint" id="gate-device-hint" hidden>检测到本机授信令牌，正在尝试自动进入…</p>
+      <p class="auth-msg" id="gate-msg"></p>
+    </div>
+  </div>
+
+  <header class="topbar">
+    <div class="brand">
+      <a class="brand-home" href="/" title="返回工作台">←</a>
+      <span class="brand-mark" aria-hidden="true"></span>
+      <div>
+        <p class="brand-kicker">Case Library · Module</p>
+        <h1 class="brand-title">DEMO展览馆</h1>
+      </div>
+    </div>
+    <div class="top-actions">
+      <div class="search">
+        <span class="sr-only">搜索</span>
+        <input id="q" type="search" placeholder="搜索客户、模块、标签、正文关键词…" autocomplete="off" role="combobox" aria-autocomplete="list" aria-controls="suggest" aria-expanded="false" />
+        <kbd>/</kbd>
+        <div id="suggest" class="suggest" role="listbox" hidden></div>
+      </div>
+      <button type="button" class="btn ghost" id="btn-view" aria-pressed="false">列表</button>
+    </div>
+  </header>
+
+  <main class="shell">
+    <aside class="rail">
+      <section class="rail-block">
+        <h2>展示范围</h2>
+        <div id="scope-filters" class="scope-row" role="tablist" aria-label="展示范围"></div>
+      </section>
+
+      <section class="rail-block rail-tree">
+        <div class="rail-head">
+          <h2 id="tree-title">客户档案</h2>
+          <span class="hint" id="tree-hint">多 DEMO 可展开</span>
+        </div>
+        <div id="client-tree" class="client-tree"></div>
+      </section>
+
+      <section class="rail-block stats" aria-label="统计">
+        <div><strong id="stat-client">0</strong><span>客户 DEMO</span></div>
+        <div><strong id="stat-internal">0</strong><span>内部 DEMO</span></div>
+        <div><strong id="stat-shown">0</strong><span>当前可见</span></div>
+      </section>
+    </aside>
+
+    <section class="stage">
+      <div class="page-theme">
+        <div class="page-theme-copy">
+          <h2 class="page-theme-title">
+            <span class="title-kicker">Personal Atelier</span>
+            <span class="title-line">
+              <span class="title-name">Lorin</span><span class="title-rest">的个人空间</span>
+            </span>
+            <span class="title-underline" aria-hidden="true"></span>
+          </h2>
+          <p class="page-theme-meta"><span id="updated">更新中</span><span class="dot"></span><span id="focus-label">客户 DEMO</span></p>
+        </div>
+      </div>
+
+      <div class="filter-panel" id="filter-panel" aria-label="筛选">
+        <div class="filter-head">
+          <span class="filter-head-label">筛选</span>
+          <span class="filter-summary" id="filter-summary">未筛选</span>
+          <button type="button" class="filter-clear" id="filter-clear" disabled aria-disabled="true">清除筛选</button>
+        </div>
+        <div class="filter-row">
+          <span class="filter-dim">场景</span>
+          <div id="scene-filters" class="filter-chips"></div>
+        </div>
+        <div class="filter-row">
+          <span class="filter-dim">行业</span>
+          <div id="industry-filters" class="filter-chips"></div>
+        </div>
+        <div class="filter-row">
+          <span class="filter-dim">业务</span>
+          <div id="business-filters" class="filter-chips"></div>
+        </div>
+        <div class="filter-row">
+          <span class="filter-dim">排序</span>
+          <div id="sort-filters" class="filter-chips" aria-label="按添加时间排序"></div>
+        </div>
+      </div>
+
+      <div class="featured-wrap" id="featured-wrap" hidden>
+        <div class="section-head">
+          <h3>精选客户案例</h3>
+          <p>上下浏览 · 点击卡片进入详情</p>
+        </div>
+        <div class="featured-grid" id="featured"></div>
+      </div>
+
+      <div class="section-head tight">
+        <h3 id="section-title">客户 DEMO</h3>
+        <p id="section-blurb">面向客户交付与售前演示</p>
+      </div>
+      <div id="grid" class="grid"></div>
+      <p class="empty" id="empty" hidden>没有匹配的案例，试试切换范围或清空筛选。</p>
+      <section class="fed-panel" id="fed-panel" hidden>
+        <div class="section-head tight">
+          <h3>全库检索</h3>
+          <p id="fed-blurb">案例以外的反馈、知识库与飞书</p>
+        </div>
+        <div class="progress-box" id="fed-progress" hidden>
+          <div class="progress-track" aria-hidden="true">
+            <div class="progress-fill" id="fed-fill"></div>
+          </div>
+          <p class="progress-now" id="fed-now">正在检索全库…</p>
+          <ol class="progress-steps" id="fed-steps"></ol>
+        </div>
+        <div class="fed-brief" id="fed-brief" hidden></div>
+        <div class="fed-cols" id="fed-cols" hidden></div>
+      </section>
+    </section>
+  </main>
+
+  <div class="drawer-backdrop" id="backdrop" hidden></div>
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <button type="button" class="drawer-close" id="drawer-close" aria-label="关闭">×</button>
+    <div class="drawer-body" id="drawer-body"></div>
+  </aside>
+
+  <script src="/assets/gate.js?v=20260731p2"></script>
+  <script src="/assets/gallery.js?v=20260903k51"></script>
+</body>
+</html>

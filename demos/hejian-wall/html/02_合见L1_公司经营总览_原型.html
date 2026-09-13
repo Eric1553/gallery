@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>合见 · 公司经营总览（L1）原型</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { background:#eef3f9; }
+  body { font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif; color:#23314c; -webkit-font-smoothing:antialiased; }
+  .stage { width:1600px; height:992px; position:relative; background:linear-gradient(165deg,#ffffff,#eef4fb); }
+  .ribbon { position:absolute; right:0; top:0; background:#e2574c; color:#fff; font-size:12px; font-weight:700; padding:5px 16px; border-bottom-left-radius:10px; z-index:3; }
+  .top { background:linear-gradient(135deg,#274a86,#3f7fc4); color:#fff; padding:14px 28px; display:flex; justify-content:space-between; align-items:center; }
+  .top h1 { font-size:21px; font-weight:800; letter-spacing:1px; }
+  .top h1 .en { font-size:12px; opacity:.85; font-weight:600; margin-left:8px; }
+  .top .meta { font-size:12.5px; opacity:.92; }
+  .body { padding:16px 28px; }
+  .lab { font-size:12px; font-weight:800; color:#3f7fc4; letter-spacing:1px; margin:2px 0 10px; display:flex; align-items:center; gap:8px; }
+  .lab::before { content:""; width:5px; height:14px; background:#5fa0db; border-radius:2px; }
+  .lab .tg { font-size:10.5px; font-weight:700; color:#8a93a6; background:#eef2f8; padding:1px 8px; border-radius:10px; }
+  .kpis { display:grid; grid-template-columns:repeat(6,1fr); gap:13px; margin-bottom:16px; }
+  .kpi { background:#fff; border:1px solid #e4ebf4; border-radius:11px; padding:13px 16px; box-shadow:0 3px 9px rgba(40,70,120,.05); position:relative; overflow:hidden; }
+  .kpi::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; }
+  .kpi.b::before{background:#3f7fc4;} .kpi.g::before{background:#2e8b57;} .kpi.o::before{background:#e8855a;} .kpi.r::before{background:#e2574c;} .kpi.p::before{background:#7e6cc4;} .kpi.c::before{background:#2aa3b8;}
+  .kpi .t { font-size:11.5px; color:#7c869a; }
+  .kpi .v { font-size:26px; font-weight:800; color:#1c2c4a; margin-top:4px; }
+  .kpi .v small { font-size:13px; font-weight:700; }
+  .kpi .d { font-size:11px; margin-top:3px; }
+  .kpi .d.up { color:#2e8b57; } .kpi .d.dn { color:#e2574c; }
+  .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:14px; }
+  .panel { background:#fff; border:1px solid #e4ebf4; border-radius:11px; padding:12px 14px 6px; box-shadow:0 3px 10px rgba(40,70,120,.05); }
+  .panel .ph { font-size:13.5px; font-weight:800; color:#1c2c4a; display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+  .panel .ph .sub { font-size:10.5px; color:#9aa3b5; font-weight:600; }
+  .chart { width:100%; height:212px; }
+  .note { margin-top:6px; background:linear-gradient(90deg,#eef4fb,#f6f9fd); border:1px dashed #b9cce4; border-left:4px solid #3f7fc4; border-radius:8px; padding:9px 16px; font-size:12.5px; color:#3a4660; line-height:1.5; }
+  .note b { color:#2a5ea0; }
+</style>
+  <link rel="stylesheet" href="nav.css">
+</head>
+<body data-page="02">
+<div class="proto-app">
+  <aside id="proto-nav" class="proto-nav"></aside>
+  <div class="proto-main">
+<div class="stage">
+  <div class="ribbon">原型设计稿</div>
+  <div class="top">
+    <h1>合见公司经营总览<span class="en">Executive Overview · L1 决策层视角</span></h1>
+    <div class="meta">期间：2026 YTD　|　主体：全集团（沪/深/京）　|　示意数据</div>
+  </div>
+  <div class="body">
+    <div class="lab">核心经营 KPI <span class="tg">管理层 / 决策层</span></div>
+    <div class="kpis">
+      <div class="kpi b"><div class="t">营收（YTD/万元）</div><div class="v">12,860</div><div class="d up">▲ 18.6% 同比</div></div>
+      <div class="kpi g"><div class="t">综合毛利率</div><div class="v">39.2<small>%</small></div><div class="d up">▲ 1.4pct</div></div>
+      <div class="kpi c"><div class="t">借转销转化率</div><div class="v">58.6<small>%</small></div><div class="d up">▲ 3.1pct</div></div>
+      <div class="kpi b"><div class="t">发货满足率</div><div class="v">90.3<small>%</small></div><div class="d dn">▼ 0.9pct</div></div>
+      <div class="kpi o"><div class="t">库存周转天数</div><div class="v">86</div><div class="d up">▼ 5 天</div></div>
+      <div class="kpi p"><div class="t">回款率</div><div class="v">82.7<small>%</small></div><div class="d up">▲ 2.3pct</div></div>
+    </div>
+    <div class="grid3">
+      <div class="panel"><div class="ph">营收 &amp; 毛利率 月度趋势<span class="sub">经营</span></div><div class="chart" id="e1"></div></div>
+      <div class="panel"><div class="ph">收入构成（硬件 / 非硬件 / 借转销）<span class="sub">LTC</span></div><div class="chart" id="e2"></div></div>
+      <div class="panel"><div class="ph">三主体经营对比（营收 / 毛利）<span class="sub">沪 / 深 / 京</span></div><div class="chart" id="e3"></div></div>
+    </div>
+    <div class="grid3">
+      <div class="panel"><div class="ph">经营异常雷达<span class="sub">缺货/呆滞/超期/质量/回款</span></div><div class="chart" id="e4"></div></div>
+      <div class="panel"><div class="ph">库存健康总览<span class="sub">可售/借测/在制/呆滞</span></div><div class="chart" id="e5"></div></div>
+      <div class="panel"><div class="ph">回款账龄分布<span class="sub">DF / 回款</span></div><div class="chart" id="e6"></div></div>
+    </div>
+    <div class="note"><b>分析思路：</b>决策层一屏看懂经营健康——营收/毛利/借测转化/库存/回款；<b>经营异常雷达</b>定位最需关注的领域，向下可进入<a href="03_合见运营驾驶舱_原型.html" style="color:#2a5ea0;font-weight:700;text-decoration:none;">运营</a>/<a href="04_合见L2_库存驾驶舱_原型.html" style="color:#2a5ea0;font-weight:700;text-decoration:none;">库存</a>/<a href="05_合见L2_销售驾驶舱_原型.html" style="color:#2a5ea0;font-weight:700;text-decoration:none;">销售</a>/<a href="07_合见L2_财务驾驶舱_原型.html" style="color:#2a5ea0;font-weight:700;text-decoration:none;">财务</a>等主题驾驶舱。</div>
+  </div>
+</div>
+<script>
+  var BLUE='#3f7fc4',LBLUE='#7bb0e6',GREEN='#2e8b57',ORANGE='#e8855a',RED='#e2574c',PURPLE='#7e6cc4',CYAN='#2aa3b8';
+  var M=['1月','2月','3月','4月','5月','6月'];
+  function init(id,opt){echarts.init(document.getElementById(id)).setOption(opt);}
+  var L={top:0,itemWidth:10,itemHeight:10,textStyle:{fontSize:10,color:'#6b7790'}};
+  init('e1',{animation:false,legend:Object.assign({data:['营收','毛利率']},L),grid:{left:48,right:48,top:28,bottom:24},xAxis:{type:'category',data:M,axisLabel:{fontSize:10,color:'#8a93a6'}},yAxis:[{type:'value',splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:10,color:'#8a93a6'}},{type:'value',max:60,axisLabel:{fontSize:10,color:'#8a93a6',formatter:'{value}%'},splitLine:{show:false}}],series:[{name:'营收',type:'bar',data:[1820,1960,2080,2150,2310,2540],barWidth:18,itemStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:LBLUE},{offset:1,color:BLUE}]),borderRadius:[4,4,0,0]}},{name:'毛利率',type:'line',yAxisIndex:1,data:[37,38,39,38.5,40,41],smooth:true,itemStyle:{color:GREEN},lineStyle:{width:2.5}}]});
+  init('e2',{animation:false,legend:Object.assign({data:['硬件','非硬件','借转销']},L),grid:{left:44,right:16,top:28,bottom:24},xAxis:{type:'category',data:M,axisLabel:{fontSize:10,color:'#8a93a6'}},yAxis:{type:'value',splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:10,color:'#8a93a6'}},series:[{name:'硬件',type:'bar',stack:'x',data:[900,980,1050,1080,1160,1280],itemStyle:{color:BLUE}},{name:'非硬件',type:'bar',stack:'x',data:[520,560,600,620,650,700],itemStyle:{color:CYAN}},{name:'借转销',type:'bar',stack:'x',data:[400,420,430,450,500,560],itemStyle:{color:GREEN,borderRadius:[3,3,0,0]}}]});
+  init('e3',{animation:false,legend:Object.assign({data:['营收','毛利']},L),grid:{left:48,right:16,top:28,bottom:24},xAxis:{type:'category',data:['上海','深圳','北京'],axisLabel:{fontSize:11,color:'#6b7790'}},yAxis:{type:'value',splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:10,color:'#8a93a6'}},series:[{name:'营收',type:'bar',data:[7200,3400,2260],barWidth:26,itemStyle:{color:BLUE,borderRadius:[4,4,0,0]}},{name:'毛利',type:'bar',data:[2880,1290,880],barWidth:26,itemStyle:{color:GREEN,borderRadius:[4,4,0,0]}}]});
+  init('e4',{animation:false,radar:{indicator:[{name:'缺货',max:100},{name:'呆滞',max:100},{name:'超期在借',max:100},{name:'质量Hold',max:100},{name:'回款逾期',max:100}],radius:'62%',center:['50%','54%'],axisName:{fontSize:10,color:'#6b7790'},splitLine:{lineStyle:{color:'#e6ecf5'}},splitArea:{areaStyle:{color:['#fbfdff','#f3f7fc']}}},series:[{type:'radar',data:[{value:[42,38,55,20,30],name:'风险指数',areaStyle:{color:'rgba(226,87,76,.18)'},lineStyle:{color:RED},itemStyle:{color:RED}}]}]});
+  init('e5',{animation:false,legend:{bottom:0,itemWidth:9,itemHeight:9,textStyle:{fontSize:10,color:'#6b7790'}},series:[{type:'pie',radius:['44%','68%'],center:['50%','46%'],label:{fontSize:10,formatter:'{b}\n{d}%'},data:[{value:46,name:'可售',itemStyle:{color:BLUE}},{value:24,name:'借测占用',itemStyle:{color:ORANGE}},{value:18,name:'在制/委外',itemStyle:{color:CYAN}},{value:12,name:'呆滞',itemStyle:{color:RED}}]}]});
+  init('e6',{animation:false,grid:{left:46,right:16,top:20,bottom:24},xAxis:{type:'category',data:['0-30','31-60','61-90','91-180','180+'],axisLabel:{fontSize:10,color:'#8a93a6'}},yAxis:{type:'value',splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:10,color:'#8a93a6'}},series:[{type:'bar',data:[4200,2600,1500,900,520],barWidth:24,itemStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'#9ec6ee'},{offset:1,color:'#e8855a'}]),borderRadius:[4,4,0,0]}}]});
+</script>
+  </div>
+</div>
+<script src="nav.js"></script>
+</body>
+</html>

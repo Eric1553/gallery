@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>杜邦分析 · 集团树状图 | 财经驾驶舱</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/dupont.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="logo-area">
+      <div class="logo-mark">SMIC</div>
+      <div class="logo-text"><h1>财经驾驶舱</h1><span>杜邦 · L4 专题分析</span></div>
+    </div>
+    <nav class="header-nav">
+      <a href="index.html" data-page="overview">总览</a>
+      <a href="revenue.html" data-page="revenue">收入专题</a>
+      <a href="cost.html" data-page="cost">成本专题</a>
+      <a href="profit.html" data-page="profit">盈利效率</a>
+      <a href="dupont-site.html" data-page="dupont" class="active">杜邦分析</a>
+    </nav>
+    <div class="header-meta"><span class="badge-proto">HTML 原型</span></div>
+  </header>
+
+  <div class="app-body">
+    <aside class="sidebar"></aside>
+
+    <main class="main-content">
+      <div class="dupont-subnav">
+        <a href="dupont-site.html">Site 视图 <span class="sub-lv">L2 经营成效</span></a>
+        <a href="dupont-tree.html" class="active">集团树状图 <span class="sub-lv">L4 专题分析</span></a>
+        <a href="dupont-table.html">集团表格报告 <span class="sub-lv">L5 下钻穿透</span></a>
+      </div>
+
+      <div class="page-toolbar">
+        <div class="toolbar-head">
+          <div class="page-title">杜邦分析 · 集团树状图<span class="level-tag">L4 专题分析</span></div>
+          <div class="page-desc">九层展开/合并 · 单线路展开 · 长期资产/存货/权益/资金 · 填报+评论</div>
+        </div>
+        <div class="toolbar-controls">
+          <div class="seg-group">
+            <span class="seg-label">树图</span>
+            <button class="sub-tab-btn active" type="button" onclick="expandAll(true)">全部展开</button>
+            <button class="sub-tab-btn" type="button" onclick="expandAll(false)">全部合并</button>
+            <button class="sub-tab-btn" type="button" onclick="expandAll(true); Cockpit.showStatus('单线路：ROE→净利率→净利润→营业收入')">单线路展开</button>
+          </div>
+          <div class="toolbar-divider"></div>
+          <div class="seg-group" data-tab-group="period">
+            <span class="seg-label">周期</span>
+            <button class="sub-tab-btn active" data-value="month">月度</button>
+            <button class="sub-tab-btn" data-value="quarter">季度</button>
+          </div>
+        </div>
+        <div class="filter-bar" id="filter-bar"></div>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi-card highlight"><div class="kpi-label">ROE</div><div class="kpi-value">8.42<span class="kpi-unit">%</span></div><div class="kpi-metrics"><span class="up">同比 +1.2pp</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">长期经营资产</div><div class="kpi-value">1,206<span class="kpi-unit">亿</span></div><div class="kpi-metrics"><span class="up">同比 +6.9%</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">存货净额</div><div class="kpi-value">124.4<span class="kpi-unit">亿</span></div><div class="kpi-metrics"><span class="up">周转 86 天</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">所有者权益</div><div class="kpi-value">792<span class="kpi-unit">亿</span></div><div class="kpi-metrics"><span class="up">同比 +8.9%</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">净债务/EBITDA</div><div class="kpi-value">0.33<span class="kpi-unit">x</span></div><div class="kpi-metrics"><span class="up">改善</span></div></div>
+      </div>
+
+      <div class="panel" style="margin-bottom:12px">
+        <div class="panel-header">
+          <span class="panel-title">杜邦分解树（九层 · 比上期 / 比上年同期）</span>
+          <div class="panel-actions"><button class="panel-action" onclick="location.href='dupont-site.html'">Site 四层视图 ↗</button></div>
+        </div>
+        <div class="panel-body"><div class="chart-box lg" id="chart-dupont-tree"></div></div>
+      </div>
+
+      <div class="panel-grid">
+        <div class="panel col-12" id="sec-asset">
+          <div class="panel-header"><span class="panel-title">长期经营资产分析</span><span class="panel-sub">平均净额 · 新增 · 转固 · 折旧</span></div>
+          <div class="panel-body" style="overflow-x:auto">
+            <table class="data-table">
+              <thead><tr><th>资产类型</th><th class="text-right">平均净额</th><th class="text-right">对比期间</th><th class="text-right">新增</th><th class="text-right">转固</th><th class="text-right">折旧</th><th class="text-right">处置</th><th class="text-right">当期净额</th></tr></thead>
+              <tbody id="asset-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel col-4">
+          <div class="panel-header"><span class="panel-title">12英寸生产机净额占比</span></div>
+          <div class="panel-body"><div class="chart-box sm" id="chart-ring-12"></div><p style="text-align:center;font-size:11px;color:var(--text-muted)">外环当期 · 内环对比期</p></div>
+        </div>
+        <div class="panel col-4">
+          <div class="panel-header"><span class="panel-title">在建工程新增占比</span></div>
+          <div class="panel-body"><div class="chart-box sm" id="chart-ring-cip"></div></div>
+        </div>
+        <div class="panel col-4">
+          <div class="panel-header"><span class="panel-title">长期经营资产结构</span></div>
+          <div class="panel-body"><div class="chart-box sm" id="chart-ring-asset"></div></div>
+        </div>
+
+        <div class="panel col-12" id="sec-inventory">
+          <div class="panel-header"><span class="panel-title">存货分析（表 + 双层圆环 · 与周转天数联动）</span></div>
+          <div class="panel-body">
+            <div class="panel-grid">
+              <div class="col-8">
+                <table class="data-table">
+                  <thead><tr><th>存货类型</th><th class="text-right">平均余额</th><th class="text-right">当期</th><th class="text-right">对比期</th><th class="text-right">差异</th><th class="text-right">差异%</th></tr></thead>
+                  <tbody id="inv-table-body"></tbody>
+                </table>
+              </div>
+              <div class="col-4"><div class="chart-box sm" id="chart-inv-ring"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel col-6" id="sec-equity">
+          <div class="panel-header"><span class="panel-title">所有者权益（部分填报 · 按月版本）</span></div>
+          <div class="panel-body" style="overflow-x:auto">
+            <table class="data-table">
+              <thead><tr><th>类型</th><th class="text-right">当期</th><th class="text-right">对比期</th><th>来源</th><th>操作</th></tr></thead>
+              <tbody id="equity-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="panel col-6">
+          <div class="panel-header"><span class="panel-title">负债及权益结构</span></div>
+          <div class="panel-body"><div class="chart-box sm" id="chart-equity-ring"></div></div>
+        </div>
+
+        <div class="panel col-6" id="sec-payable">
+          <div class="panel-header"><span class="panel-title">应付款项 · TOP5 供应商</span></div>
+          <div class="panel-body">
+            <table class="data-table">
+              <thead><tr><th>供应商</th><th class="text-right">余额(亿)</th><th class="text-right">占比</th></tr></thead>
+              <tbody id="payable-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="panel col-6">
+          <div class="panel-header"><span class="panel-title">合同负债 · TOP5 客户</span></div>
+          <div class="panel-body"><div class="chart-box sm" id="chart-contract-ring"></div></div>
+        </div>
+
+        <div class="panel col-12" id="sec-fund">
+          <div class="panel-header"><span class="panel-title">资金情况分析</span></div>
+          <div class="panel-body">
+            <div class="kpi-row" id="fund-kpis"></div>
+            <div class="chart-box sm" id="chart-fund-bar" style="margin-top:8px"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dupont-note">
+        <b>填报说明：</b>其他综合收益、少数股东权益变动等 3 项需手工填报；
+        点击存货行联动圆环高亮 · 树节点点击可展开下级 · 详见 <a href="dupont-table.html">108 项指标表</a>。
+      </div>
+    </main>
+  </div>
+
+  <nav class="anchor-nav">
+    <a href="#sec-asset">长期资产</a>
+    <a href="#sec-inventory">存货</a>
+    <a href="#sec-equity">权益</a>
+    <a href="#sec-payable">应付款项</a>
+    <a href="#sec-fund">资金</a>
+  </nav>
+
+  <script src="assets/js/echarts.min.js"></script>
+  <script src="assets/js/mock-data.js"></script>
+  <script src="assets/js/dupont-data.js"></script>
+  <script src="assets/js/dupont.js"></script>
+  <script src="assets/js/levels.js"></script>
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/charts.js"></script>
+  <script>
+    let dupontTreeChart;
+    boot(function () {
+      Cockpit.initNav('dupont', { sidebarPage: 'dupont-tree' });
+      Cockpit.renderFilterBar(document.getElementById('filter-bar'));
+
+      dupontTreeChart = Charts.tree(document.getElementById('chart-dupont-tree'), DupontData.treeFull);
+
+      document.getElementById('asset-table-body').innerHTML = DupontData.longTermAssets.map(r => `
+        <tr><td>${r.type}</td><td class="num">${Cockpit.fmt.num(r.avg)}</td><td class="num">${Cockpit.fmt.num(r.cmp)}</td>
+        <td class="num">${Cockpit.fmt.num(r.add)}</td><td class="num">${Cockpit.fmt.num(r.transfer)}</td>
+        <td class="num">${Cockpit.fmt.num(r.dep)}</td><td class="num">${Cockpit.fmt.num(r.disp)}</td><td class="num">${Cockpit.fmt.num(r.current)}</td></tr>`).join('');
+
+      document.getElementById('inv-table-body').innerHTML = DupontData.inventory.map(r => `
+        <tr class="clickable" data-inv="${r.type}"><td>${r.type}</td><td class="num">${Cockpit.fmt.num(r.avg)}</td>
+        <td class="num">${Cockpit.fmt.num(r.current)}</td><td class="num">${Cockpit.fmt.num(r.cmp)}</td>
+        <td class="num ${r.diff >= 0 ? 'up' : 'down'}">${r.diff >= 0 ? '+' : ''}${Cockpit.fmt.num(r.diff)}</td>
+        <td class="num ${r.pct >= 0 ? 'up' : 'down'}">${Cockpit.fmt.pct(r.pct)}</td></tr>`).join('');
+
+      document.getElementById('equity-table-body').innerHTML = DupontData.equityItems.map(r => `
+        <tr><td>${r.type}${r.src === '填报' ? '<span class="indicator-tag tag-manual">填报</span>' : ''}</td>
+        <td class="num">${Cockpit.fmt.num(r.current)}</td><td class="num">${Cockpit.fmt.num(r.cmp)}</td>
+        <td>${r.src}</td><td>${r.src === '填报' ? '<button class="panel-action" onclick="alert(\'打开填报\')">填报</button>' : '—'}</td></tr>`).join('');
+
+      document.getElementById('payable-table-body').innerHTML = DupontData.payablesTop.map(r => `
+        <tr><td>${r.name}</td><td class="num">${Cockpit.fmt.num(r.balance)}</td><td class="num">${Cockpit.fmt.num(r.ratio, 1)}%</td></tr>`).join('');
+
+      document.getElementById('fund-kpis').innerHTML = DupontData.fundKpis.map(k => `
+        <div class="kpi-card"><div class="kpi-label">${k.label}</div><div class="kpi-value">${k.value}<span class="kpi-unit">${k.unit}</span></div></div>`).join('');
+
+      Charts.nestedRing(document.getElementById('chart-ring-12'),
+        [{ name: '对比期', value: 42 }, { name: '其他', value: 58 }],
+        [{ name: '12寸', value: 48 }, { name: '8寸', value: 32 }, { name: '其他', value: 20 }]);
+      Charts.pie(document.getElementById('chart-ring-cip'),
+        [{ name: '生产机', value: 45 }, { name: '厂房', value: 30 }, { name: '其他', value: 25 }], { donut: true });
+      Charts.pie(document.getElementById('chart-ring-asset'),
+        [{ name: '固定', value: 65 }, { name: '在建', value: 25 }, { name: '无形', value: 10 }], { donut: true });
+      Charts.nestedRing(document.getElementById('chart-inv-ring'),
+        [{ name: '对比原材', value: 35 }, { name: '对比产成品', value: 65 }],
+        DupontData.inventory.map(r => ({ name: r.type, value: r.current })));
+      Charts.pie(document.getElementById('chart-equity-ring'),
+        [{ name: '净资产', value: 55 }, { name: '少数股东', value: 8 }, { name: '有息债务', value: 25 }, { name: '应付款项', value: 12 }], { donut: true });
+      Charts.pie(document.getElementById('chart-contract-ring'),
+        MockData.topCustomers.slice(0, 5).map(c => ({ name: c.name, value: c.value })), { donut: true });
+      Charts.bar(document.getElementById('chart-fund-bar'),
+        ['库存资金', '净债务', 'EBITDA', '有息债务'],
+        [{ name: '余额', data: [156.8, 42.5, 128.6, 285.6], color: '#005293' }], { yName: '亿元' });
+
+      document.querySelectorAll('#inv-table-body tr').forEach(tr => {
+        tr.addEventListener('click', () => {
+          document.querySelectorAll('#inv-table-body tr').forEach(r => r.classList.remove('selected'));
+          tr.classList.add('selected');
+          Cockpit.showStatus(`存货联动：${tr.querySelector('td').textContent}`);
+        });
+      });
+    });
+
+    function expandAll(exp) {
+      if (dupontTreeChart) dupontTreeChart.setOption({ series: [{ initialTreeDepth: exp ? 9 : 1 }] });
+    }
+  </script>
+</body>
+</html>

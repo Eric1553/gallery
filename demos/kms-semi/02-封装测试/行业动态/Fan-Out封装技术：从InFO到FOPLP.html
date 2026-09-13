@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fan-Out封装技术：从InFO到FOPLP — 半导体知识库</title>
+<meta name="description" content="# Fan-Out封装技术：从InFO到FOPLP  > Fan-Out（扇出型封装）是先进封装中"经济适用房"——成本远低于CoWoS/混合键合，但互连密度足以覆盖移动SoC、PMIC、射频前端等每年数百亿颗芯片的需求。它是台积电InFO和ASE FOCoS的核心战场，也是面板级封装（FOPLP）">
+<link rel="stylesheet" href="/kb/assets/style.css">
+</head>
+<body>
+<div class="top-accent"></div>
+<header class="page-header">
+  <a href="/kb/首页.html" class="home-link">🔬 半导体知识库</a>
+</header>
+<main class="container">
+<nav class="breadcrumb"><a href="/kb/首页.html">半导体知识库</a> <span class="sep">›</span> <a href="/kb//02-封装测试/index.html">02-封装测试</a> <span class="sep">›</span> <a href="/kb//02-封装测试/行业动态/index.html">行业动态</a></nav>
+<article class="note">
+<header class="note-header">
+  <h1>Fan-Out封装技术：从InFO到FOPLP</h1>
+  
+</header>
+<div class="note-body">
+<h1 id="fan-outinfofoplp">Fan-Out封装技术：从InFO到FOPLP</h1>
+<blockquote>
+<p>Fan-Out（扇出型封装）是先进封装中"经济适用房"——成本远低于CoWoS/混合键合，但互连密度足以覆盖移动SoC、PMIC、射频前端等每年数百亿颗芯片的需求。它是台积电InFO和ASE FOCoS的核心战场，也是面板级封装（FOPLP）将成本效率推向极致的试验田。</p>
+</blockquote>
+<hr />
+<h2 id="_1">📖 技术概述</h2>
+<p>Fan-Out封装的核心思想很简单：<strong>让I/O触点"溢出"芯片边界</strong>。</p>
+<p>传统WLP（Wafer-Level Package，晶圆级封装）是Fan-in结构——所有I/O焊点必须落在芯片面积之内。当芯片功能越来越复杂、I/O数量越来越多，Die面积却无法同步放大时，Fan-in的I/O密度就撞到了天花板。</p>
+<p>Fan-Out的解决方案：把芯片埋入模塑料（EMC），然后在模塑料表面铺设RDL（Redistribution Layer，重布线层），将I/O触点从芯片边界"扇出"到更大的面积。这样一来，I/O数量不再受芯片面积限制。</p>
+<div class="codehilite"><pre><span></span><code><span class="n">传统Fan</span><span class="o">-</span><span class="ow">in</span><span class="w"> </span><span class="n">WLP</span><span class="err">：</span><span class="w">         </span><span class="n">Fan</span><span class="o">-</span><span class="k">Out</span><span class="err">：</span>
+<span class="err">┌──────────┐</span><span class="w">              </span><span class="err">┌──────────────┐</span>
+<span class="err">│</span><span class="w">   </span><span class="n">Die</span><span class="w">    </span><span class="err">│</span><span class="w">              </span><span class="err">│</span><span class="w">    </span><span class="o">[</span><span class="n">Die</span><span class="o">]</span><span class="w">     </span><span class="err">│</span>
+<span class="err">│</span><span class="w"> </span><span class="n">I</span><span class="o">/</span><span class="n">O仅限</span><span class="w">  </span><span class="err">│</span><span class="w">              </span><span class="err">│</span><span class="w">  </span><span class="n">RDL扇出区</span><span class="w">   </span><span class="err">│</span>
+<span class="err">│</span><span class="w"> </span><span class="n">Die范围内</span><span class="w"> </span><span class="err">│</span><span class="w">              </span><span class="err">│</span><span class="w"> </span><span class="n">I</span><span class="o">/</span><span class="n">O超出Die</span><span class="w">   </span><span class="err">│</span>
+<span class="err">└──────────┘</span><span class="w">              </span><span class="err">└──────────────┘</span>
+</code></pre></div>
+
+<p><strong>核心技术价值</strong>：
+1. <strong>打破I/O密度瓶颈</strong>：同样的芯片面积，Fan-Out可提供3-5倍的I/O触点数量
+2. <strong>极致薄型化</strong>：无需基板（Substrate-less），总封装厚度可&lt;0.3mm，手机/穿戴式设备的关键需求
+3. <strong>成本优势</strong>：无需硅中介层（$3000+/片），相比CoWoS成本可低至1/5~1/10</p>
+<p><strong>在先进封装版图中的位置</strong>：如果混合键合是"摩天大楼"（1μm间距，$1000+单颗封装），CoWoS是"高层公寓"（35μm间距，$300+单颗），Fan-Out就是"经济适用房"（50-200μm间距，$5-30单颗）——但正是经济适用房撑起了每年数亿颗移动芯片的封装需求。</p>
+<hr />
+<h2 id="chip-first-vs-chip-last">🔬 技术原理：Chip-First vs Chip-Last</h2>
+<p>Fan-Out封装按芯片放置与RDL生成的顺序，分为两大工艺路线。</p>
+<h3 id="1-chip-first">1. Chip-First（先芯片）</h3>
+<p><strong>工艺序列</strong>：</p>
+<div class="codehilite"><pre><span></span><code>芯片贴装到临时载板 → 模塑（Molding）包裹芯片 → 去除载板
+→ 在芯片面+模塑料面上制作RDL → 植球 → 切割
+</code></pre></div>
+
+<ul>
+<li>芯片<strong>先</strong>被嵌入模塑料，RDL<strong>后</strong>制作在芯片+模塑料表面</li>
+<li>RDL与芯片Pad直接连接——无需μBump，路径最短，寄生参数最小</li>
+<li>挑战：芯片贴装的X/Y/θ精度必须极高（±2μm），因为RDL是后续制作的，无法根据贴装偏差做对准补偿</li>
+</ul>
+<p><strong>典型应用</strong>：
+- TSMC InFO（Integrated Fan-Out）：Chip-First面朝下（Face-Down）变体。芯片面朝下载体贴装，RDL生成后翻转——Apple A系列处理器自iPhone 7起已使用超过9年，累计出货数十亿颗
+- Deca M-Series：自适应图案化（Adaptive Patterning™）技术，通过光学扫描每颗Die的实际位置，实时调整RDL光刻图案以补偿贴装偏差——这是Chip-First路线上最大的工艺创新之一</p>
+<h3 id="2-chip-last">2. Chip-Last（后芯片）</h3>
+<p><strong>工艺序列</strong>：</p>
+<div class="codehilite"><pre><span></span><code>在临时载板上先制作RDL → 芯片通过μBump/铜柱倒装到RDL上
+→ 模塑填充底层 → 去除载板 → 背面制程 → 切割
+</code></pre></div>
+
+<ul>
+<li>RDL<strong>先</strong>制作完成，芯片<strong>后</strong>通过倒装（Flip-Chip）方式键合到RDL上</li>
+<li>优势：RDL可以使用与传统IC后端相同的精密工艺（细线宽/线距可达2/2μm），不受模塑料热稳定性限制；芯片贴装对准也更容易（RDL上的焊盘已有精确的位置基准）</li>
+<li>代价：需要μBump——引入了额外的互连层级和寄生参数</li>
+</ul>
+<p><strong>典型应用</strong>：
+- ASE FOCoS（Fan-Out Chip-on-Substrate）：Chip-Last + 基板的混合方案。先做高密度RDL（Fan-Out层），再将RDL+芯片子模组贴装到传统FC-BGA基板上——兼顾高密度互连和大面积I/O引出
+- SPIL（矽品）的Fan-Out方案：类似Chip-Last路径，服务联发科/高通的中高端移动SoC</p>
+<h3 id="_2">两种路线对比</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th style="text-align: center;">Chip-First</th>
+<th style="text-align: center;">Chip-Last</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RDL线宽/线距</td>
+<td style="text-align: center;">5/5 ~ 10/10 μm</td>
+<td style="text-align: center;"><strong>2/2 ~ 5/5 μm</strong>（RDL在先，可用IC级工艺）</td>
+</tr>
+<tr>
+<td>是否需要μBump</td>
+<td style="text-align: center;"><strong>否</strong>（RDL直连Pad）</td>
+<td style="text-align: center;">是（倒装键合）</td>
+</tr>
+<tr>
+<td>贴装精度要求</td>
+<td style="text-align: center;">极高（±2μm）</td>
+<td style="text-align: center;">中等（±10μm）</td>
+</tr>
+<tr>
+<td>寄生参数</td>
+<td style="text-align: center;"><strong>低</strong>（最短路径）</td>
+<td style="text-align: center;">中（μBump引入额外RC）</td>
+</tr>
+<tr>
+<td>多芯片集成</td>
+<td style="text-align: center;">困难（需精准多Die贴装）</td>
+<td style="text-align: center;"><strong>容易</strong>（RDL做好再装多芯片）</td>
+</tr>
+<tr>
+<td>成本</td>
+<td style="text-align: center;">中低</td>
+<td style="text-align: center;">中</td>
+</tr>
+<tr>
+<td>代表工艺</td>
+<td style="text-align: center;">TSMC InFO, Deca M-Series</td>
+<td style="text-align: center;">ASE FOCoS, SPIL方案</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>关键判断</strong>：Chip-First路线的极低寄生参数使其天然适合射频（RF）和电源管理（PMIC）芯片——信号路径短、不需要μBump，高频性能好。Chip-Last路线则更适合需要多芯片异构集成的场景——RDL先做好，多颗芯片再像"乐高"一样放上去。</p>
+</blockquote>
+<hr />
+<h2 id="_3">🏭 主要厂商与竞争格局</h2>
+<h3 id="fan-out">全球Fan-Out市场格局</h3>
+<table>
+<thead>
+<tr>
+<th>厂商</th>
+<th>国家/地区</th>
+<th>技术路线</th>
+<th>核心工艺</th>
+<th>关键客户</th>
+<th style="text-align: center;">2026年Fan-Out收入（估）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>TSMC（台积电）</strong></td>
+<td>台湾</td>
+<td>Chip-First</td>
+<td>InFO_PoP（AP封装）, InFO-oS（大芯片）</td>
+<td>Apple（独家iPhone AP）</td>
+<td style="text-align: center;">~$40亿</td>
+</tr>
+<tr>
+<td><strong>ASE（日月光）</strong></td>
+<td>台湾</td>
+<td>Chip-Last</td>
+<td>FOCoS（多Die）, FOCoS-Bridge（对标CoWoS-L）</td>
+<td>高通/联发科/AMD</td>
+<td style="text-align: center;">~$20亿</td>
+</tr>
+<tr>
+<td><strong>SPIL（矽品）</strong></td>
+<td>台湾</td>
+<td>Chip-Last</td>
+<td>Fan-Out PoP, 多Die Fan-Out</td>
+<td>联发科/高通/海思（受限前）</td>
+<td style="text-align: center;">~$8亿</td>
+</tr>
+<tr>
+<td><strong>Nepes</strong></td>
+<td>韩国</td>
+<td>Chip-First/Chip-Last</td>
+<td>面板级Fan-Out（FOPLP）先驱</td>
+<td>三星显示驱动/PMIC</td>
+<td style="text-align: center;">~$3亿</td>
+</tr>
+<tr>
+<td><strong>JCET（长电科技）</strong></td>
+<td>中国</td>
+<td>Chip-First</td>
+<td>绍兴基地聚焦Fan-Out，2025年底投产</td>
+<td>国内Fabless</td>
+<td style="text-align: center;">~$2亿（起步阶段）</td>
+</tr>
+<tr>
+<td><strong>Deca</strong></td>
+<td>美国/菲律宾</td>
+<td>Chip-First</td>
+<td>Adaptive Patterning™，日月光子公司</td>
+<td>ASE内部 + 外部客户</td>
+<td style="text-align: center;">~$1亿</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_4">竞争态势分析</h3>
+<p><strong>TSMC InFO的"Apple护城河"</strong>：InFO之所以成为Fan-Out代名词，根源在于Apple独家用量的锁定效应——每年约2亿颗iPhone AP全部使用InFO封装，这种海量单一产品的打磨，让TSMC在良率、成本和产能上都达到了竞争对手无法企及的水平。2026年，Apple仍是InFO产能的最大单一使用者（估计&gt;70%）。</p>
+<p><strong>ASE FOCoS的差异化</strong>：ASE不跟TSMC在纯Fan-Out上硬拼（InFO已太强），而是走"Fan-Out + Chiplet"路线。FOCoS的核心价值在于：用Fan-Out层实现Die-to-Die高密度互连（对标CoWoS的硅中介层功能），再通过传统FC-BGA基板引出I/O——性能接近CoWoS但成本显著更低。对于不需要CoWoS-S级别互连密度的芯片（如中端AI推理、网络交换芯片），FOCoS是比CoWoS更务实的方案。</p>
+<p><strong>FOPLP（面板级Fan-Out）的Cost-Down革命</strong>：传统FOWLP在300mm圆片上做，圆片边缘约15%的面积因无法利用被浪费。FOPLP改用510×515mm方形面板，面积利用率从~85%跃升至&gt;95%，单次产出提升3-5倍——这对成本敏感的PMIC/射频等芯片是颠覆性的。但FOPLP的设备生态（曝光机/电镀/刻蚀）仍未成熟，2026年仍处于导入期。</p>
+<hr />
+<h2 id="_5">📊 关键性能指标对比</h2>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th style="text-align: center;">Fan-Out (Chip-First)</th>
+<th style="text-align: center;">Fan-Out (Chip-Last)</th>
+<th style="text-align: center;">CoWoS-S</th>
+<th style="text-align: center;">混合键合</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>最小RDL L/S</td>
+<td style="text-align: center;">5/5 μm</td>
+<td style="text-align: center;">2/2 μm</td>
+<td style="text-align: center;">0.4/0.4 μm (Si Interposer)</td>
+<td style="text-align: center;">无RDL（直接键合）</td>
+</tr>
+<tr>
+<td>Die-to-Die Pitch</td>
+<td style="text-align: center;">100-200 μm</td>
+<td style="text-align: center;">40-100 μm</td>
+<td style="text-align: center;">35-55 μm</td>
+<td style="text-align: center;">&lt;10 μm</td>
+</tr>
+<tr>
+<td>封装厚度</td>
+<td style="text-align: center;">&lt;0.3 mm (无基板)</td>
+<td style="text-align: center;">0.5-1.0 mm</td>
+<td style="text-align: center;">1.5-2.5 mm</td>
+<td style="text-align: center;">&lt;0.5 mm</td>
+</tr>
+<tr>
+<td>单颗封装成本</td>
+<td style="text-align: center;">$2-10</td>
+<td style="text-align: center;">$5-20</td>
+<td style="text-align: center;">$200-500+</td>
+<td style="text-align: center;">$500-2000+</td>
+</tr>
+<tr>
+<td>多芯片集成</td>
+<td style="text-align: center;">困难</td>
+<td style="text-align: center;">中</td>
+<td style="text-align: center;">优</td>
+<td style="text-align: center;">优</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td style="text-align: center;">移动AP/PMIC/RF</td>
+<td style="text-align: center;">中端SoC/Chiplet</td>
+<td style="text-align: center;">AI GPU/HPC</td>
+<td style="text-align: center;">3D堆叠/HBM</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_6">🎯 帆软产品关联度分析</h2>
+<table>
+<thead>
+<tr>
+<th>产品线</th>
+<th style="text-align: center;">关联度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FineReport</td>
+<td style="text-align: center;">🟢</td>
+<td>Fan-Out产线的SPC控制图、RDL良率监控、Warpage热力图、多批次良率对比报表——与CoWoS场景类似但密度略低</td>
+</tr>
+<tr>
+<td>FineBI</td>
+<td style="text-align: center;">🟢</td>
+<td>FOWLP vs FOPLP成本对比分析、多产品线良率归因、面板级封装产线效率对比——管理层决策的关键数据支撑</td>
+</tr>
+<tr>
+<td>FDL数据底座</td>
+<td style="text-align: center;">🟢</td>
+<td>RDL线宽/线距量测数据（CD-SEM/Overlay）、模塑厚度/翘曲量测、Die贴装精度——多种量测设备数据统一管道</td>
+</tr>
+<tr>
+<td>简道云与AI Agent</td>
+<td style="text-align: center;">🟡</td>
+<td>简道云：Fan-Out载板/模具/临时键合膜等耗材的更换周期管理；AI Agent：RDL缺陷自动分类（SEM图像识别）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>关联度说明：🟢 = 有标准方案可直接切入；🟡 = 有场景但需定制；⚪ = 无明显场景</p>
+</blockquote>
+<hr />
+<h2 id="_7">🎤 售前场景</h2>
+<h3 id="1fan-outrdl">场景1：Fan-Out产线良率爬坡——RDL缺陷分析</h3>
+<p><strong>① 客户画像</strong>：长电科技绍兴基地（Fan-Out专线，2025年底投产）、ASE Fan-Out产线的工程部/良率提升团队。Fan-Out产线处于产能爬坡期，良率从60%→90%→95%的过程是最大利润释放期。</p>
+<p><strong>② 痛点</strong>：RDL（重布线层）是Fan-Out的"命门"——多层RDL的线宽/线距（L/S）偏差、Overlay偏移、电镀空洞等缺陷定位困难。Fan-Out的RDL是在模塑料表面制作的，而模塑料的表面粗糙度和热膨胀系数（CTE）与硅晶圆差异显著，导致CD Uniformity（线宽均匀性）天生差于IC后段。工程师需要将CD-SEM、Overlay量测、AOI光学检查三台设备的数据拼在一起来定位根因——目前靠手动拷贝Excel。</p>
+<p><strong>③ 帆软切入方案</strong>：FDL将CD-SEM（线宽/线距）、Overlay Metrology（套刻精度）、AOI（缺陷坐标）三路数据统一管道 → FineBI按Wafer Map坐标做Overlay叠加分析 → FineReport一键输出每日RDL良率热力图。</p>
+<p><strong>④ 参考话术</strong>："你们Fan-Out产线的RDL良率爬坡，是不是现在靠三台设备的数据人工拼？FDL把CD-SEM、Overlay、AOI数据串成一条管道——哪个Panel的哪个位置RDL线宽偏窄、跟Overlay偏移有没有相关性，FineBI三分钟给你答案。长电绍兴基地三年内Fan-Out产能翻两番，没有数据底座良率爬到95%就是撞大运。"</p>
+<hr />
+<h3 id="2foplpvs">场景2：FOPLP导入评估——面板级vs晶圆级成本对比</h3>
+<p><strong>① 客户画像</strong>：封测厂高层（CTO/VP工程），正在评估是否从FOWLP（晶圆级）升级到FOPLP（面板级）。投资决策涉及数千万元设备采购，需要可靠的ROI数据支撑。</p>
+<p><strong>② 痛点</strong>：FOPLP的理论成本优势（单次产出3-5倍）大家都知道，但引入面板级设备（510×515mm方形面板的曝光机/电镀槽/RDL设备）的CAPEX高昂，且产线良率在导入初期必然低于成熟的FOWLP。什么时候"面板级成本≤晶圆级成本"？这个Break-even点需要精确的产线数据建模——现在靠Excel敏感性分析，参数一变全表重算。</p>
+<p><strong>③ 帆软切入方案</strong>：FineBI构建FOWLP vs FOPLP的成本对比模型——输入变量（面板尺寸/设备折旧年限/良率爬坡曲线/芯片尺寸/UPH）→ 动态输出Break-even图表，帮管理层做数据驱动的投资决策。</p>
+<p><strong>④ 参考话术</strong>："你们在纠结上FOPLP还是扩FOWLP产能——FineBI把两条路线的成本模型放一起实时比较：良率爬到85%时FOPLP成本低于FOWLP？还是90%？现在的良率曲线数据来自你们的FOWLP产线历史数据，FineBI直接拉进来建模——不用靠Excel一遍遍手动算。"</p>
+<hr />
+<h3 id="3fan-out">场景3：Fan-Out多产品线混流排产优化</h3>
+<p><strong>① 客户画像</strong>：ASE/SPIL等Fan-Out产能服务多家客户的工厂运营团队。Fan-Out产线同时跑PMIC（小Die、低成本）、移动SoC（大Die、高价值）、RF前端（中Die、高频要求）等多种产品，换线频率高。</p>
+<p><strong>② 痛点</strong>：Fan-Out的模塑和RDL工艺对芯片尺寸、Die厚度、EMC材料都有定制要求——不同产品换线意味着调整模塑参数、更换载板、重新校准RDL光刻对准。换线一次1-2小时，一条产线每天换线2次就是几万元的机会成本。如何排产能最小化换线次数同时满足客户交期？目前靠计划员Excel手动排——单因素排序，不考虑全局最优。</p>
+<p><strong>③ 帆软切入方案</strong>：FineBI + FDL整合ERP工单数据、MES产线实时状态、历史换线时间数据 → FineBI多维排产看板（按产品线/交期优先级/换线时间做多约束排产可视化，虽然不是APS级优化但比Excel强数个量级）。</p>
+<p><strong>④ 参考话术</strong>："你们的Fan-Out产线上同时跑七八款产品，计划员调一次排产要半天——FineBI把工单、产线状态、换线时间全拉通，换一个产品订单优先级，排产建议自动更新。你们一条线一天少换一次线，一年就是几百万。"</p>
+<hr />
+<h2 id="_8">🔗 延伸阅读</h2>
+<ul>
+<li><a href="/kb/02-封装测试/行业动态/先进封装技术深度：CoWoS、3D堆叠与Chiplet的技术路线与产业格局">先进封装技术深度：CoWoS、3D堆叠与Chiplet的技术路线与产业格局</a> — Fan-Out在先进封装版图中的定位，含与CoWoS的成本对比</li>
+<li><a href="/kb/02-封装测试/行业动态/封装基板与先进封装设备：从ABF到混合键合">封装基板与先进封装设备：从ABF到混合键合</a> — RDL光刻/电镀设备生态</li>
+<li><a href="/kb/02-封装测试/行业动态/面板级封装(PLP)与玻璃基板：下一代封装的载体革命">面板级封装(PLP)与玻璃基板：下一代封装的载体革命</a> — FOPLP面板级封装深度展开</li>
+<li><a href="/kb/02-封装测试/行业动态/SiP系统级封装：异构集成的产品化路径">SiP系统级封装：异构集成的产品化路径</a> — Fan-Out是SiP的核心载体技术之一</li>
+<li><span class="broken-link" title="链接目标不存在">AMD与台积电先进封装技术路线与合作模式详解</span> — InFO在Apple生态中的战略地位</li>
+</ul>
+<hr />
+<h2 id="_9">📝 关键数据备忘</h2>
+<ul>
+<li>Fan-Out封装全球市场规模2026年约<strong>55亿美元</strong>（Yole），FOWLP（晶圆级）仍占主体（~80%），FOPLP（面板级）快速导入</li>
+<li>TSMC InFO产能的70%+用于Apple iPhone AP——Apple的需求波动直接影响TSMC Fan-Out产线利用率</li>
+<li>FOPLP面板级导入的临界点：单一芯片年需求量&gt;5亿颗（如特定规格PMIC），才有可能摊薄整条面板级产线的CAPEX投资</li>
+<li>中国在Fan-Out设备（面板级光刻机/电镀/模塑）上几乎完全依赖日韩欧美进口——设备国产化率&lt;5%</li>
+<li>Fan-Out的RDL工艺与传统IC后道（BEOL）的设备重叠率约60%——这是封测厂和设备商进入Fan-Out市场的技术基础</li>
+<li>单颗Fan-Out封装的测试成本占封装总成本的15-25%（取决于芯片复杂度和Multi-Site测试效率）——测试优化是Fan-Out降本的关键杠杆点</li>
+</ul>
+<hr />
+<p><em>创建于 2026-07-13 · 徐文浩 (Lorin) · 帆软上海售前</em></p>
+</div>
+</article>
+<footer class="note-footer">
+  <a href="/kb/02-封装测试/行业动态/index.html">← 返回目录</a>
+</footer>
+</main>
+</body>
+</html>

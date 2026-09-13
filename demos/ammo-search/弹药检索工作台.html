@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>弹药检索工作台</title>
+  <link rel="stylesheet" href="工作台工程项目/assets/global/css/workbench.css" />
+</head>
+<body>
+  <canvas id="bgFx"></canvas>
+  <div class="aurora"></div>
+
+  <div class="layout">
+    <aside class="panel left">
+      <div>
+        <h1>弹药检索工作台</h1>
+        <div class="desc">工程化目录版工作台：主页负责导航与嵌入切换，子页面按职责独立演进，素材按页面分目录管理。</div>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi"><div class="k">今日查询</div><div class="v">28</div></div>
+        <div class="kpi"><div class="k">待归档完善</div><div class="v">6</div></div>
+        <div class="kpi"><div class="k">复用率</div><div class="v">63%</div></div>
+        <div class="kpi"><div class="k">发布检查通过</div><div class="v">91%</div></div>
+      </div>
+
+      <nav class="nav" id="navList">
+        <button class="nav-btn active" data-src="工作台工程项目/pages/search/index.html" data-name="检索编排中心">
+          <div class="t">检索编排中心</div><div class="s">统一输入、策略过滤、弹药包生成入口</div>
+        </button>
+        <button class="nav-btn" data-src="工作台工程项目/pages/case/index.html" data-name="案例解析实验室">
+          <div class="t">案例解析实验室</div><div class="s">客户场景拆解、打法匹配、边界提示</div>
+        </button>
+        <button class="nav-btn" data-src="工作台工程项目/pages/material/index.html" data-name="材料推荐工坊">
+          <div class="t">材料推荐工坊</div><div class="s">P1-P3推荐、替代关系、引用风险</div>
+        </button>
+        <button class="nav-btn" data-src="工作台工程项目/pages/action/index.html" data-name="动作引导台">
+          <div class="t">动作引导台</div><div class="s">会前/会中/会后动作分派与节奏检查</div>
+        </button>
+        <button class="nav-btn" data-src="工作台工程项目/pages/governance/index.html" data-name="发布检查与运营看板">
+          <div class="t">发布检查与运营看板</div><div class="s">版本治理、审核记录、归档与同步节奏</div>
+        </button>
+      </nav>
+
+      <div class="note">Tab 切换使用 iframe 嵌入，后续新增职责页只需新建页面目录并追加一条导航。</div>
+    </aside>
+
+    <main class="panel right">
+      <div class="topbar">
+        <div class="crumb">当前模块：<strong id="moduleName">检索编排中心</strong></div>
+        <div class="badge">分层目录 + 嵌入切换</div>
+      </div>
+      <div class="frame-wrap">
+        <iframe id="moduleFrame" src="工作台工程项目/pages/search/index.html" title="弹药子页面工作区"></iframe>
+      </div>
+    </main>
+  </div>
+
+  <script src="工作台工程项目/assets/global/js/bg-fx.js"></script>
+  <script src="工作台工程项目/assets/global/js/workbench.js"></script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>D-09 送样管理与转化追踪 · 唯捷创芯</title>
+<link rel="stylesheet" href="../assets/style.css" />
+<script src="../assets/echarts.min.js"></script>
+</head>
+<body>
+<div id="content">
+
+  <div class="grid r-23" style="margin-bottom:4px">
+    <div class="card"><div class="card-b" style="padding:12px 16px">
+      <div class="flow">
+        <div class="step"><span class="sn">1</span>总览</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">2</span>及时率</div><span class="arrow">→</span>
+        <div class="step"><span class="sn">3</span>转化</div>
+      </div>
+    </div></div>
+    <div class="card"><div class="card-b" style="padding:12px 16px">
+      <div class="meta-strip">
+        <span class="ms">数据源 <b>销售易 · 预计/物流时间</b></span>
+        <span class="ms">终端占比 <b>本期不做</b></span>
+        <span class="ms">转化漏斗 <b>暂不考虑</b></span>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="grid g4" id="kpi"></div>
+
+  <div class="section-head"><span class="bar"></span><h2>送样总览 · 量产 / 新品 / PCN</h2>
+    <span class="desc">送样总量分类统计与趋势</span><span class="line"></span></div>
+  <div class="grid g3">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>送样类型分布</div></div>
+      <div class="card-b"><div id="c1" class="chart" style="height:230px"></div></div>
+    </div>
+    <div class="card span2">
+      <div class="card-h"><div class="ct"><span class="ci"></span>送样总量月度趋势（量产/新品/PCN）</div></div>
+      <div class="card-b"><div id="c2" class="chart" style="height:230px"></div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="bar"></span><h2>送样及时率与个人转化</h2>
+    <span class="desc">接收需求→送样完成；销售个人送样及转化到订单</span><span class="line"></span></div>
+  <div class="grid g2">
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>送样及时率 / 平均延迟（按大类）</div></div>
+      <div class="card-b"><div id="c3" class="chart" style="height:250px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="ct"><span class="ci"></span>销售个人送样与转化</div></div>
+      <div class="card-b" style="padding:0"><div class="tbl-wrap"><table class="tbl" id="tbl"></table></div></div>
+    </div>
+  </div>
+
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+renderLayout("d09",{chapter:"第五章 · 促样品转化",
+ sub:"面向销售及研发：跟踪送样总量、及时率、平均延迟与转化率（终端占比与转化漏斗本期不做）。",
+ batchTags:'<span class="tag tag-orange" style="margin-left:8px">二期 P2</span>'});
+
+const kpi=[
+ {t:"送样总量",v:"1,286",u:"次",f:'<span class="trend-up">▲11.2%</span>',c:"",sc:"#2468f2",sp:[180,190,200,210,215,220,226]},
+ {t:"送样及时率",v:"89.4",u:"%",f:'<span class="trend-up">▲2.6pct</span>',c:"k-green",sc:"#25a36c",sp:[82,84,85,86,87,88,89.4]},
+ {t:"平均延迟",v:"2.8",u:"天",f:'<span class="lbl">预计 vs 物流</span>',c:"k-gold",sc:"#e0a106",sp:[2,2.2,2.4,2.5,2.6,2.7,2.8]},
+ {t:"转化率",v:"32.6",u:"%",f:'<span class="trend-up">▲3.1pct</span>',c:"k-cyan",sc:"#16b8c8",sp:[26,27,28,29,30,31,32.6]},
+];
+document.getElementById("kpi").innerHTML=kpi.map((k,i)=>`
+ <div class="kpi ${k.c}"><div class="kt"><span class="dot" style="background:${k.sc}"></span>${k.t}</div>
+ <div class="kv">${k.v}<small>${k.u}</small></div><div class="kf">${k.f}</div><div class="spark" id="s${i}"></div></div>`).join("");
+kpi.forEach((k,i)=>spark("s"+i,k.sp,k.sc));
+
+mk("c1",{tooltip:{trigger:"item",formatter:"{b}<br/>{c} 次 ({d}%)"},legend:legend({bottom:0,icon:"circle"}),
+ series:[{type:"pie",radius:["46%","72%"],center:["50%","44%"],itemStyle:{borderColor:"#fff",borderWidth:2,borderRadius:4},
+  label:{show:true,formatter:"{b}\n{d}%",fontSize:11},
+  data:[{value:620,name:"量产"},{value:491,name:"新品"},{value:175,name:"PCN"}]}]});
+
+const M=["1月","2月","3月","4月","5月","6月"];
+mk("c2",{tooltip:tip(),legend:legend({data:["量产","新品","PCN"]}),grid:baseGrid({top:30}),
+ xAxis:catAxis(M),yAxis:valAxis({name:"次"}),
+ series:[
+  {name:"量产",type:"bar",stack:"a",barWidth:24,itemStyle:{color:"#2468f2"},data:[95,100,105,102,108,110]},
+  {name:"新品",type:"bar",stack:"a",barWidth:24,itemStyle:{color:"#16b8c8"},data:[72,78,80,82,88,91]},
+  {name:"PCN",type:"bar",stack:"a",barWidth:24,itemStyle:{color:"#7a6ff0",borderRadius:[4,4,0,0]},data:[26,28,30,29,31,31]},
+ ]});
+
+mk("c3",{tooltip:tip(),legend:legend({data:["及时率","平均延迟"]}),grid:baseGrid({top:30,right:46}),
+ xAxis:catAxis(["消费电子","工业控制","汽车电子","通信","其他"]),
+ yAxis:[valAxis({name:"%",max:100,min:70}),valAxis({name:"天",splitLine:{show:false}})],
+ series:[
+  {name:"及时率",type:"bar",barWidth:22,itemStyle:{borderRadius:[4,4,0,0],color:gradient("#5bd0a6","#25a36c")},data:[92,88,85,90,87]},
+  {name:"平均延迟",type:"line",yAxisIndex:1,smooth:true,symbol:"circle",symbolSize:6,lineStyle:{width:2.5,color:"#e0a106"},itemStyle:{color:"#e0a106"},data:[2.1,3.0,3.6,2.4,2.9]},
+ ]});
+
+const rows=[
+ ["张伟","华东一组","186","68","36.6%"],
+ ["李娜","华南一组","152","52","34.2%"],
+ ["王强","华北一组","138","40","29.0%"],
+ ["陈静","西南一组","96","34","35.4%"],
+ ["赵敏","海外一组","78","22","28.2%"],
+];
+const head=["销售","销售组","送样次数","转化订单","转化率"];
+document.getElementById("tbl").innerHTML=
+ "<thead><tr>"+head.map((h,i)=>`<th class="${i>=2?'num':''}">${h}</th>`).join("")+"</tr></thead><tbody>"+
+ rows.map(r=>"<tr>"+r.map((c,i)=>`<td class="${i>=2?'num':''} ${i===0?'strong':''}">${i===4?'<span class=trend-up>'+c+'</span>':c}</td>`).join("")+"</tr>").join("")+"</tbody>";
+</script>
+</body>
+</html>

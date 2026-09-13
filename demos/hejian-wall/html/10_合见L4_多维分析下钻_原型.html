@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>合见 · 多维分析与下钻（L4）原型</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { background:#eef3f9; }
+  body { font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif; color:#23314c; -webkit-font-smoothing:antialiased; }
+  .stage { width:1600px; height:912px; position:relative; background:linear-gradient(165deg,#ffffff,#eef4fb); }
+  .ribbon { position:absolute; right:0; top:0; background:#e2574c; color:#fff; font-size:12px; font-weight:700; padding:5px 16px; border-bottom-left-radius:10px; z-index:3; }
+  .top { background:linear-gradient(135deg,#5a4b9e,#7e6cc4); color:#fff; padding:14px 28px; display:flex; justify-content:space-between; align-items:center; }
+  .top h1 { font-size:21px; font-weight:800; letter-spacing:1px; }
+  .top h1 .en { font-size:12px; opacity:.85; font-weight:600; margin-left:8px; }
+  .top .meta { font-size:12.5px; opacity:.92; }
+  .cfg { display:flex; gap:18px; padding:11px 28px; background:#fff; border-bottom:1px solid #e3ebf4; align-items:center; flex-wrap:wrap; }
+  .cfg .grp { display:flex; align-items:center; gap:7px; }
+  .cfg .gl { font-size:11px; color:#8a93a6; font-weight:700; }
+  .chip { font-size:12px; font-weight:600; padding:4px 11px; border-radius:14px; background:#f1f2f6; color:#5a6477; border:1px solid #dde2ea; }
+  .chip.on { background:#efeafc; color:#5a4b9e; border-color:#c9bdf0; }
+  .crumb { margin-left:auto; font-size:12.5px; color:#5a6477; }
+  .crumb b { color:#5a4b9e; background:#efeafc; padding:2px 9px; border-radius:5px; }
+  .body { padding:14px 28px; }
+  .grid2 { display:grid; grid-template-columns:1.25fr 1fr; gap:14px; margin-bottom:14px; }
+  .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:14px; }
+  .panel { background:#fff; border:1px solid #e4ebf4; border-radius:11px; padding:12px 14px 8px; box-shadow:0 3px 10px rgba(40,70,120,.05); }
+  .panel .ph { font-size:13.5px; font-weight:800; color:#1c2c4a; display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  .panel .ph .sub { font-size:10.5px; color:#9aa3b5; font-weight:600; }
+  .chart { width:100%; height:200px; }
+  table.pv { width:100%; border-collapse:collapse; }
+  table.pv th { font-size:11px; color:#5a6477; text-align:right; padding:8px 10px; background:#f6f4fc; border-bottom:2px solid #e7e2f4; font-weight:700; }
+  table.pv th:first-child { text-align:left; }
+  table.pv td { font-size:12.5px; color:#3a4660; padding:8px 10px; border-bottom:1px solid #f1f4f9; text-align:right; }
+  table.pv td:first-child { text-align:left; font-weight:700; color:#1c2c4a; }
+  table.pv tr.sum td { background:#faf9fe; font-weight:800; color:#5a4b9e; border-top:2px solid #e7e2f4; }
+  .dl { color:#7e6cc4; font-weight:800; cursor:pointer; }
+  .bad { color:#c0392b; font-weight:700; } .good { color:#1c6b40; font-weight:700; }
+  .note { margin-top:2px; background:linear-gradient(90deg,#f3f0fc,#f9f8fd); border:1px dashed #c9bdf0; border-left:4px solid #7e6cc4; border-radius:8px; padding:9px 16px; font-size:12.5px; color:#3a4660; line-height:1.5; }
+  .note b { color:#5a4b9e; }
+</style>
+  <link rel="stylesheet" href="nav.css">
+</head>
+<body data-page="10">
+<div class="proto-app">
+  <aside id="proto-nav" class="proto-nav"></aside>
+  <div class="proto-main">
+<div class="stage">
+  <div class="ribbon">原型设计稿</div>
+  <div class="top">
+    <h1>合见多维分析与下钻<span class="en">Multi-dimension Analysis &amp; Drill-down · L4 自助分析</span></h1>
+    <div class="meta">维度自由组合 · 逐级下钻 · 示意数据</div>
+  </div>
+  <div class="cfg">
+    <div class="grp"><span class="gl">分析维度</span><span class="chip on">区域</span><span class="chip on">行业</span><span class="chip">客户</span><span class="chip">产品</span><span class="chip">订单类型</span></div>
+    <div class="grp"><span class="gl">分析指标</span><span class="chip on">销售额</span><span class="chip on">满足率</span><span class="chip on">借转销率</span><span class="chip">缺货率</span><span class="chip">库存周转</span></div>
+    <div class="crumb">下钻路径：<b>全国</b> › <b>华东</b> › <b>数据中心</b></div>
+  </div>
+  <div class="body">
+    <div class="grid2">
+      <div class="panel"><div class="ph">交叉透视表（行业 × 指标）<span class="sub">点击行可继续下钻</span></div>
+        <table class="pv">
+          <thead><tr><th>行业</th><th>销售额(万)</th><th>满足率</th><th>缺货率</th><th>借转销率</th><th>下钻</th></tr></thead>
+          <tbody>
+            <tr><td>数据中心</td><td>4,280</td><td class="bad">78%</td><td class="bad">22%</td><td>61%</td><td><span class="dl">▸ 客户</span></td></tr>
+            <tr><td>HPC</td><td>3,160</td><td>90%</td><td>10%</td><td class="good">66%</td><td><span class="dl">▸ 客户</span></td></tr>
+            <tr><td>ADAS</td><td>2,140</td><td class="bad">84%</td><td>16%</td><td>52%</td><td><span class="dl">▸ 客户</span></td></tr>
+            <tr><td>5G通信</td><td>1,520</td><td>92%</td><td>8%</td><td>48%</td><td><span class="dl">▸ 客户</span></td></tr>
+            <tr><td>消费电子</td><td>980</td><td class="good">95%</td><td>5%</td><td>40%</td><td><span class="dl">▸ 客户</span></td></tr>
+            <tr class="sum"><td>合计 / 平均</td><td>12,080</td><td>90.3%</td><td>9.7%</td><td>58.6%</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel"><div class="ph">行业矩阵（满足率 × 借转销率，气泡=销售额）<span class="sub">定位问题象限</span></div><div class="chart" id="e1" style="height:236px;"></div></div>
+    </div>
+    <div class="grid3">
+      <div class="panel"><div class="ph">区域下钻（销售额 / 满足率）<span class="sub">区域</span></div><div class="chart" id="e2"></div></div>
+      <div class="panel"><div class="ph">产品下钻（借转销率）<span class="sub">产品</span></div><div class="chart" id="e3"></div></div>
+      <div class="panel"><div class="ph">选定维度月度趋势<span class="sub">数据中心·华东</span></div><div class="chart" id="e4"></div></div>
+    </div>
+    <div class="note"><b>分析思路：</b>L4 自助分析层——<b>维度（区域/行业/客户/产品）× 指标（销售额/满足率/借转销率…）自由交叉</b>，沿「全国 → 区域 → 行业 → 客户/订单」<b>逐级下钻</b>，用矩阵气泡快速定位「高销售额却低满足/低转化」的问题象限，最终穿透至明细清单与单笔卡片。</div>
+  </div>
+</div>
+<script>
+  var BLUE='#3f7fc4',GREEN='#2e8b57',ORANGE='#e8855a',RED='#e2574c',PURPLE='#7e6cc4',CYAN='#2aa3b8';
+  var M=['1月','2月','3月','4月','5月','6月'];
+  function init(id,opt){echarts.init(document.getElementById(id)).setOption(opt);}
+  init('e1',{animation:false,grid:{left:52,right:24,top:18,bottom:40},tooltip:{},xAxis:{name:'满足率',nameLocation:'middle',nameGap:24,nameTextStyle:{fontSize:10,color:'#8a93a6'},min:70,max:100,splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:9,color:'#8a93a6',formatter:'{value}%'}},yAxis:{name:'借转销率',nameTextStyle:{fontSize:10,color:'#8a93a6'},min:30,max:75,splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:9,color:'#8a93a6',formatter:'{value}%'}},series:[{type:'scatter',symbolSize:function(d){return Math.sqrt(d[2])/2.2;},data:[[78,61,4280],[90,66,3160],[84,52,2140],[92,48,1520],[95,40,980]],itemStyle:{color:PURPLE,opacity:.7},label:{show:true,fontSize:10,color:'#5a4b9e',formatter:function(p){return ['数据中心','HPC','ADAS','5G','消费'][p.dataIndex];},position:'right'}}]});
+  init('e2',{animation:false,legend:{top:0,itemWidth:10,itemHeight:10,textStyle:{fontSize:10,color:'#6b7790'},data:['销售额','满足率']},grid:{left:46,right:42,top:26,bottom:20},xAxis:{type:'category',data:['华东','华北','华南'],axisLabel:{fontSize:10,color:'#8a93a6'}},yAxis:[{type:'value',splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:9,color:'#8a93a6'}},{type:'value',max:100,splitLine:{show:false},axisLabel:{fontSize:9,color:'#8a93a6',formatter:'{value}%'}}],series:[{name:'销售额',type:'bar',data:[6800,3200,2080],barWidth:30,itemStyle:{color:PURPLE,borderRadius:[4,4,0,0]}},{name:'满足率',type:'line',yAxisIndex:1,data:[88,92,90],smooth:true,itemStyle:{color:GREEN},lineStyle:{width:2.5}}]});
+  init('e3',{animation:false,grid:{left:54,right:24,top:14,bottom:20},xAxis:{type:'category',data:['UVHP','UVHS','UV APS','子卡','模组'],axisLabel:{fontSize:10,color:'#8a93a6'}},yAxis:{type:'value',max:80,splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:9,color:'#8a93a6',formatter:'{value}%'}},series:[{type:'bar',data:[66,62,55,48,40],barWidth:26,itemStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'#a99be0'},{offset:1,color:PURPLE}]),borderRadius:[5,5,0,0]},label:{show:true,position:'top',fontSize:10,color:'#5a4b9e',formatter:'{c}%'}}]});
+  init('e4',{animation:false,legend:{top:0,itemWidth:10,itemHeight:10,textStyle:{fontSize:10,color:'#6b7790'},data:['销售额','缺货率']},grid:{left:46,right:42,top:26,bottom:20},xAxis:{type:'category',data:M,axisLabel:{fontSize:10,color:'#8a93a6'}},yAxis:[{type:'value',splitLine:{lineStyle:{color:'#eef2f8'}},axisLabel:{fontSize:9,color:'#8a93a6'}},{type:'value',max:40,splitLine:{show:false},axisLabel:{fontSize:9,color:'#8a93a6',formatter:'{value}%'}}],series:[{name:'销售额',type:'bar',data:[620,680,700,720,760,800],barWidth:16,itemStyle:{color:'#b9aee8',borderRadius:[3,3,0,0]}},{name:'缺货率',type:'line',yAxisIndex:1,data:[18,20,19,24,22,22],smooth:true,itemStyle:{color:RED},lineStyle:{width:2.5}}]});
+</script>
+  </div>
+</div>
+<script src="nav.js"></script>
+</body>
+</html>

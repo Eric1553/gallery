@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>成本专题分析 | 财经驾驶舱</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="assets/js/echarts.min.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <div class="logo-area">
+      <div class="logo-mark">SMIC</div>
+      <div class="logo-text"><h1>财经驾驶舱</h1><span>成本 · L2 经营成效</span></div>
+    </div>
+    <nav class="header-nav">
+      <a href="index.html" data-page="overview">总览</a>
+      <a href="revenue.html" data-page="revenue">收入专题</a>
+      <a href="cost.html" data-page="cost" class="active">成本专题</a>
+      <a href="profit.html" data-page="profit">盈利效率</a>
+      <a href="dupont-site.html" data-page="dupont">杜邦分析</a>
+    </nav>
+    <div class="header-meta"><span class="badge-proto">HTML 原型</span></div>
+  </header>
+
+  <div class="app-body">
+    <aside class="sidebar"></aside>
+
+    <main class="main-content">
+      <div class="page-toolbar">
+        <div class="toolbar-head">
+          <div class="page-title">成本管控分析<span class="level-tag">L2 经营成效</span></div>
+          <div class="page-desc">集团/单体口径 · 制造费用 LV5 / 折旧 LV4 下钻 · 趋势/预测切换 · 甲方提供处理后数据</div>
+        </div>
+        <div class="toolbar-controls">
+          <div class="tab-bar" id="main-tabs">
+            <button class="tab-btn active" data-tab="panel-total">总成本分析</button>
+            <button class="tab-btn" data-tab="panel-layer">总成本 / Layer 分析</button>
+          </div>
+          <div class="toolbar-divider"></div>
+          <div class="seg-group" data-tab-group="period">
+            <span class="seg-label">周期</span>
+            <button class="sub-tab-btn active" data-value="month">月度</button>
+            <button class="sub-tab-btn" data-value="quarter">季度</button>
+          </div>
+          <div class="seg-group" data-tab-group="scope">
+            <span class="seg-label">口径</span>
+            <button class="sub-tab-btn active" data-value="group">集团</button>
+            <button class="sub-tab-btn" data-value="single">单体</button>
+          </div>
+        </div>
+        <div class="filter-bar" id="filter-bar"></div>
+      </div>
+
+      <div data-panel="panel-total">
+        <div class="kpi-row" id="kpi-cost"></div>
+
+        <div class="breadcrumb-drill" id="cost-drill">
+          下钻路径：<span onclick="resetDrill()">制造费用</span> › <strong id="drill-level">LV1 汇总</strong>
+          <button class="panel-action" style="margin-left:12px" onclick="drillDown()">下钻 +</button>
+          <button class="panel-action" onclick="resetDrill()">返回顶层</button>
+        </div>
+
+        <div class="panel-grid">
+          <div class="panel col-5">
+            <div class="panel-header"><span class="panel-title">制造费用分组织（内层 BU · 外层 FAB）</span></div>
+            <div class="panel-body">
+              <p id="org-drill-label" style="font-size:11px;color:var(--text-muted);margin-bottom:8px">悬停外层查看 FAB · 点击联动下方明细</p>
+              <div class="chart-box" id="chart-org-ring"></div>
+            </div>
+          </div>
+          <div class="panel col-7">
+            <div class="panel-header"><span class="panel-title">制造费用结构（折旧 / 先进制造 · 可下钻 LV5）</span></div>
+            <div class="panel-body"><div class="chart-box" id="chart-cost-struct"></div></div>
+          </div>
+          <div class="panel col-12">
+            <div class="panel-header"><span class="panel-title">制造费用明细表（近 12 月按月展开 · 树形层级）</span></div>
+            <div class="panel-body" style="overflow-x:auto">
+              <table class="data-table table-fixed" id="cost-detail-table">
+                <thead><tr><th>成本项</th><th class="num-int">层级</th><th class="text-right col-num">02月</th><th class="text-right col-num">03月</th><th class="text-right col-num">04月</th><th class="text-right col-num">05月</th><th class="text-right col-num">06月</th><th class="text-right col-num">07月</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="panel col-6">
+            <div class="panel-header"><span class="panel-title">现金制造费用占销售收入比重（前 12 月）</span></div>
+            <div class="panel-body"><div class="chart-box" id="chart-cost-ratio"></div></div>
+          </div>
+          <div class="panel col-6">
+            <div class="panel-header">
+              <span class="panel-title">制造费用趋势（趋势 / 预测切换）</span>
+              <div class="panel-actions" data-toggle-group data-chart="chart-cost-trend">
+                <button class="sub-tab-btn active" data-mode="trend">趋势分析</button>
+                <button class="sub-tab-btn" data-mode="forecast">预测分析</button>
+              </div>
+            </div>
+            <div class="panel-body"><div class="chart-box" id="chart-cost-trend"></div></div>
+          </div>
+          <div class="panel col-12">
+            <div class="panel-header">
+              <span class="panel-title">制造费用趋势分组织（多 FAB 分系列 · 结束月后预测虚线）</span>
+            </div>
+            <div class="panel-body"><div class="chart-box lg" id="chart-cost-by-org"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div data-panel="panel-layer" style="display:none">
+        <div class="kpi-row" id="kpi-layer"></div>
+        <div class="panel-grid">
+          <div class="panel col-12">
+            <div class="panel-header"><span class="panel-title">单层现金成本趋势 · 等效光刻层数</span></div>
+            <div class="panel-body"><div class="chart-box lg" id="chart-layer-trend"></div></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="assets/js/mock-data.js"></script>
+  <script src="assets/js/levels.js"></script>
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/charts.js"></script>
+  <script>
+    const orgAssign = ['SMIC', 'SMIC', 'SMIC-N', 'SMIC-N', 'SMIC-S', 'Others'];
+    let drillLv = 1;
+    let selectedOrg = '';
+
+    function renderCostDetailTable() {
+      const tbody = document.querySelector('#cost-detail-table tbody');
+      tbody.innerHTML = MockData.costStructure.map((c, i) => `
+        <tr data-org="${orgAssign[i % orgAssign.length]}" data-category="${c.name}">
+          <td>${'　'.repeat(c.level - 1)}${c.level > 1 ? '└ ' : ''}${c.name}</td>
+          <td class="num-int">LV${c.level}</td>
+          <td class="num">${Cockpit.fmt.num(c.value * 0.92)}</td>
+          <td class="num">${Cockpit.fmt.num(c.value * 0.95)}</td>
+          <td class="num">${Cockpit.fmt.num(c.value * 0.98)}</td>
+          <td class="num">${Cockpit.fmt.num(c.value * 1.01)}</td>
+          <td class="num">${Cockpit.fmt.num(c.value * 0.99)}</td>
+          <td class="num">${Cockpit.fmt.num(c.value)}</td>
+        </tr>
+      `).join('');
+      if (selectedOrg) Cockpit.filterTableRows('cost-detail-table', 'org', selectedOrg);
+    }
+
+    function renderCostTrend(mode) {
+      if (mode === 'forecast') {
+        Charts.comboTrend(document.getElementById('chart-cost-trend'), MockData.months.concat(['2026-01', '2026-02']), 9);
+      } else {
+        Charts.line(document.getElementById('chart-cost-trend'), MockData.months.slice(-8), [
+          { name: '实际', data: MockData.trendActual.slice(-8).map(v => +(v * 0.58).toFixed(1)), color: '#1890ff', type: 'bar' },
+          { name: '目标', data: MockData.trendTarget.slice(-8).map(v => +(v * 0.58).toFixed(1)), color: '#91caff', type: 'bar' },
+          { name: '环比%', data: [null, 1.2, -0.5, 0.8, 1.1, 0.3, -0.2, 0.6], color: '#fa8c16', dashed: true }
+        ], { boundaryGap: true });
+      }
+    }
+
+    function drillDown() {
+      if (drillLv >= 5) return;
+      drillLv++;
+      document.getElementById('drill-level').textContent = `LV${drillLv} ${['汇总', '折旧费用', '先进制造', '直接人工', '物料消耗'][drillLv - 1]}`;
+      Cockpit.showStatus(`成本结构下钻至 LV${drillLv}`);
+    }
+    function resetDrill() {
+      drillLv = 1;
+      selectedOrg = '';
+      document.getElementById('drill-level').textContent = 'LV1 汇总';
+      document.querySelectorAll('#cost-detail-table tbody tr').forEach(tr => tr.classList.remove('dimmed', 'selected'));
+    }
+
+    boot(function () {
+      const sidebarPage = location.hash === '#layer' ? 'cost-layer' : location.hash === '#total' ? 'cost-total' : 'cost';
+      Cockpit.initNav('cost', { sidebarPage });
+      Cockpit.renderFilterBar(document.getElementById('filter-bar'), { showVersion: true });
+      Cockpit.renderKpis(document.getElementById('kpi-cost'), MockData.costKpis);
+      Cockpit.renderKpis(document.getElementById('kpi-layer'), MockData.costKpis);
+      Cockpit.bindTabs('#main-tabs', tab => {
+        setTimeout(() => Charts.resizeAll(), 100);
+        const page = tab === 'panel-layer' ? 'cost-layer' : 'cost-total';
+        Cockpit.renderSidebar(page);
+      });
+
+      Charts.orgNestedRing(document.getElementById('chart-org-ring'), MockData.costByOrg.tree);
+      Charts.bar(document.getElementById('chart-cost-struct'), MockData.costStructure.map(d => d.name),
+        [{ name: '金额(亿)', data: MockData.costStructure.map(d => d.value), color: '#005293' }],
+        { onClick: p => {
+          drillDown();
+          Cockpit.filterTableRows('cost-detail-table', 'category', p.name);
+          Cockpit.showStatus(`制造费用结构：${p.name} → 明细表已联动`);
+        }});
+
+      renderCostDetailTable();
+      Charts.line(document.getElementById('chart-cost-ratio'), MockData.months, [
+        { name: '制造费用(亿)', data: MockData.trendActual.map(v => +(v * 0.58).toFixed(1)), color: '#1890ff', type: 'bar' },
+        { name: '占收入比(%)', data: MockData.trendActual.map(() => 58.0), color: '#fa8c16', dashed: true }
+      ], { boundaryGap: true });
+      renderCostTrend('trend');
+      Charts.stackedBar(document.getElementById('chart-cost-by-org'), MockData.months.slice(-8),
+        MockData.fabs.slice(0, 4).map((f, i) => ({
+          name: f, data: MockData.trendActual.slice(-8).map(v => +(v * (0.18 + i * 0.04)).toFixed(1))
+        }))
+      );
+      Charts.line(document.getElementById('chart-layer-trend'), MockData.months, [
+        { name: '单层现金成本', data: [2650, 2720, 2680, 2750, 2810, 2790, 2850, 2820, 2780, 2840, 2860, 2850], color: '#1890ff' },
+        { name: '等效光刻层数', data: [10.2, 10.4, 10.3, 10.5, 10.6, 10.5, 10.8, 10.7, 10.9, 10.8, 10.9, 10.9], color: '#52c41a', dashed: true }
+      ]);
+
+      document.addEventListener('cockpit:orgSelect', e => {
+        selectedOrg = e.detail.bu || e.detail.name;
+        Cockpit.filterTableRows('cost-detail-table', 'org', selectedOrg.startsWith('Fab') ? null : selectedOrg);
+        if (e.detail.name.startsWith('Fab')) Cockpit.showStatus(`FAB 联动：${e.detail.name}`);
+      });
+
+      document.addEventListener('cockpit:chartmode', e => {
+        if (e.detail.chartId === 'chart-cost-trend') renderCostTrend(e.detail.mode);
+      });
+
+      if (location.hash === '#layer') document.querySelector('[data-tab="panel-layer"]').click();
+      else if (location.hash === '#total') document.querySelector('[data-tab="panel-total"]').click();
+    });
+  </script>
+</body>
+</html>

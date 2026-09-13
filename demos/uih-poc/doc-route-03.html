@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>联影 PoC 场景技术路线说明</title>
+  <style>
+    body { font-family:"Microsoft YaHei","微软雅黑",sans-serif; color:#000; background:#fff; line-height:1.6; padding:32px 40px; }
+    h1 { font-size:22px; text-align:center; margin-bottom:8px; }
+    .subtitle { text-align:center; font-size:13px; color:#333; margin-bottom:24px; }
+    .source { border:1px solid #000; padding:12px 16px; margin-bottom:28px; background:#fafafa; font-size:13px; }
+    .scene-block { margin-bottom:44px; }
+    .scene-block h2 { font-size:17px; border-left:4px solid #000; padding-left:10px; margin-bottom:10px; }
+    .scene-block h3 { font-size:14px; margin:14px 0 8px; }
+    .note { font-size:12px; color:#333; margin-bottom:10px; }
+    table { width:100%; border-collapse:collapse; font-size:12px; margin:10px 0 14px; }
+    th,td { border:1px solid #000; padding:6px 8px; vertical-align:top; }
+    th { background:#f0f0f0; }
+    .flow { display:flex; flex-wrap:wrap; align-items:stretch; margin:10px 0 14px; }
+    .flow-step { flex:1; min-width:115px; border:1px solid #000; padding:10px 8px; text-align:center; background:#fafafa; }
+    .flow-step .title { font-weight:bold; font-size:12px; }
+    .flow-step .time { font-size:11px; color:#c00000; margin:3px 0; }
+    .flow-step .product { font-size:11px; }
+    .arrow { display:flex; align-items:center; padding:0 4px; font-size:18px; }
+    .red { color:#c00000; font-weight:bold; }
+    .sub { font-size:11px; color:#444; }
+    .legend { font-size:11px; color:#333; margin-top:16px; }
+  </style>
+</head>
+<body>
+  <h1>联影数据平台选型 PoC — 场景技术路线说明</h1>
+  <p class="subtitle">唯一数据来源：《联影POC项目管理文档-具体清单.xlsx》— 计划安排 sheet</p>
+  <div class="source">
+    <strong>PoC计划安排（按场景模块）  6.12 - 6.22  共11天（法定假6.19-6.21收尾约6-7人天，6.22客户汇报）</strong><br/>
+    同步时间：2026-06-12 15:39<br/>
+    平台组件：SelectDB｜FineDataLink｜指标中心(Dora)｜FineBI｜数据治理｜知识平台｜AI Agent
+  </div>
+
+  <section class="scene-block" id="global">
+    <h2>全局准备任务</h2>
+    <table>
+      <tr><th>任务项</th><th>完成时间</th><th>工时(人天)</th><th>负责角色</th><th>技术栈/说明</th><th>里程碑/交付物</th></tr>
+      <tr>
+      <td>序号1 项目启动Kick-off</td>
+      <td>6.12</td>
+      <td>0.5</td>
+      <td>项目组</td>
+      <td>—</td>
+      <td>Kick-off会议纪要+分工表</td>
+    </tr><tr>
+      <td>序号2 场景一应答方案编写</td>
+      <td>6.12</td>
+      <td>2</td>
+      <td>徐文浩</td>
+      <td>—</td>
+      <td>场景一设计文档</td>
+    </tr><tr>
+      <td>序号3 场景二应答方案编写</td>
+      <td>6.12</td>
+      <td>2</td>
+      <td>徐文浩</td>
+      <td>—</td>
+      <td>场景二设计文档</td>
+    </tr><tr>
+      <td>序号4 场景三应答方案编写</td>
+      <td>6.12</td>
+      <td>2</td>
+      <td>徐文浩</td>
+      <td>—</td>
+      <td>场景三设计文档</td>
+    </tr><tr>
+      <td>序号6 基础设施部署(服务器/网络/OS/Docker)</td>
+      <td>6.12</td>
+      <td>2</td>
+      <td>徐文浩</td>
+      <td>SelectDB 集群；FineDataLink；FineBI/指标中心/Agent 应用环境</td>
+      <td>服务器+网络就绪</td>
+    </tr><tr>
+      <td>序号8 场景二Mock数据(线索/商机/订单/发运/签收)</td>
+      <td>6.13—6.14</td>
+      <td>2</td>
+      <td>孙润祥</td>
+      <td>FineDataLink 数据源；Mock 数据文件</td>
+      <td>五表Mock数据就绪<br/><span class='sub'>环境就绪</span></td>
+    </tr>
+    </table>
+  </section>
+
+  <section class="scene-block" id="scene1">
+    <h2>场景一：财务多模态融合分析（6.14—6.19）— 李翔</h2>
+    <p class="note">结构化预算指标 + 非结构化制度文档统一纳管，Agent 融合问数与来源追溯。</p>
+    <h3>1. 端到端技术路线</h3>
+    <div class="flow"><div class="flow-step"><div class="title">Mock</div><div class="time">6.13—6.14</div><div class="product">孙润祥</div></div><div class="arrow">→</div><div class="flow-step"><div class="title">FineDataLink</div><div class="time">6.14—6.15</div><div class="product">库表孙润祥/飞书徐文浩</div></div><div class="arrow">→</div><div class="flow-step"><div class="title">SelectDB 宽表</div><div class="time">6.15</div><div class="product">孙润祥</div></div><div class="arrow">→</div><div class="flow-step"><div class="title">服务器端文档解析与向量化页面部署与上线</div><div class="time">6.15—6.17</div><div class="product">徐文浩</div></div><div class="arrow">→</div><div class="flow-step"><div class="title">数据服务/治理</div><div class="time">6.16—6.17</div><div class="product">徐文浩</div></div><div class="arrow">→</div><div class="flow-step"><div class="title">AI Agent</div><div class="time">6.17—6.20</div><div class="product">徐文浩</div></div></div>
+    <h3>2. 工作计划明细（计划安排 sheet）</h3>
+    <table>
+      <tr><th>任务项</th><th>完成时间</th><th>工时(人天)</th><th>负责角色</th><th>帆软/平台技术栈</th><th>里程碑/交付物</th></tr>
+      <tr>
+      <td>序号7 场景一Mock数据(预算申请/执行/制度/日志)</td>
+      <td>6.13—6.14</td>
+      <td>2</td>
+      <td>孙润祥</td>
+      <td>FineDataLink 数据源；Mock 数据文件</td>
+      <td>四类Mock数据就绪<br/><span class='sub'>环境就绪</span></td>
+    </tr><tr>
+      <td>序号11 数据集成(飞书表/库表/日志接入)</td>
+      <td>6.14—6.15</td>
+      <td>2</td>
+      <td>库表：孙润祥 飞书：徐文浩</td>
+      <td>FineDataLink：库表同步（孙润祥）+ 飞书接入（徐文浩）+ 日志文件解析</td>
+      <td>三类数据源接入完成<br/><span class='sub'>Mock数据就绪</span></td>
+    </tr><tr>
+      <td>序号12 数据开发(预算分析宽表)</td>
+      <td>6.15</td>
+      <td>1</td>
+      <td>孙润祥</td>
+      <td>SelectDB SQL；指标中心派生指标</td>
+      <td>宽表可查询<br/><span class='sub'>数据集成完成</span></td>
+    </tr><tr>
+      <td>序号13 文档处理(制度文档解析+维度关联)</td>
+      <td>6.15—6.17</td>
+      <td>3</td>
+      <td>徐文浩</td>
+      <td>平台文档解析；SelectDB 向量/倒排索引；元数据维度关联</td>
+      <td>文档可检索，关联业务维度<br/><span class='sub'>制度文档就绪</span></td>
+    </tr><tr>
+      <td>序号14 数据服务(统一API出口)+治理安全(权限+血缘)</td>
+      <td>6.16—6.17</td>
+      <td>2</td>
+      <td>徐文浩</td>
+      <td>数据服务 API；数据治理（权限、血缘）</td>
+      <td>API可调用+权限血缘可演示<br/><span class='sub'>宽表+文档完成</span></td>
+    </tr><tr>
+      <td>序号15 Agent对接(结构化+制度+融合问数)</td>
+      <td>6.17—6.19</td>
+      <td>3</td>
+      <td>徐文浩</td>
+      <td>AI Agent；调用数据服务 API（结构化+文档检索）</td>
+      <td>融合问数可演示<br/><span class='sub'>数据服务就绪</span></td>
+    </tr><tr>
+      <td>序号16 联调优化与Demo准备</td>
+      <td class="red">6.19—6.20</td>
+      <td>2</td>
+      <td>徐文浩</td>
+      <td>AI Agent 融合问数 Demo；资产目录/调用链</td>
+      <td class="red">★ 场景一Demo就绪<br/><span class='sub'>各模块完成</span></td>
+    </tr><tr>
+      <td>序号38 客户Demo演示与方案汇报</td>
+      <td class="red">6.2—6.22</td>
+      <td>—</td>
+      <td>项目组</td>
+      <td>四场景 Demo + 方案汇报</td>
+      <td class="red">★ 里程碑：最终汇报完成<br/><span class='sub'>预演通过+材料就绪</span></td>
+    </tr>
+    </table>
+  </section>
+  <section class="scene-block" id="scene2">
+    <h2>场景二：营销 OTD 全链路 BI（6.14—6.20）— 文浩</h2>
+    <p class="note">多源集成 → 宽表 → 治理 → 指标中心 → FineBI 看板。</p>
+    <h3>1. 端到端技术路线</h3>
+    <div class="flow"><div class="flow-step"><div class="title">Mock 五表</div><div class="time">6.13—6.14</div><div class="product">孙润祥</div></div><div class="arrow">→</div><div class="flow-step"><div class="title">FineDataLink</div><div class="time">6.14</div><div class="product">孙润祥</div></div><div class="arrow">→</div><div class="flow-step"><div class="title">SelectDB 宽表</div><div class="time">6.14</div><div class="product">孙润祥</div></div><div class="arrow">→</div><div class="flow-step"><div class="title">数据治理</div><div class="time">6.14—6.15</div><div class="product">孙润祥</div></div><div class="arrow">→</div><div class="flow-step"><div class="title">指标中心</div><div class="time">6.15—6.16</div><div class="product">孙润祥</div></div><div class="arrow">→</div><div class="flow-step"><div class="title">FineBI</div><div class="time">6.16—6.18</div><div class="product">孙润祥</div></div></div>
+    <h3>2. 工作计划明细（计划安排 sheet）</h3>
+    <table>
+      <tr><th>任务项</th><th>完成时间</th><th>工时(人天)</th><th>负责角色</th><th>帆软/平台技术栈</th><th>里程碑/交付物</th></tr>
+      <tr>
+      <td>序号8 场景二Mock数据(线索/商机/订单/发运/签收)</td>
+      <td>6.13—6.14</td>
+      <td>2</td>
+      <td>孙润祥</td>
+      <td>FineDataLink 数据源；Mock 数据文件</td>
+      <td>五表Mock数据就绪<br/><span class='sub'>环境就绪</span></td>
+    </tr><tr>
+      <td>序号17 数据集成(批量+实时接入)</td>
+      <td>6.14</td>
+      <td>1</td>
+      <td>孙润祥</td>
+      <td>FineDataLink：CRM/ERP/WMS 批量+实时接入</td>
+      <td>批量+实时管道可用<br/><span class='sub'>Mock数据就绪</span></td>
+    </tr><tr>
+      <td>序号18 数据开发(OTD宽表+状态标准化)</td>
+      <td>6.14</td>
+      <td>1</td>
+      <td>孙润祥</td>
+      <td>SelectDB OTD 宽表；FDL 清洗与状态标准化</td>
+      <td>OTD宽表五段关联<br/><span class='sub'>数据集成完成</span></td>
+    </tr><tr>
+      <td>序号19 数据治理(质量探查+告警)</td>
+      <td>6.14—6.15</td>
+      <td>2</td>
+      <td>孙润祥</td>
+      <td>数据治理：质量探查、稽核规则、告警</td>
+      <td>质量规则+告警可用<br/><span class='sub'>宽表完成</span></td>
+    </tr><tr>
+      <td>序号20 指标建设(体系梳理+语义建模+发布+血缘)</td>
+      <td>6.15—6.16</td>
+      <td>2</td>
+      <td>孙润祥</td>
+      <td>指标中心 Dora：语义建模、指标发布、血缘</td>
+      <td>指标可计算+发布+血缘<br/><span class='sub'>宽表完成</span></td>
+    </tr><tr>
+      <td>序号21 BI看板(管理层+业务层+下钻+预警订阅)</td>
+      <td>6.16—6.17</td>
+      <td>2</td>
+      <td>孙润祥</td>
+      <td>FineBI：管理层+业务层看板、下钻、预警（P1）</td>
+      <td>两层看板+下钻+预警可用<br/><span class='sub'>指标发布完成</span></td>
+    </tr><tr>
+      <td>序号22 联调优化与Demo准备</td>
+      <td class="red">6.17—6.18</td>
+      <td>2</td>
+      <td>孙润祥</td>
+      <td>FineBI + FDL + 指标中心 Demo 联调</td>
+      <td class="red">★ 场景二Demo就绪<br/><span class='sub'>各模块完成</span></td>
+    </tr><tr>
+      <td>序号38 客户Demo演示与方案汇报</td>
+      <td class="red">6.2—6.22</td>
+      <td>—</td>
+      <td>项目组</td>
+      <td>四场景 Demo + 方案汇报</td>
+      <td class="red">★ 里程碑：最终汇报完成<br/><span class='sub'>预演通过+材料就绪</span></td>
+    </tr>
+    </table>
+  </section>
+  <section class="scene-block" id="scene3">
+    <h2>场景三：售后维修智能助手（6.14—6.20）— 文浩</h2>
+    <p class="note">数据集成治理 + 知识加工 + Agent 端到端故障诊断（知识部分以 Demo 演示为主）。</p>
+    <h3>1. 端到端技术路线</h3>
+    <div class="flow"><div class="flow-step"><div class="title">Mock</div><div class="time">6.13—6.14</div><div class="product">徐文浩</div></div><div class="arrow">→</div><div class="flow-step"><div class="title">FineDataLink</div><div class="time">6.14—6.15</div><div class="product">孙润祥</div></div><div class="arrow">→</div><div class="flow-step"><div class="title">SelectDB 治理</div><div class="time">6.15—6.17</div><div class="product">孙润祥</div></div><div class="arrow">→</div><div class="flow-step"><div class="title">知识平台</div><div class="time">6.16—6.19</div><div class="product">徐文浩</div></div><div class="arrow">→</div><div class="flow-step"><div class="title">AI Agent</div><div class="time">6.18—6.20</div><div class="product">徐文浩</div></div></div>
+    <h3>2. 工作计划明细（计划安排 sheet）</h3>
+    <table>
+      <tr><th>任务项</th><th>完成时间</th><th>工时(人天)</th><th>负责角色</th><th>帆软/平台技术栈</th><th>里程碑/交付物</th></tr>
+      <tr>
+      <td>序号9 场景三Mock数据(报修/日志/工单/手册/经验/备件)</td>
+      <td>6.13—6.14</td>
+      <td>2</td>
+      <td>徐文浩</td>
+      <td>FineDataLink 数据源；Mock 数据文件</td>
+      <td>六类Mock数据就绪<br/><span class='sub'>环境就绪</span></td>
+    </tr><tr>
+      <td>序号23 数据集成(实时管道+离线ETL)</td>
+      <td>6.14—6.15</td>
+      <td>2</td>
+      <td>孙润祥</td>
+      <td>FineDataLink：CRM/IoT 实时管道 + 离线 ETL</td>
+      <td>实时+离线管道可用<br/><span class='sub'>Mock数据就绪</span></td>
+    </tr><tr>
+      <td>序号24 数据治理+维度建模+指标产出</td>
+      <td>6.15—6.17</td>
+      <td>3</td>
+      <td>孙润祥</td>
+      <td>SelectDB 维度模型；数据治理；指标中心 MTBF/MTTR</td>
+      <td>维度模型+指标可用<br/><span class='sub'>数据集成完成</span></td>
+    </tr><tr>
+      <td>序号25 知识加工(图谱+SOP+经验+备件推荐)</td>
+      <td>6.16—6.19</td>
+      <td>4</td>
+      <td>徐文浩</td>
+      <td>知识平台：故障图谱、SOP 解析、经验/备件（前端 Demo 为主）</td>
+      <td>四类知识库可用<br/><span class='sub'>数据就绪</span></td>
+    </tr><tr>
+      <td>序号26 Agent对接(意图+查数据+查知识+推理推荐)</td>
+      <td>6.18—6.20</td>
+      <td>3</td>
+      <td>徐文浩</td>
+      <td>AI Agent：意图理解、数据/知识 API、推理推荐</td>
+      <td>Agent端到端可演示<br/><span class='sub'>数据+知识就绪</span></td>
+    </tr><tr>
+      <td>序号27 联调优化与Demo准备</td>
+      <td class="red">6.20</td>
+      <td>1</td>
+      <td>徐文浩</td>
+      <td>AI Agent 端到端 Demo；典型故障脚本</td>
+      <td class="red">★ 场景三Demo就绪<br/><span class='sub'>各模块完成</span></td>
+    </tr><tr>
+      <td>序号38 客户Demo演示与方案汇报</td>
+      <td class="red">6.2—6.22</td>
+      <td>—</td>
+      <td>项目组</td>
+      <td>四场景 Demo + 方案汇报</td>
+      <td class="red">★ 里程碑：最终汇报完成<br/><span class='sub'>预演通过+材料就绪</span></td>
+    </tr>
+    </table>
+  </section>
+
+  <section class="scene-block" id="report">
+    <h2>阶段五：客户汇报验收（6.22）</h2>
+    <table>
+      <tr><th>任务项</th><th>完成时间</th><th>工时(人天)</th><th>负责角色</th><th>说明</th><th>里程碑/交付物</th></tr>
+      <tr>
+      <td>序号35 汇报前最终检查(Demo环境+账号+材料)</td>
+      <td>6.2—6.22</td>
+      <td>—</td>
+      <td>项目组</td>
+      <td>项目管理与验收检查</td>
+      <td>汇报前Checklist清零<br/><span class='sub'>PoC实施完成</span></td>
+    </tr><tr>
+      <td>序号38 客户Demo演示与方案汇报</td>
+      <td class="red">6.2—6.22</td>
+      <td>—</td>
+      <td>项目组</td>
+      <td>四场景 Demo + 方案汇报</td>
+      <td class="red">★ 里程碑：最终汇报完成<br/><span class='sub'>预演通过+材料就绪</span></td>
+    </tr><tr>
+      <td>序号39 客户验证账号交付</td>
+      <td>6.2—6.22</td>
+      <td>—</td>
+      <td>项目组</td>
+      <td>客户登录地址与账号交付</td>
+      <td>登录地址+账号交付<br/><span class='sub'>汇报完成</span></td>
+    </tr>
+    </table>
+  </section>
+
+  <p class="legend">说明：负责角色、时间、工时、交付物、进度列均直接摘自「具体清单.xlsx / 计划安排」，未引用其他 Excel 文件，未做二次分工调整。</p>
+</body>
+</html>

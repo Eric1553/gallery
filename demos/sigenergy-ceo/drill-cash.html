@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>下钻 · 现金与应收</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">一把手总览</a> / 下钻：现金与应收</div>
+    <div id="param-banner" class="param-banner" hidden></div>
+    <nav class="top-nav">
+      <a href="index.html">页1 总览</a>
+      <span class="current">现金与应收</span>
+    </nav>
+
+    <h1>下钻：现金与应收</h1>
+    <p class="sub">承接页1「D」· Tab1 现金流 / Tab2 应收账龄（FineBI 可用 Tab 容器）</p>
+
+    <div class="toolbar">
+      <div><span class="lbl">视图</span><span class="fake-select" data-sync-param="tab" data-tab-map="cash">现金流量 / 应收 ▾</span></div>
+      <div><span class="lbl">期间</span><span class="fake-select">2026-03 期末 ▾</span></div>
+    </div>
+
+    <section>
+      <div class="sec-title" style="margin-bottom:10px">现金流量滚动（亿元）</div>
+      <table class="table-ph">
+        <thead><tr><th>月份</th><th class="num">经营现金流</th><th class="num">净利润</th><th class="num">覆盖倍数</th></tr></thead>
+        <tbody>
+          <tr><td>2026-01</td><td class="num">6.2</td><td class="num">5.4</td><td class="num">1.15</td></tr>
+          <tr><td>2026-02</td><td class="num">7.8</td><td class="num">6.9</td><td class="num">1.13</td></tr>
+          <tr><td>2026-03</td><td class="num">10.1</td><td class="num">8.2</td><td class="num">1.23</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <div class="sec-title" style="margin-bottom:10px">应收账龄桶（合并 · 亿元）</div>
+      <table class="table-ph">
+        <thead><tr><th>账龄</th><th class="num">余额</th><th class="num">占比</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>0–30 天</td><td class="num">18.4</td><td class="num">52%</td><td>正常</td></tr>
+          <tr><td>31–60 天</td><td class="num">9.2</td><td class="num">26%</td><td>关注渠道回款</td></tr>
+          <tr><td>61–90 天</td><td class="num">4.1</td><td class="num">12%</td><td>销售与财资协同</td></tr>
+          <tr><td>90+ 天</td><td class="num">3.5</td><td class="num">10%</td><td><span class="dot y"></span> 升级评审</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <div class="sec-title" style="margin-bottom:10px">DSO 驱动因子（示意）</div>
+      <table class="table-ph">
+        <thead><tr><th>因子</th><th class="num">影响（天）</th></tr></thead>
+        <tbody>
+          <tr><td>欧洲渠道信用期延长</td><td class="num">+4.2</td></tr>
+          <tr><td>澳洲回款节奏改善</td><td class="num">−2.1</td></tr>
+          <tr><td>季末集中出货</td><td class="num">+1.8</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:11px;color:var(--muted);margin:8px 0 0">三级下钻（可选）：大客户应收卡片 — 仅财务角色可见。</p>
+    </section>
+
+    <footer><a href="index.html" style="color:var(--link)">← 返回总览</a></footer>
+  </div>
+  <script src="drill-context.js"></script>
+</body>
+</html>

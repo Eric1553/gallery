@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>联影医疗 · 知识库文档入库</title>
+  <style>
+    :root {
+      --text: #1b2940; --muted: #63748b; --line: #d7e1ef; --navy: #173b69;
+      --blue: #1f55cc; --teal: #0d8a7a; --orange: #d4820a; --red: #e04560;
+      --purple: #5a3fd4; --gray: #eef3f9; --shadow: 0 8px 24px rgba(22,52,95,.07);
+      --green: #0d9a6a;
+    }
+    * { box-sizing: border-box; margin: 0; }
+    body {
+      font-family: "PingFang SC","Microsoft YaHei",sans-serif;
+      color: var(--text); background: #f4f8fc; line-height: 1.55; font-size: 14px;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg,#0f2952,#1a4a85);
+      color: #fff; padding: 16px 24px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      box-shadow: 0 2px 12px rgba(15,41,82,.2);
+    }
+    .header-left h1 { font-size: 20px; font-weight: 700; }
+    .header-left p { font-size: 12px; opacity: .8; margin-top: 2px; }
+    .header-pipeline {
+      display: flex; align-items: center; gap: 6px; font-size: 11px; opacity: .9;
+    }
+    .header-pipeline .step {
+      padding: 4px 10px; border-radius: 999px;
+      background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
+    }
+    .header-pipeline .arrow { opacity: .5; }
+
+    /* Layout */
+    .layout {
+      display: grid;
+      grid-template-columns: 280px 1fr 340px;
+      gap: 16px;
+      padding: 16px 20px 24px;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+    @media(max-width:1200px) { .layout { grid-template-columns: 1fr; } }
+
+    .panel {
+      background: #fff; border: 1px solid var(--line);
+      border-radius: 14px; box-shadow: var(--shadow);
+    }
+    .panel-head {
+      padding: 14px 18px; border-bottom: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .panel-head h2 { font-size: 14px; font-weight: 700; color: var(--navy); }
+    .panel-head span { font-size: 11px; color: var(--muted); }
+    .panel-body { padding: 16px 18px; }
+
+    /* Config sidebar */
+    .field { margin-bottom: 14px; }
+    .field label {
+      display: block; font-size: 11px; font-weight: 700;
+      color: var(--navy); margin-bottom: 5px; letter-spacing: .03em;
+    }
+    .field select, .field input {
+      width: 100%; padding: 8px 10px; border: 1px solid var(--line);
+      border-radius: 8px; font-size: 13px; color: var(--text);
+      background: #fafcff;
+    }
+    .field select:focus, .field input:focus {
+      outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(31,85,204,.1);
+    }
+    .field-hint { font-size: 10px; color: var(--muted); margin-top: 4px; }
+    .divider { height: 1px; background: var(--line); margin: 16px 0; }
+
+    /* Upload zone */
+    .upload-zone {
+      border: 2px dashed var(--line); border-radius: 12px;
+      padding: 36px 24px; text-align: center; cursor: pointer;
+      transition: border-color .2s, background .2s;
+      background: #fafcff;
+    }
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--blue); background: #f0f5ff;
+    }
+    .upload-icon {
+      width: 48px; height: 48px; margin: 0 auto 12px;
+      background: var(--gray); border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+    }
+    .upload-zone h3 { font-size: 15px; color: var(--navy); margin-bottom: 6px; }
+    .upload-zone p { font-size: 12px; color: var(--muted); }
+    .upload-formats {
+      display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-top: 12px;
+    }
+    .upload-formats span {
+      font-size: 10px; font-weight: 700; padding: 3px 8px;
+      border-radius: 4px; background: var(--gray); color: var(--navy);
+    }
+    #fileInput { display: none; }
+
+    /* File list */
+    .file-list { margin-top: 16px; }
+    .file-list-head {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 10px;
+    }
+    .file-list-head h3 { font-size: 13px; color: var(--navy); font-weight: 700; }
+    .file-count { font-size: 11px; color: var(--muted); }
+
+    .file-item {
+      display: grid;
+      grid-template-columns: 36px 1fr auto;
+      gap: 10px; align-items: center;
+      padding: 10px 12px; border: 1px solid var(--line);
+      border-radius: 10px; margin-bottom: 8px;
+      cursor: pointer; transition: border-color .15s, box-shadow .15s;
+    }
+    .file-item:hover { border-color: #b8cce8; }
+    .file-item.active {
+      border-color: var(--blue); box-shadow: 0 0 0 3px rgba(31,85,204,.08);
+    }
+    .file-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 800; color: #fff;
+    }
+    .fi-pdf { background: #e04560; }
+    .fi-doc { background: #1f55cc; }
+    .fi-ppt { background: #d4820a; }
+    .fi-xls { background: #0d8a7a; }
+    .fi-csv { background: #5a3fd4; }
+    .fi-other { background: #6b7c93; }
+
+    .file-info .name {
+      font-size: 13px; font-weight: 600; color: var(--navy);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .file-info .meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    .file-status { text-align: right; }
+    .status-badge {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      padding: 3px 8px; border-radius: 999px;
+    }
+    .st-pending { background: var(--gray); color: var(--muted); }
+    .st-uploading { background: #e8f0ff; color: var(--blue); }
+    .st-parsing { background: #fff7ed; color: var(--orange); }
+    .st-chunking { background: #f0ecff; color: var(--purple); }
+    .st-embedding { background: #e6f7f4; color: var(--teal); }
+    .st-ready { background: #e6f7ef; color: var(--green); }
+    .st-pushed { background: #173b69; color: #fff; }
+    .st-error { background: #fde8ec; color: var(--red); }
+
+    .file-progress {
+      margin-top: 6px; height: 3px; background: var(--gray);
+      border-radius: 999px; overflow: hidden;
+    }
+    .file-progress-bar {
+      height: 100%; background: var(--blue); border-radius: 999px;
+      transition: width .3s; width: 0%;
+    }
+
+    /* Pipeline steps (right panel) */
+    .pipeline-steps { margin-bottom: 16px; }
+    .pipe-step {
+      display: grid; grid-template-columns: 28px 1fr; gap: 10px;
+      padding: 8px 0; position: relative;
+    }
+    .pipe-step:not(:last-child)::after {
+      content: ""; position: absolute; left: 13px; top: 32px; bottom: -4px;
+      width: 2px; background: var(--line);
+    }
+    .pipe-dot {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800; z-index: 1;
+      background: var(--gray); color: var(--muted);
+      border: 2px solid var(--line);
+    }
+    .pipe-step.done .pipe-dot { background: var(--green); color: #fff; border-color: var(--green); }
+    .pipe-step.active .pipe-dot {
+      background: var(--blue); color: #fff; border-color: var(--blue);
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(31,85,204,.3); }
+      50% { box-shadow: 0 0 0 6px rgba(31,85,204,0); }
+    }
+    .pipe-step.done:not(:last-child)::after { background: var(--green); }
+    .pipe-label { font-size: 12px; font-weight: 600; color: var(--navy); }
+    .pipe-desc { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+    /* Chunk preview */
+    .chunk-preview { max-height: 280px; overflow-y: auto; }
+    .chunk-item {
+      padding: 10px 12px; border: 1px solid var(--line);
+      border-radius: 8px; margin-bottom: 8px; font-size: 12px;
+    }
+    .chunk-item .chunk-head {
+      display: flex; justify-content: space-between; margin-bottom: 6px;
+    }
+    .chunk-id { font-size: 10px; font-weight: 700; color: var(--blue); font-family: ui-monospace,monospace; }
+    .chunk-meta { font-size: 10px; color: var(--muted); }
+    .chunk-text {
+      color: var(--text); line-height: 1.6;
+      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .chunk-dim { font-size: 10px; color: var(--teal); margin-top: 6px; font-family: ui-monospace,monospace; }
+
+    .empty-state {
+      text-align: center; padding: 32px 16px; color: var(--muted); font-size: 12px;
+    }
+
+    /* Stats row */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 16px;
+    }
+    .stat {
+      text-align: center; padding: 10px; background: var(--gray);
+      border-radius: 8px; border: 1px solid var(--line);
+    }
+    .stat .n { font-size: 18px; font-weight: 700; color: var(--navy); }
+    .stat .l { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+    /* Push button area */
+    .push-area {
+      padding: 14px; border-radius: 10px;
+      background: linear-gradient(135deg,#f0f5ff,#faf8ff);
+      border: 1px solid #d4e2ff;
+    }
+    .push-area p { font-size: 11px; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 700;
+      border: none; cursor: pointer; transition: opacity .15s, transform .1s;
+      width: 100%;
+    }
+    .btn:active { transform: scale(.98); }
+    .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+    .btn-primary { background: var(--blue); color: #fff; }
+    .btn-primary:hover:not(:disabled) { background: #1848b0; }
+    .btn-secondary {
+      background: #fff; color: var(--navy); border: 1px solid var(--line);
+      margin-top: 8px;
+    }
+    .btn-push {
+      background: linear-gradient(135deg,var(--teal),#0a6e62); color: #fff;
+    }
+    .btn-push:hover:not(:disabled) { background: linear-gradient(135deg,#0a7a6e,#086058); }
+
+    /* Activity log */
+    .log-area {
+      margin-top: 16px; max-height: 160px; overflow-y: auto;
+      background: #1b2940; border-radius: 8px; padding: 10px 12px;
+      font-family: ui-monospace,Menlo,monospace; font-size: 11px;
+      color: #a8b8cc; line-height: 1.7;
+    }
+    .log-area .log-time { color: #63748b; }
+    .log-area .log-ok { color: #4ade80; }
+    .log-area .log-warn { color: #fbbf24; }
+    .log-area .log-err { color: #f87171; }
+    .log-area .log-info { color: #60a5fa; }
+
+    /* Modal */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(15,41,82,.45); z-index: 100;
+      align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #fff; border-radius: 16px; width: 100%; max-width: 520px;
+      box-shadow: 0 20px 60px rgba(15,41,82,.25); overflow: hidden;
+    }
+    .modal-head {
+      padding: 18px 22px; border-bottom: 1px solid var(--line);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .modal-head h3 { font-size: 16px; color: var(--navy); font-weight: 700; }
+    .modal-close {
+      width: 28px; height: 28px; border: none; background: var(--gray);
+      border-radius: 6px; cursor: pointer; font-size: 16px; color: var(--muted);
+    }
+    .modal-body { padding: 18px 22px; }
+    .modal-foot {
+      padding: 14px 22px; border-top: 1px solid var(--line);
+      display: flex; gap: 10px; justify-content: flex-end;
+    }
+    .api-preview {
+      margin-top: 12px; padding: 12px; background: #1b2940; border-radius: 8px;
+      font-family: ui-monospace,Menlo,monospace; font-size: 11px; color: #a8b8cc;
+      line-height: 1.6; white-space: pre-wrap; word-break: break-all;
+    }
+    .tag-reserved {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      color: var(--orange); background: #fff7ed; border: 1px solid #fdba74;
+      padding: 2px 8px; border-radius: 999px; margin-left: 6px;
+    }
+
+    .toolbar {
+      display: flex; gap: 8px; margin-top: 12px;
+    }
+    .toolbar .btn { width: auto; flex: 1; padding: 8px 12px; font-size: 12px; }
+
+    .mode-badge {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      padding: 3px 8px; border-radius: 999px; margin-left: 8px;
+      background: #e6f7ef; color: var(--green); border: 1px solid #a7f3d0;
+    }
+    .parse-preview {
+      font-size: 11px; color: var(--muted); margin-bottom: 12px;
+      padding: 8px 10px; background: var(--gray); border-radius: 8px;
+      max-height: 60px; overflow: hidden; line-height: 1.5;
+    }
+  </style>
+  <!-- 文档解析库 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-left">
+    <h1>知识库文档入库</h1>
+    <p>真实本地解析 · 读取文档正文 → 切片 → Embedding → 推送 Doris</p>
+  </div>
+  <div class="header-pipeline">
+    <span class="step">上传</span><span class="arrow">→</span>
+    <span class="step">解析</span><span class="arrow">→</span>
+    <span class="step">切片</span><span class="arrow">→</span>
+    <span class="step">Embedding</span><span class="arrow">→</span>
+    <span class="step">推送数据库</span>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- Left: Config -->
+  <aside class="panel">
+    <div class="panel-head">
+      <h2>入库配置</h2>
+      <span>Ingest Config</span>
+    </div>
+    <div class="panel-body">
+      <div class="field">
+        <label>业务域 domain</label>
+        <select id="cfgDomain">
+          <option value="finance" selected>finance · 财务</option>
+          <option value="service">service · 售后</option>
+          <option value="supply_chain">supply_chain · 供应链</option>
+          <option value="rd">rd · 研发</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>文档类型 doc_type</label>
+        <select id="cfgDocType">
+          <option value="policy" selected>policy · 制度</option>
+          <option value="manual">manual · 手册</option>
+          <option value="SOP">SOP · 操作规程</option>
+          <option value="report">report · 报告</option>
+          <option value="meeting">meeting · 会议纪要</option>
+        </select>
+      </div>
+      <div class="divider"></div>
+      <div class="field">
+        <label>切片策略 chunk_strategy</label>
+        <select id="cfgChunkStrategy">
+          <option value="paragraph" selected>段落切分（通用文档）</option>
+          <option value="qa">按段落/标题（制度/FAQ）</option>
+          <option value="table">Table 模板（Excel/CSV）</option>
+          <option value="page">按页切分（PDF/PPT）</option>
+        </select>
+        <div class="field-hint">从文档真实正文中切片，非模板填充</div>
+      </div>
+      <div class="field">
+        <label>切片大小 chunk_size</label>
+        <input type="number" id="cfgChunkSize" value="512" min="128" max="2048" step="64" />
+        <div class="field-hint">字符数，默认 512</div>
+      </div>
+      <div class="field">
+        <label>重叠 overlap</label>
+        <input type="number" id="cfgOverlap" value="64" min="0" max="256" step="16" />
+      </div>
+      <div class="divider"></div>
+      <div class="field">
+        <label>Embedding 方式</label>
+        <select id="cfgEmbedMode">
+          <option value="browser" selected>浏览器本地（bge-small-zh · 512维）</option>
+          <option value="api">API 服务（bge-large-zh · 1024维）</option>
+        </select>
+      </div>
+      <div class="field" id="embedApiField" style="display:none;">
+        <label>Embedding API</label>
+        <input type="text" id="cfgEmbedApi" placeholder="http://host:port/embed" />
+        <div class="field-hint">POST JSON: {"texts":["..."],"model":"bge-large-zh"}</div>
+      </div>
+      <div class="field">
+        <label>Embedding 模型</label>
+        <select id="cfgEmbedModel">
+          <option value="bge-small-zh" selected>bge-small-zh（512维 · 本地）</option>
+          <option value="bge-large-zh">bge-large-zh（1024维 · 需 API）</option>
+          <option value="bge-m3">bge-m3（1024维 · 需 API）</option>
+        </select>
+        <div class="field-hint">写入与检索须同模型/同版本</div>
+      </div>
+      <div class="field">
+        <label>目标表 target_table</label>
+        <input type="text" id="cfgTargetTable" value="uih_doc_chunks" readonly
+               style="background:#f0f4f8;color:var(--muted);" />
+      </div>
+      <div class="divider"></div>
+      <div class="field">
+        <label>Ingest Worker 地址</label>
+        <input type="text" id="cfgWorkerUrl" value="http://127.0.0.1:8790" />
+        <div class="field-hint">本地运行 doris-ingest/start.sh</div>
+      </div>
+      <div class="field">
+        <label><input type="checkbox" id="cfgAutoPush" checked style="width:auto;margin-right:6px;" />处理完成后自动推送 Doris</label>
+      </div>
+      <div id="workerStatus" style="font-size:11px;margin-top:4px;color:var(--muted);">Worker: 检测中...</div>
+    </div>
+  </aside>
+
+  <!-- Center: Upload + File list -->
+  <main class="panel">
+    <div class="panel-head">
+      <h2>文档上传</h2>
+      <span id="totalSize">0 个文件 · 0 B</span>
+    </div>
+    <div class="panel-body">
+      <div class="upload-zone" id="uploadZone">
+        <div class="upload-icon">📄</div>
+        <h3>拖拽文件到此处，或点击选择</h3>
+        <p>支持批量上传，单文件最大 50 MB</p>
+        <div class="upload-formats">
+          <span>PDF</span><span>Word</span><span>PPT</span>
+          <span>Excel</span><span>CSV</span><span>TXT</span><span>MD</span>
+        </div>
+        <input type="file" id="fileInput" multiple
+               accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.csv,.txt,.md" />
+      </div>
+
+      <div class="toolbar">
+        <button class="btn btn-primary" id="btnOneClick" disabled style="background:linear-gradient(135deg,#0d8a7a,#0a6e62);">⚡ 一键入库</button>
+        <button class="btn btn-primary" id="btnProcessAll" disabled>▶ 仅处理</button>
+        <button class="btn btn-secondary" id="btnPushReady" disabled>⬆ 推送待入库</button>
+        <button class="btn btn-secondary" id="btnExportDoris" disabled>⬇ 导出 JSON</button>
+        <button class="btn btn-secondary" id="btnClearAll" disabled>清空</button>
+      </div>
+
+      <div class="file-list" id="fileListSection" style="display:none;">
+        <div class="file-list-head">
+          <h3>文档队列</h3>
+          <span class="file-count" id="fileCount">0 个文件</span>
+        </div>
+        <div id="fileList"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Right: Pipeline + Preview + Push -->
+  <aside class="panel">
+    <div class="panel-head">
+      <h2>处理详情</h2>
+      <span id="selectedFileName">未选择</span><span class="mode-badge">真实解析</span>
+    </div>
+    <div class="panel-body">
+      <div class="stats-row">
+        <div class="stat"><div class="n" id="statChunks">—</div><div class="l">Chunks</div></div>
+        <div class="stat"><div class="n" id="statTokens">—</div><div class="l">Tokens</div></div>
+        <div class="stat"><div class="n" id="statDim">—</div><div class="l">维度</div></div>
+      </div>
+
+      <div class="pipeline-steps" id="pipelineSteps">
+        <div class="pipe-step" data-step="upload">
+          <div class="pipe-dot">1</div>
+          <div><div class="pipe-label">上传至 OSS</div><div class="pipe-desc">等待文件...</div></div>
+        </div>
+        <div class="pipe-step" data-step="parse">
+          <div class="pipe-dot">2</div>
+          <div><div class="pipe-label">DeepDoc 解析</div><div class="pipe-desc">提取文本 / 表格 / OCR</div></div>
+        </div>
+        <div class="pipe-step" data-step="chunk">
+          <div class="pipe-dot">3</div>
+          <div><div class="pipe-label">切片 Chunk</div><div class="pipe-desc">按策略切分文档</div></div>
+        </div>
+        <div class="pipe-step" data-step="embed">
+          <div class="pipe-dot">4</div>
+          <div><div class="pipe-label">Embedding</div><div class="pipe-desc">bge-large-zh 向量化</div></div>
+        </div>
+        <div class="pipe-step" data-step="ready">
+          <div class="pipe-dot">5</div>
+          <div><div class="pipe-label">待推送</div><div class="pipe-desc">索引就绪，可写入 Doris</div></div>
+        </div>
+      </div>
+
+      <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px;">Chunk 预览</div>
+      <div class="parse-preview" id="parsePreview" style="display:none;"></div>
+      <div class="chunk-preview" id="chunkPreview">
+        <div class="empty-state">上传并处理文档后，在此预览切片结果</div>
+      </div>
+
+      <div class="push-area" style="margin-top:16px;">
+        <p>
+          <strong>一键入库</strong> = 解析 + 切片 + Embedding + Stream Load 至
+          <code>kb.uih_doc_chunks</code>。需先启动本地 Worker：
+          <code>doris-ingest/start.sh</code>
+        </p>
+        <button class="btn btn-push" id="btnPushDb" disabled>⬆ 推送到 Doris</button>
+        <button class="btn btn-secondary" id="btnPushConfig">⚙ Doris 连接配置</button>
+      </div>
+
+      <div class="log-area" id="logArea">
+        <div><span class="log-time">[--:--:--]</span> 系统就绪，等待上传文档...</div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- Push Modal -->
+<div class="modal-overlay" id="pushModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>推送到 Doris</h3>
+      <button class="modal-close" id="modalClose">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>推送目标</label>
+        <select id="pushTarget">
+          <option value="doris" selected>Apache Doris · uih_doc_chunks</option>
+          <option value="doris_registry">Apache Doris · kb_document_registry</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Ingest Worker API</label>
+        <input type="text" id="pushApiUrl"
+               value="http://127.0.0.1:8790/api/v1/ingest/push"
+               placeholder="POST 推送接口地址" />
+      </div>
+      <div class="field">
+        <label>Doris 连接（Worker 侧 .env 配置）</label>
+        <input type="text" id="pushHost" value="127.0.0.1:8030" readonly
+               style="background:#f0f4f8;color:var(--muted);" />
+        <div class="field-hint">修改 doris-ingest/.env 后重启 Worker</div>
+      </div>
+      <div class="api-preview" id="apiPreview"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" id="modalCancel" style="width:auto;">取消</button>
+      <button class="btn btn-push" id="modalConfirm" style="width:auto;">确认推送</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2';
+env.allowLocalModels = false;
+env.useBrowserCache = true;
+
+(function () {
+  const ACCEPT_EXT = {
+    pdf: 'fi-pdf', doc: 'fi-doc', docx: 'fi-doc',
+    ppt: 'fi-ppt', pptx: 'fi-ppt',
+    xls: 'fi-xls', xlsx: 'fi-xls', csv: 'fi-csv',
+    txt: 'fi-other', md: 'fi-other'
+  };
+  const STATUS_LABEL = {
+    pending: '待处理', uploading: '读取中', parsing: '解析中',
+    chunking: '切片中', embedding: 'Embedding', ready: '待推送',
+    pushed: '已推送', error: '失败'
+  };
+  const PIPELINE = ['upload', 'parse', 'chunk', 'embed', 'ready'];
+  const MODEL_DIM = { 'bge-small-zh': 512, 'bge-large-zh': 1024, 'bge-m3': 1024 };
+  const BROWSER_MODEL = 'Xenova/bge-small-zh-v1.5';
+
+  let files = [];
+  let selectedId = null;
+  let processing = false;
+  let embedPipeline = null;
+
+  const $ = (sel) => document.querySelector(sel);
+  const uploadZone = $('#uploadZone');
+  const fileInput = $('#fileInput');
+  const fileList = $('#fileList');
+  const fileListSection = $('#fileListSection');
+  const chunkPreview = $('#chunkPreview');
+  const parsePreview = $('#parsePreview');
+  const logArea = $('#logArea');
+  const pushModal = $('#pushModal');
+
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  function uid() { return 'doc_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+  function fmtSize(b) {
+    if (b < 1024) return b + ' B';
+    if (b < 1048576) return (b / 1024).toFixed(1) + ' KB';
+    return (b / 1048576).toFixed(1) + ' MB';
+  }
+  function ext(name) { return (name.split('.').pop() || '').toLowerCase(); }
+  function now() { return new Date().toTimeString().slice(0, 8); }
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function estTokens(text) {
+    const cn = (text.match(/[\u4e00-\u9fff]/g) || []).length;
+    const en = text.length - cn;
+    return Math.max(1, Math.ceil(cn / 1.5 + en / 4));
+  }
+  function normalize(v) {
+    const n = Math.sqrt(v.reduce((s, x) => s + x * x, 0)) || 1;
+    return v.map(x => x / n);
+  }
+
+  function log(msg, type = '') {
+    const cls = { ok: 'log-ok', warn: 'log-warn', err: 'log-err', info: 'log-info' }[type] || '';
+    const line = document.createElement('div');
+    line.innerHTML = `<span class="log-time">[${now()}]</span> <span class="${cls}">${esc(msg)}</span>`;
+    logArea.appendChild(line);
+    logArea.scrollTop = logArea.scrollHeight;
+  }
+
+  function getConfig() {
+    const embedModel = $('#cfgEmbedModel').value;
+    const embedMode = $('#cfgEmbedMode').value;
+    return {
+      domain: $('#cfgDomain').value,
+      doc_type: $('#cfgDocType').value,
+      chunk_strategy: $('#cfgChunkStrategy').value,
+      chunk_size: +$('#cfgChunkSize').value,
+      overlap: +$('#cfgOverlap').value,
+      embed_model: embedModel,
+      embed_mode: embedMode,
+      embed_api: $('#cfgEmbedApi').value.trim(),
+      target_table: $('#cfgTargetTable').value,
+      embed_dim: embedMode === 'browser' ? 512 : (MODEL_DIM[embedModel] || 1024),
+      worker_url: getWorkerUrl(),
+      auto_push: $('#cfgAutoPush').checked
+    };
+  }
+
+  function getWorkerUrl() {
+    const base = ($('#cfgWorkerUrl').value || 'http://127.0.0.1:8790').replace(/\/$/, '');
+    return base + '/api/v1/ingest/push';
+  }
+
+  async function checkWorkerHealth() {
+    const base = ($('#cfgWorkerUrl').value || 'http://127.0.0.1:8790').replace(/\/$/, '');
+    const el = $('#workerStatus');
+    try {
+      const resp = await fetch(base + '/health', { signal: AbortSignal.timeout(3000) });
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      const data = await resp.json();
+      el.innerHTML = `<span style="color:var(--green)">● Worker 在线</span> · ${esc(data.doris_fe)} · ${esc(data.database)}`;
+      return true;
+    } catch {
+      el.innerHTML = `<span style="color:var(--orange)">○ Worker 离线</span> · 请运行 doris-ingest/start.sh`;
+      return false;
+    }
+  }
+
+  $('#cfgWorkerUrl').addEventListener('change', () => {
+    localStorage.setItem('uih_worker_url', $('#cfgWorkerUrl').value);
+    $('#pushApiUrl').value = getWorkerUrl();
+    checkWorkerHealth();
+  });
+  const savedWorker = localStorage.getItem('uih_worker_url');
+  if (savedWorker) { $('#cfgWorkerUrl').value = savedWorker; $('#pushApiUrl').value = getWorkerUrl(); }
+
+  $('#cfgEmbedMode').addEventListener('change', () => {
+    const api = $('#cfgEmbedMode').value === 'api';
+    $('#embedApiField').style.display = api ? 'block' : 'none';
+    if (api) $('#cfgEmbedModel').value = 'bge-large-zh';
+    else $('#cfgEmbedModel').value = 'bge-small-zh';
+  });
+
+  // ── 真实文档解析 ──
+  async function readAsArrayBuffer(file) { return file.raw.arrayBuffer(); }
+  async function readAsText(file) { return file.raw.text(); }
+
+  async function parseDocx(file) {
+    const buf = await readAsArrayBuffer(file);
+    const result = await mammoth.extractRawText({ arrayBuffer: buf });
+    if (result.messages?.length) {
+      result.messages.filter(m => m.type === 'warning').forEach(m => log(`Word 警告: ${m.message}`, 'warn'));
+    }
+    const text = (result.value || '').replace(/\r\n/g, '\n').trim();
+    if (!text) throw new Error('Word 文档未提取到文本（可能是扫描件，需 OCR）');
+    return { text, pages: [{ page: 1, text }], parser: 'mammoth' };
+  }
+
+  async function parsePdf(file) {
+    const buf = await readAsArrayBuffer(file);
+    const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+    const pages = [];
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      const text = content.items.map(it => it.str).join(' ').replace(/\s+/g, ' ').trim();
+      if (text) pages.push({ page: i, text });
+    }
+    const text = pages.map(p => p.text).join('\n\n');
+    if (!text) throw new Error('PDF 未提取到文本（可能是扫描件，需 OCR / DeepDoc）');
+    return { text, pages, parser: 'pdf.js', pageCount: pdf.numPages };
+  }
+
+  async function parsePptx(file) {
+    const buf = await readAsArrayBuffer(file);
+    const zip = await JSZip.loadAsync(buf);
+    const slideFiles = Object.keys(zip.files)
+      .filter(n => /^ppt\/slides\/slide\d+\.xml$/i.test(n))
+      .sort((a, b) => {
+        const na = +a.match(/\d+/)[0], nb = +b.match(/\d+/)[0];
+        return na - nb;
+      });
+    const pages = [];
+    for (let i = 0; i < slideFiles.length; i++) {
+      const xml = await zip.files[slideFiles[i]].async('string');
+      const texts = [...xml.matchAll(/<a:t[^>]*>([^<]*)<\/a:t>/g)].map(m => m[1].trim()).filter(Boolean);
+      const text = texts.join('\n');
+      if (text) pages.push({ page: i + 1, text });
+    }
+    const text = pages.map(p => `【幻灯片 ${p.page}】\n${p.text}`).join('\n\n');
+    if (!text) throw new Error('PPT 未提取到文本');
+    return { text, pages, parser: 'jszip+pptx', pageCount: slideFiles.length };
+  }
+
+  async function parseExcel(file) {
+    const buf = await readAsArrayBuffer(file);
+    const wb = XLSX.read(buf, { type: 'array' });
+    const pages = [];
+    wb.SheetNames.forEach((name, idx) => {
+      const sheet = wb.Sheets[name];
+      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+      const lines = rows
+        .filter(r => r.some(c => String(c).trim()))
+        .map(r => r.map(c => String(c).trim()).join(' | '));
+      if (lines.length) {
+        const text = lines.join('\n');
+        pages.push({ page: idx + 1, text, sheetName: name });
+      }
+    });
+    const text = pages.map(p => `【Sheet: ${p.sheetName}】\n${p.text}`).join('\n\n');
+    if (!text) throw new Error('表格为空');
+    return { text, pages, parser: 'SheetJS' };
+  }
+
+  async function parseCsv(file) {
+    const raw = await readAsText(file);
+    const lines = raw.split(/\r?\n/).filter(l => l.trim());
+    if (!lines.length) throw new Error('CSV 为空');
+    const text = lines.join('\n');
+    return { text, pages: [{ page: 1, text }], parser: 'csv' };
+  }
+
+  async function parseText(file) {
+    const text = (await readAsText(file)).trim();
+    if (!text) throw new Error('文件为空');
+    return { text, pages: [{ page: 1, text }], parser: 'text' };
+  }
+
+  async function parseDocument(file) {
+    const e = ext(file.name);
+    if (e === 'docx') return parseDocx(file);
+    if (e === 'doc') throw new Error('.doc 旧格式请另存为 .docx 后上传');
+    if (e === 'pdf') return parsePdf(file);
+    if (e === 'pptx') return parsePptx(file);
+    if (e === 'ppt') throw new Error('.ppt 旧格式请另存为 .pptx 后上传');
+    if (e === 'xlsx' || e === 'xls') return parseExcel(file);
+    if (e === 'csv') return parseCsv(file);
+    if (e === 'txt' || e === 'md') return parseText(file);
+    throw new Error(`不支持: .${e}`);
+  }
+
+  // ── 真实切片 ──
+  function splitParagraphs(text) {
+    return text.split(/\n{2,}/).map(p => p.replace(/\s+/g, ' ').trim()).filter(p => p.length > 20);
+  }
+
+  function chunkBySize(text, size, overlap) {
+    const chunks = [];
+    let start = 0;
+    while (start < text.length) {
+      let end = Math.min(start + size, text.length);
+      if (end < text.length) {
+        const slice = text.slice(start, end);
+        const breakAt = Math.max(slice.lastIndexOf('\n'), slice.lastIndexOf('。'), slice.lastIndexOf('；'), slice.lastIndexOf('. '));
+        if (breakAt > size * 0.4) end = start + breakAt + 1;
+      }
+      const piece = text.slice(start, end).trim();
+      if (piece.length > 10) chunks.push(piece);
+      if (end >= text.length) break;
+      start = Math.max(start + 1, end - overlap);
+    }
+    return chunks;
+  }
+
+  function chunkDocument(parsed, cfg, docId) {
+    const { text, pages } = parsed;
+    let rawChunks = [];
+
+    if (cfg.chunk_strategy === 'page' && pages.length > 1) {
+      rawChunks = pages.map(p => ({ text: p.text, page: p.page }));
+    } else if (cfg.chunk_strategy === 'table') {
+      rawChunks = pages.flatMap(p => {
+        const rows = p.text.split('\n').filter(r => r.trim());
+        return rows.map((row, i) => ({ text: row, page: p.page || 1, row: i + 1 }));
+      });
+    } else if (cfg.chunk_strategy === 'qa') {
+      const paras = splitParagraphs(text);
+      rawChunks = paras.map((t, i) => ({ text: t, page: 1, para: i + 1 }));
+      if (!rawChunks.length) {
+        chunkBySize(text, cfg.chunk_size, cfg.overlap).forEach((t, i) =>
+          rawChunks.push({ text: t, page: 1, para: i + 1 }));
+      }
+    } else {
+      const paras = splitParagraphs(text);
+      if (paras.length > 1) {
+        paras.forEach((p, i) => {
+          if (p.length <= cfg.chunk_size) rawChunks.push({ text: p, page: 1, para: i + 1 });
+          else chunkBySize(p, cfg.chunk_size, cfg.overlap).forEach((t, j) =>
+            rawChunks.push({ text: t, page: 1, para: `${i + 1}.${j + 1}` }));
+        });
+      } else {
+        chunkBySize(text, cfg.chunk_size, cfg.overlap).forEach((t, i) =>
+          rawChunks.push({ text: t, page: 1, para: i + 1 }));
+      }
+    }
+
+    return rawChunks.map((c, i) => ({
+      id: `chk_${docId.slice(4, 12)}_${String(i + 1).padStart(3, '0')}`,
+      text: c.text,
+      tokens: estTokens(c.text),
+      page: c.page || 1,
+      embedding: null,
+      vectorPreview: ''
+    }));
+  }
+
+  // ── 真实 Embedding ──
+  async function getBrowserEmbedder() {
+    if (!embedPipeline) {
+      log('加载本地 Embedding 模型（首次约 20–40 秒）...', 'info');
+      embedPipeline = await pipeline('feature-extraction', BROWSER_MODEL, { quantized: true });
+      log('本地模型加载完成', 'ok');
+    }
+    return embedPipeline;
+  }
+
+  async function embedViaBrowser(chunks, onProgress) {
+    const extractor = await getBrowserEmbedder();
+    for (let i = 0; i < chunks.length; i++) {
+      const out = await extractor(chunks[i].text, { pooling: 'mean', normalize: true });
+      const vec = Array.from(out.data);
+      chunks[i].embedding = vec;
+      chunks[i].vectorPreview = vec.slice(0, 4).map(v => v.toFixed(4)).join(', ');
+      if (onProgress) onProgress(i + 1, chunks.length);
+    }
+    return chunks;
+  }
+
+  async function embedViaApi(chunks, cfg, onProgress) {
+    if (!cfg.embed_api) throw new Error('请配置 Embedding API 地址');
+    const batchSize = 8;
+    for (let i = 0; i < chunks.length; i += batchSize) {
+      const batch = chunks.slice(i, i + batchSize);
+      const resp = await fetch(cfg.embed_api, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ texts: batch.map(c => c.text), model: cfg.embed_model })
+      });
+      if (!resp.ok) throw new Error(`Embedding API ${resp.status}: ${await resp.text()}`);
+      const data = await resp.json();
+      const vectors = data.embeddings || data.data?.map(d => d.embedding) || data.vectors;
+      if (!vectors || vectors.length !== batch.length) throw new Error('Embedding API 返回格式不正确');
+      batch.forEach((c, j) => {
+        c.embedding = normalize(vectors[j]);
+        c.vectorPreview = c.embedding.slice(0, 4).map(v => v.toFixed(4)).join(', ');
+      });
+      if (onProgress) onProgress(Math.min(i + batchSize, chunks.length), chunks.length);
+    }
+    return chunks;
+  }
+
+  async function embedChunks(chunks, cfg, onProgress) {
+    if (cfg.embed_mode === 'api') return embedViaApi(chunks, cfg, onProgress);
+    return embedViaBrowser(chunks, onProgress);
+  }
+
+  // ── UI ──
+  function updateHeader() {
+    const total = files.reduce((s, f) => s + f.size, 0);
+    $('#totalSize').textContent = `${files.length} 个文件 · ${fmtSize(total)}`;
+    $('#fileCount').textContent = `${files.length} 个文件`;
+    fileListSection.style.display = files.length ? 'block' : 'none';
+    const busy = processing;
+    $('#btnOneClick').disabled = !files.length || busy;
+    $('#btnProcessAll').disabled = !files.length || busy;
+    $('#btnClearAll').disabled = !files.length || busy;
+    $('#btnPushDb').disabled = !files.filter(f => f.status === 'ready').length || busy;
+    $('#btnPushReady').disabled = !files.filter(f => f.status === 'ready').length || busy;
+    $('#btnExportDoris').disabled = !files.filter(f => f.status === 'ready' && f.chunks?.length).length || busy;
+  }
+
+  function renderFileList() {
+    fileList.innerHTML = files.map(f => `
+      <div class="file-item ${f.id === selectedId ? 'active' : ''}" data-id="${f.id}">
+        <div class="file-icon ${ACCEPT_EXT[ext(f.name)] || 'fi-other'}">${ext(f.name).toUpperCase().slice(0, 3)}</div>
+        <div class="file-info">
+          <div class="name" title="${esc(f.name)}">${esc(f.name)}</div>
+          <div class="meta">${fmtSize(f.size)} · ${f.chunks ? f.chunks.length + ' chunks' : f.parsed ? f.parsed.text.length + ' 字' : '—'}</div>
+          ${!['pending','ready','pushed','error'].includes(f.status) ? `
+            <div class="file-progress"><div class="file-progress-bar" style="width:${f.progress || 0}%"></div></div>` : ''}
+        </div>
+        <div class="file-status"><span class="status-badge st-${f.status}">${STATUS_LABEL[f.status]}</span></div>
+      </div>`).join('');
+    fileList.querySelectorAll('.file-item').forEach(el => el.addEventListener('click', () => selectFile(el.dataset.id)));
+    updateHeader();
+  }
+
+  function setPipelineStep(step, state, desc) {
+    const el = document.querySelector(`.pipe-step[data-step="${step}"]`);
+    el.classList.remove('active', 'done');
+    if (state === 'active') el.classList.add('active');
+    if (state === 'done') el.classList.add('done');
+    if (desc) el.querySelector('.pipe-desc').textContent = desc;
+  }
+
+  function resetPipeline() {
+    PIPELINE.forEach(step => {
+      const el = document.querySelector(`.pipe-step[data-step="${step}"]`);
+      el.classList.remove('done', 'active');
+      el.querySelector('.pipe-desc').textContent =
+        step === 'upload' ? '等待文件...' : step === 'parse' ? '提取文本 / 表格' :
+        step === 'chunk' ? '按策略切分文档' : step === 'embed' ? '向量化' : '索引就绪，可写入 Doris';
+    });
+    $('#statChunks').textContent = '—';
+    $('#statTokens').textContent = '—';
+    $('#statDim').textContent = '—';
+    parsePreview.style.display = 'none';
+    chunkPreview.innerHTML = '<div class="empty-state">上传并处理文档后，在此预览切片结果</div>';
+    $('#selectedFileName').textContent = '未选择';
+  }
+
+  function selectFile(id) {
+    selectedId = id;
+    const f = files.find(x => x.id === id);
+    if (!f) return;
+    renderFileList();
+    $('#selectedFileName').textContent = f.name;
+    const cfg = getConfig();
+
+    if (f.parsed) {
+      parsePreview.style.display = 'block';
+      parsePreview.textContent = `解析摘要: ${f.parsed.parser} · ${f.parsed.text.length} 字` +
+        (f.parsed.pageCount ? ` · ${f.parsed.pageCount} 页` : '') +
+        ` · ${f.parsed.text.slice(0, 120)}...`;
+    } else parsePreview.style.display = 'none';
+
+    if (!f.chunks) {
+      if (f.status !== 'pending') {
+        const map = { uploading: 0, parsing: 1, chunking: 2, embedding: 3, ready: 4 };
+        const idx = map[f.status] ?? -1;
+        PIPELINE.forEach((s, i) => setPipelineStep(s, i < idx ? 'done' : i === idx ? 'active' : ''));
+      } else resetPipeline();
+      return;
+    }
+
+    PIPELINE.forEach(s => setPipelineStep(s, 'done',
+      s === 'upload' ? `已读取 ${fmtSize(f.size)}` :
+      s === 'parse' ? `${f.parsed.parser} · ${f.parsed.text.length} 字` :
+      s === 'chunk' ? `生成 ${f.chunks.length} 个 chunk` :
+      s === 'embed' ? `${f.chunks.length} 条向量 · ${cfg.embed_dim} 维` :
+      '索引就绪，可推送 Doris'));
+
+    $('#statChunks').textContent = f.chunks.length;
+    $('#statTokens').textContent = f.chunks.reduce((s, c) => s + c.tokens, 0);
+    $('#statDim').textContent = cfg.embed_dim;
+
+    chunkPreview.innerHTML = f.chunks.map(c => `
+      <div class="chunk-item">
+        <div class="chunk-head">
+          <span class="chunk-id">${esc(c.id)}</span>
+          <span class="chunk-meta">${c.tokens} tokens · page ${c.page}</span>
+        </div>
+        <div class="chunk-text">${esc(c.text)}</div>
+        <div class="chunk-dim">${c.embedding
+          ? `vector[${c.embedding.length}] = [${esc(c.vectorPreview)}...]`
+          : 'vector: 待生成'}</div>
+      </div>`).join('');
+  }
+
+  async function processFile(file) {
+    const cfg = getConfig();
+    selectFile(file.id);
+
+    // 1 读取
+    file.status = 'uploading'; file.progress = 10; renderFileList();
+    setPipelineStep('upload', 'active', '读取本地文件...');
+    log(`读取 ${file.name} (${fmtSize(file.size)})`, 'info');
+    await new Promise(r => setTimeout(r, 100));
+    setPipelineStep('upload', 'done', `已读取 ${fmtSize(file.size)}`);
+
+    // 2 解析
+    file.status = 'parsing'; file.progress = 30; renderFileList();
+    setPipelineStep('parse', 'active', '正在解析文档...');
+    log(`解析 ${file.name} · ${ext(file.name)}`, 'info');
+    file.parsed = await parseDocument(file);
+    setPipelineStep('parse', 'done', `${file.parsed.parser} · ${file.parsed.text.length} 字`);
+    log(`✓ 解析完成 · ${file.parsed.text.length} 字符` +
+      (file.parsed.pageCount ? ` · ${file.parsed.pageCount} 页` : ''), 'ok');
+
+    // 3 切片
+    file.status = 'chunking'; file.progress = 55; renderFileList();
+    setPipelineStep('chunk', 'active', `策略: ${cfg.chunk_strategy}`);
+    file.chunks = chunkDocument(file.parsed, cfg, file.id);
+    if (!file.chunks.length) throw new Error('切片结果为空，请调小 chunk_size 或检查文档内容');
+    setPipelineStep('chunk', 'done', `生成 ${file.chunks.length} 个 chunk`);
+    log(`✓ 切片完成 · ${file.chunks.length} chunks · ${cfg.chunk_strategy}`, 'ok');
+
+    // 4 Embedding
+    file.status = 'embedding'; file.progress = 70; renderFileList();
+    setPipelineStep('embed', 'active', cfg.embed_mode === 'api' ? '调用 Embedding API...' : '浏览器本地向量化...');
+    await embedChunks(file.chunks, cfg, (done, total) => {
+      file.progress = 70 + Math.round((done / total) * 25);
+      setPipelineStep('embed', 'active', `向量化 ${done}/${total}`);
+      renderFileList();
+    });
+    setPipelineStep('embed', 'done', `${file.chunks.length} 条向量 · ${cfg.embed_dim} 维`);
+    log(`✓ Embedding 完成 · ${cfg.embed_mode === 'api' ? cfg.embed_model : BROWSER_MODEL}`, 'ok');
+
+    file.status = 'ready'; file.progress = 100;
+    file.ossUri = `oss://uih-kb/${cfg.domain}/${file.id}/${file.name}`;
+    file.metadata = { domain: cfg.domain, doc_type: cfg.doc_type, embed_model: cfg.embed_model, parser: file.parsed.parser };
+    setPipelineStep('ready', 'done', '索引就绪，可推送 Doris');
+    selectFile(file.id); renderFileList();
+    log(`✓ ${file.name} 处理完成 · 真实正文 ${file.parsed.text.length} 字 · ${file.chunks.length} chunks`, 'ok');
+  }
+
+  async function processAll(options = {}) {
+    const { autoPush = $('#cfgAutoPush').checked } = options;
+    if (processing) return;
+    processing = true; updateHeader();
+    const pending = files.filter(f => f.status === 'pending' || f.status === 'error');
+    log(`开始真实解析 ${pending.length} 个文件...`, 'info');
+    for (const f of pending) {
+      f.status = 'pending'; f.progress = 0; f.chunks = null; f.parsed = null;
+      try {
+        await processFile(f);
+        if (autoPush && f.status === 'ready') await pushFilesToDoris([f]);
+      } catch (e) {
+        f.status = 'error'; log(`✗ ${f.name}: ${e.message}`, 'err'); renderFileList();
+      }
+    }
+    processing = false; updateHeader();
+    log('批量处理完成', 'ok');
+  }
+
+  async function oneClickIngest() {
+    if (processing) return;
+    const online = await checkWorkerHealth();
+    if (!online) {
+      log('✗ Worker 未启动，请先运行: cd doris-ingest && ./start.sh', 'err');
+      return;
+    }
+    log('⚡ 一键入库：解析 → Embedding → Stream Load Doris', 'info');
+    await processAll({ autoPush: true });
+  }
+
+  function addFiles(fileListRaw) {
+    const maxSize = 50 * 1024 * 1024;
+    for (const raw of fileListRaw) {
+      const e = ext(raw.name);
+      if (!ACCEPT_EXT[e] && !['txt', 'md'].includes(e)) { log(`✗ 不支持: ${raw.name}`, 'warn'); continue; }
+      if (raw.size > maxSize) { log(`✗ 过大: ${raw.name}`, 'warn'); continue; }
+      if (files.some(f => f.name === raw.name && f.size === raw.size)) continue;
+      files.push({ id: uid(), name: raw.name, size: raw.size, raw, status: 'pending', progress: 0, chunks: null, parsed: null });
+      log(`+ ${raw.name} (${fmtSize(raw.size)})`, 'info');
+      if (['xls','xlsx','csv'].includes(e)) $('#cfgChunkStrategy').value = 'table';
+      else if (['pdf','ppt','pptx'].includes(e)) $('#cfgChunkStrategy').value = 'page';
+      else if (['doc','docx'].includes(e)) $('#cfgChunkStrategy').value = 'paragraph';
+    }
+    renderFileList();
+    if (files.length && !selectedId) selectFile(files[files.length - 1].id);
+  }
+
+  function buildDorisPayload(forFiles) {
+    const targets = forFiles || files.filter(f => f.status === 'ready' && f.chunks?.length);
+    const registry = [];
+    const chunks = [];
+    targets.forEach(f => {
+      const dim = f.chunks[0]?.embedding?.length || 512;
+      registry.push({
+        document_id: f.id, title: f.name, oss_uri: f.ossUri,
+        domain: f.metadata.domain, doc_type: f.metadata.doc_type,
+        embed_model: f.metadata.embed_model, embed_dim: dim,
+        parser: f.metadata.parser || '', chunk_count: f.chunks.length,
+        status: 'indexed', version: 1,
+        indexed_at: new Date().toISOString().slice(0, 19).replace('T', ' ')
+      });
+      f.chunks.forEach(c => {
+        chunks.push({
+          chunk_id: c.id, document_id: f.id, content: c.text, title: f.name,
+          domain: f.metadata.domain, doc_type: f.metadata.doc_type,
+          page_no: c.page, token_count: c.tokens, embed_model: f.metadata.embed_model,
+          embedding: c.embedding, oss_uri: f.ossUri, dept_acl: 'All',
+          indexed_at: new Date().toISOString().slice(0, 19).replace('T', ' ')
+        });
+      });
+    });
+    return { registry, chunks, replace: true,
+      summary: { documents: registry.length, chunks: chunks.length } };
+  }
+
+  function buildDorisRows() {
+    const p = buildDorisPayload();
+    return { registry: p.registry, chunks: p.chunks, summary: p.summary };
+  }
+
+  function downloadJson(filename, data) {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function exportDorisJson() {
+    const { registry, chunks, summary } = buildDorisRows();
+    if (!chunks.length) return;
+    const ts = new Date().toISOString().slice(0, 10);
+    downloadJson(`kb_document_registry_${ts}.json`, registry);
+    downloadJson(`uih_doc_chunks_${ts}.json`, chunks);
+    log(`✓ 已导出 Doris 格式 · registry ${summary.documents} 行 · chunks ${summary.chunks} 行`, 'ok');
+    log('→ Stream Load 至 kb.kb_document_registry / kb.uih_doc_chunks', 'info');
+  }
+
+  function updateApiPreview() {
+    const payload = buildDorisPayload();
+    $('#apiPreview').textContent =
+      `POST ${getWorkerUrl()}\nContent-Type: application/json\n\n` +
+      JSON.stringify({ registry: payload.registry.slice(0, 1), chunks: payload.chunks.slice(0, 1), replace: true }, null, 2) +
+      `\n... (${payload.summary.documents} docs, ${payload.summary.chunks} chunks)`;
+  }
+
+  async function pushFilesToDoris(forFiles) {
+    const targets = forFiles || files.filter(f => f.status === 'ready');
+    if (!targets.length) return;
+    const payload = buildDorisPayload(targets);
+    if (!payload.chunks.length) throw new Error('无 chunk 数据');
+
+    log(`Stream Load → Doris · ${payload.summary.documents} 文档 · ${payload.summary.chunks} chunks`, 'info');
+    setPipelineStep('ready', 'active', 'Stream Load 写入 Doris...');
+    const resp = await fetch(getWorkerUrl(), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok) throw new Error(data.detail || data.message || `HTTP ${resp.status}`);
+
+    targets.forEach(f => {
+      f.status = 'pushed';
+      log(`✓ ${f.name} → Doris（${f.chunks.length} rows）`, 'ok');
+    });
+    setPipelineStep('ready', 'done', `已入库 · ${data.message || 'Success'}`);
+    renderFileList();
+    log(`✓ 入库完成 · registry ${data.registry?.loaded} · chunks ${data.chunks?.loaded}`, 'ok');
+    return data;
+  }
+
+  async function pushToDb() {
+    try {
+      await pushFilesToDoris();
+      pushModal.classList.remove('open');
+      updateHeader();
+    } catch (e) {
+      log(`✗ 推送失败: ${e.message}`, 'err');
+    }
+  }
+
+  uploadZone.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', (e) => { addFiles(e.target.files); fileInput.value = ''; });
+  uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', (e) => { e.preventDefault(); uploadZone.classList.remove('dragover'); addFiles(e.dataTransfer.files); });
+  $('#btnOneClick').addEventListener('click', oneClickIngest);
+  $('#btnProcessAll').addEventListener('click', () => processAll({ autoPush: false }));
+  $('#btnPushReady').addEventListener('click', () => pushFilesToDoris().catch(e => log(`✗ ${e.message}`, 'err')));
+  $('#btnExportDoris').addEventListener('click', exportDorisJson);
+  $('#btnClearAll').addEventListener('click', () => {
+    if (processing) return;
+    files = []; selectedId = null; resetPipeline(); renderFileList(); log('已清空', 'warn');
+  });
+  $('#btnPushDb').addEventListener('click', () => { updateApiPreview(); pushModal.classList.add('open'); });
+  $('#btnPushConfig').addEventListener('click', () => { updateApiPreview(); pushModal.classList.add('open'); });
+  $('#modalClose').addEventListener('click', () => pushModal.classList.remove('open'));
+  $('#modalCancel').addEventListener('click', () => pushModal.classList.remove('open'));
+  $('#modalConfirm').addEventListener('click', pushToDb);
+  pushModal.addEventListener('click', (e) => { if (e.target === pushModal) pushModal.classList.remove('open'); });
+  ['pushHost', 'pushApiUrl', 'pushTarget'].forEach(id => {
+    document.getElementById(id)?.addEventListener('input', updateApiPreview);
+    document.getElementById(id)?.addEventListener('change', updateApiPreview);
+  });
+
+  log('真实解析 + 一键入库模式', 'ok');
+  checkWorkerHealth();
+})();
+</script>
+</body>
+</html>

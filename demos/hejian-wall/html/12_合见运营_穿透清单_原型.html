@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>合见运营 · 借测/发货全量明细清单 · 原型</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { background:#eef3f9; }
+  body { font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif; color:#23314c; -webkit-font-smoothing:antialiased; }
+  .stage { width:1600px; height:826px; position:relative; background:linear-gradient(165deg,#ffffff,#eef4fb); }
+  .ribbon { position:absolute; right:0; top:0; background:#e2574c; color:#fff; font-size:12px; font-weight:700; padding:5px 16px; border-bottom-left-radius:10px; z-index:3; }
+  .top { background:linear-gradient(135deg,#3f7fc4,#5fa0db); color:#fff; padding:13px 28px; display:flex; justify-content:space-between; align-items:center; }
+  .top h1 { font-size:19px; font-weight:800; letter-spacing:.5px; }
+  .top h1 .en { font-size:12px; opacity:.85; font-weight:600; margin-left:8px; }
+  .crumb { font-size:12.5px; opacity:.92; }
+  .crumb b { background:rgba(255,255,255,.2); padding:2px 9px; border-radius:5px; }
+
+  .filters { display:flex; gap:9px; padding:11px 28px; background:#fff; border-bottom:1px solid #e3ebf4; flex-wrap:wrap; align-items:center; }
+  .sel { background:#f4f7fc; border:1px solid #d4ddea; border-radius:6px; padding:6px 12px; font-size:12.5px; color:#3a4660; }
+  .sel.act { border-color:#5fa0db; color:#2a5ea0; font-weight:700; }
+  .sp { font-size:12px; color:#8a93a6; }
+  .btn { margin-left:auto; background:linear-gradient(135deg,#3f7fc4,#5fa0db); color:#fff; font-size:12.5px; font-weight:700; padding:7px 18px; border-radius:6px; }
+
+  .sumrow { display:flex; gap:12px; padding:13px 28px 4px; }
+  .sc { background:#fff; border:1px solid #e4ebf4; border-left:4px solid #3f7fc4; border-radius:9px; padding:9px 16px; box-shadow:0 3px 9px rgba(40,70,120,.05); }
+  .sc.g{border-left-color:#2e8b57;} .sc.o{border-left-color:#e8855a;} .sc.r{border-left-color:#e2574c;}
+  .sc .n { font-size:20px; font-weight:800; color:#1c2c4a; }
+  .sc .t { font-size:11px; color:#7c869a; }
+
+  .tablewrap { margin:12px 28px; background:#fff; border:1px solid #e4ebf4; border-radius:11px; overflow:hidden; box-shadow:0 3px 10px rgba(40,70,120,.05); }
+  table { width:100%; border-collapse:collapse; }
+  thead th { font-size:11.5px; color:#5a6580; text-align:left; padding:11px 12px; background:#f3f7fc; border-bottom:2px solid #e3ebf4; font-weight:700; white-space:nowrap; }
+  tbody td { font-size:12.5px; color:#3a4660; padding:10px 12px; border-bottom:1px solid #f1f4f9; white-space:nowrap; }
+  tbody tr:hover { background:#f8fbff; }
+  td .sn { color:#2a5ea0; font-weight:700; }
+  .pill { font-size:10.5px; font-weight:700; padding:2px 9px; border-radius:10px; }
+  .pill.buy{background:#e9f1fb;color:#2a5ea0;} .pill.lend{background:#fef0e2;color:#cf6a2e;} .pill.conv{background:#e8f3ec;color:#1c6b40;} .pill.ret{background:#eef0f4;color:#6b7488;}
+  .st { font-size:10.5px; font-weight:700; padding:2px 9px; border-radius:10px; }
+  .st.ok{background:#e8f3ec;color:#27795a;} .st.warn{background:#fef0e2;color:#cf6a2e;} .st.bad{background:#fde8e6;color:#c0392b;}
+  .arrow { color:#3f7fc4; font-weight:800; }
+  .foot { padding:0 28px; font-size:11.5px; color:#9aa3b5; display:flex; justify-content:space-between; }
+</style>
+  <link rel="stylesheet" href="nav.css">
+</head>
+<body data-page="12">
+<div class="proto-app">
+  <aside id="proto-nav" class="proto-nav"></aside>
+  <div class="proto-main">
+<div class="stage">
+  <div class="ribbon">原型设计稿</div>
+  <div class="top">
+    <h1>借测 / 发货全量明细清单<span class="en">Drill-through List · L5 明细层</span></h1>
+    <div class="crumb">穿透来源：<b>运营工作台 › 缺货 / 借测占用</b> · 序列号级可追溯</div>
+  </div>
+
+  <div class="filters">
+    <div class="sel act">2026-01 ~ 2026-06</div>
+    <div class="sel">订单类型：全部</div>
+    <div class="sel">状态：全部</div>
+    <div class="sel">主体：全部</div>
+    <div class="sp">关键字：</div><div class="sel" style="min-width:160px;color:#9aa3b5;">订单号 / 客户 / 序列号…</div>
+    <div class="btn">导出明细</div>
+  </div>
+
+  <div class="sumrow">
+    <div class="sc"><div class="n">1,284</div><div class="t">明细行（笔）</div></div>
+    <div class="sc g"><div class="n">752</div><div class="t">已发 / 已转销</div></div>
+    <div class="sc o"><div class="n">213</div><div class="t">在借（未归还）</div></div>
+    <div class="sc r"><div class="n">96</div><div class="t">缺货 / 待发</div></div>
+    <div class="sc o"><div class="n">28</div><div class="t">超期在借（>90天）</div></div>
+    <div class="sc"><div class="n">8,640<span style="font-size:12px">万</span></div><div class="t">关联金额</div></div>
+  </div>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr>
+        <th>订单号</th><th>客户</th><th>行业 / 区域</th><th>产品 / 平台</th><th>序列号(SN)</th><th>类型</th><th>数量</th><th>在借天数</th><th>库龄</th><th>履约状态</th><th>金额(万)</th><th>穿透</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>SO-2026-0418</td><td>客户 A</td><td>数据中心 / 华东</td><td>UVHS-2</td><td class="sn">SN-3389</td><td><span class="pill lend">借用</span></td><td>1</td><td style="color:#c0392b;font-weight:700;">126</td><td>—</td><td><span class="st bad">超期在借</span></td><td>320</td><td class="arrow"><a href="13_合见运营_订单卡片_原型.html" style="color:#3f7fc4;text-decoration:none;font-weight:800;">›</a></td></tr>
+        <tr><td>SO-2026-0402</td><td>客户 B</td><td>HPC / 华北</td><td>UVHP</td><td class="sn">SN-3201</td><td><span class="pill conv">借转销</span></td><td>1</td><td>—</td><td>—</td><td><span class="st ok">已转销</span></td><td>560</td><td class="arrow"><a href="13_合见运营_订单卡片_原型.html" style="color:#3f7fc4;text-decoration:none;font-weight:800;">›</a></td></tr>
+        <tr><td>SO-2026-0391</td><td>客户 C</td><td>ADAS / 华东</td><td>UV APS</td><td class="sn">SN-3110</td><td><span class="pill buy">购买</span></td><td>2</td><td>—</td><td>—</td><td><span class="st warn">待发(缺货)</span></td><td>180</td><td class="arrow"><a href="13_合见运营_订单卡片_原型.html" style="color:#3f7fc4;text-decoration:none;font-weight:800;">›</a></td></tr>
+        <tr><td>SO-2026-0377</td><td>客户 D</td><td>5G通信 / 华南</td><td>子卡</td><td class="sn">SN-2980</td><td><span class="pill ret">归还</span></td><td>3</td><td>已归还</td><td>—</td><td><span class="st ok">复检入库</span></td><td>45</td><td class="arrow"><a href="13_合见运营_订单卡片_原型.html" style="color:#3f7fc4;text-decoration:none;font-weight:800;">›</a></td></tr>
+        <tr><td>SO-2026-0356</td><td>客户 E</td><td>消费电子 / 华东</td><td>开发板</td><td class="sn">SN-2877</td><td><span class="pill lend">借用</span></td><td>1</td><td>62</td><td>—</td><td><span class="st warn">在借跟踪</span></td><td>22</td><td class="arrow"><a href="13_合见运营_订单卡片_原型.html" style="color:#3f7fc4;text-decoration:none;font-weight:800;">›</a></td></tr>
+        <tr><td>SO-2026-0341</td><td>客户 F</td><td>数据中心 / 华北</td><td>UVHS-2</td><td class="sn">SN-2810</td><td><span class="pill buy">购买</span></td><td>1</td><td>—</td><td>—</td><td><span class="st ok">已发货</span></td><td>300</td><td class="arrow"><a href="13_合见运营_订单卡片_原型.html" style="color:#3f7fc4;text-decoration:none;font-weight:800;">›</a></td></tr>
+        <tr><td>SO-2026-0330</td><td>客户 G</td><td>AI推理 / 华东</td><td>模组</td><td class="sn">SN-2756</td><td><span class="pill buy">购买</span></td><td>4</td><td>—</td><td>148</td><td><span class="st warn">长库龄</span></td><td>96</td><td class="arrow"><a href="13_合见运营_订单卡片_原型.html" style="color:#3f7fc4;text-decoration:none;font-weight:800;">›</a></td></tr>
+        <tr><td>SO-2026-0318</td><td>客户 H</td><td>HPC / 华南</td><td>UVHP</td><td class="sn">SN-2701</td><td><span class="pill conv">借转销</span></td><td>1</td><td>—</td><td>—</td><td><span class="st ok">已转销</span></td><td>540</td><td class="arrow"><a href="13_合见运营_订单卡片_原型.html" style="color:#3f7fc4;text-decoration:none;font-weight:800;">›</a></td></tr>
+        <tr><td>SO-2026-0299</td><td>客户 I</td><td>智能驾驶 / 华东</td><td>UV APS</td><td class="sn">SN-2655</td><td><span class="pill lend">借用</span></td><td>2</td><td style="color:#c0392b;font-weight:700;">104</td><td>—</td><td><span class="st bad">超期在借</span></td><td>360</td><td class="arrow"><a href="13_合见运营_订单卡片_原型.html" style="color:#3f7fc4;text-decoration:none;font-weight:800;">›</a></td></tr>
+        <tr><td>SO-2026-0284</td><td>客户 J</td><td>存储 / 华北</td><td>子卡</td><td class="sn">SN-2590</td><td><span class="pill buy">购买</span></td><td>6</td><td>—</td><td>210</td><td><span class="st bad">呆滞</span></td><td>72</td><td class="arrow"><a href="13_合见运营_订单卡片_原型.html" style="color:#3f7fc4;text-decoration:none;font-weight:800;">›</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="foot"><span>共 1,284 行 · 当前第 1 / 129 页 · 示意数据</span><span>← 上一页　1　2　3　…　129　下一页 →</span></div>
+  <div style="margin:12px 28px 0; background:linear-gradient(90deg,#eef4fb,#f6f9fd); border:1px dashed #b9cce4; border-left:4px solid #3f7fc4; border-radius:8px; padding:9px 16px; font-size:12.5px; color:#3a4660; line-height:1.5;"><b style="color:#2a5ea0;">分析思路：</b>L5 明细层，<b style="color:#2a5ea0;">序列号级全量可追溯</b>；承接上层工作台/专题的穿透，支持按类型/状态/主体筛选与导出，并可继续穿透到<a href="13_合见运营_订单卡片_原型.html" style="color:#2a5ea0;font-weight:700;">「单笔订单 / 序列号 360° 卡片」→</a></div>
+</div>
+  </div>
+</div>
+<script src="nav.js"></script>
+</body>
+</html>

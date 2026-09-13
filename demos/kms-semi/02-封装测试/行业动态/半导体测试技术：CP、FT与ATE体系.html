@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>半导体测试技术：CP、FT与ATE体系 — 半导体知识库</title>
+<meta name="description" content="# 半导体测试技术：CP、FT与ATE体系  ## 测试在半导体产业链中的位置 半导体测试是封测环节中技术含量最高、设备投资最大的部分。一颗芯片从晶圆制造完成到最终出货，至少需要经历两次完整的电性测试： - **CP测试（Chip Probe / Wafer Sort）**：在晶圆切割前，用探针卡接">
+<link rel="stylesheet" href="/kb/assets/style.css">
+</head>
+<body>
+<div class="top-accent"></div>
+<header class="page-header">
+  <a href="/kb/首页.html" class="home-link">🔬 半导体知识库</a>
+</header>
+<main class="container">
+<nav class="breadcrumb"><a href="/kb/首页.html">半导体知识库</a> <span class="sep">›</span> <a href="/kb//02-封装测试/index.html">02-封装测试</a> <span class="sep">›</span> <a href="/kb//02-封装测试/行业动态/index.html">行业动态</a></nav>
+<article class="note">
+<header class="note-header">
+  <h1>半导体测试技术：CP、FT与ATE体系</h1>
+  <div class="meta-line"><span class="meta-item">📅 2026-07-09</span> · <span class="meta-item">📂 02-封装测试</span> · <span class="meta-item" style="color:#059669">⭐ high</span> · <span class="meta-item">🏷️ <span class="tag">晶圆制造</span> <span class="tag">封装测试</span> <span class="tag">半导体测试</span> <span class="tag">CP测试</span> <span class="tag">FT测试</span> <span class="tag">ATE</span></span></div>
+</header>
+<div class="note-body">
+<h1 id="cpftate">半导体测试技术：CP、FT与ATE体系</h1>
+<h2 id="_1">测试在半导体产业链中的位置</h2>
+<p>半导体测试是封测环节中技术含量最高、设备投资最大的部分。一颗芯片从晶圆制造完成到最终出货，至少需要经历两次完整的电性测试：
+- <strong>CP测试（Chip Probe / Wafer Sort）</strong>：在晶圆切割前，用探针卡接触晶圆上的每个Die进行电性测试。筛出坏Die，对好Die进行Bin分类。
+- <strong>FT测试（Final Test）</strong>：封装完成后的最终功能测试。确保封装过程中没有引入新的缺陷，并完成所有规格参数的验证。
+对于先进封装（如Chiplet/3D封装），还需要<strong>KGD测试</strong>（Known Good Die）——在将多颗Chiplet组装在一起之前，必须确保每颗Chiplet都是好的。因为一颗坏的Chiplet会导致整个MCM（多芯片模块）报废，损失巨大。</p>
+<h2 id="cp">CP测试（晶圆探针测试）</h2>
+<h3 id="_2">测试系统构成</h3>
+<div class="codehilite"><pre><span></span><code>测试程序 → ATE（自动测试设备）→ 探针卡（Probe Card）→ 晶圆上的Die
+↑
+Prober（探针台）：精确定位和移动晶圆
+</code></pre></div>
+
+<h3 id="_3">关键设备</h3>
+<ul>
+<li><strong>ATE（Automatic Test Equipment，自动测试机）</strong>：
+ATE是测试的核心设备——一台设备价格可达数百万美元。主流供应商：</li>
+<li><strong>Advantest（爱德万，日本）</strong>：全球最大的ATE供应商，V93000系列是逻辑/SoC测试的行业标准</li>
+<li><strong>Teradyne（泰瑞达，美国）</strong>：全球第二大，在模拟/混合信号测试和存储测试方面领先</li>
+<li><strong>Cohu（美国）</strong>：通过收购Xcerra跃升，在RF和电源管理测试方面有专长</li>
+<li><strong>华峰测控（中国）</strong>：国产ATE龙头，在模拟/电源管理测试领域有一定份额</li>
+<li><strong>长川科技（中国）</strong>：国产ATE，在数字测试和SoC测试方面发展较快
+ATE的核心能力：</li>
+<li>施加测试激励（电压、电流、数字pattern、RF信号）</li>
+<li>测量芯片响应（电压、电流、频率、时序）</li>
+<li>与设计规范比较，判定Pass/Fail</li>
+<li><strong>探针卡（Probe Card）</strong>：
+探针卡是连接ATE和晶圆上Die的物理接口。一块探针卡上可能有数千根微细探针，每根探针的尖端直径小至20-50μm，精确对准Die上的每个Pad（焊盘）。
+探针卡的类型：</li>
+<li><strong>悬臂式（Cantilever）</strong>：最传统，用于低引脚数、大Pitch（Pad间距&gt;60μm）</li>
+<li><strong>垂直式（Vertical）</strong>：用于高引脚数、小Pitch（40-60μm），是当前主流</li>
+<li><strong>MEMS探针卡</strong>：用于超高密度（Pitch&lt;40μm）、高频测试，是最先进但最昂贵的技术
+探针卡供应商：FormFactor（美国，全球最大）、Technoprobe（意大利）、日本电子材料（JEM，日本）、强一半导体（中国）</li>
+<li><strong>探针台（Prober）</strong>：
+晶圆级的精确定位和移动平台，将晶圆上的每个Die对准探针卡：</li>
+<li>TEL（东京电子）和Accretech（东京精密）是探针台领域的双寡头</li>
+<li>精度要求：±1-2μm的定位精度（对于先进制程Die的Pad尺寸可能只有30-50μm）</li>
+</ul>
+<h3 id="cpbinning">CP测试的Binning（分档）</h3>
+<p>CP测试不仅是Pass/Fail判断，更重要的是<strong>Binning</strong>——将好Die按照性能分为不同档次：
+- <strong>Bin 1</strong>：最高性能（最高频率、最低功耗、所有功能正常）
+- <strong>Bin 2</strong>：标准性能
+- <strong>Bin 3</strong>：降频版本（可以在较低频率下正常运行）
+- <strong>Bin N</strong>：不同缺陷等级
+Binning对芯片的经济价值影响巨大——同一片晶圆上的Die，Bin 1可能卖100美元，Bin 3可能只卖50美元。Binning的准确性直接影响芯片公司的收入和利润。</p>
+<h2 id="ft">FT测试（最终测试）</h2>
+<p>FT测试在封装后进行，目的是：
+1. 验证封装过程没有损坏芯片（键合线断裂、封装应力导致的裂纹等）
+2. 完成所有规格参数的最终验证
+3. 进行温度测试（在高温/低温下测试，因为芯片在实际应用中会经历温度变化）
+FT测试使用的ATE与CP测试类似，但使用的是<strong>Handler（分选机）</strong>而不是Prober——Handler负责将封装好的芯片自动送入测试插座（Socket），测试完成后根据Bin结果自动分拣到不同的Bin Tray中。</p>
+<h3 id="_4">测试程序开发</h3>
+<p>这是测试工程师的核心工作：
+1. 芯片设计阶段：DFT（面向测试的设计）——在芯片中内建测试电路（扫描链、BIST等），使芯片"可测试"
+2. 晶圆投产后：开发测试程序（Test Program），定义每个测试项（Test Item）的测试条件、测量方法和通过标准
+3. 量产阶段：持续优化测试程序，在测试覆盖率（Coverage）和测试时间（Test Time）之间找到最优平衡
+测试时间直接决定测试成本——多1秒的测试时间，乘以数百万颗芯片的出货量，就是巨大的成本增加。</p>
+<h2 id="_5">测试数据的价值</h2>
+<p>半导体测试产生海量数据，这些数据不只是Pass/Fail的二值判定，而是包含极其丰富的工艺和质量信息：
+- <strong>每颗Die在每个Test Item上的测量值</strong>（不仅是过/不过，还有具体数值）
+- <strong>Bin分布随时间的漂移</strong>（可能指示工艺偏差）
+- <strong>缺陷的空间分布</strong>（Wafer Map上的缺陷图案可以指示特定设备/Chamber的问题）
+- <strong>CP→FT的良率损失</strong>（指示封装工艺问题）
+这也是为什么SPC和YMS系统需要整合测试数据的原因——测试数据是"从芯片内部看工艺问题"的最佳窗口。</p>
+<hr />
+<h2 id="_6">📊 帆软产品关联度分析</h2>
+<table>
+<thead>
+<tr>
+<th>帆软产品线</th>
+<th style="text-align: center;">关联度</th>
+<th>关联说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>FineReport</strong></td>
+<td style="text-align: center;">🟢 高</td>
+<td>CP/FT测试报告自动生成、Bin分布每日报表、客户出货质量报告——测试是Fab与客户的"最后一公里"，报表要求极其刚性</td>
+</tr>
+<tr>
+<td><strong>FineBI</strong></td>
+<td style="text-align: center;">🟢 高</td>
+<td>Bin分布趋势监控与漂移预警、Wafer Map缺陷空间聚类分析、CP→FT良率损失根因分析——测试数据天然适合BI分析</td>
+</tr>
+<tr>
+<td><strong>FineDataLink</strong></td>
+<td style="text-align: center;">🟡 中</td>
+<td>汇聚ATE测试数据、Prober/Handler设备状态、MES批次数据——测试数据量大但结构相对规整，集成复杂度中等</td>
+</tr>
+<tr>
+<td><strong>简道云 + AI Agent</strong></td>
+<td style="text-align: center;">🟡 中</td>
+<td>探针卡生命周期管理、ATE设备校准工单、AI Agent自动识别Wafer Map异常模式（环形/划痕/区域缺陷）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>测试是晶圆制造的最后一道关卡——每一片晶圆、每一颗Die的测试数据都必须被记录和追溯。Binning的结果直接决定营收，Bin分布的任何漂移都是重大信号。</p>
+</blockquote>
+<h2 id="_7">💼 售前场景</h2>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>痛点描述</th>
+<th>帆软产品</th>
+<th>具体切入</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Bin分布实时监控</strong></td>
+<td>CP测试的Bin分布每天在变化，但产品工程师只能看汇总报表，无法快速发现漂移趋势</td>
+<td>FineBI</td>
+<td>按产品×Lot×测试日期的Bin分布热力图，AI Agent在Bin1占比下降&gt;2%时自动推送预警</td>
+</tr>
+<tr>
+<td><strong>CP→FT良率损失分析</strong></td>
+<td>封装后FT良率低于CP良率，需要追溯是封装工艺问题还是CP测试漏判</td>
+<td>FineBI</td>
+<td>CP vs FT良率的差异分析，按封装厂/封装类型/测试项目维度分解损失</td>
+</tr>
+<tr>
+<td><strong>探针卡生命周期管理</strong></td>
+<td>探针卡是易耗品（寿命约50万-100万次接触），但更换周期靠经验判断，过早换浪费成本，过晚换导致测试良率虚低</td>
+<td>简道云 + FineBI</td>
+<td>简道云登记探针卡使用次数，FineBI基于接触次数+测试良率趋势预测最佳更换时机</td>
+</tr>
+<tr>
+<td><strong>出货质量报告自动化</strong></td>
+<td>每批芯片出货需要附带详细的测试数据报告，格式因客户而异，手工制作耗时且易出错</td>
+<td>FineReport</td>
+<td>按客户模板一键生成出货质量报告——客户A要PDF、客户B要Excel，同一个数据源自动适配</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_8">售前话术</h3>
+<blockquote>
+<p>"测试数据不只是Pass/Fail——Bin分布从'Bin1=85%'漂移到'Bin1=78%'，意味着同一片晶圆上的芯片从卖100美元降到卖50美元。FineBI让产品工程师每天上班第一眼就看到Bin分布有没有异常。"</p>
+<p>"出货质量报告是Fab的'面子'——客户拿到的第一份文件就是你们的质量报告。FineReport让报告从'手工拼凑'变成'一键生成'，而且格式可以按不同客户的模板自动适配。"</p>
+</blockquote>
+<h2 id="_9">🔗 关联</h2>
+<ul>
+<li><a href="/kb/01-晶圆制造/行业动态/SPC与良率管理：半导体制造的质量控制体系">SPC与良率管理：半导体制造的质量控制体系</a></li>
+<li><a href="/kb/行业知识体系/02-封装测试/基础概念/封装技术概述">封装技术概述</a></li>
+<li><a href="/kb/02-封装测试/行业动态/2026年H1全球封测行业动态与先进封装趋势">2026年H1全球封测行业动态与先进封装趋势</a></li>
+</ul>
+<h2 id="_10">🔗 来源</h2>
+<p>技术文献及行业报告综合
+入库时间：2026-07-09</p>
+</div>
+</article>
+<footer class="note-footer">
+  <a href="/kb/02-封装测试/行业动态/index.html">← 返回目录</a>
+</footer>
+</main>
+</body>
+</html>

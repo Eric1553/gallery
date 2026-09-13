@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>杜邦分析 · 集团表格 | 财经驾驶舱</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/dupont.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="logo-area">
+      <div class="logo-mark">SMIC</div>
+      <div class="logo-text"><h1>财经驾驶舱</h1><span>杜邦 · L5 下钻穿透</span></div>
+    </div>
+    <nav class="header-nav">
+      <a href="index.html" data-page="overview">总览</a>
+      <a href="revenue.html" data-page="revenue">收入专题</a>
+      <a href="cost.html" data-page="cost">成本专题</a>
+      <a href="profit.html" data-page="profit">盈利效率</a>
+      <a href="dupont-site.html" data-page="dupont" class="active">杜邦分析</a>
+    </nav>
+    <div class="header-meta"><span class="badge-proto">HTML 原型</span></div>
+  </header>
+
+  <div class="app-body">
+    <aside class="sidebar"></aside>
+
+    <main class="main-content">
+      <div class="dupont-subnav">
+        <a href="dupont-site.html">Site 视图 <span class="sub-lv">L2 经营成效</span></a>
+        <a href="dupont-tree.html">集团树状图 <span class="sub-lv">L4 专题分析</span></a>
+        <a href="dupont-table.html" class="active">集团表格报告 <span class="sub-lv">L5 下钻穿透</span></a>
+      </div>
+
+      <div class="page-toolbar">
+        <div class="toolbar-head">
+          <div class="page-title">杜邦分析 · 集团表格报告<span class="level-tag">L5 下钻穿透</span></div>
+          <div class="page-desc">108 指标全景 · 29 系统 + 9 加工 + 3 手工 + 67 公式 · 分类展示 · 搜索筛选</div>
+        </div>
+        <div class="toolbar-controls">
+          <div class="filter-pills toolbar-pills" id="type-filter">
+            <span class="filter-pill active" data-type="all">全部 (38+)</span>
+            <span class="filter-pill" data-type="sys">系统直取</span>
+            <span class="filter-pill" data-type="mix">系统+加工</span>
+            <span class="filter-pill" data-type="manual">手工填报 (3)</span>
+            <span class="filter-pill" data-type="formula">公式计算</span>
+          </div>
+          <div class="toolbar-divider"></div>
+          <div class="dupont-search"><input type="search" id="indicator-search" placeholder="搜索指标名称…"></div>
+        </div>
+        <div class="filter-bar" id="filter-bar"></div>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi-card highlight"><div class="kpi-label">指标总数（方案）</div><div class="kpi-value">108</div></div>
+        <div class="kpi-card"><div class="kpi-label">本页展示</div><div class="kpi-value" id="kpi-shown">38</div></div>
+        <div class="kpi-card"><div class="kpi-label">系统直取</div><div class="kpi-value" id="kpi-sys">—</div></div>
+        <div class="kpi-card"><div class="kpi-label">手工填报</div><div class="kpi-value" id="kpi-manual">3</div></div>
+        <div class="kpi-card"><div class="kpi-label">待填报</div><div class="kpi-value" style="color:var(--warning)">3</div></div>
+      </div>
+
+      <div class="panel-grid" style="margin-bottom:12px">
+        <div class="panel col-6">
+          <div class="panel-header"><span class="panel-title">指标来源结构</span></div>
+          <div class="panel-body"><div class="chart-box sm" id="chart-src-pie"></div></div>
+        </div>
+        <div class="panel col-6">
+          <div class="panel-header"><span class="panel-title">杜邦核心指标趋势</span></div>
+          <div class="panel-body"><div class="chart-box sm" id="chart-core-trend"></div></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">杜邦分析报告（分类指标表）</span>
+          <div class="panel-actions">
+            <button class="panel-action" onclick="alert('打开填报工作台（原型）')">批量填报</button>
+            <button class="panel-action" onclick="Cockpit.showStatus('已导出 Excel（原型）')">导出 Excel</button>
+          </div>
+        </div>
+        <div class="panel-body" style="max-height:560px;overflow:auto">
+          <table class="data-table dupont-mega-table" id="mega-table">
+            <thead>
+              <tr>
+                <th style="min-width:220px">指标名称</th>
+                <th>来源</th>
+                <th class="text-right">当期</th>
+                <th class="text-right">上期</th>
+                <th class="text-right">环比差异</th>
+                <th class="text-right">上年同期</th>
+                <th class="text-right">同比差异</th>
+                <th class="text-right">当年累计</th>
+                <th class="text-right">累计同比</th>
+              </tr>
+            </thead>
+            <tbody id="mega-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="dupont-note">
+        <b>数据说明：</b>本原型展示 38 项代表性指标（完整方案 108 项）；
+        带「填报」标签的指标支持月版本手工录入 · 公式项由帆软 FVS 计算 ·
+        与 <a href="dupont-site.html">Site 视图</a>、<a href="dupont-tree.html">集团树</a> 联动同一套 BOSS 管报口径。
+      </div>
+    </main>
+  </div>
+
+  <script src="assets/js/echarts.min.js"></script>
+  <script src="assets/js/mock-data.js"></script>
+  <script src="assets/js/dupont-data.js"></script>
+  <script src="assets/js/dupont.js"></script>
+  <script src="assets/js/levels.js"></script>
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/charts.js"></script>
+  <script>
+    boot(function () {
+      Cockpit.initNav('dupont', { sidebarPage: 'dupont-table' });
+      Cockpit.renderFilterBar(document.getElementById('filter-bar'));
+
+      let allRows = [...DupontData.indicatorRows];
+      for (let i = allRows.length + 1; i <= 108; i++) {
+        const cats = ['formula', 'formula', 'sys', 'formula', 'mix'];
+        const src = cats[i % cats.length];
+        const catMap = { formula: 'profit', sys: 'asset', mix: 'asset' };
+        allRows.push({
+          name: `杜邦扩展指标 ${String(i).padStart(3, '0')}`,
+          cat: catMap[src] || 'profit', src, fill: false,
+          current: +(20 + (i % 50) * 1.2).toFixed(2), prev: +(18 + (i % 50)).toFixed(2),
+          yoyPrev: +(16 + (i % 48)).toFixed(2), ytd: +(100 + i * 2.5).toFixed(1), yoyYtd: +(90 + i * 2.2).toFixed(1), fill: false
+        });
+      }
+
+      let filter = 'all', search = '';
+
+      function refresh() {
+        let list = filter === 'all' ? allRows : allRows.filter(r => r.src === filter);
+        if (search) list = list.filter(r => r.name.toLowerCase().includes(search.toLowerCase()));
+        Dupont.renderIndicatorTable(document.getElementById('mega-body'), list, { groupByCat: true });
+        document.getElementById('kpi-shown').textContent = list.length;
+        document.getElementById('kpi-sys').textContent = list.filter(r => r.src === 'sys').length;
+      }
+
+      refresh();
+
+      Charts.pie(document.getElementById('chart-src-pie'), [
+        { name: '系统直取', value: 29 }, { name: '系统+加工', value: 9 },
+        { name: '手工填报', value: 3 }, { name: '公式计算', value: 67 }
+      ], { donut: true });
+
+      const core = DupontData.indicatorRows.filter(r => r.cat === 'core');
+      Charts.line(document.getElementById('chart-core-trend'), ['Q1', 'Q2', 'Q3', 'Q4'], [
+        { name: 'ROE', data: [7.8, 8.0, 8.2, 8.42], color: '#005293', area: true }
+      ]);
+
+      document.querySelectorAll('#type-filter .filter-pill').forEach(p => {
+        p.addEventListener('click', () => {
+          document.querySelectorAll('#type-filter .filter-pill').forEach(x => x.classList.remove('active'));
+          p.classList.add('active');
+          filter = p.dataset.type;
+          refresh();
+        });
+      });
+
+      document.getElementById('indicator-search').addEventListener('input', e => {
+        search = e.target.value.trim();
+        refresh();
+      });
+
+      document.getElementById('mega-body').addEventListener('click', e => {
+        const tr = e.target.closest('tr');
+        if (!tr || tr.classList.contains('cat-row')) return;
+        const name = tr.querySelector('td')?.textContent?.split(/系统|加工|填报|公式/)[0]?.trim();
+        if (name && tr.dataset.src === 'manual') alert(`打开「${name}」填报表单（原型）`);
+      });
+    });
+  </script>
+</body>
+</html>

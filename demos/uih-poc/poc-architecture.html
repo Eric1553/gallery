@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>联影 PoC · 技术架构与栈说明</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root{--navy:#0f2952;--blue:#1f55cc;--teal:#0d9488;--purple:#5a3fd4;--orange:#c27803;
+      --done:#0d7a3e;--done-bg:#e8f5ee;--wip:#b8860b;--wip-bg:#fef8e8;--pending:#64748b;--pending-bg:#f1f5f9;
+      --line:#d7e1ef;--muted:#63748b;--text:#1b2940;--shadow:0 8px 24px rgba(22,52,95,.07)}
+    *{box-sizing:border-box;margin:0}
+    body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:var(--text);background:#f4f8fc;line-height:1.65;font-size:14px}
+    .wrap{max-width:1280px;margin:0 auto;padding:24px 24px 56px}
+    .hero{background:linear-gradient(135deg,#0f2952 0%,#1a4a85 50%,#0d4f6e 100%);color:#fff;border-radius:16px;padding:28px 32px;box-shadow:var(--shadow);margin-bottom:24px}
+    .hero h1{font-size:24px;margin-bottom:8px}.hero .lead{font-size:14px;opacity:.92;max-width:980px}
+    .hero-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+    .hero-meta span{font-size:11px;padding:4px 12px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18)}
+    .nav-top{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;font-size:12px}
+    .nav-top a{color:var(--blue);text-decoration:none;padding:6px 12px;background:#fff;border:1px solid var(--line);border-radius:8px}
+    h2{font-size:17px;color:var(--navy);margin:32px 0 14px;padding-left:12px;border-left:4px solid var(--blue);font-weight:700}
+    h3{font-size:14px;color:var(--navy);margin:16px 0 8px;font-weight:700}
+    h4{font-size:13px;margin:12px 0 6px;font-weight:700}
+    p,li{font-size:13px}ul{margin:6px 0 6px 20px}li{margin:4px 0}
+    .panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow)}
+    .panel-accent{border-left:4px solid var(--blue)}.panel-teal{border-left:4px solid var(--teal)}
+    .panel-purple{border-left:4px solid var(--purple)}.panel-orange{border-left:4px solid var(--orange)}
+    .badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px}
+    .b-done{background:var(--done-bg);color:var(--done)}.b-core{background:#dbeafe;color:#1e40af}
+    .b-new{background:#fce7f3;color:#9d174d}
+    table{width:100%;border-collapse:collapse;font-size:12px;margin:10px 0}
+    th,td{border:1px solid var(--line);padding:8px 10px;vertical-align:top}
+    th{background:#eef3f9;color:var(--navy);font-weight:700}
+    tr:nth-child(even) td{background:#fafcff}
+    .mermaid{margin:14px 0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto}
+    .arch{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;line-height:1.75;background:#0d1117;color:#e6edf3;padding:16px 20px;border-radius:10px;margin:12px 0;overflow-x:auto;white-space:pre}
+    .arch .p{color:#58a6ff}.arch .u{color:#3fb950}.arch .b{color:#a371f7}.arch .c{color:#8b949e}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    @media(max-width:900px){.grid2,.grid3{grid-template-columns:1fr}}
+    .stack-card{border:1px solid var(--line);border-radius:10px;padding:14px;background:#fafbfc}
+    .stack-card h4{margin-top:0;color:var(--navy)}
+    .stack-card ul{margin:0;padding-left:16px;font-size:12px}
+    .callout{padding:12px 16px;border-radius:8px;font-size:13px;margin:12px 0}
+    .callout-ok{background:var(--done-bg);border:1px solid #a7d9b8}
+    .callout-blue{background:#eff6ff;border:1px solid #93c5fd}
+    code{font-size:11px;background:#eef3f9;padding:1px 5px;border-radius:3px;font-family:ui-monospace,Menlo,monospace}
+    a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
+    .footer{text-align:center;font-size:11px;color:var(--muted);margin-top:36px;padding-top:16px;border-top:1px solid var(--line)}
+    .tag{display:inline-block;font-size:10px;padding:2px 6px;border-radius:4px;background:#eef3f9;margin:2px}
+  </style>
+  <script src="poc-paths.js"></script>
+  <script src="poc-glossary.js"></script>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav-top">
+  <a href="scene-front.html">← 页面导航</a>
+  <a href="poc-demo-runbook.html" data-page="demoRunbook">演示 Runbook</a>
+  <a href="poc-tech-brief.html" data-page="techBrief">技术说明</a>
+  <a href="#overall">总架构</a>
+  <a href="#scene1">场景一</a>
+  <a href="#scene3">场景三</a>
+  <a href="#engineering">工程交付</a>
+</nav>
+
+<header class="hero">
+  <h1>联影 PoC · 技术架构与栈说明</h1>
+  <p class="lead">
+    整体技术栈、分场景能力矩阵与数据链路说明。
+    本期重点为<strong>底层平台选型</strong>：SelectDB/Doris 统一存储、FineDataLink 数据治理、FineBI 指标分析、知识检索与混合索引能力。
+  </p>
+  <div class="hero-meta">
+    <span>SelectDB / Doris</span>
+    <span>FineBI + 分析主题</span>
+    <span>FineDataLink 集成</span>
+    <span>混合检索 Worker</span>
+    <span>285 chunks · 11 docs</span>
+    <span>SSOT catalog v2</span>
+  </div>
+</header>
+
+<!-- Overall -->
+<h2 id="overall">01 · 总体技术架构</h2>
+<div class="panel panel-accent">
+  <div class="mermaid">
+flowchart TB
+  subgraph Client["用户 / 访问"]
+    U1[Dora Agent 对话]:::aiLayer
+    U2[PoC 工作台 8890]
+    U3[FineBI 看板]
+  end
+
+  subgraph Gateway["统一网关 Nginx :8890"]
+    G1["/ 工作台"]
+    G2["/api/v1/* Worker"]
+    G3["/mcp 财务"]:::aiLayer
+    G4["/service-mcp 售后"]:::aiLayer
+    G5["/feishu-mcp Wiki"]:::aiLayer
+  end
+
+  subgraph Compute["应用层 ECS 47.99.198.211"]
+    W[Ingest Worker :8790]
+    MF[MCP Finance :8791]:::aiLayer
+    MS[MCP Service :8793]:::aiLayer
+    MF2[MCP Feishu :8792]:::aiLayer
+    BL[budget_operation_log.py]:::aiLayer
+  end
+
+  subgraph Data["数据层"]
+    D1[(SelectDB/Doris kb)]
+    D2[(MySQL sh_lorin 售后)]
+    D3[FineBI 分析主题]
+    ATT[附件 JSONL/LOG/DOC]
+  end
+
+  U1 --> G3 & G4 & G5
+  U1 --> D3
+  U2 --> G1 & G2
+  G2 --> W
+  G3 --> MF
+  G4 --> MS
+  MF --> BL
+  BL --> ATT
+  W --> D1
+  MF --> W
+  MS --> W
+  D3 --> D1 & D2
+
+  classDef aiLayer fill:#f1f5f9,stroke:#cbd5e1,color:#64748b,stroke-dasharray:4 4
+  </div>
+
+  <div class="arch"><span class="p">http://47.99.198.211:8890</span>
+├── <span class="u">/</span> <span class="u">index.html</span>              <span class="c">PoC 演示工作台 · 浏览器切片入库</span>
+├── <span class="u">/api/v1/ingest/push</span>     → Worker <span class="b">8790</span>   <span class="c">embedding + Stream Load</span>
+├── <span class="u">/api/v1/retrieve</span>        → Worker <span class="b">8790</span>   <span class="c">BM25 + 向量混合检索</span>
+├── <span class="u">/mcp</span>                    → Finance MCP <span class="b">8791</span>  <span class="c">制度 RAG + 日志解析 · 6 tools</span>
+├── <span class="u">/service-mcp</span>            → Service MCP <span class="b">8793</span>  <span class="c">售后 RAG + 图谱 · 4 tools</span>
+└── <span class="u">/feishu-mcp</span>               → Feishu MCP <span class="b">8792</span>   <span class="c">Wiki 原生检索（补充路径）</span></div>
+</div>
+
+<h3>技术栈总览</h3>
+<div class="grid3">
+  <div class="stack-card">
+    <h4>数据存储与计算</h4>
+    <ul>
+      <li>SelectDB / Apache Doris 集群</li>
+      <li><code>kb.uih_doc_chunks</code> 向量+全文索引</li>
+      <li><code>kb_document_registry</code> 文档注册</li>
+      <li>MySQL <code>sh_lorin</code> 售后 ODS</li>
+      <li>bge-small-zh 512d 浏览器/Worker 嵌入</li>
+    </ul>
+  </div>
+  <div class="stack-card">
+    <h4>集成与 BI</h4>
+    <ul>
+      <li>FineDataLink（宽表/ODS 同步）</li>
+      <li>FineBI 分析主题（预算/售后）</li>
+      <li>飞书多维表 + Wiki（补充）</li>
+    </ul>
+  </div>
+  <div class="stack-card" style="opacity:.55">
+    <h4>AI 接入层（非平台选型范围）</h4>
+    <ul>
+      <li>Dora Agent + 分析主题问数</li>
+      <li>自定义 Skill（scene1/3 zip）</li>
+      <li>HTTP MCP（FastMCP streamable）</li>
+    </ul>
+  </div>
+</div>
+
+<h3>架构先进性</h3>
+<table>
+  <tr><th>能力</th><th>实现</th><th>PoC 体现</th></tr>
+  <tr><td>存储与索引解耦</td><td>原文附件 vs Doris chunk 索引表</td><td>工作台入库；RAG 只查索引层</td></tr>
+  <tr><td>混合检索</td><td>domain/doc_type 预筛 → BM25 + HNSW 向量 → RRF 融合</td><td>retrieve + retrieve_trace</td></tr>
+  <tr><td>多模态融合问数</td><td>结构化 + 半结构化 + RAG 并行</td><td>Scene1 拦截+制度；Scene3 诊断链</td></tr>
+  <tr><td>半结构化纳管</td><td>JSONL/.log 双格式 MCP 解析 <span class="badge b-new">新</span></td><td>finance_budget_operation_*</td></tr>
+  <tr><td>可验收 SSOT</td><td>poc-chunk-profiles.json 单点维护</td><td>10+11 验收 JSON，不进 Prompt</td></tr>
+  <tr><td>Agent 工具隔离</td><td>同端口多路径 MCP，按场景拆分 tool</td><td>/mcp vs /service-mcp</td></tr>
+</table>
+
+<!-- Scene 1 -->
+<h2 id="scene1">02 · 场景一 · 财务多模态融合</h2>
+<div class="panel panel-accent">
+  <h3>场景定位</h3>
+  <p>docx §2 · Data for AI：预算宽表 + 半结构化操作日志 + 制度文档 → 同一 Agent 融合问数。</p>
+
+  <div class="mermaid">
+flowchart LR
+  subgraph Sources
+    S1[budget_operation JSONL]
+    S2[budget_operation LOG]
+    S3[BG 制度 DOC]
+    S4[FineBI 预算宽表]
+  end
+  subgraph Process
+    P1[日志解析服务]:::aiLayer
+    P2[浏览器切片+embed]
+    P3[FDL 宽表]
+  end
+  subgraph Store
+    T1[(日志内存索引 8000x2)]
+    T2[(uih_doc_chunks finance)]
+    T3[(budget 宽表)]
+  end
+  subgraph Agent
+    A1[finance_budget_operation_*]:::aiLayer
+    A2[finance_policy_retrieve]:::aiLayer
+    A3[分析主题问数]
+  end
+  S1 & S2 --> P1 --> T1 --> A1
+  S3 --> P2 --> T2 --> A2
+  S4 --> P3 --> T3 --> A3
+
+  classDef aiLayer fill:#f1f5f9,stroke:#cbd5e1,color:#64748b,stroke-dasharray:4 4
+  </div>
+
+  <h4>技术栈明细</h4>
+  <table>
+    <tr><th>层次</th><th>组件</th><th>说明</th></tr>
+    <tr><td>半结构化</td><td><code>budget_operation_log.py</code></td><td>JSONL 行解析 + LOG 正则；指标 execution_rate / over_budget_amount</td></tr>
+    <tr><td>MCP</td><td>6 tools @ /mcp</td><td>retrieve / trace / meta / query / metric / meta_log</td></tr>
+    <tr><td>非结构化</td><td>3 制度 · 85 chunks</td><td>BG-2022-001/005/012；policy 切片策略</td></tr>
+    <tr><td>结构化</td><td>FineBI 预算主题</td><td>宽表 + 明细；与日志 MCP 可交叉验证</td></tr>
+    <tr><td>Agent</td><td>scene1-finance skill</td><td>metrics-catalog.json 指标口径；tool-contracts 路由</td></tr>
+    <tr><td>验收</td><td>10 题 JSON</td><td>含 log/json 双格式、执行率、747.4 万</td></tr>
+  </table>
+
+  <h4>Agent 数据流</h4>
+  <div class="mermaid">
+sequenceDiagram
+  participant U as 用户
+  participant D as Dora:::aiLayer
+  participant M as MCP Finance:::aiLayer
+  participant W as Worker/Doris
+  participant F as FineBI
+  Note over U,F: 路径 A 半结构化
+  U->>D: trace_id / 747万 / 执行率
+  D->>M: finance_budget_operation_*
+  M->>M: 解析 JSONL+LOG
+  M-->>D: app_no/action/amount
+  Note over U,F: 路径 B 制度
+  U->>D: 审批流程
+  D->>M: finance_policy_retrieve_trace
+  M->>W: /api/v1/retrieve domain=finance
+  W-->>M: evidence + trace
+  Note over U,F: 路径 C 宽表
+  U->>D: 汇总统计
+  D->>F: 分析主题 NL2SQL
+  F-->>D: 指标结果
+  </div>
+</div>
+
+<!-- Scene 3 -->
+<h2 id="scene3">03 · 场景三 · 售后维修智能助手</h2>
+<div class="panel panel-purple">
+  <h3>场景定位</h3>
+  <p>docx §4 · 报修/工单/IoT 日志 + 手册/经验/备件 + 故障图谱 → 诊断链 Agent。</p>
+
+  <div class="mermaid">
+flowchart TB
+  subgraph ODS["MySQL sh_lorin"]
+    R[hospital_repair_record]
+    W[dispatch_work_order]
+    L[device_operation_log]
+  end
+  subgraph KB["Doris kb · domain=service"]
+    C[uih_doc_chunks 200]
+    G[service-fault-graph.json]
+  end
+  subgraph Agent3["接入层 · Dora 售后"]
+    Q[分析主题 售后维修]
+    RAG[service_manual_retrieve]:::aiLayer
+    FG[service_fault_graph_lookup]:::aiLayer
+  end
+  ODS --> Q
+  KB --> RAG
+  G --> FG
+  Q & RAG & FG --> OUT[诊断链回答]:::aiLayer
+
+  classDef aiLayer fill:#f1f5f9,stroke:#cbd5e1,color:#64748b,stroke-dasharray:4 4
+  </div>
+
+  <h4>技术栈明细</h4>
+  <table>
+    <tr><th>层次</th><th>组件</th><th>说明</th></tr>
+    <tr><td>结构化</td><td>MySQL 三表 + FineBI</td><td>974 uCT960 报修；Q1 MTTR/MTBF 可聚合</td></tr>
+    <tr><td>非结构化</td><td>8 文档 · 200 chunks</td><td>SOP/经验/备件/报告；sop_step / table_row 策略</td></tr>
+    <tr><td>图谱</td><td>service-fault-graph</td><td>E1001/E1002 → EXP/RM/SP 路由</td></tr>
+    <tr><td>MCP</td><td>4 tools @ /service-mcp</td><td>retrieve / trace / meta / fault_graph</td></tr>
+    <tr><td>指标</td><td>metrics-catalog.json</td><td>MTTR=AVG(labor_hours)；MTBF PoC 公式</td></tr>
+    <tr><td>验收</td><td>11 题 JSON</td><td>诊断链 + MTTR + 30天日志</td></tr>
+  </table>
+</div>
+
+<!-- Scene 2/4 brief -->
+<h2>04 · 场景二 / 四 · 架构占位（本次不验收）</h2>
+<div class="grid2">
+  <div class="panel panel-teal">
+    <h3>场景二 OTD BI</h3>
+    <ul>
+      <li>CRM/ERP/WMS 五段表 → FDL → Doris</li>
+      <li>FineBI 两层看板（管理/业务）</li>
+      <li>可选 Dora 查 <code>ads_otd_kpi_di</code></li>
+    </ul>
+    <span class="badge b-core">平台能力 · Agent PoC 未纳入</span>
+  </div>
+  <div class="panel panel-orange">
+    <h3>场景四 存储底座</h3>
+    <ul>
+      <li>TP/AP 基准（TPC-C/H）</li>
+      <li>高并发 QPS、列存压缩</li>
+      <li>混合检索已在 Scene1/3 验证</li>
+    </ul>
+    <span class="badge b-core">能力分散验证 · 专项压测待排期</span>
+  </div>
+</div>
+
+<!-- MCP matrix -->
+<h2>05 · MCP 工具矩阵（接入层 · 非平台选型范围）</h2>
+<div class="panel" style="opacity:.85">
+  <table>
+    <tr><th>路径</th><th>Tool</th><th>场景</th><th>输入</th><th>输出</th></tr>
+    <tr><td rowspan="6">/mcp</td><td>finance_policy_retrieve</td><td>1</td><td>query</td><td>evidence[]</td></tr>
+    <tr><td>finance_policy_retrieve_trace</td><td>1</td><td>query</td><td>evidence + trace</td></tr>
+    <tr><td>finance_document_meta</td><td>1</td><td>document_id</td><td>元数据</td></tr>
+    <tr><td>finance_budget_operation_query</td><td>1</td><td>dept/action/app_no…</td><td>日志明细/统计</td></tr>
+    <tr><td>finance_budget_operation_metric</td><td>1</td><td>execution_rate…</td><td>指标+口径</td></tr>
+    <tr><td>finance_budget_operation_meta</td><td>1</td><td>—</td><td>8000×2 元信息</td></tr>
+    <tr><td rowspan="4">/service-mcp</td><td>service_manual_retrieve</td><td>3</td><td>query</td><td>evidence[]</td></tr>
+    <tr><td>service_manual_retrieve_trace</td><td>3</td><td>query</td><td>evidence + trace</td></tr>
+    <tr><td>service_document_meta</td><td>3</td><td>document_id</td><td>元数据</td></tr>
+    <tr><td>service_fault_graph_lookup</td><td>3</td><td>error_code</td><td>推荐文档/表</td></tr>
+    <tr><td>/feishu-mcp</td><td>feishu_wiki_policy_search</td><td>1 补充</td><td>query</td><td>Wiki snippet+url</td></tr>
+  </table>
+</div>
+
+<!-- Ingest pipeline -->
+<h2>06 · 非结构化入库流水线（Scene1/3 共用）</h2>
+<div class="panel panel-accent">
+  <div class="mermaid">
+flowchart LR
+  A[附件 DOC/PDF] --> B[浏览器解析 mammoth/pdf.js]
+  B --> C[场景切片策略 SSOT]
+  C --> D["@xenova/transformers bge-small-zh"]
+  D --> E[POST /api/v1/ingest/push]
+  E --> F[Worker 校验]
+  F --> G[Stream Load registry + chunks]
+  G --> H[(Doris uih_doc_chunks)]
+  H --> I[检索 API retrieve/trace]
+
+  classDef aiLayer fill:#f1f5f9,stroke:#cbd5e1,color:#64748b,stroke-dasharray:4 4
+  </div>
+  <div class="callout callout-blue">
+    <strong>与半结构化日志的区别：</strong>制度/手册走<strong>切片+向量入库</strong>；budget_operation json/log <strong>不进 chunk 表</strong>，由 MCP 现场解析——体现「多形态数据分治」。
+  </div>
+</div>
+
+<!-- Engineering -->
+<h2 id="engineering">07 · 工程化交付清单（工作量体现）</h2>
+<div class="panel panel-accent">
+  <table>
+    <tr><th>类别</th><th>交付物</th><th>路径/URL</th></tr>
+    <tr><td>SSOT 文档清单</td><td>poc-chunk-profiles.json v2</td><td>catalog → sync → 8890</td></tr>
+    <tr><td>演示工作台</td><td>Scene1/3 入库 + 进度条</td><td>/index.html</td></tr>
+    <tr><td>知识产出视图</td><td>本体/图谱/SOP/经验</td><td>/knowledge-deliverables.html</td></tr>
+    <tr><td>故障路由图</td><td>service-fault-graph.json</td><td>/knowledge-graph.html</td></tr>
+    <tr><td>Dora 技能包</td><td>scene1-finance / scene3-service zip</td><td>03-Dora-Agent/skills/</td></tr>
+    <tr><td>指标口径</td><td>metrics-catalog.json ×2</td><td>skill references/</td></tr>
+    <tr><td>半结构化解析</td><td>budget_operation_log.py</td><td>deploy/ → ECS MCP</td></tr>
+    <tr><td>验收用例</td><td>scene1 10 题 + scene3 11 题</td><td>04-验收与演示/demo-scripts/</td></tr>
+    <tr><td>术语表</td><td>poc-glossary.js hover</td><td>进展/技术页</td></tr>
+    <tr><td>部署脚本</td><td>sync / upload_mcp / start-poc-local</td><td>deploy/</td></tr>
+    <tr><td>汇报材料</td><td>Runbook + 本文档</td><td>poc-demo-runbook / poc-architecture</td></tr>
+  </table>
+</div>
+
+<h2>08 · 混合检索溯源（Step C 技术细节）</h2>
+<div class="panel">
+  <div class="mermaid">
+flowchart TD
+  Q[用户 query] --> PF[pre-filter domain + doc_type]
+  PF --> BM25[BM25 MATCH_ANY 全文]
+  PF --> VEC[HNSW 向量 ANN]
+  BM25 --> RRF[RRF 融合排序]
+  VEC --> RRF
+  RRF --> EV[evidence top_k]
+  EV --> TR[trace.narrative_zh]
+  TR --> AN[检索结果输出]:::aiLayer
+
+  classDef aiLayer fill:#f1f5f9,stroke:#cbd5e1,color:#64748b,stroke-dasharray:4 4
+  </div>
+  <p>工具：<code>finance_policy_retrieve_trace</code> / <code>service_manual_retrieve_trace</code> — 返回 SQL 预览、通道得分、top_hits。</p>
+</div>
+
+<div class="footer">
+  联影 PoC 技术架构说明 ·
+  ECS <code>47.99.198.211:8890</code>
+</div>
+</div>
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose' });
+  if (window.POC_PATHS) POC_PATHS.bindPageLinks();
+</script>
+</body>
+</html>

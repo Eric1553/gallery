@@ -1,0 +1,274 @@
+#!/usr/bin/env python3
+"""壁仞 CEO 经营闭环看板 · 本地服务（MOSS 实时优先，失败回退演示包）。"""
+
+from __future__ import annotations
+
+import copy
+import json
+import os
+import threading
+import time
+import traceback
+from datetime import datetime, timedelta, timezone
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent
+PACKS_PATH = ROOT / "demo-packs.json"
+TZ_SH = timezone(timedelta(hours=8))
+DEFAULT_PORT = 8770
+
+# 单飞 + 短缓存：对抗连点刷新 / 并发打爆 MOSS
+_CACHE_TTL_SEC = 45
+_lock = threading.Lock()
+_cache: dict | None = None  # {"expires": float, "body": dict}
+_inflight: threading.Event | None = None
+_inflight_result: dict | None = None
+_inflight_error: Exception | None = None
+
+
+def load_dotenv() -> None:
+    env_path = ROOT / ".env"
+    if not env_path.exists():
+        return
+    for raw in env_path.read_text(encoding="utf-8").splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, val = line.split("=", 1)
+        key, val = key.strip(), val.strip().strip('"').strip("'")
+        if key and key not in os.environ:
+            os.environ[key] = val
+
+
+def now_iso() -> str:
+    return datetime.now(TZ_SH).isoformat(timespec="seconds")
+
+
+def load_fallback_packs() -> dict:
+    raw = json.loads(PACKS_PATH.read_text(encoding="utf-8")) if PACKS_PATH.exists() else {}
+    refreshed = now_iso()
+    packs = {}
+    for key, pack in raw.items():
+        item = copy.deepcopy(pack)
+        item["generated_at"] = refreshed
+        item["client_refreshed_at"] = refreshed
+        item["source"] = "local_fallback"
+        packs[key] = item
+    return packs
+
+
+def build_external_focus(packs: dict) -> list[dict]:
+    from moss_live import build_external_focus as moss_build_focus
+
+    items: list[dict] = []
+    for key in ("evening", "noon", "morning"):
+        items.extend((packs.get(key) or {}).get("items") or [])
+    return moss_build_focus(items)
+
+
+def persist_daily_packs(packs: dict) -> None:
+    out = {k: packs[k] for k in ("morning", "noon", "evening") if k in packs}
+    if not out:
+        return
+    PACKS_PATH.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"[persist] demo-packs.json 已更新 · {now_iso()}")
+
+
+def _fallback_body(exc: Exception | str) -> dict:
+    packs = load_fallback_packs()
+    return {
+        "ok": True,
+        "mode": "local_fallback",
+        "refreshed_at": now_iso(),
+        "item_count": sum(len((p.get("items") or [])) for p in packs.values()),
+        "errors": [str(exc)],
+        "external_focus": build_external_focus(packs),
+        "packs": packs,
+        "note": "MOSS 不可用，已回退本地演示情报",
+    }
+
+
+def _call_moss() -> dict:
+    from moss_live import refresh_intel_from_moss
+
+    body = refresh_intel_from_moss()
+    if not body.get("ok"):
+        raise RuntimeError(body.get("error") or "MOSS 返回无效")
+    if not body.get("packs") or not body.get("item_count"):
+        raise RuntimeError("MOSS 返回空情报包")
+    persist_daily_packs(body["packs"])
+    if body.get("errors"):
+        body["note"] = f"MOSS 部分成功（{len(body['errors'])} 个 topic 异常）"
+    else:
+        body["note"] = "MOSS 实时检索成功"
+    return body
+
+
+def refresh_with_fallback(*, force: bool = False) -> dict:
+    global _cache, _inflight, _inflight_result, _inflight_error
+
+    now = time.time()
+    if not force:
+        with _lock:
+            if _cache and now < float(_cache["expires"]):
+                hit = copy.deepcopy(_cache["body"])
+                hit["cache_hit"] = True
+                return hit
+
+    leader = False
+    wait_event: threading.Event | None = None
+    with _lock:
+        if _inflight is not None:
+            wait_event = _inflight
+        else:
+            _inflight = threading.Event()
+            _inflight_result = None
+            _inflight_error = None
+            wait_event = _inflight
+            leader = True
+
+    if not leader:
+        assert wait_event is not None
+        wait_event.wait(timeout=120)
+        with _lock:
+            if _inflight_error is not None:
+                return _fallback_body(_inflight_error)
+            if _inflight_result is not None:
+                body = copy.deepcopy(_inflight_result)
+                body["joined_inflight"] = True
+                return body
+        return _fallback_body("并发刷新等待超时")
+
+    try:
+        body = _call_moss()
+        with _lock:
+            _cache = {"expires": time.time() + _CACHE_TTL_SEC, "body": copy.deepcopy(body)}
+            _inflight_result = body
+        return body
+    except Exception as exc:  # noqa: BLE001
+        with _lock:
+            _inflight_error = exc
+        return _fallback_body(exc)
+    finally:
+        with _lock:
+            if _inflight is not None:
+                _inflight.set()
+            _inflight = None
+
+
+def moss_status() -> dict:
+    """轻量连通性探测：鉴权是否可读 + 可选 tools/list。"""
+    load_dotenv()
+    try:
+        from moss_live import load_moss_auth
+
+        t0 = time.time()
+        url, auth = load_moss_auth()
+        # tools/list 比舆情检索便宜，用于探活
+        import json as _json
+        import urllib.request
+
+        req = urllib.request.Request(
+            url,
+            data=_json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/list"}).encode("utf-8"),
+            method="POST",
+            headers={
+                "Authorization": auth,
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+        )
+        with urllib.request.urlopen(req, timeout=12) as resp:
+            payload = _json.loads(resp.read().decode("utf-8"))
+        tools = ((payload.get("result") or {}).get("tools") or [])
+        names = [t.get("name") for t in tools]
+        has_opinion = "moss_public_opinion_search" in names
+        return {
+            "ok": True,
+            "auth": True,
+            "url_host": url.split("/")[2] if "//" in url else url,
+            "tools_count": len(tools),
+            "has_public_opinion_search": has_opinion,
+            "elapsed_ms": int((time.time() - t0) * 1000),
+            "cache_ttl_sec": _CACHE_TTL_SEC,
+        }
+    except Exception as exc:  # noqa: BLE001
+        return {"ok": False, "auth": False, "error": str(exc)}
+
+
+class OpsHandler(SimpleHTTPRequestHandler):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, directory=str(ROOT), **kwargs)
+
+    def end_headers(self) -> None:
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("Access-Control-Allow-Origin", "*")
+        super().end_headers()
+
+    def do_GET(self) -> None:
+        path = self.path.split("?", 1)[0]
+        if path == "/api/health":
+            self._json(
+                200,
+                {
+                    "ok": True,
+                    "product": "ceo-ops-loop-v2",
+                    "ts": now_iso(),
+                    "cache_hot": bool(_cache and time.time() < float(_cache["expires"])),
+                },
+            )
+            return
+        if path == "/api/moss/status":
+            self._json(200, moss_status())
+            return
+        if path == "/api/intel/refresh":
+            self.handle_intel_refresh()
+            return
+        super().do_GET()
+
+    def handle_intel_refresh(self) -> None:
+        try:
+            qs = self.path.split("?", 1)[1] if "?" in self.path else ""
+            force = "force=1" in qs or "force=true" in qs
+            body = refresh_with_fallback(force=force)
+            self._json(200, body)
+        except Exception as exc:  # noqa: BLE001
+            self._json(
+                500,
+                {
+                    "ok": False,
+                    "mode": "error",
+                    "error": str(exc),
+                    "trace": traceback.format_exc(limit=3),
+                },
+            )
+
+    def _json(self, code: int, body: dict) -> None:
+        payload = json.dumps(body, ensure_ascii=False).encode("utf-8")
+        self.send_response(code)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Content-Length", str(len(payload)))
+        self.end_headers()
+        self.wfile.write(payload)
+
+    def log_message(self, fmt: str, *args) -> None:
+        print(f"[{self.log_date_time_string()}] {fmt % args}")
+
+
+def main() -> None:
+    load_dotenv()
+    host = os.environ.get("HOST", "127.0.0.1").strip() or "127.0.0.1"
+    port = int(os.environ.get("PORT", str(DEFAULT_PORT)))
+    server = ThreadingHTTPServer((host, port), OpsHandler)
+    print("=" * 58)
+    print("  壁仞 CEO 经营闭环看板（新版 · 区别于决策看板 v1）")
+    print(f"  打开：http://{host if host != '0.0.0.0' else '127.0.0.1'}:{port}")
+    print("  健康：/api/health  ·  MOSS探活：/api/moss/status")
+    print("  情报：/api/intel/refresh（单飞+45s缓存；?force=1 强制）")
+    print("=" * 58)
+    server.serve_forever()
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,193 @@
+{
+  "version": "2.0",
+  "description": "联影 PoC 文档清单唯一数据源（SSOT）· 新增待切片文档只需在此追加条目并放入 attachments/",
+  "attachments_dir": "01-数据资产/attachments",
+  "principles": [
+    "制度类按章节切片，保留制度编号与章节标题前缀",
+    "SOP 按操作步骤切片；经验案例按失效模式切片",
+    "备件/统计表按行切片；knowledge=false 的条目仅结构化不入 Doris chunk 表"
+  ],
+  "how_to_add_document": [
+    "1. 将文件放入 01-数据资产/attachments/",
+    "2. 在对应 scene 的 documents 数组追加一条（document_id / file / doc_type / chunk_*）",
+    "3. 运行 bash deploy/sync_web_from_scene.sh 同步到 ECS",
+    "4. 工作台「加载附件」→ 切片 → 推送 Doris",
+    "5. 场景三若需图谱路由，同步更新 service-fault-graph.json"
+  ],
+  "scene1_finance": {
+    "scene": 1,
+    "domain": "finance",
+    "structured": ["budget_application", "budget_execution", "dim_department", "dim_budget_category"],
+    "structured_source": "budget_operation json/log → Agent MCP 解析；宽表 → FineBI 分析主题",
+    "documents": [
+      {
+        "file": "BG-2022-001_联影医疗科技股份有限公司预算管理办法.doc",
+        "document_id": "BG-2022-001",
+        "doc_type": "policy",
+        "knowledge": true,
+        "chunk_strategy": "policy_section",
+        "chunk_size": 480,
+        "overlap": 64,
+        "section_split": "## ",
+        "prefix_fields": ["制度编号", "分类", "章节"],
+        "demo_queries": ["预算执行率100%-120%如何处理", "预算刚性约束原则是什么"]
+      },
+      {
+        "file": "BG-2022-005_联影医疗科技股份有限公司差旅费报销管理制度.doc",
+        "document_id": "BG-2022-005",
+        "doc_type": "policy",
+        "knowledge": true,
+        "chunk_strategy": "policy_section",
+        "chunk_size": 420,
+        "overlap": 48,
+        "section_split": "## ",
+        "atomic_tables": ["出差审批权限", "住宿标准"],
+        "demo_queries": ["研发经理国内出差5天谁审批", "经理级一线城市住宿标准"]
+      },
+      {
+        "file": "BG-2023-012_联影医疗科技股份有限公司超预算审批管理流程.doc",
+        "document_id": "BG-2023-012",
+        "doc_type": "policy",
+        "knowledge": true,
+        "chunk_strategy": "policy_section",
+        "chunk_size": 450,
+        "overlap": 64,
+        "section_split": "## ",
+        "atomic_tables": ["超预算级别划分", "超预算审批申请单模板"],
+        "demo_queries": ["超预算747万走什么审批", "B级超支审批流程"]
+      },
+      {
+        "file": "budget_operation_预览后缀改成json.doc",
+        "document_id": "budget_operation_json",
+        "doc_type": "log",
+        "knowledge": false,
+        "structured": true,
+        "chunk_strategy": "paragraph",
+        "note": "半结构化 JSONL；Agent MCP finance_budget_operation_query 解析，不进 uih_doc_chunks"
+      },
+      {
+        "file": "budget_operation_预览后缀改成log.doc",
+        "document_id": "budget_operation_log",
+        "doc_type": "log",
+        "knowledge": false,
+        "structured": true,
+        "chunk_strategy": "paragraph",
+        "note": "半结构化 JSONL；Agent MCP finance_budget_operation_query 解析，不进 uih_doc_chunks"
+      }
+    ]
+  },
+  "scene2_otd": {
+    "scene": 2,
+    "domain": "supply_chain",
+    "note": "结构化五表由 FineDataLink 入 Doris；主 Demo 在 FineBI",
+    "documents": []
+  },
+  "scene3_service": {
+    "scene": 3,
+    "domain": "service",
+    "structured": ["hospital_repair_record", "dispatch_work_order", "device_operation_log"],
+    "documents": [
+      {
+        "file": "RM-2023-001_uCT_960_系列球管组件更换标准操作流程(SOP).doc",
+        "document_id": "RM-2023-001",
+        "doc_type": "SOP",
+        "knowledge": true,
+        "device_models": ["uCT960"],
+        "fault_codes": ["E1001", "E1002"],
+        "chunk_strategy": "sop_step",
+        "chunk_size": 520,
+        "overlap": 48,
+        "step_pattern": "### 步骤",
+        "prefix_fields": ["机型", "操作等级", "备件编号"],
+        "demo_queries": ["uCT960球管更换第一步", "球管更换安全须知140kV"]
+      },
+      {
+        "file": "EXP-2024-015_CT球管早期失效案例分析——来自35次更换的经验总结.doc",
+        "document_id": "EXP-2024-015",
+        "doc_type": "experience",
+        "knowledge": true,
+        "fault_codes": ["E1001", "E1002"],
+        "confidence": 0.87,
+        "confidence_label": "高",
+        "confidence_source": "35次更换案例统计",
+        "chunk_strategy": "experience_case",
+        "chunk_size": 480,
+        "overlap": 64,
+        "section_split": "### ",
+        "keywords": ["E1001", "E1002", "旋转阳极", "9600rpm"],
+        "demo_queries": ["E1001 E1002什么原因", "旋转阳极卡死占比"]
+      },
+      {
+        "file": "RM-2023-008_uMR_790_高场MRI梯度线圈故障诊断与更换手册.doc",
+        "document_id": "RM-2023-008",
+        "doc_type": "manual",
+        "knowledge": true,
+        "device_models": ["uMR790"],
+        "fault_codes": ["E6xxx"],
+        "chunk_strategy": "policy_section",
+        "chunk_size": 500,
+        "overlap": 64,
+        "demo_queries": ["uMR790梯度线圈几何畸变", "E6xxx错误码诊断"]
+      },
+      {
+        "file": "RM-2024-003_uEXPLORER_全身PET-CT_日常维护与季度保养手册.doc",
+        "document_id": "RM-2024-003",
+        "doc_type": "manual",
+        "knowledge": true,
+        "device_models": ["uEXPLORER"],
+        "chunk_strategy": "checklist_table",
+        "chunk_size": 400,
+        "overlap": 32,
+        "demo_queries": ["PMT增益校准怎么做", "PET探测器温度偏差"]
+      },
+      {
+        "file": "EXP-2025-006_MRI液氦消耗异常排查与降本增效方案.doc",
+        "document_id": "EXP-2025-006",
+        "doc_type": "experience",
+        "knowledge": true,
+        "device_models": ["uMR790"],
+        "confidence": 0.72,
+        "confidence_label": "中",
+        "confidence_source": "案例归纳 + 阈值规则",
+        "chunk_strategy": "experience_case",
+        "chunk_size": 450,
+        "overlap": 64,
+        "keywords": ["液氦", "冷头", "1500升"],
+        "demo_queries": ["uMR790液氦消耗异常排查"]
+      },
+      {
+        "file": "SP-2024-001_联影医疗标准备件手册——CT_MRI_PET-CT通用备件.doc",
+        "document_id": "SP-2024-001",
+        "doc_type": "spare_part",
+        "knowledge": true,
+        "chunk_strategy": "table_row",
+        "chunk_size": 280,
+        "overlap": 0,
+        "demo_queries": ["UI-CT-TUBE-960价格和订货周期"]
+      },
+      {
+        "file": "SP-2024-025_高风险备件预警清单与替代方案（2025年Q1更新）.doc",
+        "document_id": "SP-2024-025",
+        "doc_type": "spare_part",
+        "knowledge": true,
+        "chunk_strategy": "experience_case",
+        "chunk_size": 420,
+        "overlap": 48,
+        "demo_queries": ["球管红色预警万睿视", "冷头住友战略库存"]
+      },
+      {
+        "file": "SP-REC-2025-Q1_2025年Q1全国工单备件更换汇总分析报告.doc",
+        "document_id": "SP-REC-2025-Q1",
+        "doc_type": "report",
+        "knowledge": true,
+        "confidence": 0.95,
+        "confidence_label": "高",
+        "confidence_source": "结构化工单汇总报告",
+        "chunk_strategy": "table_row",
+        "chunk_size": 320,
+        "overlap": 0,
+        "demo_queries": ["Q1 uCT960球管更换多少", "CT备件占比66.5%"]
+      }
+    ]
+  }
+}

@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>思格新能源 · 一把手总览</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="drill-toast" role="status" aria-live="polite"></div>
+
+  <div class="wrap">
+    <nav class="top-nav">
+      <strong style="font-size:13px;color:var(--text)">原型导航</strong>
+      <span class="current">页1 总览</span>
+      <a href="deep-dive.html">页2 经营深度</a>
+      <span style="color:var(--border)">|</span>
+      <a href="drill-region.html">下钻·区域</a>
+      <a href="drill-product.html">下钻·产品线</a>
+      <a href="drill-growth.html">下钻·管道订单</a>
+      <a href="drill-cash.html">下钻·现金应收</a>
+      <a href="drill-risk.html">下钻·风险合规</a>
+      <a href="drill-milestones.html">下钻·里程碑</a>
+    </nav>
+
+    <h1>思格新能源 · 集团一把手总览</h1>
+    <p class="sub">环形图/条形/卡片支持点击下钻（底部 Toast 提示后跳转）· 数据为虚构演示</p>
+
+    <div class="toolbar">
+      <div><span class="lbl">会计期间</span><span class="fake-select">2026 Q1 YTD ▾</span></div>
+      <div><span class="lbl">报表币种</span><span class="fake-select">人民币（合并）▾</span></div>
+      <div><span class="lbl">对比方式</span><span class="fake-select">较预算 ▾</span></div>
+      <div><span class="lbl">合并口径</span><span class="fake-select">集团合并 ▾</span></div>
+    </div>
+
+    <!-- A 战略快照 -->
+    <section class="drill-source">
+      <div class="sec-head">
+        <div class="sec-title">A 战略快照</div>
+        <div class="drill-hint">点击 <strong>环图扇区</strong>、<strong>图例</strong>、<strong>KPI</strong> 或右侧折线区域下钻</div>
+      </div>
+      <div class="kpi-strip">
+        <div class="kpi" data-drill-url="drill-region.html?tab=budget" data-drill-title="预算与执行">
+          <div class="label">收入完成率</div>
+          <div class="val">102.4%</div>
+          <div class="delta up">▲ 较预算 +2.4pt</div>
+          <div class="hint">战略_收入完成率 · 点击下钻</div>
+        </div>
+        <div class="kpi" data-drill-url="drill-region.html?tab=budget" data-drill-title="预算与执行">
+          <div class="label">EBITDA 完成率</div>
+          <div class="val">97.8%</div>
+          <div class="delta down">▼ 较预算 −2.2pt</div>
+          <div class="hint">战略_EBITDA完成率</div>
+        </div>
+        <div class="kpi" data-drill-url="deep-dive.html" data-drill-title="经营深度（收入结构）">
+          <div class="label">收入（YTD）</div>
+          <div class="val">182.6 亿</div>
+          <div class="delta up">同比 +38%</div>
+          <div class="hint">经营_收入_当期</div>
+        </div>
+        <div class="kpi" data-drill-url="drill-region.html?scope=overseas" data-drill-title="海外区域">
+          <div class="label">海外收入占比</div>
+          <div class="val">91.2%</div>
+          <div class="delta neu">环比 +0.6pt</div>
+          <div class="hint">市场_海外收入占比</div>
+        </div>
+      </div>
+      <div class="sec-body sec-grid-a">
+        <div class="chart-box tall">
+          <h4>国内 vs 海外收入（可点击扇区 / 图例下钻）</h4>
+          <div class="donut-block">
+            <svg id="svg-donut-overseas" viewBox="0 0 200 200" width="200" height="200" aria-label="国内海外收入环图"></svg>
+            <ul class="legend-list" id="legend-overseas">
+              <li data-drill-url="drill-region.html?scope=overseas" data-drill-title="海外区域与战略">
+                <span class="legend-swatch" style="background:#3d8bfd"></span>海外 91.2%
+              </li>
+              <li data-drill-url="drill-region.html?scope=domestic" data-drill-title="国内市场与战略">
+                <span class="legend-swatch" style="background:#5cb3ff"></span>国内 8.8%
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="chart-box tall">
+          <h4>战略目标跟踪</h4>
+          <table class="mini-table">
+            <thead><tr><th>指标</th><th class="num">目标</th><th class="num">实际</th><th class="num">缺口</th></tr></thead>
+            <tbody>
+              <tr><td>收入（亿）</td><td class="num">178.4</td><td class="num">182.6</td><td class="num" style="color:var(--green)">+4.2</td></tr>
+              <tr><td>EBITDA（亿）</td><td class="num">52.0</td><td class="num">50.9</td><td class="num" style="color:var(--amber)">−1.1</td></tr>
+              <tr><td>海外占比</td><td class="num">≥88%</td><td class="num">91.2%</td><td class="num" style="color:var(--green)">达标</td></tr>
+            </tbody>
+          </table>
+          <p style="margin:8px 0 0;font-size:10px;color:var(--muted)">表格行可在 FineBI 中绑定跳转；此处为静态展示。</p>
+        </div>
+        <div class="chart-box tall chart-svg-tight" data-drill-url="drill-region.html?tab=budget" data-drill-title="分月预算执行">
+          <h4>收入实际 vs 预算（亿元 · 2026 1–3 月 + 预测 4–6 月）</h4>
+          <svg viewBox="0 0 400 210" class="chart-svg-tight" aria-hidden="true">
+            <line class="grid-line" x1="48" y1="28" x2="48" y2="168"/>
+            <line class="grid-line" x1="48" y1="168" x2="372" y2="168"/>
+            <g class="axis-label">
+              <text x="44" y="24" text-anchor="end" class="axis-label">40</text>
+              <text x="44" y="74" text-anchor="end" class="axis-label">30</text>
+              <text x="44" y="124" text-anchor="end" class="axis-label">20</text>
+              <text x="44" y="172" text-anchor="end" class="axis-label">0</text>
+            </g>
+            <line class="grid-line" x1="48" y1="118" x2="372" y2="118" stroke-dasharray="3 4" opacity="0.5"/>
+            <line class="grid-line" x1="48" y1="68" x2="372" y2="68" stroke-dasharray="3 4" opacity="0.5"/>
+            <polygon fill="rgba(61,139,253,0.15)" points="72,148 132,125 192,98 252,102 312,88 352,78 352,168 72,168"/>
+            <polyline fill="none" stroke="#3d8bfd" stroke-width="2.5" points="72,148 132,125 192,98 252,102 312,88 352,78"/>
+            <polyline fill="none" stroke="#8b9aab" stroke-width="2" stroke-dasharray="5 4" points="72,155 132,138 192,112 252,118 312,96 352,92"/>
+            <g fill="#8b9aab" font-size="10" text-anchor="middle">
+              <text x="72" y="188">1月</text><text x="132" y="188">2月</text><text x="192" y="188">3月</text>
+              <text x="252" y="188">4月</text><text x="312" y="188">5月</text><text x="352" y="188">6月</text>
+            </g>
+            <g font-size="9" fill="#8b9aab">
+              <rect x="260" y="12" width="10" height="3" fill="#3d8bfd"/><text x="275" y="16">实际</text>
+              <rect x="318" y="12" width="10" height="2" fill="#8b9aab"/><text x="333" y="16">预算</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- B 经营质量 -->
+    <section class="drill-source">
+      <div class="sec-head">
+        <div class="sec-title">B 经营质量</div>
+        <div class="drill-hint">点击 <strong>产品线环图</strong>、<strong>毛利趋势区</strong> 或右侧对比表</div>
+      </div>
+      <div class="kpi-strip">
+        <div class="kpi" data-drill-url="drill-product.html" data-drill-title="产品线经营">
+          <div class="label">毛利率</div>
+          <div class="val">34.6%</div>
+          <div class="delta down">▼ 较预算 −0.8pt</div>
+          <div class="hint">经营_毛利率</div>
+        </div>
+        <div class="kpi" data-drill-url="deep-dive.html" data-drill-title="费用结构">
+          <div class="label">期间费用率</div>
+          <div class="val">18.1%</div>
+          <div class="delta up">优于预算 0.4pt</div>
+          <div class="hint">经营_期间费用率</div>
+        </div>
+        <div class="kpi" data-drill-url="deep-dive.html" data-drill-title="盈利质量">
+          <div class="label">净利率（考核）</div>
+          <div class="val">12.3%</div>
+          <div class="delta up">▲ +0.6pt YoY</div>
+          <div class="hint">经营_净利率</div>
+        </div>
+        <div class="kpi" data-drill-url="deep-dive.html" data-drill-title="研发投入">
+          <div class="label">研发费销比</div>
+          <div class="val">7.8%</div>
+          <div class="delta neu">与预算持平</div>
+          <div class="hint">研发_费销比</div>
+        </div>
+      </div>
+      <div class="sec-body sec-grid-b">
+        <div class="chart-box tall" data-drill-url="drill-product.html" data-drill-title="产品线毛利趋势">
+          <h4>毛利率 vs 行业基准（近 6 个月 · %）</h4>
+          <svg viewBox="0 0 360 220" aria-hidden="true">
+            <line class="grid-line" x1="44" y1="32" x2="44" y2="178"/>
+            <line class="grid-line" x1="44" y1="178" x2="330" y2="178"/>
+            <line class="grid-line" x1="44" y1="128" x2="330" y2="128" stroke-dasharray="3 4" opacity="0.45"/>
+            <line class="grid-line" x1="44" y1="78" x2="330" y2="78" stroke-dasharray="3 4" opacity="0.45"/>
+            <polyline fill="none" stroke="#34c759" stroke-width="2.5" points="60,142 108,118 156,128 204,98 252,88 300,82"/>
+            <polyline fill="none" stroke="#8b9aab" stroke-width="2" stroke-dasharray="4 3" points="60,108 108,102 156,98 204,92 252,86 300,80"/>
+            <text x="310" y="86" fill="#34c759" font-size="9">集团</text>
+            <text x="310" y="74" fill="#8b9aab" font-size="9">基准</text>
+            <g fill="#8b9aab" font-size="10" text-anchor="middle">
+              <text x="60" y="196">10月</text><text x="108" y="196">11月</text><text x="156" y="196">12月</text>
+              <text x="204" y="196">1月</text><text x="252" y="196">2月</text><text x="300" y="196">3月</text>
+            </g>
+            <text x="50" y="24" fill="#8b9aab" font-size="9">38%</text>
+            <text x="50" y="80" fill="#8b9aab" font-size="9">35%</text>
+            <text x="50" y="132" fill="#8b9aab" font-size="9">32%</text>
+          </svg>
+        </div>
+        <div class="chart-box tall">
+          <h4>产品线收入占比（环图可点）</h4>
+          <div class="donut-block">
+            <svg id="svg-donut-product" viewBox="0 0 200 200" width="200" height="200" aria-label="产品线环图"></svg>
+            <ul class="legend-list">
+              <li data-drill-url="drill-product.html?line=stor" data-drill-title="光储充一体"><span class="legend-swatch" style="background:#3d8bfd"></span>光储充一体 46%</li>
+              <li data-drill-url="drill-product.html?line=stack" data-drill-title="储能栈"><span class="legend-swatch" style="background:#5cb3ff"></span>储能栈 22%</li>
+              <li data-drill-url="drill-product.html?line=inv" data-drill-title="逆变器"><span class="legend-swatch" style="background:#2d6fd4"></span>逆变器 14%</li>
+              <li data-drill-url="drill-product.html?line=charge" data-drill-title="充电与配件"><span class="legend-swatch" style="background:#4a5568"></span>充电 10%</li>
+              <li data-drill-url="drill-product.html?line=svc" data-drill-title="服务与订阅"><span class="legend-swatch" style="background:#6b7c93"></span>服务 8%</li>
+            </ul>
+          </div>
+        </div>
+        <div class="chart-box tall">
+          <h4>产品线毛利对比（YTD）</h4>
+          <table class="mini-table">
+            <thead><tr><th>产品线</th><th class="num">毛利率</th><th class="num">同比</th></tr></thead>
+            <tbody>
+              <tr data-drill-url="drill-product.html?line=stor" data-drill-title="光储充一体" style="cursor:pointer"><td>光储充一体</td><td class="num">35.8%</td><td class="num" style="color:var(--green)">+1.2pt</td></tr>
+              <tr data-drill-url="drill-product.html?line=stack" data-drill-title="储能栈" style="cursor:pointer"><td>储能栈</td><td class="num">33.1%</td><td class="num" style="color:var(--green)">+0.6pt</td></tr>
+              <tr data-drill-url="drill-product.html?line=inv" data-drill-title="逆变器" style="cursor:pointer"><td>逆变器</td><td class="num">31.4%</td><td class="num" style="color:var(--red)">−0.4pt</td></tr>
+              <tr data-drill-url="drill-product.html?line=charge" data-drill-title="充电与配件" style="cursor:pointer"><td>充电与配件</td><td class="num">28.6%</td><td class="num" style="color:var(--muted)">持平</td></tr>
+              <tr data-drill-url="drill-product.html?line=svc" data-drill-title="服务与订阅" style="cursor:pointer"><td>服务与订阅</td><td class="num">62.0%</td><td class="num" style="color:var(--green)">+3.1pt</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- C 增长引擎 -->
+    <section class="drill-source">
+      <div class="sec-head">
+        <div class="sec-title">C 增长引擎</div>
+        <div class="drill-hint">点击 <strong>漏斗行</strong>、<strong>区域条</strong> 或右侧 Backlog 表</div>
+      </div>
+      <div class="kpi-strip">
+        <div class="kpi" data-drill-url="drill-growth.html" data-drill-title="在手订单明细">
+          <div class="label">在手订单（期末）</div>
+          <div class="val">86.4 亿</div>
+          <div class="delta up">▲ 环比 +6.2%</div>
+          <div class="hint">订单_Backlog金额</div>
+        </div>
+        <div class="kpi" data-drill-url="drill-growth.html" data-drill-title="覆盖月数说明">
+          <div class="label">订单覆盖月数</div>
+          <div class="val">7.2</div>
+          <div class="delta neu">绿区（≥6）</div>
+          <div class="hint">订单_覆盖月数</div>
+        </div>
+        <div class="kpi" data-drill-url="drill-growth.html" data-drill-title="销售管道">
+          <div class="label">管道金额（加权）</div>
+          <div class="val">42.8 亿</div>
+          <div class="delta up">▲ 较上月 +4.1%</div>
+          <div class="hint">销售_Pipeline金额</div>
+        </div>
+        <div class="kpi" data-drill-url="drill-growth.html" data-drill-title="赢单率">
+          <div class="label">阶段转化率（季）</div>
+          <div class="val">34%</div>
+          <div class="delta up">▲ +2pt</div>
+          <div class="hint">销售_赢单率</div>
+        </div>
+      </div>
+      <div class="sec-body sec-grid-c">
+        <div class="chart-box tall">
+          <h4>管道阶段分布（点击阶段下钻商机清单）</h4>
+          <div class="funnel-row" data-drill-url="drill-growth.html?stage=线索" data-drill-title="管道·线索">
+            <span class="name">线索</span><div class="bar-wrap"><div class="bar" style="width:100%"></div></div><span class="amt">18.4 亿</span>
+          </div>
+          <div class="funnel-row" data-drill-url="drill-growth.html?stage=方案" data-drill-title="管道·方案报价">
+            <span class="name">方案/报价</span><div class="bar-wrap"><div class="bar" style="width:78%"></div></div><span class="amt">14.3 亿</span>
+          </div>
+          <div class="funnel-row" data-drill-url="drill-growth.html?stage=谈判" data-drill-title="管道·谈判">
+            <span class="name">谈判</span><div class="bar-wrap"><div class="bar" style="width:52%"></div></div><span class="amt">7.2 亿</span>
+          </div>
+          <div class="funnel-row" data-drill-url="drill-growth.html?stage=待签" data-drill-title="管道·待签">
+            <span class="name">待签</span><div class="bar-wrap"><div class="bar" style="width:28%"></div></div><span class="amt">2.9 亿</span>
+          </div>
+          <p style="margin-top:10px;font-size:10px;color:var(--muted)">赢率加权：线索 15% · 方案 35% · 谈判 55% · 待签 80%（示意）</p>
+        </div>
+        <div class="chart-box tall">
+          <h4>区域收入 YTD（亿元 · 点击条形下钻）</h4>
+          <svg viewBox="0 0 360 200" aria-hidden="true">
+            <text x="8" y="28" fill="#8b9aab" font-size="11">澳大利亚</text>
+            <rect data-drill-url="drill-region.html?region=澳大利亚" data-drill-title="澳大利亚" x="96" y="14" width="220" height="20" fill="#3d8bfd" rx="3"/>
+            <text x="322" y="28" fill="#e8eef4" font-size="11">83.4</text>
+            <text x="8" y="58" fill="#8b9aab" font-size="11">欧洲</text>
+            <rect data-drill-url="drill-region.html?region=欧洲" data-drill-title="欧洲" x="96" y="44" width="168" height="20" fill="#5cb3ff" rx="3"/>
+            <text x="270" y="58" fill="#e8eef4" font-size="11">62.7</text>
+            <text x="8" y="88" fill="#8b9aab" font-size="11">其他海外</text>
+            <rect data-drill-url="drill-region.html?region=其他海外" data-drill-title="其他海外" x="96" y="74" width="78" height="20" fill="#2d6fd4" rx="3"/>
+            <text x="180" y="88" fill="#e8eef4" font-size="11">28.8</text>
+            <text x="8" y="118" fill="#8b9aab" font-size="11">中国</text>
+            <rect data-drill-url="drill-region.html?region=中国" data-drill-title="中国" x="96" y="104" width="40" height="20" fill="#4a5568" rx="3"/>
+            <text x="142" y="118" fill="#e8eef4" font-size="11">7.7</text>
+            <text x="8" y="158" fill="#8b9aab" font-size="10">收入+在手（双轴示意）</text>
+            <polyline fill="none" stroke="#ffbd2e" stroke-width="2" points="96,148 160,138 224,132 288,124"/>
+            <circle cx="96" cy="148" r="3" fill="#ffbd2e"/><circle cx="160" cy="138" r="3" fill="#ffbd2e"/>
+            <circle cx="224" cy="132" r="3" fill="#ffbd2e"/><circle cx="288" cy="124" r="3" fill="#ffbd2e"/>
+            <text x="300" y="128" fill="#ffbd2e" font-size="9">Backlog 指数</text>
+          </svg>
+        </div>
+        <div class="chart-box tall">
+          <h4>在手订单分月到期（亿）</h4>
+          <table class="mini-table">
+            <thead><tr><th>月份</th><th class="num">金额</th><th class="num">占%</th></tr></thead>
+            <tbody>
+              <tr data-drill-url="drill-growth.html" data-drill-title="交付排期" style="cursor:pointer"><td>2026-04</td><td class="num">18.2</td><td class="num">21%</td></tr>
+              <tr data-drill-url="drill-growth.html" data-drill-title="交付排期" style="cursor:pointer"><td>2026-05</td><td class="num">22.6</td><td class="num">26%</td></tr>
+              <tr data-drill-url="drill-growth.html" data-drill-title="交付排期" style="cursor:pointer"><td>2026-06+</td><td class="num">45.6</td><td class="num">53%</td></tr>
+            </tbody>
+          </table>
+          <svg viewBox="0 0 280 90" style="margin-top:8px" aria-hidden="true">
+            <rect x="20" y="20" width="40" height="50" fill="#3d8bfd" rx="2"/>
+            <rect x="68" y="10" width="40" height="60" fill="#5cb3ff" rx="2"/>
+            <rect x="116" y="30" width="40" height="40" fill="#2d6fd4" rx="2"/>
+            <text x="28" y="82" fill="#8b9aab" font-size="9">Q1</text>
+            <text x="76" y="82" fill="#8b9aab" font-size="9">Q2</text>
+            <text x="124" y="82" fill="#8b9aab" font-size="9">Q3</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- D 现金命脉 -->
+    <section class="drill-source">
+      <div class="sec-head">
+        <div class="sec-title">D 现金命脉</div>
+        <div class="drill-hint">点击 <strong>KPI</strong>、<strong>图表区</strong> 或 <strong>账龄堆叠条</strong></div>
+      </div>
+      <div class="kpi-strip">
+        <div class="kpi" data-drill-url="drill-cash.html?tab=cf" data-drill-title="现金流量">
+          <div class="label">经营现金流（YTD）</div>
+          <div class="val">24.1 亿</div>
+          <div class="delta up">覆盖净利润 1.12x</div>
+          <div class="hint">现金_经营现金流</div>
+        </div>
+        <div class="kpi" data-drill-url="drill-cash.html?tab=cf" data-drill-title="自由现金流">
+          <div class="label">自由现金流（YTD）</div>
+          <div class="val">16.8 亿</div>
+          <div class="delta neu">CAPEX 已扣</div>
+          <div class="hint">现金_自由现金流</div>
+        </div>
+        <div class="kpi" data-drill-url="drill-cash.html?tab=ar" data-drill-title="应收与 DSO">
+          <div class="label">DSO</div>
+          <div class="val">52 天</div>
+          <div class="delta neu">黄区边缘</div>
+          <div class="hint">现金_DSO</div>
+        </div>
+        <div class="kpi" data-drill-url="drill-cash.html" data-drill-title="库存与资金">
+          <div class="label">库存资金占用</div>
+          <div class="val">31.2 亿</div>
+          <div class="delta down">▲ 较季初 +5%</div>
+          <div class="hint">供应链_库存资金占用</div>
+        </div>
+      </div>
+      <div class="sec-body sec-grid-d">
+        <div class="chart-box tall" data-drill-url="drill-cash.html?tab=cf" data-drill-title="现金流明细">
+          <h4>经营现金流 vs 净利润（亿元 · 月度）</h4>
+          <svg viewBox="0 0 380 210" aria-hidden="true">
+            <line class="grid-line" x1="50" y1="30" x2="50" y2="170"/>
+            <line class="grid-line" x1="50" y1="170" x2="360" y2="170"/>
+            <polyline fill="rgba(61,139,253,0.12)" stroke="none" points="70,120 120,112 170,100 220,92 270,82 320,72 320,170 70,170"/>
+            <polyline fill="none" stroke="#3d8bfd" stroke-width="2.5" points="70,120 120,112 170,100 220,92 270,82 320,72"/>
+            <polyline fill="none" stroke="#34c759" stroke-width="2" stroke-dasharray="4 3" points="70,128 120,122 170,118 220,108 270,102 320,96"/>
+            <g fill="#8b9aab" font-size="10" text-anchor="middle">
+              <text x="70" y="190">10月</text><text x="120" y="190">11月</text><text x="170" y="190">12月</text>
+              <text x="220" y="190">1月</text><text x="270" y="190">2月</text><text x="320" y="190">3月</text>
+            </g>
+            <text x="230" y="22" fill="#3d8bfd" font-size="9">经营现金流</text>
+            <text x="300" y="22" fill="#34c759" font-size="9">净利润</text>
+          </svg>
+        </div>
+        <div class="chart-box tall" data-drill-url="drill-cash.html?tab=ar" data-drill-title="DSO 拆解">
+          <h4>DSO 与回款目标（天）</h4>
+          <svg viewBox="0 0 360 210" aria-hidden="true">
+            <line class="grid-line" x1="44" y1="32" x2="44" y2="172"/>
+            <line class="grid-line" x1="44" y1="172" x2="320" y2="172"/>
+            <line x1="44" y1="92" x2="320" y2="92" stroke="#ffbd2e" stroke-dasharray="4 4" opacity="0.7"/>
+            <text x="250" y="88" fill="#ffbd2e" font-size="9">目标 48 天</text>
+            <polyline fill="none" stroke="#ffbd2e" stroke-width="2.5" points="60,108 100,102 140,98 180,88 220,80 260,76 300,72"/>
+            <g fill="#8b9aab" font-size="10" text-anchor="middle">
+              <text x="60" y="192">10月</text><text x="100" y="192">11月</text><text x="140" y="192">12月</text>
+              <text x="180" y="192">1月</text><text x="220" y="192">2月</text><text x="260" y="192">3月</text>
+            </g>
+          </svg>
+        </div>
+        <div class="chart-box tall" data-drill-url="drill-cash.html?tab=ar" data-drill-title="应收账龄">
+          <h4>应收账龄结构（期末 · 亿）</h4>
+          <svg viewBox="0 0 280 120" aria-hidden="true">
+            <rect data-drill-url="drill-cash.html?tab=ar" data-drill-title="0-30天" x="20" y="40" width="102" height="28" fill="#34c759" rx="3"/>
+            <rect data-drill-url="drill-cash.html?tab=ar" data-drill-title="31-60天" x="124" y="40" width="51" height="28" fill="#3d8bfd" rx="3"/>
+            <rect data-drill-url="drill-cash.html?tab=ar" data-drill-title="61-90天" x="177" y="40" width="23" height="28" fill="#ffbd2e" rx="3"/>
+            <rect data-drill-url="drill-cash.html?tab=ar" data-drill-title="90+天" x="202" y="40" width="20" height="28" fill="#ff5f57" rx="3"/>
+            <text x="20" y="30" fill="#8b9aab" font-size="9">0–30 天 52%</text>
+            <text x="124" y="30" fill="#8b9aab" font-size="9">31–60 26%</text>
+            <text x="177" y="30" fill="#8b9aab" font-size="9">61–90 12%</text>
+            <text x="202" y="30" fill="#8b9aab" font-size="9">90+ 10%</text>
+            <text x="20" y="92" fill="#8b9aab" font-size="9">点击色块下钻账龄明细（示意）</text>
+          </svg>
+          <table class="mini-table" style="margin-top:6px">
+            <thead><tr><th>动作</th><th class="num">影响 DSO</th></tr></thead>
+            <tbody>
+              <tr><td>欧洲渠道信用期</td><td class="num" style="color:var(--red)">+4.2 天</td></tr>
+              <tr><td>澳洲回款改善</td><td class="num" style="color:var(--green)">−2.1 天</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- E 风险 -->
+    <section class="drill-source">
+      <div class="sec-head">
+        <div class="sec-title">E 风险红绿灯</div>
+        <div class="drill-hint">环图为套保覆盖 · 表格行点击进风险页</div>
+      </div>
+      <div class="sec-body sec-grid-e">
+        <div class="chart-box tall">
+          <h4>套保覆盖率（可点击环图）</h4>
+          <svg id="svg-risk-mini" viewBox="0 0 104 104" width="140" height="140" aria-label="套保覆盖环图"></svg>
+          <p style="font-size:10px;color:var(--muted);margin:6px 0 0">汇兑 YTD：<strong style="color:var(--text)">−1.24 亿</strong>（预算内）· <a href="drill-risk.html?tab=fx" style="color:var(--link)">明细</a></p>
+        </div>
+        <div class="chart-box tall">
+          <h4>重大认证状态</h4>
+          <table class="table-ph">
+            <thead><tr><th>市场/认证</th><th>状态</th><th>计划取证日</th></tr></thead>
+            <tbody>
+              <tr data-drill-url="drill-risk.html?tab=cert" data-drill-title="欧盟电池法规" style="cursor:pointer"><td>欧盟电池法规配套</td><td><span class="dot y"></span>在途</td><td>2026-05-30</td></tr>
+              <tr data-drill-url="drill-risk.html?tab=cert" data-drill-title="澳洲并网" style="cursor:pointer"><td>澳洲并网新规符合性</td><td><span class="dot g"></span>齐套</td><td>已取证</td></tr>
+              <tr data-drill-url="drill-risk.html?tab=cert" data-drill-title="北美 UL" style="cursor:pointer"><td>北美 UL 扩项</td><td><span class="dot y"></span>在途</td><td>2026-08-15</td></tr>
+              <tr data-drill-url="drill-risk.html?tab=cert" data-drill-title="英国 G98" style="cursor:pointer"><td>英国 G98 更新</td><td><span class="dot g"></span>齐套</td><td>2026-02-10</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="chart-box tall" data-drill-url="drill-risk.html?tab=cs" data-drill-title="重大客诉">
+          <h4>重大客诉（YTD）与趋势</h4>
+          <p style="margin:0 0 6px;font-size:20px;font-weight:600">7 件 · 预估 2,860 万</p>
+          <svg viewBox="0 0 320 100" aria-hidden="true">
+            <polyline fill="none" stroke="#ff5f57" stroke-width="2" points="30,70 90,65 150,72 210,55 270,48"/>
+            <text x="200" y="20" fill="#8b9aab" font-size="9">件数指数（示意）</text>
+          </svg>
+          <table class="mini-table">
+            <thead><tr><th>类型</th><th class="num">金额（万）</th></tr></thead>
+            <tbody>
+              <tr><td>批量固件升级</td><td class="num">1,020</td></tr>
+              <tr><td>海运货损</td><td class="num">890</td></tr>
+              <tr><td>安装质量争议</td><td class="num">620</td></tr>
+              <tr><td>其他</td><td class="num">330</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- F 里程碑 -->
+    <section class="drill-source">
+      <div class="sec-head">
+        <div class="sec-title">F 执行里程碑</div>
+        <div class="drill-hint">表格行点击 → <a href="drill-milestones.html">里程碑全景</a></div>
+      </div>
+      <div class="row2" style="grid-template-columns:1.6fr 1fr;margin-top:0">
+        <table class="table-ph">
+          <thead><tr><th>里程碑</th><th>责任</th><th>计划日</th><th>状态</th></tr></thead>
+          <tbody>
+            <tr data-drill-url="drill-milestones.html" data-drill-title="SigenStor 3.0" style="cursor:pointer"><td>SigenStor 3.0 量产爬坡</td><td>供应链 VP</td><td>2026-04-20</td><td><span class="dot y"></span>关注</td></tr>
+            <tr data-drill-url="drill-milestones.html" data-drill-title="欧洲框架" style="cursor:pointer"><td>欧洲分销龙头年度框架签署</td><td>销售总裁</td><td>2026-03-31</td><td><span class="dot g"></span>正常</td></tr>
+            <tr data-drill-url="drill-milestones.html" data-drill-title="思格云 SLA" style="cursor:pointer"><td>思格云 SLA 达 99.95%</td><td>云与软件</td><td>2026-06-30</td><td><span class="dot g"></span>正常</td></tr>
+            <tr data-drill-url="drill-milestones.html" data-drill-title="北美交付" style="cursor:pointer"><td>北美渠道首批交付</td><td>海外交付</td><td>2026-05-10</td><td><span class="dot r"></span>风险</td></tr>
+            <tr data-drill-url="drill-milestones.html" data-drill-title="产能扩建" style="cursor:pointer"><td>华东仓自动化投产</td><td>供应链</td><td>2026-07-01</td><td><span class="dot g"></span>正常</td></tr>
+          </tbody>
+        </table>
+        <div class="page-intro" style="margin:0;min-height:100%">
+          <strong style="color:var(--text)">本月聚焦</strong><br /><br />
+          北美首批交付与 UL 扩项、欧盟电池法规三线并行；DSO 黄区要求财资与销售联合周更回款计划。
+          <hr style="border:none;border-top:1px solid var(--border);margin:12px 0" />
+          <span style="font-size:11px">下周例会必问：北美交付关键路径 · 欧洲框架回款条款 · 库存周转目标</span>
+        </div>
+      </div>
+    </section>
+
+    <p style="text-align:center;margin-top:20px">
+      <a href="deep-dive.html" style="color:var(--link);font-size:13px">进入页2：区域利润 · 大客集中度 · 云健康度 →</a>
+    </p>
+
+    <footer>指标定义见 ../METRIC_DICTIONARY.md · 下钻规范见 ../DRILLDOWN_NAVIGATION.md</footer>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

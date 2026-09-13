@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>华塘大昌POC - POC脑图</title>
+<style>
+:root {
+  --bg: #0f1419;
+  --surface: #1a2332;
+  --surface2: #243044;
+  --text: #e7ecf3;
+  --muted: #8b9cb3;
+  --accent: #3b82f6;
+  --accent2: #10b981;
+  --border: #2d3a4f;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+.container { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1.25rem 3rem; }
+header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+header h1 { margin: 0 0 .35rem; font-size: 1.75rem; font-weight: 700; }
+.meta { color: var(--muted); font-size: .9rem; margin: 0; }
+.pills { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
+.pill {
+  background: var(--surface2);
+  padding: .25rem .75rem;
+  border-radius: 999px;
+  font-size: .85rem;
+}
+.pill em { font-style: normal; color: var(--accent2); margin-left: .25rem; }
+.analysis { margin-bottom: 2rem; }
+.analysis h2 { font-size: 1.25rem; margin: 0 0 .75rem; }
+.lead { color: var(--muted); margin: 0 0 1rem; }
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; }
+@media (max-width: 768px) { .cards { grid-template-columns: 1fr; } }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+}
+.card h3 { margin: 0 0 .35rem; font-size: 1.05rem; color: var(--accent); }
+.card .stat { color: var(--muted); font-size: .8rem; margin: 0 0 .6rem; }
+.card ul { margin: 0; padding-left: 1.1rem; font-size: .88rem; color: #c5d0de; }
+.card li { margin-bottom: .35rem; }
+.highlights, .dims, .notes-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  margin-bottom: 1rem;
+}
+.highlights h3, .dims h3, .notes-section h3 { margin: 0 0 .65rem; font-size: 1rem; }
+.mark-groups { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 640px) { .mark-groups { grid-template-columns: 1fr; } }
+.mark-group h4 { margin: 0 0 .4rem; font-size: .9rem; color: var(--muted); }
+.mark-group ul { margin: 0; padding-left: 1.1rem; font-size: .82rem; }
+.mark-group li { margin-bottom: .25rem; word-break: break-word; }
+.note-card { background: var(--surface2); border-radius: 8px; padding: .75rem 1rem; margin-bottom: .65rem; }
+.note-path { font-size: .78rem; color: var(--muted); margin-bottom: .35rem; }
+.note-card p { margin: 0; font-size: .88rem; }
+table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+th, td { border: 1px solid var(--border); padding: .5rem .65rem; text-align: left; }
+th { background: var(--surface2); color: var(--muted); font-weight: 600; }
+.tree-section h2 { font-size: 1.25rem; margin: 0 0 .75rem; }
+.toolbar {
+  display: flex; flex-wrap: wrap; gap: .5rem; align-items: center;
+  margin-bottom: 1rem; position: sticky; top: 0; z-index: 10;
+  background: rgba(15,20,25,.92); backdrop-filter: blur(8px);
+  padding: .6rem 0;
+}
+.toolbar input {
+  flex: 1; min-width: 180px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: .45rem .75rem;
+  border-radius: 6px;
+  font-size: .9rem;
+}
+.toolbar button {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: .45rem .85rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: .85rem;
+}
+.toolbar button:hover { border-color: var(--accent); color: var(--accent); }
+.legend { display: flex; gap: 1rem; font-size: .8rem; color: var(--muted); margin-left: auto; }
+@media (max-width: 640px) { .legend { margin-left: 0; width: 100%; } }
+.tree {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+}
+.root-node {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: .75rem;
+  padding: .5rem .75rem;
+  background: linear-gradient(90deg, #1e3a5f, transparent);
+  border-radius: 6px;
+  border-left: 3px solid var(--accent);
+}
+.node { margin-left: .5rem; }
+.node summary {
+  cursor: pointer;
+  padding: .3rem .5rem;
+  border-radius: 4px;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+}
+.node summary::-webkit-details-marker { display: none; }
+.node summary::before {
+  content: "▸";
+  color: var(--muted);
+  font-size: .75rem;
+  transition: transform .15s;
+}
+.node[open] > summary::before { transform: rotate(90deg); }
+.node summary:hover { background: var(--surface2); }
+.children { margin-left: 1rem; border-left: 1px dashed var(--border); padding-left: .5rem; }
+.leaf {
+  padding: .2rem .5rem .2rem 1rem;
+  font-size: .9rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .35rem;
+}
+.leaf:hover { background: var(--surface2); border-radius: 4px; }
+.depth-1 > summary { font-weight: 600; color: #93c5fd; }
+.depth-2 > summary { color: #a5f3fc; }
+.marker { font-size: .85rem; }
+.note {
+  width: 100%;
+  margin: .25rem 0 .35rem 1.5rem;
+  padding: .4rem .65rem;
+  background: rgba(16,185,129,.12);
+  border-left: 2px solid var(--accent2);
+  border-radius: 0 6px 6px 0;
+  font-size: .82rem;
+  color: #b8c9dc;
+}
+.topic-image { width: 100%; margin: .35rem 0 .5rem 1.5rem; }
+.topic-image img {
+  max-width: min(100%, 480px);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+.node.hidden, .leaf.hidden { display: none !important; }
+.node.match > summary, .leaf.match { background: rgba(59,130,246,.2); }
+.no-results { display: none; color: var(--muted); padding: 1rem; text-align: center; }
+footer { margin-top: 2rem; text-align: center; color: var(--muted); font-size: .8rem; }
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>🎯 华塘大昌POC</h1>
+  <p class="meta">POC 脑图 · 共 264 个节点 · 最大深度 7 层 · 生成日期 2026-05-26 · 来源 XMind</p>
+  <div class="pills"><span class="pill">经营驾驶舱 <em>189</em></span><span class="pill">Dashboard-PC&amp;APP(PC深色 APP浅色) <em>74</em></span></div>
+</header>
+
+<section class="analysis" id="analysis">
+  <h2>📋 脑图分析摘要</h2>
+  <p class="lead">本 POC 面向<strong>华塘大昌</strong>零售/电商经营场景，围绕「经营驾驶舱」与「Dashboard（PC/APP）」两条产品线展开，覆盖<strong>人货场</strong>分析框架、首页大屏模块、商品钻取页及移动端指标看板。</p>
+  <div class="cards">
+    <article class="card">
+      <h3>经营驾驶舱</h3>
+      <p class="stat">189 节点</p>
+      <ul>
+        <li><strong>原始需求</strong>：品牌/店铺/产品/消费者四维 + 销售额/订单量/客单价等指标</li>
+        <li><strong>分析思路</strong>：人（消费者转化）· 货（采购/供应链/销售）· 场（销售额/促销）</li>
+        <li><strong>首页模块</strong>：指标卡、销售趋势、产品/店铺/消费者五大区块</li>
+        <li><strong>钻取页</strong>：商品详情（基本信息、销售/连带趋势）</li></ul>
+    </article>
+    <article class="card">
+      <h3>Dashboard-PC&amp;APP(PC深色 APP浅色)</h3>
+      <p class="stat">74 节点</p>
+      <ul>
+        <li><strong>销售总览</strong>：年/月/日指标卡（金额、目标、达成、同比环比、毛利、MD）</li>
+        <li><strong>区域地图</strong>：按销售金额区域分布</li>
+        <li><strong>趋势与排行</strong>：近 8 日组合图、品牌/店铺条形图、产品 TOP10</li>
+        <li><strong>维度</strong>：产品、时间（日/月/年/周）；收货区域维度已标注删除</li></ul>
+    </article></div>
+  <div class="highlights">
+    <h3>⚠️ 待确认与重点标记（共 10 处）</h3>
+    <div class="mark-groups"><div class="mark-group"><h4>已确认</h4><ul><li>华塘大昌POC › 华塘大昌POC › 经营驾驶舱 › 原始需求</li></ul></div><div class="mark-group"><h4>待确认</h4><ul><li>华塘大昌POC › 华塘大昌POC › 经营驾驶舱 › 销售经营驾驶舱首页 › 核心销售部分 › 1指标卡模块 › 转化</li><li>华塘大昌POC › 华塘大昌POC › 经营驾驶舱 › 销售经营驾驶舱首页 › 核心销售部分 › 2销售趋势 › 转化趋势</li><li>华塘大昌POC › 华塘大昌POC › 经营驾驶舱 › 销售经营驾驶舱首页 › 4店铺模块 › 店铺top图</li><li>华塘大昌POC › 华塘大昌POC › 经营驾驶舱 › 销售经营驾驶舱首页 › 消费者模块</li><li>华塘大昌POC › 华塘大昌POC › 经营驾驶舱 › 销售经营驾驶舱首页 › 消费者模块 › 整体流量分析</li><li>华塘大昌POC › 华塘大昌POC › 经营驾驶舱 › 销售经营驾驶舱首页 › 消费者模块 › 整体用户画像</li><li>华塘大昌POC › 华塘大昌POC › Dashboard-PC&amp;APP(PC深色 APP浅色) › 维度 › 收货区域维度(删除)</li></ul></div><div class="mark-group"><h4>重要</h4><ul><li>华塘大昌POC › 华塘大昌POC › 经营驾驶舱 › 销售经营驾驶舱首页 › 3产品模块</li><li>华塘大昌POC › 华塘大昌POC › 经营驾驶舱 › 销售经营驾驶舱首页 › 4店铺模块</li></ul></div></div>
+  </div>
+  
+  <div class="dims">
+    <h3>🔑 关键设计要素</h3>
+    <table>
+      <thead><tr><th>类别</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td>分析维度</td><td>品牌（bref/pro/persil/perwoll/renuzit）、店铺、产品、消费者、时间（日/月/年）</td></tr>
+        <tr><td>图表类型</td><td>指标卡、折线/柱状/组合图、饼图、条形图、地图、TOP 列表</td></tr>
+        <tr><td>核心指标</td><td>销售额、达成率、转化率、毛利率、MD、客单价、动销率、库存、连带率</td></tr>
+        <tr><td>交互</td><td>日月年切换、金额/达成/量 TOP 切换、店铺条形图弹窗明细</td></tr>
+        <tr><td>参考截图</td><td>Dashboard 模块含 6 张 UI 参考图（见树形结构中对应节点下方）</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="tree-section" id="tree">
+  <h2>🌳 完整脑图结构</h2>
+  <div class="toolbar">
+    <input type="search" id="search" placeholder="搜索节点关键词…" autocomplete="off">
+    <button type="button" id="expandAll">全部展开</button>
+    <button type="button" id="collapseAll">全部折叠</button>
+    <button type="button" id="toAnalysis">回到摘要</button>
+    <div class="legend">
+      <span>🟢 已确认</span>
+      <span>🔴 待确认</span>
+      <span>🚩 重要</span>
+    </div>
+  </div>
+  <div class="tree" id="treeRoot">
+    <div class="root-node">🎯 华塘大昌POC</div>
+    <details class="node depth-1" data-title="经营驾驶舱" open><summary><span class="title-text">经营驾驶舱</span></summary><div class="children"><details class="node depth-2" data-title="原始需求"><summary><span class="title-text">原始需求</span><span class="marker marker-green" title="已确认">🟢</span></summary><div class="children"><details class="node depth-3" data-title="维度"><summary><span class="title-text">维度</span></summary><div class="children"><div class="leaf depth-4" data-title="品牌维度"><span class="leaf-title">品牌维度</span></div><div class="leaf depth-4" data-title="店铺维度"><span class="leaf-title">店铺维度</span></div><div class="leaf depth-4" data-title="产品维度"><span class="leaf-title">产品维度</span></div><div class="leaf depth-4" data-title="消费者维度"><span class="leaf-title">消费者维度</span></div></div></details><details class="node depth-3" data-title="分析指标"><summary><span class="title-text">分析指标</span></summary><div class="children"><div class="leaf depth-4" data-title="销售额"><span class="leaf-title">销售额</span></div><div class="leaf depth-4" data-title="订单量"><span class="leaf-title">订单量</span></div><div class="leaf depth-4" data-title="消费者数量"><span class="leaf-title">消费者数量</span></div><div class="leaf depth-4" data-title="客单价"><span class="leaf-title">客单价</span></div></div></details></div></details><details class="node depth-2" data-title="分析思路"><summary><span class="title-text">分析思路</span></summary><div class="children"><details class="node depth-3" data-title="人"><summary><span class="title-text">人</span></summary><div class="children"><details class="node depth-4" data-title="消费者"><summary><span class="title-text">消费者</span></summary><div class="children"><div class="leaf depth-5" data-title="客单价"><span class="leaf-title">客单价</span></div><div class="leaf depth-5" data-title="件单价"><span class="leaf-title">件单价</span></div><div class="leaf depth-5" data-title="连带率"><span class="leaf-title">连带率</span></div><div class="leaf depth-5" data-title="转化指标"><span class="leaf-title">转化指标</span></div></div></details></div></details><details class="node depth-3" data-title="货"><summary><span class="title-text">货</span></summary><div class="children"><details class="node depth-4" data-title="采购"><summary><span class="title-text">采购</span></summary><div class="children"><details class="node depth-5" data-title="采购匹配度"><summary><span class="title-text">采购匹配度</span></summary><div class="children"><div class="leaf depth-6" data-title="订单售罄st"><span class="leaf-title">订单售罄ST</span></div><div class="leaf depth-6" data-title="品类匹配"><span class="leaf-title">品类匹配</span></div><div class="leaf depth-6" data-title="价格匹配"><span class="leaf-title">价格匹配</span></div></div></details><div class="leaf depth-5" data-title="供应商"><span class="leaf-title">供应商</span></div></div></details><details class="node depth-4" data-title="供应链"><summary><span class="title-text">供应链</span></summary><div class="children"><details class="node depth-5" data-title="库存"><summary><span class="title-text">库存</span></summary><div class="children"><div class="leaf depth-6" data-title="期初，期末，平均库存"><span class="leaf-title">期初，期末，平均库存</span></div><div class="leaf depth-6" data-title="库存天数"><span class="leaf-title">库存天数</span></div><div class="leaf depth-6" data-title="存销比"><span class="leaf-title">存销比</span></div><div class="leaf depth-6" data-title="有效库存比"><span class="leaf-title">有效库存比</span></div></div></details></div></details><details class="node depth-4" data-title="销售"><summary><span class="title-text">销售</span></summary><div class="children"><details class="node depth-5" data-title="商品指标"><summary><span class="title-text">商品指标</span></summary><div class="children"><div class="leaf depth-6" data-title="货龄"><span class="leaf-title">货龄</span></div><div class="leaf depth-6" data-title="售罄st"><span class="leaf-title">售罄ST</span></div><div class="leaf depth-6" data-title="折扣率"><span class="leaf-title">折扣率</span></div><div class="leaf depth-6" data-title="动销率"><span class="leaf-title">动销率</span></div><div class="leaf depth-6" data-title="缺货率"><span class="leaf-title">缺货率</span></div></div></details><details class="node depth-5" data-title="结构指标"><summary><span class="title-text">结构指标</span></summary><div class="children"><div class="leaf depth-6" data-title="品类结构占比"><span class="leaf-title">品类结构占比</span></div><div class="leaf depth-6" data-title="价格段占比"><span class="leaf-title">价格段占比</span></div><div class="leaf depth-6" data-title="正价销售占比"><span class="leaf-title">正价销售占比</span></div></div></details><details class="node depth-5" data-title="滞销分析"><summary><span class="title-text">滞销分析</span></summary><div class="children"><div class="leaf depth-6" data-title="top10销售占比"><span class="leaf-title">top10销售占比</span></div><div class="leaf depth-6" data-title="top10库存占比"><span class="leaf-title">top10库存占比</span></div><div class="leaf depth-6" data-title="滞销品销售占比"><span class="leaf-title">滞销品销售占比</span></div></div></details><details class="node depth-5" data-title="关联分析"><summary><span class="title-text">关联分析</span></summary><div class="children"><div class="leaf depth-6" data-title="支持度"><span class="leaf-title">支持度</span></div><div class="leaf depth-6" data-title="提升度"><span class="leaf-title">提升度</span></div><div class="leaf depth-6" data-title="可信度"><span class="leaf-title">可信度</span></div><div class="leaf depth-6" data-title="购物篮系数"><span class="leaf-title">购物篮系数</span></div><div class="leaf depth-6" data-title="商品人气指数"><span class="leaf-title">商品人气指数</span></div></div></details></div></details></div></details><details class="node depth-3" data-title="场"><summary><span class="title-text">场</span></summary><div class="children"><details class="node depth-4" data-title="销售额"><summary><span class="title-text">销售额</span></summary><div class="children"><div class="leaf depth-5" data-title="时间维度：年月日季度"><span class="leaf-title">时间维度：年月日季度</span></div><div class="leaf depth-5" data-title="预测额"><span class="leaf-title">预测额</span></div></div></details><details class="node depth-4" data-title="促销指标"><summary><span class="title-text">促销指标</span></summary><div class="children"><div class="leaf depth-5" data-title="目标完成率"><span class="leaf-title">目标完成率</span></div><div class="leaf depth-5" data-title="同比增长率"><span class="leaf-title">同比增长率</span></div><div class="leaf depth-5" data-title="促销爆发度"><span class="leaf-title">促销爆发度</span></div><div class="leaf depth-5" data-title="促销衰减度"><span class="leaf-title">促销衰减度</span></div></div></details></div></details></div></details><details class="node depth-2" data-title="销售经营驾驶舱首页"><summary><span class="title-text">销售经营驾驶舱首页</span></summary><div class="children"><details class="node depth-3" data-title="核心销售部分"><summary><span class="title-text">核心销售部分</span></summary><div class="children"><details class="node depth-4" data-title="1指标卡模块"><summary><span class="title-text">1指标卡模块</span></summary><div class="children"><details class="node depth-5" data-title="销售"><summary><span class="title-text">销售</span></summary><div class="children"><details class="node depth-6" data-title="销售金额"><summary><span class="title-text">销售金额</span></summary><div class="children"><div class="leaf depth-7" data-title="金额"><span class="leaf-title">金额</span></div><div class="leaf depth-7" data-title="环比"><span class="leaf-title">环比</span></div><div class="leaf depth-7" data-title="同比"><span class="leaf-title">同比</span></div></div></details><details class="node depth-6" data-title="销售目标"><summary><span class="title-text">销售目标</span></summary><div class="children"><div class="leaf depth-7" data-title="总销售目标"><span class="leaf-title">总销售目标</span></div><div class="leaf depth-7" data-title="滚动目标"><span class="leaf-title">滚动目标</span></div></div></details><details class="node depth-6" data-title="销售达成"><summary><span class="title-text">销售达成</span></summary><div class="children"><div class="leaf depth-7" data-title="总销售达成"><span class="leaf-title">总销售达成</span></div><div class="leaf depth-7" data-title="滚动达成"><span class="leaf-title">滚动达成</span></div></div></details><details class="node depth-6" data-title="客单"><summary><span class="title-text">客单</span></summary><div class="children"><div class="leaf depth-7" data-title="客单价"><span class="leaf-title">客单价</span></div><div class="leaf depth-7" data-title="客单数"><span class="leaf-title">客单数</span></div></div></details></div></details><details class="node depth-5" data-title="转化"><summary><span class="title-text">转化</span><span class="marker marker-red" title="待确认">🔴</span></summary><div class="children"><details class="node depth-6" data-title="累计pv(不去重)"><summary><span class="title-text">累计PV(不去重)</span></summary><div class="children"><div class="leaf depth-7" data-title="pv"><span class="leaf-title">PV</span></div><div class="leaf depth-7" data-title="环比"><span class="leaf-title">环比</span></div><div class="leaf depth-7" data-title="同比"><span class="leaf-title">同比</span></div></div></details><details class="node depth-6" data-title="累计uv(去重)"><summary><span class="title-text">累计UV(去重)</span></summary><div class="children"><div class="leaf depth-7" data-title="uv"><span class="leaf-title">UV</span></div><div class="leaf depth-7" data-title="环比"><span class="leaf-title">环比</span></div><div class="leaf depth-7" data-title="同比"><span class="leaf-title">同比</span></div></div></details><details class="node depth-6" data-title="累计购买次数"><summary><span class="title-text">累计购买次数</span></summary><div class="children"><div class="leaf depth-7" data-title="购买次数"><span class="leaf-title">购买次数</span></div><div class="leaf depth-7" data-title="环比"><span class="leaf-title">环比</span></div><div class="leaf depth-7" data-title="同比"><span class="leaf-title">同比</span></div></div></details><div class="leaf depth-6" data-title="加购率"><span class="leaf-title">加购率</span></div><div class="leaf depth-6" data-title="uv转化率"><span class="leaf-title">UV转化率</span></div></div></details><details class="node depth-5" data-title="利润"><summary><span class="title-text">利润</span></summary><div class="children"><div class="leaf depth-6" data-title="毛利率"><span class="leaf-title">毛利率</span></div><div class="leaf depth-6" data-title="平均销售md"><span class="leaf-title">平均销售MD</span></div></div></details></div></details><details class="node depth-4" data-title="2销售趋势"><summary><span class="title-text">2销售趋势</span></summary><div class="children"><details class="node depth-5" data-title="销售趋势"><summary><span class="title-text">销售趋势</span></summary><div class="children"><div class="leaf depth-6" data-title="销售金额(柱状)"><span class="leaf-title">销售金额(柱状)</span></div><div class="leaf depth-6" data-title="销售金额目标(柱状)"><span class="leaf-title">销售金额目标(柱状)</span></div><div class="leaf depth-6" data-title="达成率(折线)"><span class="leaf-title">达成率(折线)</span></div></div></details><details class="node depth-5" data-title="转化趋势"><summary><span class="title-text">转化趋势</span><span class="marker marker-red" title="待确认">🔴</span></summary><div class="children"><div class="leaf depth-6" data-title="累计uv(去重)(柱状)"><span class="leaf-title">累计UV(去重)(柱状)</span></div><div class="leaf depth-6" data-title="累计购买次数(柱状)"><span class="leaf-title">累计购买次数(柱状)</span></div><div class="leaf depth-6" data-title="uv转化率(折线)"><span class="leaf-title">UV转化率(折线)</span></div></div></details><details class="node depth-5" data-title="毛利趋势"><summary><span class="title-text">毛利趋势</span></summary><div class="children"><div class="leaf depth-6" data-title="毛利金额(柱状)"><span class="leaf-title">毛利金额(柱状)</span></div><div class="leaf depth-6" data-title="毛利率(折线)"><span class="leaf-title">毛利率(折线)</span></div></div></details></div></details></div></details><details class="node depth-3" data-title="3产品模块"><summary><span class="title-text">3产品模块</span><span class="marker marker-flag" title="重要">🚩</span></summary><div class="children"><details class="node depth-4" data-title="产品概览"><summary><span class="title-text">产品概览</span></summary><div class="children"><details class="node depth-5" data-title="商品新上架数(饼图)"><summary><span class="title-text">商品新上架数(饼图)</span></summary><div class="children"><div class="leaf depth-6" data-title="维度(产品类型)"><span class="leaf-title">维度(产品类型)</span></div></div></details><details class="node depth-5" data-title="产品指标卡模块"><summary><span class="title-text">产品指标卡模块</span></summary><div class="children"><details class="node depth-6" data-title="关注浏览"><summary><span class="title-text">关注浏览</span></summary><div class="children"><div class="leaf depth-7" data-title="浏览商品sku总数"><span class="leaf-title">浏览商品sku总数</span></div><div class="leaf depth-7" data-title="商品访问率"><span class="leaf-title">商品访问率</span></div><div class="leaf depth-7" data-title="商品访客数"><span class="leaf-title">商品访客数</span></div><div class="leaf depth-7" data-title="浏览商品总次数"><span class="leaf-title">浏览商品总次数</span></div><div class="leaf depth-7" data-title="商品收藏数"><span class="leaf-title">商品收藏数</span></div></div></details><details class="node depth-6" data-title="加构效果"><summary><span class="title-text">加构效果</span></summary><div class="children"><div class="leaf depth-7" data-title="加购商品数"><span class="leaf-title">加购商品数</span></div><div class="leaf depth-7" data-title="商品加购率"><span class="leaf-title">商品加购率</span></div><div class="leaf depth-7" data-title="加购商品件数"><span class="leaf-title">加购商品件数</span></div><div class="leaf depth-7" data-title="加购客户数"><span class="leaf-title">加购客户数</span></div></div></details><details class="node depth-6" data-title="下单转化"><summary><span class="title-text">下单转化</span></summary><div class="children"><div class="leaf depth-7" data-title="动销商品 sku总数"><span class="leaf-title">动销商品 sku总数</span></div><div class="leaf depth-7" data-title="商品动销率"><span class="leaf-title">商品动销率</span></div><div class="leaf depth-7" data-title="支付商品sku总数"><span class="leaf-title">支付商品sku总数</span></div><div class="leaf depth-7" data-title="商品转化率"><span class="leaf-title">商品转化率</span></div><div class="leaf depth-7" data-title="商品库存数"><span class="leaf-title">商品库存数</span></div><div class="leaf depth-7" data-title="商品库销比"><span class="leaf-title">商品库销比</span></div></div></details></div></details><details class="node depth-5" data-title="top榜单模块"><summary><span class="title-text">top榜单模块</span></summary><div class="children"><div class="leaf depth-6" data-title="(无标题)"><span class="leaf-title">(无标题)</span></div></div></details></div></details><div class="leaf depth-4" data-title="产品饼图1&gt;销售占比"><span class="leaf-title">产品饼图1&gt;销售占比</span></div><div class="leaf depth-4" data-title="产品饼图2&gt;库存占比"><span class="leaf-title">产品饼图2&gt;库存占比</span></div><details class="node depth-4" data-title="产品top榜(列表展示)"><summary><span class="title-text">产品TOP榜(列表展示)</span></summary><div class="children"><div class="leaf depth-5" data-title="sku\产品名称\销售额\销售数量\md\总库存(取前十即可)"><span class="leaf-title">sku\产品名称\销售额\销售数量\MD\总库存(取前十即可)</span></div></div></details></div></details><details class="node depth-3" data-title="4店铺模块"><summary><span class="title-text">4店铺模块</span><span class="marker marker-flag" title="重要">🚩</span></summary><div class="children"><details class="node depth-4" data-title="店铺概览"><summary><span class="title-text">店铺概览</span></summary><div class="children"><details class="node depth-5" data-title="指标"><summary><span class="title-text">指标</span></summary><div class="children"><div class="leaf depth-6" data-title="店铺总数"><span class="leaf-title">店铺总数</span></div><div class="leaf depth-6" data-title="新开数量"><span class="leaf-title">新开数量</span></div><div class="leaf depth-6" data-title="关闭数量"><span class="leaf-title">关闭数量</span></div></div></details><details class="node depth-5" data-title="店铺清单"><summary><span class="title-text">店铺清单</span></summary><div class="children"><div class="leaf depth-6" data-title="列表展示"><span class="leaf-title">列表展示</span></div></div></details></div></details><div class="leaf depth-4" data-title="店铺饼图1&gt;销售(饼图)、达成(饼图)、转化(使用条形图)"><span class="leaf-title">店铺饼图1&gt;销售(饼图)、达成(饼图)、转化(使用条形图)</span></div><div class="leaf depth-4" data-title="店铺趋势2&gt;销售(折线)、达成(折线)、转化(折线)"><span class="leaf-title">店铺趋势2&gt;销售(折线)、达成(折线)、转化(折线)</span></div><details class="node depth-4" data-title="店铺top图"><summary><span class="title-text">店铺top图</span><span class="marker marker-red" title="待确认">🔴</span></summary><div class="children"><details class="node depth-5" data-title="店铺top条形图"><summary><span class="title-text">店铺top条形图</span></summary><div class="children"><div class="leaf depth-6" data-title="上方按金额top、按量top"><span class="leaf-title">上方按金额TOP、按量TOP</span></div></div></details><details class="node depth-5" data-title="条形图指标"><summary><span class="title-text">条形图指标</span></summary><div class="children"><div class="leaf depth-6" data-title="销售金额(柱状)"><span class="leaf-title">销售金额(柱状)</span></div><div class="leaf depth-6" data-title="达成率(柱状)"><span class="leaf-title">达成率(柱状)</span></div></div></details></div></details><details class="node depth-4" data-title="店铺top列表"><summary><span class="title-text">店铺TOP列表</span></summary><div class="children"><div class="leaf depth-5" data-title="名称、销售额、销售量、销售达成率、折扣、毛利率、客单价、客单数、动销率、转化率、排名变化(较上周or昨日)、"><span class="leaf-title">名称、销售额、销售量、销售达成率、折扣、毛利率、客单价、客单数、动销率、转化率、排名变化(较上周OR昨日)、</span></div></div></details></div></details><details class="node depth-3" data-title="消费者模块"><summary><span class="title-text">消费者模块</span><span class="marker marker-red" title="待确认">🔴</span></summary><div class="children"><details class="node depth-4" data-title="整体流量分析"><summary><span class="title-text">整体流量分析</span><span class="marker marker-red" title="待确认">🔴</span></summary><div class="children"><details class="node depth-5" data-title="消费者流量概览"><summary><span class="title-text">消费者流量概览</span></summary><div class="children"><div class="leaf depth-6" data-title="访问人数"><span class="leaf-title">访问人数</span></div><div class="leaf depth-6" data-title="访问次数"><span class="leaf-title">访问次数</span></div><div class="leaf depth-6" data-title="人均浏览商品数"><span class="leaf-title">人均浏览商品数</span></div><div class="leaf depth-6" data-title="平均滞留时常"><span class="leaf-title">平均滞留时常</span></div></div></details><div class="leaf depth-5" data-title="各平台流量占比(饼图)"><span class="leaf-title">各平台流量占比(饼图)</span></div><details class="node depth-5" data-title="流量趋势"><summary><span class="title-text">流量趋势</span></summary><div class="children"><div class="leaf depth-6" data-title="pv趋势"><span class="leaf-title">PV趋势</span></div><div class="leaf depth-6" data-title="uv趋势"><span class="leaf-title">UV趋势</span></div><div class="leaf depth-6" data-title="人均浏览商品数趋势"><span class="leaf-title">人均浏览商品数趋势</span></div><div class="leaf depth-6" data-title="平均滞留时常趋势"><span class="leaf-title">平均滞留时常趋势</span></div></div></details></div></details><details class="node depth-4" data-title="整体用户画像"><summary><span class="title-text">整体用户画像</span><span class="marker marker-red" title="待确认">🔴</span></summary><div class="children"><div class="leaf depth-5" data-title="消费年龄占比(饼图)"><span class="leaf-title">消费年龄占比(饼图)</span></div><div class="leaf depth-5" data-title="消费性别占比(饼图)"><span class="leaf-title">消费性别占比(饼图)</span></div><div class="leaf depth-5" data-title="消费区域占比(饼图)"><span class="leaf-title">消费区域占比(饼图)</span></div><div class="leaf depth-5" data-title="消费品类占比(饼图)"><span class="leaf-title">消费品类占比(饼图)</span></div><div class="leaf depth-5" data-title="消费价格带占比(饼图)"><span class="leaf-title">消费价格带占比(饼图)</span></div></div></details></div></details><details class="node depth-3" data-title="通用查询模块"><summary><span class="title-text">通用查询模块</span></summary><div class="children"><details class="node depth-4" data-title="品牌维度"><summary><span class="title-text">品牌维度</span></summary><div class="children"><div class="leaf depth-5" data-title="bref,pro,persil,perwoll,renuzit"><span class="leaf-title">bref,pro,persil,perwoll,renuzit</span></div></div></details><details class="node depth-4" data-title="时间维度"><summary><span class="title-text">时间维度</span></summary><div class="children"><div class="leaf depth-5" data-title="日月年"><span class="leaf-title">日月年</span></div></div></details></div></details></div></details><details class="node depth-2" data-title="销售经营驾驶舱钻取页(商品)"><summary><span class="title-text">销售经营驾驶舱钻取页(商品)</span></summary><div class="children"><details class="node depth-3" data-title="产品基本信息"><summary><span class="title-text">产品基本信息</span></summary><div class="children"><div class="leaf depth-4" data-title="图片、sku、产品名称、上市日期、品牌、品类、连带率"><span class="leaf-title">图片、SKU、产品名称、上市日期、品牌、品类、连带率</span></div></div></details><details class="node depth-3" data-title="产品销售情况"><summary><span class="title-text">产品销售情况</span></summary><div class="children"><div class="leaf depth-4" data-title="产品浏览量趋势"><span class="leaf-title">产品浏览量趋势</span></div><div class="leaf depth-4" data-title="产品加购趋势"><span class="leaf-title">产品加购趋势</span></div><div class="leaf depth-4" data-title="产品销售趋势"><span class="leaf-title">产品销售趋势</span></div><div class="leaf depth-4" data-title="产品转化趋势"><span class="leaf-title">产品转化趋势</span></div></div></details><div class="leaf depth-3" data-title="产品连带情况"><span class="leaf-title">产品连带情况</span></div></div></details></div></details><details class="node depth-1" data-title="dashboard-pc&amp;app(pc深色 app浅色)" open><summary><span class="title-text">Dashboard-PC&amp;APP(PC深色 APP浅色)</span></summary><div class="children"><details class="node depth-2" data-title="1销售总览指标卡，对应上图"><summary><span class="title-text">1销售总览指标卡，对应上图</span></summary><div class="topic-image"><img src="resources/5e569346a7759983312a160d80c09a1c1fcc4d7428751e0605afc2dd779fcb29.png" alt="1销售总览指标卡，对应上图 参考图" loading="lazy"></div><div class="children"><details class="node depth-3" data-title="年销售"><summary><span class="title-text">年销售</span></summary><div class="children"><details class="node depth-4" data-title="销售"><summary><span class="title-text">销售</span></summary><div class="children"><div class="leaf depth-5" data-title="今年总销售金额"><span class="leaf-title">今年总销售金额</span></div><details class="node depth-5" data-title="销售目标"><summary><span class="title-text">销售目标</span></summary><div class="children"><div class="leaf depth-6" data-title="今年总销售目标"><span class="leaf-title">今年总销售目标</span></div><div class="leaf depth-6" data-title="今年滚动目标"><span class="leaf-title">今年滚动目标</span></div></div></details><details class="node depth-5" data-title="销售达成"><summary><span class="title-text">销售达成</span></summary><div class="children"><div class="leaf depth-6" data-title="今年总销售达成"><span class="leaf-title">今年总销售达成</span></div><div class="leaf depth-6" data-title="今年滚动达成"><span class="leaf-title">今年滚动达成</span></div></div></details><div class="leaf depth-5" data-title="同比去年"><span class="leaf-title">同比去年</span></div></div></details><details class="node depth-4" data-title="利润"><summary><span class="title-text">利润</span></summary><div class="children"><div class="leaf depth-5" data-title="今年毛利率"><span class="leaf-title">今年毛利率</span></div><div class="leaf depth-5" data-title="今年平均销售md"><span class="leaf-title">今年平均销售MD</span></div></div></details></div></details><details class="node depth-3" data-title="月销售"><summary><span class="title-text">月销售</span></summary><div class="children"><details class="node depth-4" data-title="销售"><summary><span class="title-text">销售</span></summary><div class="children"><div class="leaf depth-5" data-title="当月总销售金额"><span class="leaf-title">当月总销售金额</span></div><details class="node depth-5" data-title="销售目标"><summary><span class="title-text">销售目标</span></summary><div class="children"><div class="leaf depth-6" data-title="当月总销售目标"><span class="leaf-title">当月总销售目标</span></div><div class="leaf depth-6" data-title="当月滚动目标"><span class="leaf-title">当月滚动目标</span></div></div></details><details class="node depth-5" data-title="销售达成"><summary><span class="title-text">销售达成</span></summary><div class="children"><div class="leaf depth-6" data-title="当月总销售达成"><span class="leaf-title">当月总销售达成</span></div><div class="leaf depth-6" data-title="当月滚动达成"><span class="leaf-title">当月滚动达成</span></div></div></details><div class="leaf depth-5" data-title="环比上月"><span class="leaf-title">环比上月</span></div></div></details><details class="node depth-4" data-title="利润"><summary><span class="title-text">利润</span></summary><div class="children"><div class="leaf depth-5" data-title="当月毛利率"><span class="leaf-title">当月毛利率</span></div><div class="leaf depth-5" data-title="当月平均销售md"><span class="leaf-title">当月平均销售MD</span></div></div></details></div></details><details class="node depth-3" data-title="日销售"><summary><span class="title-text">日销售</span></summary><div class="children"><div class="leaf depth-4" data-title="当日销售目标"><span class="leaf-title">当日销售目标</span></div><div class="leaf depth-4" data-title="当日销售金额"><span class="leaf-title">当日销售金额</span></div><div class="leaf depth-4" data-title="当日销售达成"><span class="leaf-title">当日销售达成</span></div><div class="leaf depth-4" data-title="环比昨天"><span class="leaf-title">环比昨天</span></div><div class="leaf depth-4" data-title="同比上周"><span class="leaf-title">同比上周</span></div></div></details><details class="node depth-3" data-title="其他指标"><summary><span class="title-text">其他指标</span></summary><div class="children"><div class="leaf depth-4" data-title="加购率"><span class="leaf-title">加购率</span></div><div class="leaf depth-4" data-title="uv转化率"><span class="leaf-title">UV转化率</span></div></div></details></div></details><details class="node depth-2" data-title="2区域分析地图"><summary><span class="title-text">2区域分析地图</span></summary><div class="topic-image"><img src="resources/bc957bbbaa5e82d059eb3111e51982846865d5da4dd735e113d070f2aad6ff83.png" alt="2区域分析地图 参考图" loading="lazy"></div><div class="children"><details class="node depth-3" data-title="指标"><summary><span class="title-text">指标</span></summary><div class="children"><div class="leaf depth-4" data-title="销售金额"><span class="leaf-title">销售金额</span></div></div></details></div></details><details class="node depth-2" data-title="3销售金额趋势"><summary><span class="title-text">3销售金额趋势</span></summary><div class="topic-image"><img src="resources/f949e0a18f7ee74ae49062da69c3495580af53529efcb2c9d1f81bd069ae5a85.png" alt="3销售金额趋势 参考图" loading="lazy"></div><div class="children"><details class="node depth-3" data-title="指标(组合图)"><summary><span class="title-text">指标(组合图)</span></summary><div class="children"><div class="leaf depth-4" data-title="当日销售金额(柱状)"><span class="leaf-title">当日销售金额(柱状)</span></div><div class="leaf depth-4" data-title="当日销售金额目标(柱状)"><span class="leaf-title">当日销售金额目标(柱状)</span></div><div class="leaf depth-4" data-title="达成率(折线)"><span class="leaf-title">达成率(折线)</span></div></div></details><details class="node depth-3" data-title="ps"><summary><span class="title-text">ps</span></summary><div class="children"><div class="leaf depth-4" data-title="展现形式采用组合图，数据范围采用近8days"><span class="leaf-title">展现形式采用组合图，数据范围采用近8days</span></div></div></details></div></details><details class="node depth-2" data-title="4品牌销售排行"><summary><span class="title-text">4品牌销售排行</span></summary><div class="topic-image"><img src="resources/4814a5a30061d1a40230d5110aec595c7a6945218140060d8c8603fa4c7dc185.png" alt="4品牌销售排行 参考图" loading="lazy"></div><div class="children"><details class="node depth-3" data-title="指标(条形图)"><summary><span class="title-text">指标(条形图)</span></summary><div class="children"><div class="leaf depth-4" data-title="销售金额(柱状)"><span class="leaf-title">销售金额(柱状)</span></div><div class="leaf depth-4" data-title="达成率(柱状)"><span class="leaf-title">达成率(柱状)</span></div></div></details><details class="node depth-3" data-title="ps"><summary><span class="title-text">ps</span></summary><div class="children"><div class="leaf depth-4" data-title="上方日月年切换按钮"><span class="leaf-title">上方日月年切换按钮</span></div><div class="leaf depth-4" data-title="上方按金额排名、按达成排名 切换按钮"><span class="leaf-title">上方按金额排名、按达成排名 切换按钮</span></div></div></details></div></details><details class="node depth-2" data-title="5店铺销售排行"><summary><span class="title-text">5店铺销售排行</span></summary><div class="topic-image"><img src="resources/b76d6fd903908aa4b5bc5b67e004a32e1de0a10db2519a76151592767435c014.png" alt="5店铺销售排行 参考图" loading="lazy"></div><div class="children"><details class="node depth-3" data-title="指标(条形图)"><summary><span class="title-text">指标(条形图)</span></summary><div class="children"><details class="node depth-4" data-title="条形图指标"><summary><span class="title-text">条形图指标</span></summary><div class="children"><div class="leaf depth-5" data-title="销售金额(柱状)"><span class="leaf-title">销售金额(柱状)</span></div><div class="leaf depth-5" data-title="达成率(柱状)"><span class="leaf-title">达成率(柱状)</span></div></div></details><div class="leaf depth-4" data-title="点击条形图弹出框展示:店铺名称\销售金额额\销售数量\销售达成率\md"><span class="leaf-title">点击条形图弹出框展示:店铺名称\销售金额额\销售数量\销售达成率\MD</span></div></div></details><details class="node depth-3" data-title="ps"><summary><span class="title-text">ps</span></summary><div class="children"><div class="leaf depth-4" data-title="上方日月年切换按钮"><span class="leaf-title">上方日月年切换按钮</span></div><div class="leaf depth-4" data-title="上方按金额排名、按达成排名 切换按钮"><span class="leaf-title">上方按金额排名、按达成排名 切换按钮</span></div></div></details></div></details><details class="node depth-2" data-title="6产品top(10)款"><summary><span class="title-text">6产品TOP(10)款</span></summary><div class="topic-image"><img src="resources/9b051e66d7a0bcaf67ee596c8b3fe0e173f84538b589282cb5a4d61d30f8232a.png" alt="6产品TOP(10)款 参考图" loading="lazy"></div><div class="children"><details class="node depth-3" data-title="指标(柱形图)"><summary><span class="title-text">指标(柱形图)</span></summary><div class="children"><div class="leaf depth-4" data-title="sku\产品名称\销售额\销售数量\md\总库存(取前十即可)"><span class="leaf-title">sku\产品名称\销售额\销售数量\MD\总库存(取前十即可)</span></div></div></details><details class="node depth-3" data-title="ps"><summary><span class="title-text">ps</span></summary><div class="children"><div class="leaf depth-4" data-title="上方月年切换按钮"><span class="leaf-title">上方月年切换按钮</span></div><div class="leaf depth-4" data-title="上方按金额top、按量top"><span class="leaf-title">上方按金额TOP、按量TOP</span></div></div></details></div></details><details class="node depth-2" data-title="维度"><summary><span class="title-text">维度</span></summary><div class="children"><div class="leaf depth-3" data-title="产品维度"><span class="leaf-title">产品维度</span></div><details class="node depth-3" data-title="时间维度"><summary><span class="title-text">时间维度</span></summary><div class="children"><div class="leaf depth-4" data-title="日月年(周度取年份周)"><span class="leaf-title">日月年(周度取年份周)</span></div></div></details><div class="leaf depth-3" data-title="收货区域维度(删除)"><span class="leaf-title">收货区域维度(删除)</span><span class="marker marker-red" title="待确认">🔴</span></div></div></details></div></details>
+    <p class="no-results" id="noResults">未找到匹配节点</p>
+  </div>
+</section>
+
+<footer>由 POC脑图.xmind 自动转换 · 华塘大昌经营驾驶舱 POC</footer>
+</div>
+<script>
+const search = document.getElementById('search');
+const treeRoot = document.getElementById('treeRoot');
+const noResults = document.getElementById('noResults');
+
+function allDetails() {
+  return treeRoot.querySelectorAll('details.node');
+}
+
+document.getElementById('expandAll').onclick = () => allDetails().forEach(d => d.open = true);
+document.getElementById('collapseAll').onclick = () => allDetails().forEach(d => d.open = false);
+document.getElementById('toAnalysis').onclick = () => document.getElementById('analysis').scrollIntoView({behavior:'smooth'});
+
+function normalize(s) { return (s || '').toLowerCase().trim(); }
+
+search.addEventListener('input', () => {
+  const q = normalize(search.value);
+  const nodes = treeRoot.querySelectorAll('.node, .leaf');
+  nodes.forEach(el => el.classList.remove('match', 'hidden'));
+  if (!q) {
+    allDetails().forEach(d => d.classList.remove('hidden'));
+    noResults.style.display = 'none';
+    return;
+  }
+  nodes.forEach(el => {
+    const title = el.dataset.title || '';
+    if (title.includes(q)) el.classList.add('match');
+    else el.classList.add('hidden');
+  });
+  treeRoot.querySelectorAll('.match').forEach(el => {
+    let p = el.parentElement;
+    while (p && p !== treeRoot) {
+      p.classList.remove('hidden');
+      if (p.tagName === 'DETAILS') p.open = true;
+      p = p.parentElement;
+    }
+  });
+  const hasMatchDesc = (el) => {
+    if (el.classList.contains('match')) return true;
+    return [...el.querySelectorAll('.node,.leaf')].some(c => c.classList.contains('match'));
+  };
+  allDetails().forEach(d => {
+    if (!hasMatchDesc(d)) d.classList.add('hidden');
+  });
+  treeRoot.querySelectorAll('.leaf').forEach(l => {
+    if (!l.classList.contains('match')) l.classList.add('hidden');
+  });
+  const visible = treeRoot.querySelectorAll('.match').length;
+  noResults.style.display = visible === 0 ? 'block' : 'none';
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>联影 PoC · 知识入库与演示工作台</title>
+  <style>
+    :root {
+      --text:#1b2940; --muted:#63748b; --line:#d7e1ef; --navy:#173b69;
+      --blue:#1f55cc; --teal:#0d8a7a; --orange:#d4820a; --red:#e04560;
+      --purple:#5a3fd4; --gray:#eef3f9; --shadow:0 8px 24px rgba(22,52,95,.07);
+      --green:#0d9a6a; --gold:#b8860b;
+      --s1:#1f55cc; --s2:#0d8a7a; --s3:#5a3fd4;
+    }
+    *{box-sizing:border-box;margin:0}
+    body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:var(--text);background:#f0f4fa;line-height:1.55;font-size:14px;min-height:100vh}
+
+    .header{background:linear-gradient(135deg,#0a1f3d 0%,#173b69 50%,#1a4a85 100%);color:#fff;padding:14px 24px 0;box-shadow:0 2px 16px rgba(15,41,82,.25)}
+    .header-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding-bottom:12px}
+    .header-top h1{font-size:20px;font-weight:700}
+    .header-top p{font-size:12px;opacity:.82;margin-top:3px;max-width:720px}
+    .header-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+    .header-badge{font-size:10px;font-weight:700;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);white-space:nowrap}
+    .header-link{font-size:11px;font-weight:600;padding:5px 12px;border-radius:999px;background:rgba(94,234,212,.15);border:1px solid rgba(94,234,212,.35);color:#ccfbf1;text-decoration:none;white-space:nowrap}
+    .header-link:hover{background:rgba(94,234,212,.25)}
+
+    .scene-tabs{display:flex;gap:4px;padding:0 4px}
+    .scene-tab{flex:1;padding:12px 16px;border:none;background:rgba(255,255,255,.06);color:rgba(255,255,255,.75);font-size:13px;font-weight:600;cursor:pointer;border-radius:12px 12px 0 0;transition:background .2s,color .2s;text-align:left}
+    .scene-tab:hover{background:rgba(255,255,255,.1);color:#fff}
+    .scene-tab.active{background:#f0f4fa;color:var(--navy);box-shadow:0 -2px 8px rgba(0,0,0,.08)}
+    .scene-tab .tab-num{display:block;font-size:10px;font-weight:800;opacity:.7;margin-bottom:2px}
+    .scene-tab.active .tab-num{color:var(--blue)}
+    .scene-tab[data-scene="2"].active .tab-num{color:var(--teal)}
+    .scene-tab[data-scene="3"].active .tab-num{color:var(--purple)}
+
+    .layout{display:grid;grid-template-columns:300px 1fr 360px;gap:14px;padding:14px 18px 24px;max-width:1680px;margin:0 auto}
+    @media(max-width:1280px){.layout{grid-template-columns:1fr}}
+
+    .panel{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+    .panel-head{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .panel-head h2{font-size:13px;font-weight:700;color:var(--navy)}
+    .panel-head span{font-size:10px;color:var(--muted)}
+    .panel-body{padding:14px 16px}
+
+    /* Demo path */
+    .demo-path{margin-bottom:14px}
+    .demo-step{display:grid;grid-template-columns:22px 1fr;gap:8px;padding:8px 0;position:relative;font-size:12px}
+    .demo-step:not(:last-child)::after{content:"";position:absolute;left:10px;top:28px;bottom:-2px;width:2px;background:var(--line)}
+    .demo-step.done:not(:last-child)::after{background:var(--green)}
+    .demo-dot{width:22px;height:22px;border-radius:50%;background:var(--gray);border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:var(--muted);z-index:1}
+    .demo-step.done .demo-dot{background:var(--green);border-color:var(--green);color:#fff}
+    .demo-step.active .demo-dot{background:var(--blue);border-color:var(--blue);color:#fff}
+    .demo-title{font-weight:700;color:var(--navy);margin-bottom:2px}
+    .demo-desc{color:var(--muted);font-size:11px;line-height:1.5}
+    .demo-query{margin-top:4px;padding:4px 8px;background:#f0f5ff;border-radius:6px;font-size:10px;color:var(--blue);font-family:ui-monospace,monospace}
+
+    /* Catalog */
+    .catalog-item{display:flex;gap:8px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;cursor:pointer;transition:border-color .15s,background .15s;align-items:flex-start}
+    .catalog-item:hover{border-color:#b8cce8;background:#fafcff}
+    .catalog-item.selected{border-color:var(--blue);background:#f0f5ff;box-shadow:0 0 0 2px rgba(31,85,204,.08)}
+    .catalog-item.ingested{border-left:3px solid var(--green)}
+    .catalog-code{font-size:10px;font-weight:800;color:#fff;background:var(--navy);padding:2px 6px;border-radius:4px;white-space:nowrap;margin-top:1px}
+    .catalog-info{flex:1;min-width:0}
+    .catalog-name{font-size:12px;font-weight:600;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .catalog-meta{font-size:10px;color:var(--muted);margin-top:2px}
+    .strategy-tag{display:inline-block;font-size:9px;font-weight:700;padding:1px 6px;border-radius:999px;background:#f0ecff;color:var(--purple);margin-left:4px}
+    .catalog-scroll{max-height:340px;overflow-y:auto;margin-bottom:10px}
+
+    .field{margin-bottom:12px}
+    .field label{display:block;font-size:10px;font-weight:700;color:var(--navy);margin-bottom:4px;letter-spacing:.03em}
+    .field select,.field input{width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:8px;font-size:12px;background:#fafcff}
+    .field-hint{font-size:10px;color:var(--muted);margin-top:3px}
+    .divider{height:1px;background:var(--line);margin:12px 0}
+
+    .upload-zone{border:2px dashed var(--line);border-radius:12px;padding:28px 20px;text-align:center;cursor:pointer;background:#fafcff;transition:border-color .2s,background .2s}
+    .upload-zone:hover,.upload-zone.dragover{border-color:var(--blue);background:#f0f5ff}
+    .upload-zone h3{font-size:14px;color:var(--navy);margin:8px 0 4px}
+    .upload-zone p{font-size:11px;color:var(--muted)}
+    #fileInput{display:none}
+
+    .toolbar{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:9px 14px;border-radius:8px;font-size:12px;font-weight:700;border:none;cursor:pointer;transition:opacity .15s}
+    .btn:disabled{opacity:.4;cursor:not-allowed}
+    .btn-primary{background:var(--blue);color:#fff;flex:1;min-width:100px}
+    .btn-teal{background:linear-gradient(135deg,var(--teal),#0a6e62);color:#fff;flex:1;min-width:100px}
+    .btn-secondary{background:#fff;color:var(--navy);border:1px solid var(--line)}
+    .btn-sm{padding:6px 10px;font-size:11px}
+
+    .file-list{margin-top:12px}
+    .file-item{display:grid;grid-template-columns:32px 1fr auto;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:9px;margin-bottom:6px;cursor:pointer;align-items:center}
+    .file-item.active{border-color:var(--blue);box-shadow:0 0 0 2px rgba(31,85,204,.08)}
+    .file-icon{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff;background:var(--blue)}
+    .file-info .name{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .file-info .meta{font-size:10px;color:var(--muted)}
+    .status-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:999px}
+    .st-pending{background:var(--gray);color:var(--muted)}
+    .st-ready{background:#e6f7ef;color:var(--green)}
+    .st-pushed{background:var(--navy);color:#fff}
+    .st-error{background:#fde8ec;color:var(--red)}
+    .st-parsing,.st-chunking,.st-embedding{background:#e8f0ff;color:var(--blue)}
+
+    .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+    .stat{text-align:center;padding:8px;background:var(--gray);border-radius:8px;border:1px solid var(--line)}
+    .stat .n{font-size:16px;font-weight:700;color:var(--navy)}
+    .stat .l{font-size:9px;color:var(--muted)}
+
+    .pipe-step{display:grid;grid-template-columns:24px 1fr;gap:8px;padding:6px 0;position:relative;font-size:11px}
+    .pipe-step:not(:last-child)::after{content:"";position:absolute;left:11px;top:26px;bottom:-2px;width:2px;background:var(--line)}
+    .pipe-dot{width:24px;height:24px;border-radius:50%;background:var(--gray);border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;z-index:1}
+    .pipe-step.done .pipe-dot{background:var(--green);color:#fff;border-color:var(--green)}
+    .pipe-step.active .pipe-dot{background:var(--blue);color:#fff;border-color:var(--blue);animation:pulse 1.5s infinite}
+    @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(31,85,204,.3)}50%{box-shadow:0 0 0 5px rgba(31,85,204,0)}}
+    .pipe-step.done:not(:last-child)::after{background:var(--green)}
+
+    .chunk-preview{max-height:260px;overflow-y:auto}
+    .chunk-item{padding:8px 10px;border:1px solid var(--line);border-radius:8px;margin-bottom:6px;font-size:11px}
+    .chunk-id{font-size:9px;font-weight:700;color:var(--blue);font-family:ui-monospace,monospace}
+    .chunk-section{font-size:9px;color:var(--purple);margin:3px 0}
+    .chunk-text{color:var(--text);line-height:1.55;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+    .chunk-dim{font-size:9px;color:var(--teal);margin-top:4px;font-family:ui-monospace,monospace}
+
+    .log-area{margin-top:12px;max-height:140px;overflow-y:auto;background:#1b2940;border-radius:8px;padding:8px 10px;font-family:ui-monospace,Menlo,monospace;font-size:10px;color:#a8b8cc;line-height:1.6}
+    .log-ok{color:#4ade80}.log-warn{color:#fbbf24}.log-err{color:#f87171}.log-info{color:#60a5fa}
+
+    .note-box{padding:10px 12px;border-radius:8px;font-size:11px;line-height:1.55;margin-bottom:10px}
+    .note-structured{background:#fff7ed;border:1px solid #fdba74;color:#92400e}
+    .note-scene2{background:#e6f7f4;border:1px solid #99f6e4;color:#065f46}
+    .note-scene3{background:#f5f0ff;border:1px solid #d8c4ff;color:#4c1d95}
+
+    .fault-graph{margin-top:10px;padding:10px;border-radius:8px;background:#faf8ff;border:1px solid #e0d4ff;font-size:10px;line-height:1.55;display:none}
+    .fault-graph.show{display:block}
+    .fault-graph h4{font-size:11px;color:var(--purple);margin-bottom:6px}
+    .fg-node{display:inline-block;margin:2px 4px 2px 0;padding:2px 6px;border-radius:999px;background:#ede9fe;color:#5b21b6;font-weight:700}
+    .fg-arrow{color:var(--muted);margin:0 2px}
+    .fg-edge{margin:3px 0;color:var(--text)}
+
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,41,82,.45);z-index:100;align-items:center;justify-content:center;padding:20px}
+    .modal-overlay.open{display:flex}
+    .modal{background:#fff;border-radius:14px;width:100%;max-width:480px;box-shadow:0 20px 60px rgba(15,41,82,.25)}
+    .modal-head{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+    .modal-head h3{font-size:15px;color:var(--navy)}
+    .modal-body{padding:16px 20px}
+    .modal-foot{padding:12px 20px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end}
+    .empty-state{text-align:center;padding:24px;color:var(--muted);font-size:11px}
+    .conn-box{padding:10px 12px;border-radius:8px;background:#f0f5ff;border:1px solid #c7d9ff;margin-bottom:10px;font-size:11px;line-height:1.55}
+    .conn-ok{color:var(--green);font-weight:700}.conn-warn{color:var(--orange);font-weight:700}.conn-err{color:var(--red);font-weight:700}
+    .progress-wrap{margin-top:8px;display:none}
+    .progress-bar{height:5px;background:var(--gray);border-radius:999px;overflow:hidden}
+    .progress-bar.lg{height:8px;margin:6px 0}
+    .progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--blue));transition:width .2s ease-out}
+    .job-progress{margin-bottom:12px;padding:10px 12px;background:linear-gradient(135deg,#f0f5ff,#f5f0ff);border:1px solid #c7d9ff;border-radius:10px;display:none}
+    .job-progress.active{display:block}
+    .job-progress-head{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:700;color:var(--navy);margin-bottom:4px}
+    .job-detail{font-size:10px;color:var(--muted);margin-top:4px;min-height:14px}
+    .file-item{grid-template-columns:32px 1fr auto;grid-template-rows:auto auto}
+    .file-item .file-progress{grid-column:2/4;margin-top:4px;width:100%}
+    .file-item .file-progress .progress-bar{height:4px;width:100%}
+    .file-item .file-progress .progress-label{font-size:9px;color:var(--muted);margin-top:2px}
+    .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+    .stat-mini{padding:6px 8px;background:var(--gray);border-radius:6px;font-size:10px;text-align:center}
+    .stat-mini .v{font-weight:700;color:var(--navy);font-size:13px}
+    .tunnel-gate{position:fixed;inset:0;z-index:9999;background:linear-gradient(160deg,#0a1f3d,#173b69);color:#fff;display:none;align-items:center;justify-content:center;padding:24px;transition:all .25s ease}
+    .tunnel-gate.show{display:flex}
+    .tunnel-gate.compact{inset:auto 16px 16px 16px;top:auto;height:auto;min-height:0;padding:12px 16px;border-radius:12px;background:rgba(10,31,61,.94);box-shadow:0 8px 32px rgba(0,0,0,.35);align-items:center;justify-content:flex-start;gap:12px}
+    .tunnel-gate.compact .tunnel-gate-box{display:flex;align-items:center;gap:12px;text-align:left;padding:0;background:none;border:none;max-width:none;width:100%}
+    .tunnel-gate.compact .tunnel-spinner{width:22px;height:22px;margin:0;flex-shrink:0}
+    .tunnel-gate.compact h2{display:none}
+    .tunnel-gate.compact .tunnel-cmd{display:none}
+    .tunnel-gate-box{max-width:420px;text-align:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:28px 24px;backdrop-filter:blur(8px)}
+    .tunnel-gate-box h2{font-size:18px;margin-bottom:8px}
+    .tunnel-gate-box p{font-size:13px;color:#c8daf5;line-height:1.7;margin-bottom:12px}
+    .tunnel-spinner{width:36px;height:36px;border:3px solid rgba(255,255,255,.2);border-top-color:#5eead4;border-radius:50%;animation:tspin .8s linear infinite;margin:0 auto 16px}
+    @keyframes tspin{to{transform:rotate(360deg)}}
+    .tunnel-cmd{font-family:ui-monospace,Menlo,monospace;font-size:11px;background:rgba(0,0,0,.35);padding:10px 12px;border-radius:8px;text-align:left;word-break:break-all;color:#a7f3d0}
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<div id="tunnelGate" class="tunnel-gate">
+  <div class="tunnel-gate-box">
+    <div class="tunnel-spinner"></div>
+    <h2>正在检测 SSH 隧道…</h2>
+    <p id="tunnelGateMsg">连接 ECS Worker（localhost:8890）<br>若长时间无响应，请在终端运行下方命令</p>
+    <div class="tunnel-cmd">bash deploy/start-poc-local.sh</div>
+  </div>
+</div>
+
+<header class="header">
+  <div class="header-top">
+    <div>
+      <h1>联影 PoC · 知识入库与演示工作台</h1>
+      <p>前端模拟 Dora 知识层：解析附件 → 场景化切片 → bge-small-zh 向量化 → Stream Load 至 Doris · 结构化数据由 FDL / 飞书侧处理</p>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <a class="header-link" id="linkKnowledgeDeliverables" href="knowledge-deliverables.html">📦 知识产出</a>
+      <a class="header-link" id="linkKnowledgeGraph" href="knowledge-graph.html">🕸 故障知识图谱</a>
+      <a class="header-link" id="linkDorisData" href="doris-data.html" target="_blank" rel="noopener">📊 Doris 入库数据</a>
+      <span class="header-badge">POC 演示路径 v1.0</span>
+    </div>
+  </div>
+  <div class="scene-tabs">
+    <button class="scene-tab active" data-scene="1"><span class="tab-num">SCENE 01</span>财务预算 · Agent 问答</button>
+    <button class="scene-tab" data-scene="2"><span class="tab-num">SCENE 02</span>OTD 供应链 · BI 看板</button>
+    <button class="scene-tab" data-scene="3"><span class="tab-num">SCENE 03</span>售后服务 · 备件诊断链</button>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- Left: Demo path + Config -->
+  <aside class="panel">
+    <div class="panel-head"><h2 id="demoPathTitle">场景一 · 演示路径</h2><span>以终为始</span></div>
+    <div class="panel-body">
+      <div class="demo-path" id="demoPath"></div>
+      <div class="fault-graph" id="faultGraphPanel">
+        <h4>故障路由图 · E1001/E1002 <a id="linkGraphFull" href="knowledge-graph.html" style="font-size:9px;margin-left:6px;color:var(--purple)">完整图谱 →</a></h4>
+        <div id="faultGraphBody">加载中…</div>
+      </div>
+      <div class="divider"></div>
+      <div class="field">
+        <label>业务域 domain</label>
+        <select id="cfgDomain">
+          <option value="finance">finance · 财务</option>
+          <option value="service">service · 售后</option>
+          <option value="supply_chain">supply_chain · 供应链</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>文档类型 doc_type</label>
+        <select id="cfgDocType">
+          <option value="policy">policy · 制度</option>
+          <option value="SOP">SOP · 操作规程</option>
+          <option value="manual">manual · 手册</option>
+          <option value="experience">experience · 经验案例</option>
+          <option value="spare_part">spare_part · 备件</option>
+          <option value="report">report · 报告</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>文档编号 document_id</label>
+        <input type="text" id="cfgDocId" placeholder="如 BG-2022-001" />
+      </div>
+      <div class="field">
+        <label>切片策略 chunk_strategy</label>
+        <select id="cfgChunkStrategy">
+          <option value="policy_section">policy_section · 制度章节</option>
+          <option value="sop_step">sop_step · SOP 步骤</option>
+          <option value="experience_case">experience_case · 案例/失效模式</option>
+          <option value="table_row">table_row · 表格按行</option>
+          <option value="checklist_table">checklist_table · 维护检查表</option>
+          <option value="paragraph">paragraph · 通用段落</option>
+        </select>
+        <div class="field-hint" id="strategyHint">按 ## 章节切分，保留制度编号前缀</div>
+      </div>
+      <div class="field">
+        <label>chunk_size / overlap</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          <input type="number" id="cfgChunkSize" value="480" min="128" max="2048" step="32" />
+          <input type="number" id="cfgOverlap" value="64" min="0" max="256" step="16" />
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="field">
+        <label>Doris 4.x / SelectDB 连接</label>
+        <div class="conn-box" id="connBox">
+          <div id="workerStatus">Worker: 检测中…</div>
+          <div id="dorisStatus" style="margin-top:4px">Doris: —</div>
+          <div class="stat-grid" id="dorisStats" style="display:none">
+            <div class="stat-mini"><div class="v" id="statRegRows">0</div>registry</div>
+            <div class="stat-mini"><div class="v" id="statChunkRows">0</div>chunks</div>
+          </div>
+        </div>
+        <div class="toolbar" style="margin-top:0">
+          <button class="btn btn-secondary btn-sm" id="btnTestConn">🔌 测试连接</button>
+          <button class="btn btn-secondary btn-sm" id="btnInitSchema">🗄 初始化表</button>
+        </div>
+        <div class="progress-wrap" id="pushProgressWrap">
+          <div class="progress-bar"><div class="progress-fill" id="pushProgressFill"></div></div>
+          <div class="field-hint" id="pushProgressText">推送中…</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Ingest Worker（本地代理 Stream Load）</label>
+        <input type="text" id="cfgWorkerUrl" value="http://127.0.0.1:8890" />
+        <div class="field-hint">浏览器 → Worker → SelectDB :8080 + :9030</div>
+      </div>
+      <label style="font-size:11px;display:flex;align-items:center;gap:6px;cursor:pointer">
+        <input type="checkbox" id="cfgAutoPush" checked style="width:auto" /> 处理完成后自动推送 Doris
+      </label>
+    </div>
+  </aside>
+
+  <!-- Center: Catalog + Upload -->
+  <main class="panel">
+    <div class="panel-head">
+      <h2 id="catalogTitle">场景一 · 文档清单</h2>
+      <span id="catalogCount">0 / 0 已入库</span>
+    </div>
+    <div class="panel-body">
+      <div id="sceneNote"></div>
+      <div class="catalog-scroll" id="catalogList"></div>
+      <div class="toolbar">
+        <button class="btn btn-secondary btn-sm" id="btnSelectSceneFiles">📂 选择本场景附件</button>
+        <button class="btn btn-teal btn-sm" id="btnIngestScene" disabled>⚡ 场景一键入库</button>
+        <button class="btn btn-primary btn-sm" id="btnScene1Demo" style="display:none">🎯 场景一演示</button>
+        <button class="btn btn-primary btn-sm" id="btnScene3Demo" style="display:none">🎯 场景三演示</button>
+        <button class="btn btn-secondary btn-sm" id="btnLoadAttachments" title="从附件目录 API 加载本场景文档">📥 加载附件</button>
+      </div>
+      <div class="divider"></div>
+      <div class="upload-zone" id="uploadZone">
+        <div style="font-size:28px">📄</div>
+        <h3>拖拽或点击上传</h3>
+        <p>POC 附件为 UTF-8 文本型 .doc，可直接解析 · 亦支持 docx / pdf / xlsx</p>
+        <input type="file" id="fileInput" multiple accept=".doc,.docx,.pdf,.xlsx,.xls,.csv,.txt,.md,.json,.log" />
+      </div>
+      <div class="toolbar">
+        <button class="btn btn-primary" id="btnProcessAll" disabled>▶ 处理队列</button>
+        <button class="btn btn-secondary" id="btnPushReady" disabled>⬆ 推送待入库</button>
+        <button class="btn btn-secondary" id="btnExport" disabled>⬇ 导出 JSON</button>
+        <button class="btn btn-secondary" id="btnClear" disabled>清空</button>
+      </div>
+      <div class="file-list" id="fileList"></div>
+    </div>
+  </main>
+
+  <!-- Right: Pipeline + Chunks -->
+  <aside class="panel">
+    <div class="panel-head"><h2>切片预览</h2><span id="selectedName">未选择</span></div>
+    <div class="panel-body">
+      <div id="globalProgress" class="job-progress">
+        <div class="job-progress-head">
+          <span id="jobPhaseLabel">待命</span>
+          <span id="jobPctText">0%</span>
+        </div>
+        <div class="progress-bar lg"><div id="globalProgressFill" class="progress-fill"></div></div>
+        <div id="jobDetail" class="job-detail"></div>
+      </div>
+      <div class="stats-row">
+        <div class="stat"><div class="n" id="statChunks">—</div><div class="l">Chunks</div></div>
+        <div class="stat"><div class="n" id="statTokens">—</div><div class="l">Tokens</div></div>
+        <div class="stat"><div class="n" id="statDim">512</div><div class="l">维度</div></div>
+      </div>
+      <div id="pipelineSteps">
+        <div class="pipe-step" data-step="parse"><div class="pipe-dot">1</div><div><strong>解析</strong><div class="pipe-desc">提取正文</div></div></div>
+        <div class="pipe-step" data-step="chunk"><div class="pipe-dot">2</div><div><strong>场景化切片</strong><div class="pipe-desc">按策略切分</div></div></div>
+        <div class="pipe-step" data-step="embed"><div class="pipe-dot">3</div><div><strong>Embedding</strong><div class="pipe-desc">bge-small-zh</div></div></div>
+        <div class="pipe-step" data-step="push"><div class="pipe-dot">4</div><div><strong>推送 Doris</strong><div class="pipe-desc">uih_doc_chunks</div></div></div>
+      </div>
+      <div style="font-size:11px;font-weight:700;color:var(--navy);margin:10px 0 6px">Chunk 预览</div>
+      <div class="chunk-preview" id="chunkPreview"><div class="empty-state">选择文档并处理后预览切片</div></div>
+      <div class="log-area" id="logArea"></div>
+    </div>
+  </aside>
+</div>
+
+<div class="modal-overlay" id="pushModal">
+  <div class="modal">
+    <div class="modal-head"><h3>推送到 Doris</h3><button class="btn btn-secondary btn-sm" id="modalClose">×</button></div>
+    <div class="modal-body">
+      <div class="field"><label>Worker API</label><input type="text" id="pushApiUrl" value="http://127.0.0.1:8890/api/v1/ingest/push" /></div>
+      <p class="field-hint">
+        SelectDB 公网 Stream Load 端口 <strong>8080</strong>，MySQL <strong>9030</strong>。<br>
+        写入 <code>kb.uih_doc_chunks</code>：HNSW + inner_product + 512 维 + 中文倒排。<br>
+        需先将本机 IP 加入 SelectDB 白名单。
+      </p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" id="modalCancel">取消</button>
+      <button class="btn btn-teal" id="modalConfirm">确认推送</button>
+    </div>
+  </div>
+</div>
+
+<script src="poc-paths.js"></script>
+<script src="poc-catalog.js"></script>
+<script src="poc-sync.js"></script>
+<script>
+  if (window.POC_PATHS && POC_PATHS.shouldWaitForTunnel()) POC_PATHS.waitForTunnel();
+</script>
+<script type="module">
+async function browserCacheAvailable() {
+  if (typeof window === 'undefined' || !window.isSecureContext) return false;
+  if (typeof caches === 'undefined') return false;
+  try {
+    const probe = '__poc_transformers_cache_probe__';
+    await caches.open(probe);
+    await caches.delete(probe);
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
+async function loadTransformers(forceNoCache) {
+  const mod = await import('https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2');
+  mod.env.allowLocalModels = false;
+  const useCache = !forceNoCache && (await browserCacheAvailable());
+  mod.env.useBrowserCache = useCache;
+  return { mod, useCache };
+}
+
+let transformersMod = null;
+let transformersUsedCache = null;
+
+async function getTransformers(opts) {
+  const forceNoCache = !!(opts && opts.forceNoCache);
+  if (!transformersMod || (forceNoCache && transformersUsedCache)) {
+    const { mod, useCache } = await loadTransformers(forceNoCache);
+    transformersMod = mod;
+    transformersUsedCache = useCache;
+  }
+  return transformersMod;
+}
+
+(function () {
+  const BROWSER_MODEL = 'Xenova/bge-small-zh-v1.5';
+  const STRATEGY_HINTS = {
+    policy_section: '按 ## 章节切分；审批/标准表格整表保留为独立 chunk',
+    sop_step: '按 ### 步骤N 切分；安全须知与步骤绑定',
+    experience_case: '按 ### 失效模式切分；E1001/E1002 等写入前缀',
+    table_row: 'Markdown 表格每行一 chunk，表头注入上下文',
+    checklist_table: '维护检查表按章节+表格行切片',
+    paragraph: '通用段落切分（兜底）'
+  };
+
+  let CATALOG = [];
+  let DEMO_PATHS = { 1: [], 2: [], 3: [] };
+  let OTD_TABLES = [];
+
+  async function loadPocConfig() {
+    try {
+      const { flat } = await POC_CATALOG.loadCatalog();
+      CATALOG = flat;
+      const demo = await POC_CATALOG.loadDemoPaths();
+      DEMO_PATHS = demo.paths || { 1: [], 2: [], 3: [] };
+      OTD_TABLES = demo.otd_tables || [];
+      log(`✓ 文档清单已加载 (${CATALOG.filter(c=>c.knowledge).length} 份知识文档)`, 'ok');
+    } catch (e) {
+      log(`✗ 无法加载 poc-chunk-profiles.json: ${e.message}`, 'err');
+      CATALOG = [];
+    }
+  }
+
+  const OTD_TABLES_FALLBACK = ['crm_lead','crm_opportunity','srm_purchase_order','wms_delivery_order','ads_otd_kpi_di','ads_otd_detail_di'];
+
+  let currentScene = 1;
+  let files = [];
+  let selectedId = null;
+  let selectedCatalogId = null;
+  let processing = false;
+  let embedPipeline = null;
+  const pushedDocIds = new Set();
+  const PUSH_BATCH = 40;
+
+  function publishSyncState(extra) {
+    if (!window.POC_SYNC) return;
+    const fileStates = files.map((f) => ({
+      name: f.name,
+      document_id: f.document_id || f.catalog?.document_id,
+      status: f.status,
+      chunks: f.chunks?.length || 0,
+      scene: f.catalog?.scene,
+      domain: f.metadata?.domain || f.catalog?.domain,
+      doc_type: f.metadata?.doc_type || f.catalog?.doc_type,
+      isNew: !!f._isNew,
+    }));
+    POC_SYNC.save(Object.assign({
+      currentScene,
+      selectedCatalogId,
+      pushedDocIds: [...pushedDocIds],
+      catalog: CATALOG.filter((c) => c.knowledge),
+      fileStates,
+    }, extra || {}));
+  }
+
+  function applyRemoteSync(state) {
+    if (!state) return;
+    if (state.currentScene && state.currentScene !== currentScene) {
+      currentScene = state.currentScene;
+      document.querySelectorAll('.scene-tab').forEach((t) => {
+        t.classList.toggle('active', +t.dataset.scene === currentScene);
+      });
+      if (currentScene === 1) $('#cfgDomain').value = 'finance';
+      if (currentScene === 3) $('#cfgDomain').value = 'service';
+      $('#btnScene1Demo').style.display = currentScene === 1 ? 'inline-flex' : 'none';
+      $('#btnScene3Demo').style.display = currentScene === 3 ? 'inline-flex' : 'none';
+      renderDemoPath();
+      renderFaultGraph();
+    }
+    if (state.selectedCatalogId) {
+      const item = CATALOG.find((c) => c.document_id === state.selectedCatalogId);
+      if (item) applyCatalogItem(item);
+    }
+    renderCatalog();
+  }
+
+  if (window.POC_SYNC) {
+    POC_SYNC.subscribe((state, source) => {
+      if (source === 'broadcast') applyRemoteSync(state);
+    });
+  }
+
+  const PHASE_W = { model: 10, parse: 8, chunk: 7, embed: 58, push: 17 };
+  let jobCtx = { active: false, fileIndex: 0, fileTotal: 1, needsModel: false, currentFile: null };
+  let faultGraphData = null;
+
+  async function loadFaultGraph() {
+    try {
+      const resp = await fetch(getWorkerBase() + '/service-fault-graph.json', { signal: AbortSignal.timeout(8000) });
+      if (!resp.ok) {
+        const r2 = await fetch(getWorkerBase() + '/api/v1/service/fault-graph', { signal: AbortSignal.timeout(8000) });
+        if (!r2.ok) return;
+        faultGraphData = await r2.json();
+      } else {
+        faultGraphData = await resp.json();
+      }
+      renderFaultGraph();
+    } catch {
+      $('#faultGraphBody').textContent = '故障路由图未加载（本地需 deploy/web/service-fault-graph.json）';
+    }
+  }
+
+  function renderFaultGraph() {
+    const panel = $('#faultGraphPanel');
+    const body = $('#faultGraphBody');
+    if (currentScene !== 3 || !faultGraphData) {
+      panel.classList.remove('show');
+      return;
+    }
+    panel.classList.add('show');
+    const nodes = Object.fromEntries((faultGraphData.nodes || []).map(n => [n.id, n]));
+    const code = 'E1002';
+    const entry = (faultGraphData.lookup || {})[code] || {};
+    const lines = [];
+    lines.push(`<div><span class="fg-node">${esc(code)}</span><span class="fg-arrow">→</span><span class="fg-node">${esc(nodes[entry.symptoms?.[0]]?.label || '症状')}</span></div>`);
+    (entry.causes || []).slice(0, 3).forEach(cid => {
+      const c = nodes[cid] || {};
+      lines.push(`<div class="fg-edge">↳ ${esc(c.label || cid)}${c.share_pct ? ` (${c.share_pct}%)` : ''}</div>`);
+    });
+    (entry.documents || []).slice(0, 5).forEach(did => {
+      lines.push(`<div class="fg-edge">📄 ${esc(did)}</div>`);
+    });
+    body.innerHTML = lines.join('');
+  }
+
+  async function syncIngestedFromStats() {
+    try {
+      const resp = await fetch(getWorkerBase() + '/api/v1/data/registry?limit=200', { signal: AbortSignal.timeout(8000) });
+      if (!resp.ok) return;
+      const data = await resp.json();
+      (data.items || []).forEach(row => {
+        if (row.document_id && row.status === 'indexed') pushedDocIds.add(row.document_id);
+      });
+      renderCatalog();
+    } catch {}
+    publishSyncState();
+  }
+
+  async function loadSceneAttachmentsFromServer() {
+    const base = getWorkerBase();
+    log(`从附件 API 加载场景${currentScene}…`, 'info');
+    let data;
+    try {
+      const resp = await fetch(`${base}/api/v1/attachments/list?scene=${currentScene}`, { signal: AbortSignal.timeout(15000) });
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      data = await resp.json();
+    } catch (e) {
+      log(`✗ 附件 API 不可用: ${e.message} · 请用手动选择文件`, 'err');
+      fileInput.click();
+      return;
+    }
+    const items = (data.items || []).filter(it => it.knowledge && it.available);
+    if (!items.length) {
+      log('附件 API 无可用文件，请检查 01-数据资产/attachments/ 与 poc-chunk-profiles.json', 'warn');
+      fileInput.click();
+      return;
+    }
+    const existing = new Set(files.map(f => f.name));
+    let added = 0;
+    for (const item of items) {
+      if (existing.has(item.file)) continue;
+      const fresp = await fetch(`${base}/api/v1/attachments/file/${encodeURIComponent(item.file)}`, { signal: AbortSignal.timeout(30000) });
+      if (!fresp.ok) {
+        log(`✗ 无法读取 ${item.file}`, 'err');
+        continue;
+      }
+      const blob = await fresp.blob();
+      const raw = new File([blob], item.file, { type: 'text/plain' });
+      const catalog = CATALOG.find(c => c.document_id === item.document_id) || item;
+      files.push({
+        id: uid(),
+        name: item.file,
+        size: raw.size,
+        raw,
+        catalog,
+        document_id: catalog.document_id,
+        status: 'pending'
+      });
+      existing.add(item.file);
+      added++;
+      log(`+ ${item.file} → ${catalog.document_id}（API）`, 'info');
+    }
+    if (added) {
+      const last = files[files.length - 1];
+      if (last?.catalog?.knowledge) applyCatalogItem(last.catalog);
+      renderFileList();
+      renderCatalog();
+      if (files.length && !selectedId) selectFile(files[files.length - 1].id);
+      log(`✓ 已加载 ${added} 个附件，可点「场景一键入库」`, 'ok');
+    } else {
+      log('附件已在队列中', 'warn');
+    }
+  }
+
+  function startJob(fileTotal, needsModel) {
+    jobCtx = { active: true, fileIndex: 0, fileTotal: Math.max(1, fileTotal), needsModel: !!needsModel, currentFile: null };
+    $('#globalProgress').classList.add('active');
+    reportProgress('parse', 0, 1, '准备处理', `共 ${fileTotal} 个文件`);
+  }
+
+  function endJob() {
+    jobCtx.active = false;
+    setGlobalProgress(100, '完成', '');
+    setTimeout(() => {
+      $('#globalProgress').classList.remove('active');
+      setGlobalProgress(0, '待命', '');
+    }, 2000);
+  }
+
+  function setGlobalProgress(pct, label, detail) {
+    pct = Math.max(0, Math.min(100, pct));
+    $('#globalProgressFill').style.width = pct + '%';
+    $('#jobPctText').textContent = Math.round(pct) + '%';
+    $('#jobPhaseLabel').textContent = label || '';
+    $('#jobDetail').textContent = detail || '';
+  }
+
+  function reportProgress(phase, stepDone, stepTotal, label, detail) {
+    if (jobCtx.pushOnly) {
+      const pct = stepTotal > 0 ? (stepDone / stepTotal) * 100 : 0;
+      setGlobalProgress(pct, label, detail);
+      setPushProgress(pct, detail || label);
+      return;
+    }
+    const order = jobCtx.needsModel ? ['model', 'parse', 'chunk', 'embed', 'push'] : ['parse', 'chunk', 'embed', 'push'];
+    let acc = 0;
+    const totalW = order.reduce((s, p) => s + PHASE_W[p], 0);
+    for (const p of order) {
+      if (p === phase) {
+        acc += PHASE_W[p] * (stepTotal > 0 ? stepDone / stepTotal : 0);
+        break;
+      }
+      acc += PHASE_W[p];
+    }
+    const fileFrac = acc / totalW;
+    const filePct = Math.min(100, Math.round(fileFrac * 100));
+    const overall = ((jobCtx.fileIndex + fileFrac) / jobCtx.fileTotal) * 100;
+    setGlobalProgress(overall, label, detail);
+    if (jobCtx.currentFile) {
+      jobCtx.currentFile.progressPct = filePct;
+      jobCtx.currentFile.progressLabel = detail
+        ? `${filePct}% · ${detail}`
+        : `${filePct}% · ${label || ''}`;
+      renderFileList();
+    }
+    setPushProgress(overall, detail || label);
+  }
+
+  function setFileStepProgress(file, pct, label) {
+    file.progressPct = pct;
+    file.progressLabel = label;
+    renderFileList();
+  }
+
+  const $ = (s) => document.querySelector(s);
+  const logArea = $('#logArea');
+
+  function log(msg, type='') {
+    const cls = { ok:'log-ok', warn:'log-warn', err:'log-err', info:'log-info' }[type] || '';
+    logArea.innerHTML += `<div><span style="color:#63748b">[${new Date().toTimeString().slice(0,8)}]</span> <span class="${cls}">${esc(msg)}</span></div>`;
+    logArea.scrollTop = logArea.scrollHeight;
+  }
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function ext(n) { return (n.split('.').pop()||'').toLowerCase(); }
+  function fmtSize(b) { return b<1024?b+' B':b<1048576?(b/1024).toFixed(1)+' KB':(b/1048576).toFixed(1)+' MB'; }
+  function estTokens(t) { const cn=(t.match(/[\u4e00-\u9fff]/g)||[]).length; return Math.max(1,Math.ceil(cn/1.5+(t.length-cn)/4)); }
+  function uid() { return 'doc_'+Date.now().toString(36); }
+
+  function getConfig() {
+    return {
+      domain: $('#cfgDomain').value,
+      doc_type: $('#cfgDocType').value,
+      document_id: ($('#cfgDocId').value||'').trim() || uid(),
+      chunk_strategy: $('#cfgChunkStrategy').value,
+      chunk_size: +$('#cfgChunkSize').value,
+      overlap: +$('#cfgOverlap').value,
+      embed_model: 'bge-small-zh',
+      embed_dim: 512,
+      worker_url: getWorkerUrl(),
+      auto_push: $('#cfgAutoPush').checked
+    };
+  }
+  function normalizeProgressPct(v) {
+    if (v == null || Number.isNaN(v)) return 0;
+    const n = Number(v);
+    if (n <= 1) return Math.round(Math.max(0, Math.min(1, n)) * 100);
+    return Math.round(Math.max(0, Math.min(100, n)));
+  }
+
+  function getWorkerBase() {
+    return POC_PATHS.getWorkerBase($('#cfgWorkerUrl')?.value);
+  }
+  function getWorkerUrl() {
+    return getWorkerBase() + '/api/v1/ingest/push';
+  }
+
+  function setPushProgress(pct, text) {
+    const wrap = $('#pushProgressWrap');
+    if (!jobCtx.active) {
+      wrap.style.display = pct >= 0 ? 'block' : 'none';
+      if (pct >= 0) {
+        $('#pushProgressFill').style.width = `${Math.min(100, pct)}%`;
+        $('#pushProgressText').textContent = text || '';
+      }
+    }
+  }
+
+  async function checkWorker() {
+    const base = getWorkerBase();
+    try {
+      const resp = await fetch(base + '/health', { signal: AbortSignal.timeout(12000) });
+      const d = await resp.json().catch(() => ({}));
+      if (!resp.ok || d.status === 'degraded' || !d.doris?.ok) {
+        throw new Error(d.message || d.doris?.error || 'HTTP ' + resp.status);
+      }
+      POC_PATHS.markTunnelReady();
+      const dor = d.doris || {};
+      $('#workerStatus').innerHTML = `<span class="conn-ok">● Worker 在线</span> · ${esc(d.doris_fe_http||'')} · ${esc(base)}`;
+      if (dor.ok) {
+        $('#dorisStatus').innerHTML = `<span class="conn-ok">● Doris 已连通</span> · ${esc(dor.version||'')} · db=${esc(d.database||'kb')} · chunks ${dor.chunk_rows ?? '—'}`;
+        $('#dorisStats').style.display = 'grid';
+        $('#statRegRows').textContent = dor.registry_rows ?? '—';
+        $('#statChunkRows').textContent = dor.chunk_rows ?? '—';
+      } else {
+        $('#dorisStatus').innerHTML = `<span class="conn-err">✗ Doris 不可达</span> · ${esc(dor.error||'请检查白名单/.env')}`;
+        $('#dorisStats').style.display = 'none';
+      }
+      return { worker: true, doris: !!dor.ok, base };
+    } catch (e) {
+      const hint = POC_PATHS.shouldWaitForTunnel()
+        ? 'SSH 隧道连接中… 若持续失败请运行 deploy/start-poc-local.sh'
+        : '请设置 Worker 地址为 http://127.0.0.1:8890 或运行 deploy/start-poc-local.sh';
+      $('#workerStatus').innerHTML = `<span class="conn-warn">○ Worker 离线</span> · ${esc(hint)}`;
+      $('#dorisStatus').textContent = `Doris: 需先启动 Worker (${esc(String(e.message||'network'))})`;
+      $('#dorisStats').style.display = 'none';
+      return { worker: false, doris: false, error: e.message, base };
+    }
+  }
+
+  async function requireWorker(actionLabel) {
+    const r = await checkWorker();
+    if (!r.worker) {
+      const msg = POC_PATHS.shouldWaitForTunnel()
+        ? 'Worker 未就绪：SSH 隧道连接中，请稍候或运行 deploy/start-poc-local.sh'
+        : 'Worker 未就绪：请运行 deploy/start-poc-local.sh 或设置 Worker 为 http://127.0.0.1:8890';
+      log(`✗ ${actionLabel} 中止 · ${msg}`, 'err');
+      throw new Error(msg);
+    }
+    return r;
+  }
+
+  function isPocProxyHost() {
+    return POC_PATHS.isPocProxyHost();
+  }
+
+  function hideTunnelGate() {
+    POC_PATHS.hideTunnelGate();
+  }
+
+  function showTunnelGate(msg) {
+    $('#tunnelGate').classList.add('show');
+    if (msg) $('#tunnelGateMsg').innerHTML = msg;
+  }
+
+  async function bootWaitForTunnel() {
+    if (window.__POC_TUNNEL_READY || !POC_PATHS.shouldWaitForTunnel()) {
+      hideTunnelGate();
+      return true;
+    }
+    const ok = await POC_PATHS.waitForTunnel();
+    if (ok) {
+      hideTunnelGate();
+      await checkWorker();
+      return true;
+    }
+    showTunnelGate('SSH 仍未连上 ECS。<br>请运行 <strong>bash deploy/start-poc-local.sh</strong> 后刷新');
+    return false;
+  }
+
+  async function initSchema() {
+    const base = getWorkerBase();
+    log('初始化 kb 库表（含 HNSW 512维）…', 'info');
+    const resp = await fetch(base + '/api/v1/schema/init', { method:'POST' });
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok) throw new Error(data.detail || `HTTP ${resp.status}`);
+    log(`✓ ${data.message}`, 'ok');
+    await checkWorker();
+  }
+
+  async function refreshStats() {
+    try {
+      const resp = await fetch(getWorkerBase() + '/api/v1/stats', { signal: AbortSignal.timeout(8000) });
+      if (!resp.ok) return;
+      const s = await resp.json();
+      $('#statRegRows').textContent = s.registry_rows ?? 0;
+      $('#statChunkRows').textContent = s.chunk_rows ?? 0;
+      $('#dorisStats').style.display = 'grid';
+    } catch {}
+  }
+
+  function applyCatalogItem(item) {
+    if (!item || !item.knowledge) return;
+    selectedCatalogId = item.document_id;
+    $('#cfgDomain').value = item.domain;
+    if (item.doc_type) {
+      const dt = $('#cfgDocType');
+      const has = Array.from(dt.options).some(o => o.value === item.doc_type);
+      if (!has) {
+        const opt = document.createElement('option');
+        opt.value = item.doc_type;
+        opt.textContent = item.doc_type;
+        dt.appendChild(opt);
+      }
+      dt.value = item.doc_type;
+    }
+    $('#cfgDocId').value = item.document_id;
+    $('#cfgChunkStrategy').value = item.chunk_strategy;
+    $('#cfgChunkSize').value = item.chunk_size || 480;
+    $('#cfgOverlap').value = item.overlap ?? 64;
+    $('#strategyHint').textContent = STRATEGY_HINTS[item.chunk_strategy] || '';
+    renderCatalog();
+  }
+
+  function matchCatalog(name) {
+    const base = name.replace(/\.[^.]+$/,'');
+    return CATALOG.find(c => c.file === name || name.includes(c.document_id) || base.includes(c.document_id));
+  }
+
+  // ── Demo path UI ──
+  function renderDemoPath() {
+    const steps = DEMO_PATHS[currentScene];
+    $('#demoPathTitle').textContent = `场景${['一','二','三'][currentScene-1]} · 演示路径`;
+    $('#demoPath').innerHTML = steps.map((s,i) => `
+      <div class="demo-step ${i===0?'active':''}">
+        <div class="demo-dot">${i+1}</div>
+        <div>
+          <div class="demo-title">${esc(s.title)}</div>
+          <div class="demo-desc">${esc(s.desc)}</div>
+          ${s.query ? `<div class="demo-query">${esc(s.query)}</div>` : ''}
+        </div>
+      </div>`).join('');
+  }
+
+  function renderCatalog() {
+    const items = currentScene === 2 ? [] : CATALOG.filter(c => c.scene === currentScene);
+    $('#catalogTitle').textContent = currentScene === 2 ? '场景二 · OTD 数据资产' : `场景${['一','三'][currentScene===1?0:1]} · 文档清单`;
+    const knowledgeItems = items.filter(i => i.knowledge);
+    const ingested = knowledgeItems.filter(i => pushedDocIds.has(i.document_id)).length;
+    $('#catalogCount').textContent = `${ingested} / ${knowledgeItems.length} 已入库`;
+
+    if (currentScene === 2) {
+      $('#sceneNote').innerHTML = `<div class="note-box note-scene2"><strong>场景二无附件文档</strong><br>17 张 OTD 表已在数据目录标记「完成」，由 FineDataLink 同步至 Doris。Dora 侧主要验证结构化 SQL / 指标问答，知识层本页无需切片入库。</div>`;
+      $('#catalogList').innerHTML = (OTD_TABLES.length ? OTD_TABLES : OTD_TABLES_FALLBACK).map(t => `
+        <div class="catalog-item" style="cursor:default">
+          <span class="catalog-code" style="background:var(--teal)">TABLE</span>
+          <div class="catalog-info"><div class="catalog-name">${t}</div><div class="catalog-meta">FineDataLink → Doris · 结构化查询</div></div>
+        </div>`).join('');
+      $('#btnIngestScene').disabled = true;
+      return;
+    }
+
+    const structNote = items.some(i => i.structured);
+    $('#sceneNote').innerHTML = structNote
+      ? `<div class="note-box note-structured"><strong>半结构化日志</strong>：budget_operation JSONL + .log（8000×2）由 Agent MCP <code>finance_budget_operation_query</code> 现场解析，<em>不进入</em> uih_doc_chunks。制度文档仍走工作台入库。</div>` : '';
+
+    $('#catalogList').innerHTML = items.map(item => `
+      <div class="catalog-item ${selectedCatalogId===item.document_id?'selected':''} ${pushedDocIds.has(item.document_id)?'ingested':''}"
+           data-id="${item.document_id}" data-knowledge="${item.knowledge}">
+        <span class="catalog-code">${item.knowledge?'DOC':'FDL'}</span>
+        <div class="catalog-info">
+          <div class="catalog-name">${esc(item.document_id)} · ${esc(item.file.slice(0,30))}…</div>
+          <div class="catalog-meta">
+            ${item.knowledge ? `<span class="strategy-tag">${item.chunk_strategy}</span> ${item.chunk_size}字 · overlap ${item.overlap}` : '结构化日志 · 8000 条'}
+          </div>
+        </div>
+      </div>`).join('');
+
+    $('#catalogList').querySelectorAll('.catalog-item[data-knowledge="true"]').forEach(el => {
+      el.addEventListener('click', () => applyCatalogItem(CATALOG.find(c => c.document_id === el.dataset.id)));
+    });
+
+    const pendingKnowledge = files.filter(f => f.catalog?.knowledge && f.status !== 'pushed').length;
+    $('#btnIngestScene').disabled = !pendingKnowledge || processing;
+  }
+
+  // ── Scene tabs ──
+  document.querySelectorAll('.scene-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.scene-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentScene = +tab.dataset.scene;
+      if (currentScene === 1) { $('#cfgDomain').value = 'finance'; }
+      if (currentScene === 3) { $('#cfgDomain').value = 'service'; }
+      $('#btnScene1Demo').style.display = currentScene === 1 ? 'inline-flex' : 'none';
+      $('#btnScene3Demo').style.display = currentScene === 3 ? 'inline-flex' : 'none';
+      renderDemoPath();
+      renderFaultGraph();
+      renderCatalog();
+      publishSyncState();
+    });
+  });
+
+  // ── Parsing ──
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  async function parseDocument(file) {
+    const e = ext(file.name);
+    const buf = await file.raw.arrayBuffer();
+    if (e === 'docx') {
+      const r = await mammoth.extractRawText({ arrayBuffer: buf });
+      const text = (r.value||'').replace(/\r\n/g,'\n').trim();
+      if (!text) throw new Error('Word 无文本');
+      return { text, parser:'mammoth' };
+    }
+    if (e === 'doc' || e === 'txt' || e === 'md' || e === 'log' || e === 'json') {
+      const text = (await file.raw.text()).replace(/\r\n/g,'\n').trim();
+      if (!text) throw new Error('文件为空');
+      return { text, parser: e==='doc'?'utf8-doc':'text' };
+    }
+    if (e === 'pdf') {
+      const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+      const parts = [];
+      for (let i=1;i<=pdf.numPages;i++) {
+        const page = await pdf.getPage(i);
+        const c = await page.getTextContent();
+        parts.push(c.items.map(it=>it.str).join(' '));
+      }
+      const text = parts.join('\n\n').trim();
+      if (!text) throw new Error('PDF 无文本');
+      return { text, parser:'pdf.js' };
+    }
+    if (e === 'xlsx' || e === 'xls') {
+      const wb = XLSX.read(buf, { type:'array' });
+      const text = wb.SheetNames.map(n => {
+        const rows = XLSX.utils.sheet_to_json(wb.Sheets[n], { header:1, defval:'' });
+        return `【${n}】\n` + rows.filter(r=>r.some(c=>String(c).trim())).map(r=>r.join(' | ')).join('\n');
+      }).join('\n\n');
+      return { text, parser:'SheetJS' };
+    }
+    throw new Error(`不支持 .${e}`);
+  }
+
+  // ── Chunk prefix enrichment ──
+  function buildPrefix(meta, section) {
+    const lines = [`[文档: ${meta.document_id} ${meta.title||''}]`];
+    if (section) lines.push(`[章节: ${section}]`);
+    lines.push(`[业务域: ${meta.domain} | 类型: ${meta.doc_type}]`);
+    return lines.join('\n') + '\n\n';
+  }
+
+  function chunkBySize(text, size, overlap) {
+    const chunks = [];
+    let start = 0;
+    while (start < text.length) {
+      let end = Math.min(start + size, text.length);
+      if (end < text.length) {
+        const slice = text.slice(start, end);
+        const br = Math.max(slice.lastIndexOf('\n'), slice.lastIndexOf('。'), slice.lastIndexOf('；'));
+        if (br > size * 0.35) end = start + br + 1;
+      }
+      const piece = text.slice(start, end).trim();
+      if (piece.length > 8) chunks.push({ text: piece, section: '' });
+      if (end >= text.length) break;
+      start = Math.max(start + 1, end - overlap);
+    }
+    return chunks;
+  }
+
+  function splitByPattern(text, pattern, minLen=20) {
+    const re = new RegExp(`(?=${pattern})`, 'g');
+    const parts = text.split(re).map(p => p.trim()).filter(p => p.length >= minLen);
+    return parts.length ? parts : [text];
+  }
+
+  function parseMarkdownTable(sectionText) {
+    const lines = sectionText.split('\n').filter(l => l.trim());
+    const tableLines = lines.filter(l => l.includes('|'));
+    if (tableLines.length < 2) return null;
+    const header = tableLines[0].split('|').map(c => c.trim()).filter(Boolean);
+    const rows = tableLines.slice(2).map(line =>
+      line.split('|').map(c => c.trim()).filter(Boolean)
+    ).filter(r => r.length);
+    return { header, rows };
+  }
+
+  function chunkPolicySection(text, cfg, meta) {
+    const sections = splitByPattern(text, '^##\\s+', 30);
+    const out = [];
+    sections.forEach(sec => {
+      const titleMatch = sec.match(/^##\s+(.+)/);
+      const sectionTitle = titleMatch ? titleMatch[1].trim() : '概述';
+      const table = parseMarkdownTable(sec);
+      if (table && (sec.includes('审批') || sec.includes('标准') || sec.includes('级别') || table.rows.length <= 8)) {
+        table.rows.forEach((row, i) => {
+          const rowText = table.header.map((h,j) => `${h}: ${row[j]||''}`).join(' · ');
+          out.push({ text: buildPrefix(meta, sectionTitle) + rowText, section: sectionTitle, kind:'table_row' });
+        });
+      } else if (sec.length <= cfg.chunk_size) {
+        out.push({ text: buildPrefix(meta, sectionTitle) + sec.replace(/^##\s+[^\n]+\n?/, ''), section: sectionTitle });
+      } else {
+        chunkBySize(sec, cfg.chunk_size, cfg.overlap).forEach(c => {
+          out.push({ text: buildPrefix(meta, sectionTitle) + c.text, section: sectionTitle });
+        });
+      }
+    });
+    return out;
+  }
+
+  function chunkSopStep(text, cfg, meta) {
+    const parts = splitByPattern(text, '^###\\s+步骤', 15);
+    if (parts.length <= 1) return chunkPolicySection(text, cfg, meta);
+    let safety = '';
+    const safetyMatch = text.match(/##\s*安全须知[\s\S]*?(?=##|###\s+步骤|$)/);
+    if (safetyMatch) safety = safetyMatch[0].trim();
+    return parts.map(sec => {
+      const stepMatch = sec.match(/^###\s+(步骤\d+[^\n]*)/);
+      const section = stepMatch ? stepMatch[1] : '操作步骤';
+      let body = sec;
+      if (safety && !sec.includes('安全')) body = `【安全须知摘要】${safety.slice(0,200)}…\n\n${sec}`;
+      return { text: buildPrefix(meta, section) + body.replace(/^###\s+[^\n]+\n?/, ''), section, kind:'sop_step' };
+    });
+  }
+
+  function chunkExperienceCase(text, cfg, meta) {
+    const parts = splitByPattern(text, '^###\\s+', 20);
+    if (parts.length <= 1) return chunkPolicySection(text, cfg, meta);
+    return parts.map(sec => {
+      const titleMatch = sec.match(/^###\s+(.+)/);
+      const section = titleMatch ? titleMatch[1].trim() : '案例';
+      const kw = (sec.match(/E\d{4}|9600rpm|50°C|液氦|冷头/g) || []).slice(0,4).join(' ');
+      const prefix = buildPrefix(meta, section) + (kw ? `[关键词: ${kw}]\n\n` : '');
+      return { text: prefix + sec.replace(/^###\s+[^\n]+\n?/, ''), section, kind:'experience' };
+    });
+  }
+
+  function chunkTableRow(text, cfg, meta) {
+    const sections = text.split(/^##\s+/m).filter(Boolean);
+    const out = [];
+    sections.forEach(sec => {
+      const title = sec.split('\n')[0].trim();
+      const table = parseMarkdownTable(sec);
+      if (table) {
+        table.rows.forEach(row => {
+          const rowText = table.header.map((h,j) => `${h}: ${row[j]||''}`).join(' | ');
+          out.push({ text: buildPrefix(meta, title) + rowText, section: title, kind:'table_row' });
+        });
+      } else if (sec.trim().length > 20) {
+        chunkBySize(sec, cfg.chunk_size, cfg.overlap).forEach(c =>
+          out.push({ text: buildPrefix(meta, title) + c.text, section: title }));
+      }
+    });
+    return out.length ? out : chunkBySize(text, cfg.chunk_size, cfg.overlap).map(c => ({ ...c, section:'' }));
+  }
+
+  function chunkChecklistTable(text, cfg, meta) {
+    return chunkTableRow(text, cfg, meta);
+  }
+
+  function chunkDocument(parsed, cfg, meta) {
+    const { text } = parsed;
+    let raw = [];
+    const fn = {
+      policy_section: chunkPolicySection,
+      sop_step: chunkSopStep,
+      experience_case: chunkExperienceCase,
+      table_row: chunkTableRow,
+      checklist_table: chunkChecklistTable
+    }[cfg.chunk_strategy];
+    raw = fn ? fn(text, cfg, meta) : chunkBySize(text, cfg.chunk_size, cfg.overlap);
+
+    const docId = meta.document_id.replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 16);
+    return raw.map((c, i) => ({
+      id: `chk_${docId}_${String(i+1).padStart(3,'0')}`,
+      text: c.text,
+      section: c.section || '',
+      tokens: estTokens(c.text),
+      page: 1,
+      embedding: null,
+      vectorPreview: ''
+    }));
+  }
+
+  // ── Embedding ──
+  async function getEmbedder(onModelProgress) {
+    if (!embedPipeline) {
+      jobCtx.needsModel = true;
+      reportProgress('model', 0, 1, '加载 Embedding 模型', 'bge-small-zh · 首次约 20–40 秒');
+      log('加载 bge-small-zh 模型（首次约 20–40 秒）…', 'info');
+
+      async function createPipeline(noCache) {
+        if (noCache) {
+          transformersMod = null;
+          transformersUsedCache = null;
+        }
+        const { pipeline } = await getTransformers({ forceNoCache: noCache });
+        return pipeline('feature-extraction', BROWSER_MODEL, {
+          quantized: true,
+          progress_callback: (p) => {
+            if (p.status === 'progress' && p.progress != null && onModelProgress) {
+              onModelProgress(normalizeProgressPct(p.progress));
+            }
+          }
+        });
+      }
+
+      try {
+        embedPipeline = await createPipeline(false);
+        if (!transformersUsedCache) {
+          log('提示：当前环境无浏览器 Cache，模型每次从 CDN 加载（功能正常）', 'warn');
+        }
+      } catch (e) {
+        const msg = String(e && e.message ? e.message : e);
+        if (/browser cache/i.test(msg)) {
+          log('浏览器 Cache 不可用，切换无缓存模式重试…', 'warn');
+          embedPipeline = await createPipeline(true);
+        } else {
+          throw e;
+        }
+      }
+
+      reportProgress('model', 1, 1, '模型加载完成', BROWSER_MODEL);
+      log('模型加载完成', 'ok');
+    }
+    return embedPipeline;
+  }
+
+  async function embedChunks(chunks, onProgress) {
+    const ext = await getEmbedder((pct) => {
+      reportProgress('model', pct, 100, '下载/加载模型', `${pct}%`);
+    });
+    for (let i = 0; i < chunks.length; i++) {
+      const out = await ext(chunks[i].text, { pooling:'mean', normalize:true });
+      const vec = Array.from(out.data);
+      chunks[i].embedding = vec;
+      chunks[i].vectorPreview = vec.slice(0,4).map(v=>v.toFixed(4)).join(', ');
+      if (onProgress) onProgress(i + 1, chunks.length);
+      reportProgress('embed', i + 1, chunks.length, '向量化', `chunk ${i + 1}/${chunks.length}`);
+    }
+    return chunks;
+  }
+
+  // ── Process & Push ──
+  function setPipe(step, state) {
+    const el = document.querySelector(`.pipe-step[data-step="${step}"]`);
+    if (!el) return;
+    el.classList.remove('active','done');
+    if (state) el.classList.add(state);
+  }
+
+  async function processFile(file, fileIndex = 0, fileTotal = 1) {
+    const cfg = getConfig();
+    jobCtx.fileIndex = fileIndex;
+    jobCtx.fileTotal = fileTotal;
+    jobCtx.currentFile = file;
+    file.progressPct = 0;
+    file.progressLabel = '';
+    if (file.catalog) {
+      cfg.domain = file.catalog.domain;
+      cfg.doc_type = file.catalog.doc_type;
+      cfg.document_id = file.catalog.document_id;
+      cfg.chunk_strategy = file.catalog.chunk_strategy;
+      cfg.chunk_size = file.catalog.chunk_size || cfg.chunk_size;
+      cfg.overlap = file.catalog.overlap ?? cfg.overlap;
+    }
+    if (file.catalog && !file.catalog.knowledge) {
+      log(`跳过知识入库: ${file.name}（结构化数据走 FDL）`, 'warn');
+      file.status = 'skipped';
+      renderFileList();
+      return;
+    }
+
+    selectFile(file.id);
+    file.status = 'parsing';
+    setPipe('parse','active');
+    reportProgress('parse', 0, 1, '解析文档', `${fileIndex + 1}/${fileTotal} · ${file.name}`);
+    renderFileList();
+    log(`解析 ${file.name}…`, 'info');
+    file.parsed = await parseDocument(file);
+    reportProgress('parse', 1, 1, '解析完成', `${file.parsed.text.length} 字`);
+    setPipe('parse','done');
+
+    file.status = 'chunking';
+    setPipe('chunk','active');
+    reportProgress('chunk', 0, 1, '场景化切片', cfg.chunk_strategy);
+    const meta = { document_id: cfg.document_id, title: file.name.replace(/\.[^.]+$/,''), domain: cfg.domain, doc_type: cfg.doc_type };
+    file.chunks = chunkDocument(file.parsed, cfg, meta);
+    if (!file.chunks.length) throw new Error('切片为空');
+    reportProgress('chunk', 1, 1, '切片完成', `${file.chunks.length} chunks`);
+    setPipe('chunk','done');
+    log(`切片 ${file.chunks.length} chunks · ${cfg.chunk_strategy}`, 'ok');
+
+    file.status = 'embedding';
+    setPipe('embed','active');
+    await embedChunks(file.chunks, (d, t) => setPipe('embed', 'active'));
+    setPipe('embed','done');
+
+    file.status = 'ready';
+    file.progressPct = 100;
+    file.progressLabel = '待推送';
+    file.document_id = cfg.document_id;
+    file.metadata = { domain: cfg.domain, doc_type: cfg.doc_type, embed_model: cfg.embed_model, parser: file.parsed.parser, document_id: cfg.document_id };
+    file.ossUri = `oss://uih-kb/${cfg.domain}/${cfg.document_id}/${file.name}`;
+    selectFile(file.id);
+    renderFileList();
+    log(`✓ ${file.name} 就绪 · ${file.parsed.text.length} 字 · ${file.chunks.length} chunks`, 'ok');
+    publishSyncState();
+
+    if (cfg.auto_push) await pushFiles([file]);
+  }
+
+  function buildPayload(forFiles) {
+    const registry = [], chunks = [];
+    forFiles.forEach(f => {
+      if (!f.chunks?.length) return;
+      const dim = f.chunks[0].embedding?.length || 512;
+      registry.push({
+        document_id: f.document_id || f.id,
+        title: f.name,
+        oss_uri: f.ossUri,
+        domain: f.metadata.domain,
+        doc_type: f.metadata.doc_type,
+        embed_model: f.metadata.embed_model,
+        embed_dim: dim,
+        parser: f.metadata.parser,
+        chunk_count: f.chunks.length,
+        status: 'indexed',
+        version: 1,
+        indexed_at: new Date().toISOString().slice(0,19).replace('T',' ')
+      });
+      f.chunks.forEach(c => {
+        chunks.push({
+          chunk_id: c.id,
+          document_id: f.document_id || f.id,
+          content: c.text,
+          title: f.name,
+          domain: f.metadata.domain,
+          doc_type: f.metadata.doc_type,
+          page_no: c.page,
+          token_count: c.tokens,
+          embed_model: f.metadata.embed_model,
+          embedding: c.embedding,
+          oss_uri: f.ossUri,
+          dept_acl: 'All',
+          indexed_at: new Date().toISOString().slice(0,19).replace('T',' ')
+        });
+      });
+    });
+    return { registry, chunks, replace: true };
+  }
+
+  function validateEmbeddings(forFiles) {
+    for (const f of forFiles) {
+      for (const c of f.chunks || []) {
+        if (!c.embedding || c.embedding.length !== 512) {
+          throw new Error(`${f.document_id}: embedding 须为 512 维（bge-small-zh），请重新向量化`);
+        }
+      }
+    }
+  }
+
+  async function pushFiles(forFiles) {
+    validateEmbeddings(forFiles);
+    const payload = buildPayload(forFiles);
+    if (!payload.chunks.length) return;
+
+    const online = await checkWorker();
+    if (!online.worker) throw new Error('Worker 未启动');
+    if (!online.doris) throw new Error('Doris 不可达');
+
+    const wasActive = jobCtx.active;
+    if (!wasActive) {
+      jobCtx = { active: true, fileIndex: 0, fileTotal: 1, needsModel: false, currentFile: null, pushOnly: true };
+      $('#globalProgress').classList.add('active');
+    }
+
+    setPipe('push','active');
+    const { registry, chunks } = payload;
+    const batches = [];
+    for (let i = 0; i < chunks.length; i += PUSH_BATCH) {
+      batches.push(chunks.slice(i, i + PUSH_BATCH));
+    }
+    log(`推送 SelectDB · ${registry.length} 文档 · ${chunks.length} chunks · ${batches.length} 批`, 'info');
+
+    let loadedTotal = 0;
+    try {
+      for (let bi = 0; bi < batches.length; bi++) {
+        reportProgress('push', bi, batches.length, '推送 Doris',
+          `第 ${bi + 1}/${batches.length} 批 · ${batches[bi].length} chunks`);
+        const body = {
+          replace: bi === 0,
+          registry: bi === 0 ? registry : [],
+          chunks: batches[bi],
+        };
+        const resp = await fetch(getWorkerUrl(), {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify(body),
+        });
+        const data = await resp.json().catch(() => ({}));
+        if (!resp.ok) {
+          throw new Error(typeof data.detail === 'string' ? data.detail : (data.message || `HTTP ${resp.status}`));
+        }
+        loadedTotal += data.chunks?.loaded ?? batches[bi].length;
+        const via = data.ingest_mode || data.chunks?.via || '';
+        reportProgress('push', bi + 1, batches.length, '推送 Doris',
+          `已入库 ${loadedTotal}/${chunks.length} chunks${via ? ' · ' + via : ''}`);
+      }
+    } catch (e) {
+      if (!wasActive) endJob();
+      setPipe('push', '');
+      throw e;
+    }
+
+    reportProgress('push', batches.length, batches.length, '入库完成', `${loadedTotal} chunks`);
+    forFiles.forEach(f => {
+      f.status = 'pushed';
+      f.progressPct = 100;
+      f.progressLabel = '已入库';
+      if (f.document_id) pushedDocIds.add(f.document_id);
+    });
+    setPipe('push','done');
+    renderFileList();
+    renderCatalog();
+    await refreshStats();
+    log(`✓ 入库完成 · ${loadedTotal} chunks`, 'ok');
+    publishSyncState();
+    if (!wasActive) endJob();
+    else if (!jobCtx.active) setTimeout(() => setPushProgress(-1, ''), 2500);
+  }
+
+  async function pushReadyFiles() {
+    const ready = files.filter(f => f.status === 'ready');
+    if (!ready.length || processing) return;
+    processing = true;
+    try {
+      await pushFiles(ready);
+    } catch (e) {
+      log(e.message, 'err');
+    } finally {
+      processing = false;
+      updateButtons();
+    }
+  }
+
+  async function processAll(autoPush) {
+    if (processing) return;
+    try { await requireWorker('处理队列'); } catch { return; }
+    processing = true;
+    const pending = files.filter(f => f.status === 'pending' || f.status === 'error');
+    startJob(pending.length, !embedPipeline);
+    for (let i = 0; i < pending.length; i++) {
+      const f = pending[i];
+      try {
+        f.status = 'pending';
+        f.progressPct = 0;
+        await processFile(f, i, pending.length);
+        if (autoPush && f.status === 'ready') await pushFiles([f]);
+      } catch (e) {
+        f.status = 'error';
+        f.progressLabel = e.message;
+        log(`✗ ${f.name}: ${e.message}`, 'err');
+        renderFileList();
+      }
+    }
+    endJob();
+    processing = false;
+    renderCatalog();
+    updateButtons();
+  }
+
+  // ── UI ──
+  function renderFileList() {
+    const list = $('#fileList');
+    if (!files.length) { list.innerHTML = ''; updateButtons(); return; }
+    list.innerHTML = files.map(f => `
+      <div class="file-item ${f.id===selectedId?'active':''}" data-id="${f.id}">
+        <div class="file-icon">${ext(f.name).slice(0,3).toUpperCase()}</div>
+        <div class="file-info">
+          <div class="name" title="${esc(f.name)}">${esc(f.document_id||f.name)}</div>
+          <div class="meta">${f.chunks?f.chunks.length+' chunks · ':''}${fmtSize(f.size)} · ${f.catalog?.chunk_strategy||'—'}</div>
+        </div>
+        <span class="status-badge st-${f.status}">${{pending:'待处理',parsing:'解析',chunking:'切片',embedding:'向量',ready:'待推送',pushed:'已推送',error:'失败',skipped:'跳过'}[f.status]||f.status}</span>
+        ${f.progressPct != null && f.status !== 'pushed' && f.status !== 'skipped' ? `
+        <div class="file-progress">
+          <div class="progress-bar"><div class="progress-fill" style="width:${Math.min(100, f.progressPct || 0)}%"></div></div>
+          <div class="progress-label">${esc(f.progressLabel||'')}</div>
+        </div>` : ''}
+      </div>`).join('');
+    list.querySelectorAll('.file-item').forEach(el => el.addEventListener('click', () => selectFile(el.dataset.id)));
+    updateButtons();
+  }
+
+  function updateButtons() {
+    const hasFiles = files.length > 0;
+    const hasReady = files.some(f => f.status === 'ready');
+    const busy = processing;
+    $('#btnProcessAll').disabled = !hasFiles || busy;
+    $('#btnPushReady').disabled = !hasReady || busy;
+    $('#btnExport').disabled = !hasReady || busy;
+    $('#btnClear').disabled = !hasFiles || busy;
+    const scenePending = files.filter(f => f.catalog?.scene === currentScene && f.catalog?.knowledge && !['pushed','skipped'].includes(f.status)).length;
+    $('#btnIngestScene').disabled = !scenePending || busy;
+  }
+
+  function selectFile(id) {
+    selectedId = id;
+    const f = files.find(x => x.id === id);
+    if (!f) return;
+    renderFileList();
+    $('#selectedName').textContent = f.document_id || f.name;
+    if (!f.chunks) {
+      $('#chunkPreview').innerHTML = '<div class="empty-state">尚未处理</div>';
+      $('#statChunks').textContent = '—';
+      $('#statTokens').textContent = '—';
+      return;
+    }
+    $('#statChunks').textContent = f.chunks.length;
+    $('#statTokens').textContent = f.chunks.reduce((s,c)=>s+c.tokens,0);
+    $('#chunkPreview').innerHTML = f.chunks.map(c => `
+      <div class="chunk-item">
+        <div class="chunk-id">${esc(c.id)}</div>
+        ${c.section ? `<div class="chunk-section">§ ${esc(c.section)}</div>` : ''}
+        <div class="chunk-text">${esc(c.text)}</div>
+        <div class="chunk-dim">${c.embedding ? `vector[512] = [${esc(c.vectorPreview)}…]` : '待向量化'}</div>
+      </div>`).join('');
+  }
+
+  function addFiles(rawList) {
+    for (const raw of rawList) {
+      if (files.some(f => f.name === raw.name && f.size === raw.size)) continue;
+      const catalog = matchCatalog(raw.name);
+      if (catalog && catalog.scene !== currentScene && catalog.knowledge) {
+        log(`提示: ${raw.name} 属于场景${catalog.scene}，已自动关联配置`, 'warn');
+      }
+      const item = catalog || null;
+      files.push({
+        id: uid(),
+        name: raw.name,
+        size: raw.size,
+        raw,
+        catalog: item,
+        document_id: item?.document_id,
+        status: 'pending',
+        _isNew: true,
+      });
+      if (item?.knowledge) applyCatalogItem(item);
+      log(`+ ${raw.name}${item ? ' → '+item.document_id : ''}`, 'info');
+    }
+    renderFileList();
+    renderCatalog();
+    publishSyncState();
+    if (files.length && !selectedId) selectFile(files[files.length-1].id);
+  }
+
+  // Events
+  const uploadZone = $('#uploadZone');
+  const fileInput = $('#fileInput');
+  uploadZone.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', e => { addFiles(e.target.files); fileInput.value=''; });
+  uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', e => { e.preventDefault(); uploadZone.classList.remove('dragover'); addFiles(e.dataTransfer.files); });
+
+  $('#btnSelectSceneFiles').addEventListener('click', () => loadSceneAttachmentsFromServer());
+  $('#btnLoadAttachments').addEventListener('click', () => loadSceneAttachmentsFromServer());
+
+  $('#btnIngestScene').addEventListener('click', async () => {
+    const targets = files.filter(f => f.catalog?.scene === currentScene && f.catalog?.knowledge && f.status !== 'pushed');
+    if (!targets.length) { log('请先上传本场景附件', 'warn'); fileInput.click(); return; }
+    try { await requireWorker('场景一键入库'); } catch { return; }
+    processing = true;
+    startJob(targets.length, !embedPipeline);
+    for (let i = 0; i < targets.length; i++) {
+      const f = targets[i];
+      try { await processFile(f, i, targets.length); } catch (e) { f.status='error'; f.progressLabel=e.message; log(`✗ ${e.message}`,'err'); }
+    }
+    endJob();
+    processing = false;
+    renderCatalog();
+    updateButtons();
+  });
+
+  $('#btnProcessAll').addEventListener('click', () => processAll(false));
+  $('#btnPushReady').addEventListener('click', () => pushReadyFiles());
+  $('#btnExport').addEventListener('click', () => {
+    const p = buildPayload(files.filter(f=>f.status==='ready'));
+    const blob = new Blob([JSON.stringify(p,null,2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `poc_kb_ingest_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    log('已导出 JSON', 'ok');
+  });
+  $('#btnClear').addEventListener('click', () => { files=[]; selectedId=null; renderFileList(); log('已清空','warn'); });
+
+  $('#cfgChunkStrategy').addEventListener('change', () => {
+    $('#strategyHint').textContent = STRATEGY_HINTS[$('#cfgChunkStrategy').value] || '';
+  });
+  $('#cfgWorkerUrl').addEventListener('change', () => { localStorage.setItem('poc_worker', $('#cfgWorkerUrl').value); checkWorker(); });
+  if (POC_PATHS.isPocProxyHost()) {
+    $('#cfgWorkerUrl').value = location.origin;
+    localStorage.setItem('poc_worker', location.origin);
+    $('#pushApiUrl').value = location.origin + '/api/v1/ingest/push';
+  } else {
+    const saved = localStorage.getItem('poc_worker');
+    if (saved) $('#cfgWorkerUrl').value = saved;
+    else if (location.protocol === 'file:') {
+      $('#cfgWorkerUrl').value = POC_PATHS.WORKER_DEFAULT;
+      $('#pushApiUrl').value = POC_PATHS.WORKER_DEFAULT + '/api/v1/ingest/push';
+    }
+  }
+  $('#linkDorisData').href = POC_PATHS.pageUrl('doris');
+  $('#linkKnowledgeGraph').href = POC_PATHS.pageUrl('graph');
+  const linkDel = $('#linkKnowledgeDeliverables');
+  if (linkDel) linkDel.href = POC_PATHS.pageUrl('deliverables');
+  const linkGraphFull = $('#linkGraphFull');
+  if (linkGraphFull) linkGraphFull.href = POC_PATHS.pageUrl('graph');
+
+  $('#btnTestConn').addEventListener('click', async () => {
+    log('测试 Worker + Doris 连接…', 'info');
+    const r = await checkWorker();
+    if (r.worker && r.doris) log('✓ 连接正常，可以入库', 'ok');
+    else if (r.worker) log('Worker 在线但 Doris 不通 → 检查 SelectDB 白名单与 .env', 'warn');
+    else log('请先启动 Worker', 'warn');
+  });
+
+  $('#btnInitSchema').addEventListener('click', async () => {
+    try { await initSchema(); } catch (e) { log(`✗ 建表失败: ${e.message}`, 'err'); }
+  });
+
+  $('#btnScene1Demo').addEventListener('click', async () => {
+    log('—— 场景一演示引导 ——', 'info');
+    log('1) 左侧 Doris 连接变绿  2) 未建表则点「初始化表」', 'info');
+    log('3) 点「加载附件」或上传 BG 三份制度  4) 点「场景一键入库」', 'info');
+    log('5) Dora 问: 「超预算747.4万需要哪些审批环节？」', 'info');
+    const need = CATALOG.filter(c => c.scene===1 && c.knowledge && !pushedDocIds.has(c.document_id));
+    if (need.length) log(`待入库: ${need.map(c=>c.document_id).join(', ')}`, 'warn');
+    else log('✓ 场景一制度文档已全部入库', 'ok');
+    await loadSceneAttachmentsFromServer();
+  });
+
+  $('#btnScene3Demo').addEventListener('click', async () => {
+    log('—— 场景三演示引导 ——', 'info');
+    log('1) Doris 连接正常  2) 点「加载附件」载入 8 份 service 文档', 'info');
+    log('3) 点「场景一键入库」→ 推送 Doris（domain=service）', 'info');
+    log('4) Dora 问: 「uCT960 E1001/E1002 旋转阳极达不到9600rpm 什么原因？」', 'info');
+    const need = CATALOG.filter(c => c.scene===3 && c.knowledge && !pushedDocIds.has(c.document_id));
+    if (need.length) log(`待入库: ${need.map(c=>c.document_id).join(', ')}`, 'warn');
+    else log('✓ 场景三 service 文档已全部入库', 'ok');
+    currentScene = 3;
+    document.querySelectorAll('.scene-tab').forEach(t => t.classList.toggle('active', +t.dataset.scene === 3));
+    $('#cfgDomain').value = 'service';
+    renderDemoPath();
+    renderFaultGraph();
+    renderCatalog();
+    await loadSceneAttachmentsFromServer();
+  });
+
+  $('#modalClose').addEventListener('click', () => $('#pushModal').classList.remove('open'));
+  $('#modalCancel').addEventListener('click', () => $('#pushModal').classList.remove('open'));
+  $('#modalConfirm').addEventListener('click', () => {
+    pushReadyFiles();
+    $('#pushModal').classList.remove('open');
+  });
+
+  renderDemoPath();
+  renderCatalog();
+  $('#btnScene1Demo').style.display = currentScene === 1 ? 'inline-flex' : 'none';
+  $('#btnScene3Demo').style.display = currentScene === 3 ? 'inline-flex' : 'none';
+
+  (async () => {
+    await POC_PATHS.waitForTunnel();
+    await loadPocConfig();
+    renderDemoPath();
+    renderCatalog();
+    await checkWorker();
+    await loadFaultGraph();
+    await syncIngestedFromStats();
+    publishSyncState();
+    const hash = location.hash.match(/doc=([^&]+)/);
+    if (hash) {
+      const item = CATALOG.find((c) => c.document_id === decodeURIComponent(hash[1]));
+      if (item) applyCatalogItem(item);
+    }
+    applyRemoteSync(POC_SYNC.load());
+    setInterval(() => {
+      const gate = $('#tunnelGate');
+      const needsPoll = gate.classList.contains('show') ||
+        $('#workerStatus').textContent.includes('离线');
+      if (needsPoll) checkWorker();
+    }, 3000);
+    log('联影 PoC 演示工作台就绪', 'ok');
+    log('推荐: bash deploy/start-poc-local.sh → 场景三点「加载附件」→「场景一键入库」', 'info');
+    log('① 附件 API: GET /api/v1/attachments/list?scene=3', 'info');
+  })();
+})();
+</script>
+</body>
+</html>

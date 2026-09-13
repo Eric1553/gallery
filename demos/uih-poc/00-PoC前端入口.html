@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>联影 PoC · 工作台首页</title>
+  <style>
+    :root {
+      --navy:#0f2952; --blue:#1f55cc; --teal:#0d9488; --purple:#5a3fd4;
+      --line:#d7e1ef; --muted:#63748b; --text:#1b2940;
+      --shadow:0 8px 24px rgba(22,52,95,.08);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:"PingFang SC","Microsoft YaHei",-apple-system,sans-serif;
+      background:linear-gradient(180deg,#eef3f9 0%,#f4f8fc 240px,#f4f8fc 100%);
+      color:var(--text);line-height:1.55;min-height:100vh;
+    }
+    .hero{
+      background:linear-gradient(135deg,var(--navy),#1a4a85);
+      color:#fff;padding:32px 24px 36px;
+    }
+    .hero-inner{max-width:1100px;margin:0 auto}
+    .hero h1{font-size:26px;font-weight:800;letter-spacing:.02em}
+    .hero .lead{font-size:14px;opacity:.92;margin-top:10px;max-width:760px}
+    .hero-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+    .hero-meta span{
+      font-size:11px;padding:5px 12px;border-radius:999px;
+      background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+    }
+    .wrap{max-width:1100px;margin:0 auto;padding:0 24px 48px}
+    .section{margin-top:28px}
+    .section-head{
+      display:flex;align-items:center;justify-content:space-between;
+      margin-bottom:14px;gap:12px;flex-wrap:wrap;
+    }
+    .section-head h2{
+      font-size:15px;color:var(--navy);font-weight:800;
+      display:flex;align-items:center;gap:8px;
+    }
+    .section-head h2::before{
+      content:'';width:4px;height:16px;background:var(--blue);border-radius:2px;
+    }
+    .section-head .hint{font-size:12px;color:var(--muted)}
+    .grid{display:grid;gap:14px}
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+    @media(max-width:900px){.grid-4{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:640px){.grid-2,.grid-4{grid-template-columns:1fr}}
+    .card{
+      display:flex;gap:14px;align-items:flex-start;
+      background:#fff;border:1px solid var(--line);border-radius:14px;
+      padding:16px 18px;text-decoration:none;color:inherit;
+      box-shadow:var(--shadow);
+      transition:transform .15s,box-shadow .15s,border-color .15s;
+      position:relative;overflow:hidden;
+    }
+    .card::after{
+      content:'→';position:absolute;right:16px;top:50%;transform:translateY(-50%);
+      color:#94a3b8;font-size:18px;opacity:0;transition:opacity .15s,transform .15s;
+    }
+    .card:hover{
+      transform:translateY(-2px);
+      border-color:#93c5fd;
+      box-shadow:0 12px 28px rgba(31,85,204,.12);
+    }
+    .card:hover::after{opacity:1;transform:translate(4px,-50%)}
+    .card.featured{border-top:3px solid var(--blue)}
+    .card.featured.teal{border-top-color:var(--teal)}
+    .card.featured.purple{border-top-color:var(--purple)}
+    .card.featured.amber{border-top-color:#d97706}
+    .card.report{border-top:3px solid var(--teal);background:linear-gradient(135deg,#fff 0%,#f0fdfa 100%)}
+    .card.legacy{opacity:.85;background:#fafbfc}
+    .card .num{
+      font-size:11px;font-weight:800;color:#fff;
+      width:32px;height:32px;border-radius:10px;
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;
+      background:var(--blue);
+    }
+    .card .num.ops{background:var(--teal)}
+    .card .num.doc{background:var(--purple)}
+    .card .num.muted{background:#64748b}
+    .card .body{flex:1;padding-right:20px}
+    .card .title{font-size:15px;font-weight:700;color:var(--navy)}
+    .card .desc{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.5}
+    .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+    .tag{
+      display:inline-block;font-size:10px;font-weight:700;
+      padding:3px 9px;border-radius:999px;
+    }
+    .tag-run{background:#d1fae5;color:#065f46}
+    .tag-ref{background:#e0e7ff;color:#3730a3}
+    .tag-legacy{background:#fef3c7;color:#92400e}
+    .tag-hot{background:#fee2e2;color:#991b1b}
+    .footer-bar{
+      margin-top:32px;padding:16px 18px;
+      background:#fff;border:1px solid var(--line);border-radius:12px;
+      font-size:12px;color:var(--muted);box-shadow:var(--shadow);
+    }
+    .footer-bar strong{color:var(--navy)}
+    .footer-bar a{color:var(--blue);text-decoration:none}
+    .footer-bar a:hover{text-decoration:underline}
+    .footer-bar code{
+      background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:11px;
+    }
+    .quick-row{
+      display:flex;flex-wrap:wrap;gap:8px;margin-top:-18px;
+      position:relative;z-index:1;
+    }
+    .quick{
+      font-size:12px;padding:8px 14px;border-radius:10px;
+      background:#fff;border:1px solid var(--line);color:var(--navy);
+      text-decoration:none;font-weight:600;box-shadow:var(--shadow);
+      transition:border-color .15s,transform .15s;
+    }
+    .quick:hover{border-color:var(--blue);transform:translateY(-1px)}
+  </style>
+  <script src="poc-paths.js"></script>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <h1>联影 PoC · 工作台首页</h1>
+      <p class="lead">演示、查数、看进展、读方案——所有页面从这一个入口进入。推荐先打开<strong>演示工作台</strong>做入库与场景演示。</p>
+      <div class="hero-meta">
+        <span id="metaHost">8890 统一入口</span>
+        <span>11 篇文档 · 285 切片</span>
+        <span>场景一/三 已联调</span>
+        <span>更新 2026-06-20</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="quick-row">
+      <a class="quick" data-page="workbench" href="/">进入演示工作台</a>
+      <a class="quick" data-page="status" href="/poc-status.html">看进展汇总</a>
+      <a class="quick" data-page="techBrief" href="/poc-tech-brief.html">今日技术说明</a>
+      <a class="quick" data-page="demoRunbook" href="/poc-demo-runbook.html">汇报 Runbook</a>
+      <a class="quick" data-page="architecture" href="/poc-architecture.html">技术架构</a>
+    </div>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>演示操作</h2>
+        <span class="hint">日常演示用这四个页面</span>
+      </div>
+      <div class="grid grid-2">
+        <a class="card featured teal" data-page="workbench" href="/">
+          <span class="num ops">01</span>
+          <div class="body">
+            <div class="title">联影 PoC 演示工作台</div>
+            <div class="desc">上传附件 · 按场景切片 · 写入 Doris · 三场景一键演示</div>
+            <div class="tags"><span class="tag tag-run">主入口</span></div>
+          </div>
+        </a>
+        <a class="card featured" data-page="doris" href="/doris-data.html">
+          <span class="num ops">02</span>
+          <div class="body">
+            <div class="title">Doris 入库数据查看</div>
+            <div class="desc">只读查看已入库文档和切片数量，不用登录数据库控制台</div>
+            <div class="tags"><span class="tag tag-run">数据核对</span></div>
+          </div>
+        </a>
+        <a class="card featured purple" data-page="graph" href="/knowledge-graph.html">
+          <span class="num ops">07</span>
+          <div class="body">
+            <div class="title">故障知识图谱</div>
+            <div class="desc">故障码 → 原因 → 处理方案，可与工作台实时联动</div>
+            <div class="tags"><span class="tag tag-run">场景三</span></div>
+          </div>
+        </a>
+        <a class="card featured amber" data-page="deliverables" href="/knowledge-deliverables.html">
+          <span class="num ops">09</span>
+          <div class="body">
+            <div class="title">知识产出交付视图</div>
+            <div class="desc">本体 · 故障图谱 · SOP 库 · 经验库，四类成果一页看完</div>
+            <div class="tags"><span class="tag tag-run">场景三成果</span></div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>汇报与工程说明</h2>
+        <span class="hint">6.22 汇报优先看这四页</span>
+      </div>
+      <div class="grid grid-2">
+        <a class="card report" data-page="demoRunbook" href="/poc-demo-runbook.html">
+          <span class="num doc">11</span>
+          <div class="body">
+            <div class="title">PoC 汇报演示 Runbook</div>
+            <div class="desc">45–55 分钟时间轴 · 场景步骤 · 重复能力节奏 · Checklist</div>
+            <div class="tags"><span class="tag tag-hot">现场演示脚本</span></div>
+          </div>
+        </a>
+        <a class="card report" data-page="architecture" href="/poc-architecture.html">
+          <span class="num doc">12</span>
+          <div class="body">
+            <div class="title">PoC 技术架构与栈说明</div>
+            <div class="desc">总架构 · 分场景栈 · MCP 矩阵 · 入库流水线 · 工程交付清单</div>
+            <div class="tags"><span class="tag tag-hot">架构先进性</span></div>
+          </div>
+        </a>
+        <a class="card report" data-page="status" href="/poc-status.html">
+          <span class="num doc">08</span>
+          <div class="body">
+            <div class="title">PoC 演示思路与进展汇总</div>
+            <div class="desc">四场景完成度 · 8890 架构 · 演示步骤 · 缺口跟踪</div>
+            <div class="tags"><span class="tag tag-hot">汇报必读</span></div>
+          </div>
+        </a>
+        <a class="card report" data-page="techBrief" href="/poc-tech-brief.html">
+          <span class="num doc">10</span>
+          <div class="body">
+            <div class="title">PoC 技术说明（2026-06-19）</div>
+            <div class="desc">文档清单机制 · 双入口 · 检索过程可查 · Dora 联调 · 部署验证</div>
+            <div class="tags"><span class="tag tag-run">今日工程交付</span></div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>方案参考文档</h2>
+        <span class="hint">前期方案与设计，按需查阅</span>
+      </div>
+      <div class="grid grid-2">
+        <a class="card" data-page="route03" href="/doc-route-03.html">
+          <span class="num doc">03</span>
+          <div class="body">
+            <div class="title">PoC 场景技术路线说明</div>
+            <div class="desc">三场景演示路径、产品分工、FineDataLink / Dora / Doris 链路</div>
+            <div class="tags"><span class="tag tag-ref">参考</span></div>
+          </div>
+        </a>
+        <a class="card" data-page="route04" href="/doc-route-04.html">
+          <span class="num doc">04</span>
+          <div class="body">
+            <div class="title">路线二 POC 技术路径与方案</div>
+            <div class="desc">知识层架构、Doris 向量检索、入库方式、Dora 对接</div>
+            <div class="tags"><span class="tag tag-ref">参考</span></div>
+          </div>
+        </a>
+        <a class="card" data-page="route05" href="/doc-route-05.html">
+          <span class="num doc">05</span>
+          <div class="body">
+            <div class="title">数据平台 PoC 场景设计方案</div>
+            <div class="desc">场景一/二/三的数据对象、表结构、Agent 问答设计</div>
+            <div class="tags"><span class="tag tag-ref">参考</span></div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>历史原型</h2>
+      </div>
+      <div class="grid">
+        <a class="card legacy" data-page="prototype06" href="/doc-prototype-06.html">
+          <span class="num muted">06</span>
+          <div class="body">
+            <div class="title">知识库文档入库（早期原型）</div>
+            <div class="desc">已被 01 演示工作台替代，仅保留对照</div>
+            <div class="tags"><span class="tag tag-legacy">已废弃</span></div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <div class="footer-bar">
+      <strong>当前访问：</strong><a id="linkCurrent" href="/">—</a><br>
+      <strong>云服务器（演示推荐）：</strong><a id="linkEcs" href="http://47.99.198.211:8890/" target="_blank" rel="noopener">http://47.99.198.211:8890/</a><br>
+      <strong>本机备用：</strong><code>bash deploy/start-poc-local.sh</code> → <code>http://127.0.0.1:8890/</code>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      if (!window.POC_PATHS) return;
+      POC_PATHS.bindPageLinks(document);
+      var onGallery = typeof POC_PATHS.isGalleryMount === 'function' && POC_PATHS.isGalleryMount();
+      var origin = (onGallery || POC_PATHS.isPocProxyHost())
+        ? location.origin
+        : POC_PATHS.ECS_ORIGIN;
+      var cur = document.getElementById('linkCurrent');
+      var ecs = document.getElementById('linkEcs');
+      var meta = document.getElementById('metaHost');
+      if (cur) {
+        var hub = POC_PATHS.pageUrl('hub');
+        cur.href = hub;
+        cur.textContent = hub.indexOf('http') === 0 ? hub : (origin + hub);
+      }
+      if (ecs) ecs.href = onGallery ? (POC_PATHS.galleryMount() + '/') : (POC_PATHS.ECS_ORIGIN + '/');
+      if (meta) {
+        meta.textContent = onGallery
+          ? 'DEMO案例库 · ' + location.host
+          : (POC_PATHS.isLocalPocProxy()
+            ? '本机备用 · 127.0.0.1:8890'
+            : (POC_PATHS.isPocProxyHost() ? '云服务器 · ' + location.host : '8890 统一入口'));
+      }
+    })();
+  </script>
+</body>
+</html>

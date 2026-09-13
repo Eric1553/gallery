@@ -1,0 +1,698 @@
+{
+  "morning": {
+    "bundle_id": "BIREN-MORNING-CURATED-20260729-1409",
+    "bundle_type": "morning_pack",
+    "org": "biren",
+    "timezone": "Asia/Shanghai",
+    "generated_at": "2026-07-29T14:09:14+08:00",
+    "client_refreshed_at": "2026-07-29T14:09:14+08:00",
+    "source": "curated_baseline",
+    "items": [
+      {
+        "topic_id": "BR-POL",
+        "item_id": "POL-20260729-B01",
+        "title": "工信部：加快人工智能算力基础设施高质量发展",
+        "summary": "工业和信息化部印发通知，要求统筹推进智算中心建设与算力资源调度，明确国产芯片在新建智算中心中的配套比例要求，并对集群能效提出约束。",
+        "source_name": "工信部",
+        "source_url": "https://www.gov.cn/zhengce/",
+        "sources": [
+          {
+            "name": "工信部",
+            "url": "https://www.gov.cn/zhengce/"
+          }
+        ],
+        "published_at": "2026-07-29T05:09:14+08:00",
+        "collected_at": "2026-07-29T14:09:14+08:00",
+        "impact_level": "high",
+        "impact_type": "direct",
+        "impact_label": "直接影响",
+        "priority_score": 109,
+        "confidence": "high",
+        "confidence_label": "高",
+        "source_tier": "official",
+        "tags": [
+          "政策监管",
+          "国产化",
+          "能效约束"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "国产配套比例与能效门槛直接影响投标资格，需法务与产品线同步核对合规口径。",
+        "category": "external",
+        "desk_eligible": true
+      },
+      {
+        "topic_id": "BR-CUS",
+        "item_id": "CUS-20260729-B02",
+        "title": "第一财经：头部云厂商加码智算中心建设，推理卡需求上行",
+        "summary": "阿里云、字节等云厂商继续扩容智算资源，推理场景对高能效算力卡需求上升，行业集采与 POC 节奏加快，国产卡获得更多验证窗口。",
+        "source_name": "第一财经",
+        "source_url": "https://www.yicai.com/",
+        "sources": [
+          {
+            "name": "第一财经",
+            "url": "https://www.yicai.com/"
+          }
+        ],
+        "published_at": "2026-07-29T02:09:14+08:00",
+        "collected_at": "2026-07-29T14:09:14+08:00",
+        "impact_level": "high",
+        "impact_type": "opportunity",
+        "impact_label": "新机会",
+        "priority_score": 108,
+        "confidence": "high",
+        "confidence_label": "高",
+        "source_tier": "official",
+        "tags": [
+          "新机会",
+          "推理场景",
+          "头部客户"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "智算基建扩张拉动 GPU 集群需求，关注区域集采与 POC 节奏。",
+        "category": "external",
+        "desk_eligible": true
+      },
+      {
+        "topic_id": "BR-IND",
+        "item_id": "IND-20260729-B03",
+        "title": "集微网：先进封装与HBM供给仍是国产GPU交付关键瓶颈",
+        "summary": "行业调研显示，先进封装产能与 HBM 供给紧张继续影响国产 AI 芯片交付节奏，整机厂商正调整下半年排产计划，封测厂扩产进度成为关键变量。",
+        "source_name": "集微网",
+        "source_url": "https://www.laoyaoba.com/",
+        "sources": [
+          {
+            "name": "集微网",
+            "url": "https://www.laoyaoba.com/"
+          }
+        ],
+        "published_at": "2026-07-28T23:09:14+08:00",
+        "collected_at": "2026-07-29T14:09:14+08:00",
+        "impact_level": "high",
+        "impact_type": "chain",
+        "impact_label": "供应链传导",
+        "priority_score": 107,
+        "confidence": "high",
+        "confidence_label": "高",
+        "source_tier": "trade",
+        "tags": [
+          "封测上游",
+          "存储互连",
+          "供应链传导"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "封装与 HBM 排期直接决定交付兑现，需核对关键物料锁量与备选产能。",
+        "category": "external",
+        "desk_eligible": true
+      },
+      {
+        "topic_id": "BR-CMP",
+        "item_id": "CMP-20260729-B04",
+        "title": "财新：昇腾生态扩张下国产GPU厂商加速差异化竞争",
+        "summary": "昇腾生态加速扩张，国产 GPU 厂商在推理性能、能效与软件栈兼容性上寻求差异化，客户选型开始把长期供货能力与迁移成本纳入评估。",
+        "source_name": "财新",
+        "source_url": "https://www.caixin.com/",
+        "sources": [
+          {
+            "name": "财新",
+            "url": "https://www.caixin.com/"
+          }
+        ],
+        "published_at": "2026-07-28T20:09:14+08:00",
+        "collected_at": "2026-07-29T14:09:14+08:00",
+        "impact_level": "medium",
+        "impact_type": "competitor",
+        "impact_label": "竞品压力",
+        "priority_score": 81,
+        "confidence": "high",
+        "confidence_label": "高",
+        "source_tier": "official",
+        "tags": [
+          "竞品对标",
+          "国产化"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "客户对比维度转向软件栈迁移成本，需刷新对标矩阵与迁移工具包话术。",
+        "category": "external",
+        "desk_eligible": true
+      },
+      {
+        "topic_id": "BR-IND",
+        "item_id": "IND-20260729-B05",
+        "title": "科技日报：国产DPU补齐智算集群网络与存储互连短板",
+        "summary": "国产 DPU 厂商加速在智算集群中的规模部署，缓解网络与存储互连瓶颈，为国产 GPU 集群的横向扩展提供支撑，多地智算中心已启动适配验证。",
+        "source_name": "科技日报",
+        "source_url": "https://www.stdaily.com/",
+        "sources": [
+          {
+            "name": "科技日报",
+            "url": "https://www.stdaily.com/"
+          }
+        ],
+        "published_at": "2026-07-28T17:09:14+08:00",
+        "collected_at": "2026-07-29T14:09:14+08:00",
+        "impact_level": "medium",
+        "impact_type": "chain",
+        "impact_label": "供应链传导",
+        "priority_score": 80,
+        "confidence": "high",
+        "confidence_label": "高",
+        "source_tier": "official",
+        "tags": [
+          "集群网络",
+          "产业链"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "集群互连能力提升可放大单机性能优势，建议与 DPU 厂商联合出方案。",
+        "category": "external",
+        "desk_eligible": true
+      },
+      {
+        "topic_id": "BR-CUS",
+        "item_id": "CUS-20260729-B06",
+        "title": "经济日报：智算中心建设提速，国产算力配套比例成为项目验收要点",
+        "summary": "多地新建智算中心进入验收阶段，国产算力卡配套比例与实测能效被列为验收要点，项目方开始要求供应商提供长期供货与本地运维承诺。",
+        "source_name": "经济日报",
+        "source_url": "https://www.economicdaily.com.cn/",
+        "sources": [
+          {
+            "name": "经济日报",
+            "url": "https://www.economicdaily.com.cn/"
+          }
+        ],
+        "published_at": "2026-07-28T14:09:14+08:00",
+        "collected_at": "2026-07-29T14:09:14+08:00",
+        "impact_level": "medium",
+        "impact_type": "opportunity",
+        "impact_label": "新机会",
+        "priority_score": 79,
+        "confidence": "high",
+        "confidence_label": "高",
+        "source_tier": "official",
+        "tags": [
+          "算力采购",
+          "国产化",
+          "新机会"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "验收要点前移到实测能效与供货承诺，售前需备好实测报告与运维方案。",
+        "category": "external",
+        "desk_eligible": true
+      }
+    ]
+  },
+  "noon": {
+    "bundle_id": "BIREN-NOON-CURATED-20260729-1409",
+    "bundle_type": "noon_delta",
+    "org": "biren",
+    "timezone": "Asia/Shanghai",
+    "generated_at": "2026-07-29T14:09:14+08:00",
+    "client_refreshed_at": "2026-07-29T14:09:14+08:00",
+    "source": "curated_baseline",
+    "items": [
+      {
+        "topic_id": "BR-CUS",
+        "item_id": "CUS-20260729-B07",
+        "title": "第一财经：头部云厂商加码智算中心建设，推理卡需求上行",
+        "summary": "阿里云、字节等云厂商继续扩容智算资源，推理场景对高能效算力卡需求上升，行业集采与 POC 节奏加快，国产卡获得更多验证窗口。",
+        "source_name": "第一财经",
+        "source_url": "https://www.yicai.com/",
+        "sources": [
+          {
+            "name": "第一财经",
+            "url": "https://www.yicai.com/"
+          }
+        ],
+        "published_at": "2026-07-28T11:09:14+08:00",
+        "collected_at": "2026-07-29T14:09:14+08:00",
+        "impact_level": "high",
+        "impact_type": "opportunity",
+        "impact_label": "新机会",
+        "priority_score": 103,
+        "confidence": "high",
+        "confidence_label": "高",
+        "source_tier": "official",
+        "tags": [
+          "新机会",
+          "推理场景",
+          "头部客户"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "智算基建扩张拉动 GPU 集群需求，关注区域集采与 POC 节奏。",
+        "category": "external",
+        "desk_eligible": true
+      },
+      {
+        "topic_id": "BR-IND",
+        "item_id": "IND-20260729-B08",
+        "title": "集微网：先进封装与HBM供给仍是国产GPU交付关键瓶颈",
+        "summary": "行业调研显示，先进封装产能与 HBM 供给紧张继续影响国产 AI 芯片交付节奏，整机厂商正调整下半年排产计划，封测厂扩产进度成为关键变量。",
+        "source_name": "集微网",
+        "source_url": "https://www.laoyaoba.com/",
+        "sources": [
+          {
+            "name": "集微网",
+            "url": "https://www.laoyaoba.com/"
+          }
+        ],
+        "published_at": "2026-07-28T08:09:14+08:00",
+        "collected_at": "2026-07-29T14:09:14+08:00",
+        "impact_level": "high",
+        "impact_type": "chain",
+        "impact_label": "供应链传导",
+        "priority_score": 102,
+        "confidence": "high",
+        "confidence_label": "高",
+        "source_tier": "trade",
+        "tags": [
+          "封测上游",
+          "存储互连",
+          "供应链传导"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "封装与 HBM 排期直接决定交付兑现，需核对关键物料锁量与备选产能。",
+        "category": "external",
+        "desk_eligible": true
+      },
+      {
+        "topic_id": "BR-CMP",
+        "item_id": "CMP-20260729-B09",
+        "title": "财新：昇腾生态扩张下国产GPU厂商加速差异化竞争",
+        "summary": "昇腾生态加速扩张，国产 GPU 厂商在推理性能、能效与软件栈兼容性上寻求差异化，客户选型开始把长期供货能力与迁移成本纳入评估。",
+        "source_name": "财新",
+        "source_url": "https://www.caixin.com/",
+        "sources": [
+          {
+            "name": "财新",
+            "url": "https://www.caixin.com/"
+          }
+        ],
+        "published_at": "2026-07-28T05:09:14+08:00",
+        "collected_at": "2026-07-29T14:09:14+08:00",
+        "impact_level": "medium",
+        "impact_type": "competitor",
+        "impact_label": "竞品压力",
+        "priority_score": 76,
+        "confidence": "high",
+        "confidence_label": "高",
+        "source_tier": "official",
+        "tags": [
+          "竞品对标",
+          "国产化"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "客户对比维度转向软件栈迁移成本，需刷新对标矩阵与迁移工具包话术。",
+        "category": "external",
+        "desk_eligible": true
+      },
+      {
+        "topic_id": "BR-POL",
+        "item_id": "POL-20260729-B10",
+        "title": "新华社：多地推进算电协同试点，智算中心能效考核趋严",
+        "summary": "多地启动算电协同试点，绿电直供与算力调度平台联动落地，新建智算中心的电力接入与能效考核标准同步收紧。",
+        "source_name": "新华社",
+        "source_url": "https://www.news.cn/",
+        "sources": [
+          {
+            "name": "新华社",
+            "url": "https://www.news.cn/"
+          }
+        ],
+        "published_at": "2026-07-28T02:09:14+08:00",
+        "collected_at": "2026-07-29T14:09:14+08:00",
+        "impact_level": "medium",
+        "impact_type": "opportunity",
+        "impact_label": "新机会",
+        "priority_score": 75,
+        "confidence": "high",
+        "confidence_label": "高",
+        "source_tier": "official",
+        "tags": [
+          "算力采购",
+          "能效约束",
+          "政策监管"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "能效考核趋严利好高能效产品线，建议在投标材料中前置能效实测数据。",
+        "category": "external",
+        "desk_eligible": true
+      },
+      {
+        "topic_id": "BR-CMP",
+        "item_id": "CMP-20260729-B11",
+        "title": "半导体行业观察：封测三巨头先进封装投入分化，产能分配影响国产GPU量产",
+        "summary": "长电、通富、华天在先进封装的投入强度与客户结构上分化明显，产能分配结果将直接影响国产 GPU 厂商下半年的量产交付节奏。",
+        "source_name": "半导体行业观察",
+        "source_url": "https://www.semiinsights.com/",
+        "sources": [
+          {
+            "name": "半导体行业观察",
+            "url": "https://www.semiinsights.com/"
+          }
+        ],
+        "published_at": "2026-07-27T23:09:14+08:00",
+        "collected_at": "2026-07-29T14:09:14+08:00",
+        "impact_level": "medium",
+        "impact_type": "chain",
+        "impact_label": "供应链传导",
+        "priority_score": 74,
+        "confidence": "high",
+        "confidence_label": "高",
+        "source_tier": "trade",
+        "tags": [
+          "封测上游",
+          "供应链传导"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "需确认自身在封测厂的产能优先级，必要时提前锁定第二供应。",
+        "category": "external",
+        "desk_eligible": true
+      },
+      {
+        "topic_id": "BR-POL",
+        "item_id": "POL-20260729-B12",
+        "title": "路透：美方拟进一步收紧先进AI芯片出口许可范围",
+        "summary": "据多方消息，美方正评估进一步收紧先进 AI 芯片及相关制造设备的出口许可范围，国内厂商的海外供应链与设备采购计划可能需要重新排期。",
+        "source_name": "路透",
+        "source_url": "https://www.reuters.com/",
+        "sources": [
+          {
+            "name": "路透",
+            "url": "https://www.reuters.com/"
+          }
+        ],
+        "published_at": "2026-07-27T20:09:14+08:00",
+        "collected_at": "2026-07-29T14:09:14+08:00",
+        "impact_level": "high",
+        "impact_type": "direct",
+        "impact_label": "直接影响",
+        "priority_score": 98,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "source_tier": "official",
+        "tags": [
+          "出口管制",
+          "政策监管"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "出口许可范围变化牵动供应链与合规口径，建议法务与供应链当日评估替代路径。",
+        "category": "external",
+        "desk_eligible": true
+      }
+    ]
+  },
+  "evening": {
+    "bundle_id": "BIREN-EVENING-CURATED-20260729-1409",
+    "bundle_type": "evening_pack",
+    "org": "biren",
+    "timezone": "Asia/Shanghai",
+    "generated_at": "2026-07-29T14:09:14+08:00",
+    "client_refreshed_at": "2026-07-29T14:09:14+08:00",
+    "source": "curated_baseline",
+    "items": [
+      {
+        "topic_id": "BR-POL",
+        "item_id": "POL-20260729-B13",
+        "title": "工信部：加快人工智能算力基础设施高质量发展",
+        "summary": "工业和信息化部印发通知，要求统筹推进智算中心建设与算力资源调度，明确国产芯片在新建智算中心中的配套比例要求，并对集群能效提出约束。",
+        "source_name": "工信部",
+        "source_url": "https://www.gov.cn/zhengce/",
+        "sources": [
+          {
+            "name": "工信部",
+            "url": "https://www.gov.cn/zhengce/"
+          }
+        ],
+        "published_at": "2026-07-27T17:09:14+08:00",
+        "collected_at": "2026-07-29T14:09:14+08:00",
+        "impact_level": "high",
+        "impact_type": "direct",
+        "impact_label": "直接影响",
+        "priority_score": 97,
+        "confidence": "high",
+        "confidence_label": "高",
+        "source_tier": "official",
+        "tags": [
+          "政策监管",
+          "国产化",
+          "能效约束"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "国产配套比例与能效门槛直接影响投标资格，需法务与产品线同步核对合规口径。",
+        "category": "external",
+        "desk_eligible": true
+      },
+      {
+        "topic_id": "BR-CUS",
+        "item_id": "CUS-20260729-B14",
+        "title": "第一财经：头部云厂商加码智算中心建设，推理卡需求上行",
+        "summary": "阿里云、字节等云厂商继续扩容智算资源，推理场景对高能效算力卡需求上升，行业集采与 POC 节奏加快，国产卡获得更多验证窗口。",
+        "source_name": "第一财经",
+        "source_url": "https://www.yicai.com/",
+        "sources": [
+          {
+            "name": "第一财经",
+            "url": "https://www.yicai.com/"
+          }
+        ],
+        "published_at": "2026-07-27T14:09:14+08:00",
+        "collected_at": "2026-07-29T14:09:14+08:00",
+        "impact_level": "high",
+        "impact_type": "opportunity",
+        "impact_label": "新机会",
+        "priority_score": 96,
+        "confidence": "high",
+        "confidence_label": "高",
+        "source_tier": "official",
+        "tags": [
+          "新机会",
+          "推理场景",
+          "头部客户"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "智算基建扩张拉动 GPU 集群需求，关注区域集采与 POC 节奏。",
+        "category": "external",
+        "desk_eligible": true
+      },
+      {
+        "topic_id": "BR-IND",
+        "item_id": "IND-20260729-B15",
+        "title": "集微网：先进封装与HBM供给仍是国产GPU交付关键瓶颈",
+        "summary": "行业调研显示，先进封装产能与 HBM 供给紧张继续影响国产 AI 芯片交付节奏，整机厂商正调整下半年排产计划，封测厂扩产进度成为关键变量。",
+        "source_name": "集微网",
+        "source_url": "https://www.laoyaoba.com/",
+        "sources": [
+          {
+            "name": "集微网",
+            "url": "https://www.laoyaoba.com/"
+          }
+        ],
+        "published_at": "2026-07-27T11:09:14+08:00",
+        "collected_at": "2026-07-29T14:09:14+08:00",
+        "impact_level": "high",
+        "impact_type": "chain",
+        "impact_label": "供应链传导",
+        "priority_score": 95,
+        "confidence": "high",
+        "confidence_label": "高",
+        "source_tier": "trade",
+        "tags": [
+          "封测上游",
+          "存储互连",
+          "供应链传导"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "封装与 HBM 排期直接决定交付兑现，需核对关键物料锁量与备选产能。",
+        "category": "external",
+        "desk_eligible": true
+      },
+      {
+        "topic_id": "BR-CMP",
+        "item_id": "CMP-20260729-B16",
+        "title": "财新：昇腾生态扩张下国产GPU厂商加速差异化竞争",
+        "summary": "昇腾生态加速扩张，国产 GPU 厂商在推理性能、能效与软件栈兼容性上寻求差异化，客户选型开始把长期供货能力与迁移成本纳入评估。",
+        "source_name": "财新",
+        "source_url": "https://www.caixin.com/",
+        "sources": [
+          {
+            "name": "财新",
+            "url": "https://www.caixin.com/"
+          }
+        ],
+        "published_at": "2026-07-27T08:09:14+08:00",
+        "collected_at": "2026-07-29T14:09:14+08:00",
+        "impact_level": "medium",
+        "impact_type": "competitor",
+        "impact_label": "竞品压力",
+        "priority_score": 69,
+        "confidence": "high",
+        "confidence_label": "高",
+        "source_tier": "official",
+        "tags": [
+          "竞品对标",
+          "国产化"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "客户对比维度转向软件栈迁移成本，需刷新对标矩阵与迁移工具包话术。",
+        "category": "external",
+        "desk_eligible": true
+      },
+      {
+        "topic_id": "BR-IND",
+        "item_id": "IND-20260729-B17",
+        "title": "科技日报：国产DPU补齐智算集群网络与存储互连短板",
+        "summary": "国产 DPU 厂商加速在智算集群中的规模部署，缓解网络与存储互连瓶颈，为国产 GPU 集群的横向扩展提供支撑，多地智算中心已启动适配验证。",
+        "source_name": "科技日报",
+        "source_url": "https://www.stdaily.com/",
+        "sources": [
+          {
+            "name": "科技日报",
+            "url": "https://www.stdaily.com/"
+          }
+        ],
+        "published_at": "2026-07-27T05:09:14+08:00",
+        "collected_at": "2026-07-29T14:09:14+08:00",
+        "impact_level": "medium",
+        "impact_type": "chain",
+        "impact_label": "供应链传导",
+        "priority_score": 68,
+        "confidence": "high",
+        "confidence_label": "高",
+        "source_tier": "official",
+        "tags": [
+          "集群网络",
+          "产业链"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "集群互连能力提升可放大单机性能优势，建议与 DPU 厂商联合出方案。",
+        "category": "external",
+        "desk_eligible": true
+      },
+      {
+        "topic_id": "BR-POL",
+        "item_id": "POL-20260729-B18",
+        "title": "新华社：多地推进算电协同试点，智算中心能效考核趋严",
+        "summary": "多地启动算电协同试点，绿电直供与算力调度平台联动落地，新建智算中心的电力接入与能效考核标准同步收紧。",
+        "source_name": "新华社",
+        "source_url": "https://www.news.cn/",
+        "sources": [
+          {
+            "name": "新华社",
+            "url": "https://www.news.cn/"
+          }
+        ],
+        "published_at": "2026-07-27T02:09:14+08:00",
+        "collected_at": "2026-07-29T14:09:14+08:00",
+        "impact_level": "medium",
+        "impact_type": "opportunity",
+        "impact_label": "新机会",
+        "priority_score": 67,
+        "confidence": "high",
+        "confidence_label": "高",
+        "source_tier": "official",
+        "tags": [
+          "算力采购",
+          "能效约束",
+          "政策监管"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "能效考核趋严利好高能效产品线，建议在投标材料中前置能效实测数据。",
+        "category": "external",
+        "desk_eligible": true
+      },
+      {
+        "topic_id": "BR-CMP",
+        "item_id": "CMP-20260729-B19",
+        "title": "半导体行业观察：封测三巨头先进封装投入分化，产能分配影响国产GPU量产",
+        "summary": "长电、通富、华天在先进封装的投入强度与客户结构上分化明显，产能分配结果将直接影响国产 GPU 厂商下半年的量产交付节奏。",
+        "source_name": "半导体行业观察",
+        "source_url": "https://www.semiinsights.com/",
+        "sources": [
+          {
+            "name": "半导体行业观察",
+            "url": "https://www.semiinsights.com/"
+          }
+        ],
+        "published_at": "2026-07-26T23:09:14+08:00",
+        "collected_at": "2026-07-29T14:09:14+08:00",
+        "impact_level": "medium",
+        "impact_type": "chain",
+        "impact_label": "供应链传导",
+        "priority_score": 66,
+        "confidence": "high",
+        "confidence_label": "高",
+        "source_tier": "trade",
+        "tags": [
+          "封测上游",
+          "供应链传导"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "需确认自身在封测厂的产能优先级，必要时提前锁定第二供应。",
+        "category": "external",
+        "desk_eligible": true
+      },
+      {
+        "topic_id": "BR-POL",
+        "item_id": "POL-20260729-B20",
+        "title": "路透：美方拟进一步收紧先进AI芯片出口许可范围",
+        "summary": "据多方消息，美方正评估进一步收紧先进 AI 芯片及相关制造设备的出口许可范围，国内厂商的海外供应链与设备采购计划可能需要重新排期。",
+        "source_name": "路透",
+        "source_url": "https://www.reuters.com/",
+        "sources": [
+          {
+            "name": "路透",
+            "url": "https://www.reuters.com/"
+          }
+        ],
+        "published_at": "2026-07-26T20:09:14+08:00",
+        "collected_at": "2026-07-29T14:09:14+08:00",
+        "impact_level": "high",
+        "impact_type": "direct",
+        "impact_label": "直接影响",
+        "priority_score": 90,
+        "confidence": "medium",
+        "confidence_label": "中",
+        "source_tier": "official",
+        "tags": [
+          "出口管制",
+          "政策监管"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "出口许可范围变化牵动供应链与合规口径，建议法务与供应链当日评估替代路径。",
+        "category": "external",
+        "desk_eligible": true
+      },
+      {
+        "topic_id": "BR-CUS",
+        "item_id": "CUS-20260729-B21",
+        "title": "界面新闻：地方智算中心集采启动，国产算力卡配套比例成硬指标",
+        "summary": "多个地方智算中心项目启动集采，招标文件将国产算力卡配套比例列为硬性指标，并对交付周期与本地服务能力提出要求。",
+        "source_name": "界面新闻",
+        "source_url": "https://www.jiemian.com/",
+        "sources": [
+          {
+            "name": "界面新闻",
+            "url": "https://www.jiemian.com/"
+          }
+        ],
+        "published_at": "2026-07-26T17:09:14+08:00",
+        "collected_at": "2026-07-29T14:09:14+08:00",
+        "impact_level": "high",
+        "impact_type": "opportunity",
+        "impact_label": "新机会",
+        "priority_score": 89,
+        "confidence": "high",
+        "confidence_label": "高",
+        "source_tier": "official",
+        "tags": [
+          "算力采购",
+          "新机会",
+          "国产化"
+        ],
+        "related_metric_tags": [],
+        "biren_relevance": "配套比例成硬指标意味着投标窗口打开，建议销售即刻梳理在库项目清单。",
+        "category": "external",
+        "desk_eligible": true
+      }
+    ]
+  }
+}

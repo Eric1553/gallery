@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>钛虎机器人 · 供应链经营看板</title>
+  <meta name="description" content="钛虎机器人供应链经营看板 · 铂金商务视觉" />
+  <link rel="stylesheet" href="css/app.css?v=20260806n" />
+</head>
+<body>
+  <div class="app" id="app">
+    <header class="topbar">
+      <div class="brand-lockup">
+        <div class="brand-mark" aria-hidden="true">TH</div>
+        <div>
+          <div class="brand-name">钛虎机器人</div>
+          <div class="brand-sub">Robotics Ops · Light</div>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button type="button" class="icon-btn" id="prevBtn" aria-label="上一模块">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button type="button" class="icon-btn" id="nextBtn" aria-label="下一模块">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="filter-bar" id="filters">
+      <div class="filter-bar__inner">
+        <label class="filter-item">
+          <span>账套</span>
+          <select id="filterBook"></select>
+        </label>
+        <label class="filter-item">
+          <span>时间范围</span>
+          <select id="filterTime">
+            <option value="7d">近 7 日</option>
+            <option value="30d" selected>近 30 日</option>
+            <option value="90d">近 90 日</option>
+            <option value="ytd">今年至今</option>
+          </select>
+        </label>
+        <label class="filter-item">
+          <span>标准 / 非标</span>
+          <select id="filterStd">
+            <option value="all">全部</option>
+            <option value="标准">标准</option>
+            <option value="非标">非标</option>
+          </select>
+        </label>
+        <label class="filter-item">
+          <span>研发属性</span>
+          <select id="filterRd">
+            <option value="all">全部</option>
+            <option value="研发">研发</option>
+            <option value="非研发">非研发</option>
+          </select>
+        </label>
+        <label class="filter-check">
+          <input type="checkbox" id="filterInternal" checked />
+          <span>剔除内部交易</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="nav-label">模块</div>
+        <nav class="side-nav" id="sideNav" aria-label="模块导航"></nav>
+      </aside>
+
+      <main class="main" id="main">
+        <!-- 01 总览 -->
+        <section class="module is-active" data-module="overview" id="mod-overview">
+          <div class="module-head">
+            <h2>总览</h2>
+            <span class="badge badge--good">点击 KPI 下钻</span>
+          </div>
+          <div class="hud-strip" id="hudStrip"></div>
+          <div class="kpi-grid kpi-grid--viz" id="pulseGrid"></div>
+          <div class="panel mission-panel">
+            <div class="panel__head"><h3>业务链路</h3><span class="badge">任务轨道 · 点击跳转</span></div>
+            <div class="mission-track" id="overviewChain"></div>
+          </div>
+          <div class="panel-grid overview-lower">
+            <div class="panel">
+              <div class="panel__head"><h3>审批 SLA</h3><span class="badge badge--muted">仪表</span></div>
+              <div class="sla-dials" id="overviewSla"></div>
+            </div>
+            <div class="panel">
+              <div class="panel__head"><h3>执行漏斗</h3><span class="badge badge--muted">阶段转化</span></div>
+              <div class="vfunnel" id="overviewFunnel"></div>
+            </div>
+            <div class="panel">
+              <div class="panel__head"><h3>超时关注</h3><span class="badge badge--warn">热力</span></div>
+              <div class="rank-meters" id="overviewRank"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 02 审批时效 -->
+        <section class="module" data-module="approval" id="mod-approval">
+          <div class="module-head">
+            <h2>审批时效</h2>
+            <span class="badge badge--warn">飞书节点</span>
+          </div>
+          <div class="flow-cards" id="flowCards"></div>
+          <div class="panel-grid">
+            <div class="panel">
+              <div class="panel__head">
+                <h3 id="nodeTitle">节点停留时长</h3>
+                <span class="badge" id="flowSlaBadge">SLA</span>
+              </div>
+              <div class="node-bars" id="nodeBars"></div>
+              <div class="heat-block">
+                <div class="heat-row" id="heatRow" aria-label="时效热力"></div>
+                <div class="heat-labels" id="heatLabels"></div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel__head"><h3>超时排行</h3></div>
+              <ul class="rank-list" id="rankList"></ul>
+              <button type="button" class="ghost-btn" style="margin-top:14px;width:100%" id="openSampleTimeline">样例时间轴</button>
+            </div>
+          </div>
+          <div class="panel" style="margin-top:14px">
+            <div class="panel__head"><h3>超时单据</h3><span class="badge badge--warn" id="overdueCountBadge">重点</span></div>
+            <table class="data-table" id="approvalOverdueTable"></table>
+          </div>
+        </section>
+
+        <!-- 03 采购执行 -->
+        <section class="module" data-module="chain" id="mod-chain">
+          <div class="module-head">
+            <h2>采购执行</h2>
+            <span class="badge">飞书 → 金蝶</span>
+          </div>
+          <div class="panel-grid">
+            <div class="panel">
+              <div class="panel__head">
+                <h3>执行漏斗</h3>
+                <span class="badge" id="funnelFilterHint">筛选</span>
+              </div>
+              <div class="funnel" id="funnel"></div>
+            </div>
+            <div class="panel">
+              <div class="panel__head">
+                <h3>单据时间轴</h3>
+                <button type="button" class="ghost-btn" id="expandTimeline" style="height:28px;font-size:12px">抽屉展开</button>
+              </div>
+              <div class="timeline" id="timeline"></div>
+            </div>
+          </div>
+          <div class="panel" style="margin-top:14px">
+            <div class="panel__head"><h3>在途采购订单</h3><span class="badge">重点清单</span></div>
+            <table class="data-table" id="openPoTable"></table>
+          </div>
+        </section>
+
+        <!-- 04 来料质量 -->
+        <section class="module" data-module="quality" id="mod-quality">
+          <div class="module-head">
+            <h2>来料质量</h2>
+            <div class="tag-row">
+              <span class="badge badge--muted">过程检 · 后续</span>
+              <span class="badge badge--muted">成品检 · 后续</span>
+            </div>
+          </div>
+          <div class="stat-trio" id="qualityStats"></div>
+          <div class="panel-grid panel-grid--quality-dense">
+            <div class="panel">
+              <div class="panel__head"><h3>合格率趋势</h3></div>
+              <div class="chart-box" id="qualityChart"></div>
+            </div>
+            <div class="panel">
+              <div class="panel__head"><h3>供应商合格率</h3><span class="badge badge--warn">低合格重点</span></div>
+              <table class="data-table" id="qualitySupplierTable"></table>
+            </div>
+          </div>
+          <div class="panel" style="margin-top:14px">
+            <div class="panel__head"><h3>近期不合格</h3></div>
+            <table class="data-table" id="qualityFailTable"></table>
+          </div>
+        </section>
+
+        <!-- 05 仓储 -->
+        <section class="module" data-module="warehouse" id="mod-warehouse">
+          <div class="module-head">
+            <h2>仓储</h2>
+            <span class="badge badge--muted">周转率 · 暂无</span>
+          </div>
+          <div class="panel-grid">
+            <div class="panel">
+              <div class="panel__head"><h3>出入库</h3></div>
+              <table class="move-table" id="moveTable"></table>
+            </div>
+            <div class="panel">
+              <div class="panel__head"><h3>库龄分布</h3></div>
+              <div class="age-bars" id="ageBars"></div>
+            </div>
+          </div>
+          <div class="panel" style="margin-top:14px">
+            <div class="panel__head"><h3>收发存</h3></div>
+            <div class="stock-strip" id="stockStrip"></div>
+          </div>
+          <div class="panel" style="margin-top:14px">
+            <div class="panel__head"><h3>风险物料</h3><span class="badge badge--warn">库龄 / 呆滞候选</span></div>
+            <table class="data-table" id="warehouseRiskTable"></table>
+          </div>
+        </section>
+
+        <!-- 06 项目交期 -->
+        <section class="module" data-module="project" id="mod-project">
+          <div class="module-head">
+            <h2>项目交期</h2>
+            <span class="badge" id="projectFilterBadge">筛选</span>
+          </div>
+          <div class="stat-trio" id="projectSummary"></div>
+          <div class="panel">
+            <div class="panel__head"><h3>项目采购清单</h3></div>
+            <table class="data-table" id="projectTable"></table>
+          </div>
+        </section>
+
+        <!-- 07 内部交易 -->
+        <section class="module" data-module="internal" id="mod-internal">
+          <div class="module-head">
+            <h2>内部交易</h2>
+            <span class="badge" id="internalBadge">剔除：开</span>
+          </div>
+          <div class="stat-trio" id="internalSummary"></div>
+          <div class="bridge" id="bridge"></div>
+          <div class="panel" style="margin-top:14px">
+            <div class="panel__head"><h3>桥接单据</h3><span class="badge">A-PO → B-SO</span></div>
+            <table class="data-table" id="bridgeTable"></table>
+          </div>
+        </section>
+
+        <!-- 08 经营闭环 -->
+        <section class="module" data-module="loop" id="mod-loop">
+          <div class="module-head">
+            <h2>经营闭环</h2>
+            <span class="badge">线索 → 应收 · CRM×ERP</span>
+          </div>
+          <div class="kpi-grid kpi-grid--loop" id="loopKpis"></div>
+          <div class="panel orbit-panel">
+            <div class="panel__head"><h3>闭环轨道</h3><span class="badge">CRM × ERP 全链路</span></div>
+            <div class="orbit" id="loopRail"></div>
+          </div>
+          <div class="panel-grid loop-mid">
+            <div class="panel">
+              <div class="panel__head"><h3>阶段转化</h3><span class="badge badge--muted">转化率 · 周期</span></div>
+              <table class="data-table" id="loopConvTable"></table>
+            </div>
+            <div class="panel">
+              <div class="panel__head"><h3>断点关注</h3><span class="badge badge--warn">跨系统</span></div>
+              <table class="data-table" id="loopBottleneckTable"></table>
+            </div>
+          </div>
+          <div class="panel-grid loop-systems">
+            <div class="panel" id="loopSys0"></div>
+            <div class="panel" id="loopSys1"></div>
+            <div class="panel" id="loopSys2"></div>
+          </div>
+          <div class="panel-grid loop-tables">
+            <div class="panel">
+              <div class="panel__head"><h3>在途商机</h3><span class="badge">纷享销客</span></div>
+              <table class="data-table" id="loopDealTable"></table>
+            </div>
+            <div class="panel">
+              <div class="panel__head"><h3>应收跟进</h3><span class="badge">金蝶</span></div>
+              <table class="data-table" id="loopArTable"></table>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <span id="footerText">演示数据</span>
+    </footer>
+  </div>
+
+  <div class="drawer-scrim" id="drawerScrim"></div>
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer__head">
+      <h3 id="drawerTitle">明细</h3>
+      <button type="button" class="icon-btn" id="drawerClose" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="drawer__body" id="drawerBody"></div>
+  </aside>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" crossorigin="anonymous"></script>
+  <script src="js/data.js?v=20260806n"></script>
+  <script src="js/app.js?v=20260806n"></script>
+</body>
+</html>

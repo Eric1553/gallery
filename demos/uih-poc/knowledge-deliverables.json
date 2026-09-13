@@ -1,0 +1,83 @@
+{
+  "version": "2.0",
+  "domain": "service",
+  "description": "知识产出 ① 本体与交付物元数据 · SOP/经验索引由 poc-chunk-profiles.json 动态生成",
+  "deliverables": [
+    {
+      "id": "ontology",
+      "num": "①",
+      "title": "本体建模与关系矩阵",
+      "status": "partial",
+      "status_label": "PoC 已实现 · 隐含于图谱 JSON",
+      "live_sources": ["knowledge-deliverables.json", "service-fault-graph.json"]
+    },
+    {
+      "id": "fault_graph",
+      "num": "②",
+      "title": "故障诊断知识图谱",
+      "status": "done",
+      "status_label": "可视化 + MCP lookup",
+      "live_sources": ["service-fault-graph.json", "/knowledge-graph.html"]
+    },
+    {
+      "id": "sop_kb",
+      "num": "③",
+      "title": "维修 SOP 知识库",
+      "status": "partial",
+      "status_label": "Doris RAG + 机型×故障码（catalog 驱动）",
+      "live_sources": ["poc-chunk-profiles.json", "kb.uih_doc_chunks"]
+    },
+    {
+      "id": "experience_kb",
+      "num": "④",
+      "title": "经验知识库",
+      "status": "partial",
+      "status_label": "经验文档 RAG + catalog 置信度标签",
+      "live_sources": ["poc-chunk-profiles.json", "kb.uih_doc_chunks"]
+    }
+  ],
+  "ontology": {
+    "entities": [
+      {
+        "id": "equipment",
+        "label_zh": "设备",
+        "label_en": "Equipment",
+        "graph_node_types": ["error_code"],
+        "examples": ["uCT960 · E1001", "uMR790 · E6xxx"],
+        "doris_field": "device_model / domain=service"
+      },
+      {
+        "id": "fault",
+        "label_zh": "故障",
+        "label_en": "Fault",
+        "graph_node_types": ["error_code", "symptom", "root_cause"],
+        "examples": ["E1001", "旋转阳极转速不足", "旋转阳极卡死"],
+        "doris_field": "content keywords / doc_type"
+      },
+      {
+        "id": "solution",
+        "label_zh": "方案",
+        "label_en": "Solution",
+        "graph_node_types": ["solution", "spare_part"],
+        "examples": ["球管更换 SOP", "UI-CT-TUBE-960"],
+        "doris_field": "doc_type=SOP|spare_part"
+      },
+      {
+        "id": "experience",
+        "label_zh": "经验",
+        "label_en": "Experience",
+        "graph_node_types": ["root_cause", "report", "risk"],
+        "examples": ["34.3% 旋转阳极卡死", "Q1 更换统计"],
+        "doris_field": "doc_type=experience|report"
+      }
+    ],
+    "relations": [
+      { "from": "equipment", "to": "fault", "relation_zh": "上报/表现", "graph_edge": "manifests", "cardinality": "1:N" },
+      { "from": "fault", "to": "fault", "relation_zh": "可能根因", "graph_edge": "likely_cause / check_first", "cardinality": "1:N", "has_weight": true },
+      { "from": "fault", "to": "solution", "relation_zh": "推荐处置", "graph_edge": "recommend", "cardinality": "N:M" },
+      { "from": "solution", "to": "solution", "relation_zh": "所需备件", "graph_edge": "requires_part", "cardinality": "1:1" },
+      { "from": "fault", "to": "experience", "relation_zh": "案例佐证", "graph_edge": "documented_in", "cardinality": "N:M", "has_weight": true },
+      { "from": "solution", "to": "experience", "relation_zh": "供应/用量统计", "graph_edge": "check_supply / usage_stats", "cardinality": "1:N" }
+    ]
+  }
+}

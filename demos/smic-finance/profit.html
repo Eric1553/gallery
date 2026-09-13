@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>盈利效率分析 | 财经驾驶舱</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="logo-area">
+      <div class="logo-mark">SMIC</div>
+      <div class="logo-text"><h1>财经驾驶舱</h1><span>盈利 · L2 经营成效</span></div>
+    </div>
+    <nav class="header-nav">
+      <a href="index.html" data-page="overview">总览</a>
+      <a href="revenue.html" data-page="revenue">收入专题</a>
+      <a href="cost.html" data-page="cost">成本专题</a>
+      <a href="profit.html" data-page="profit" class="active">盈利效率</a>
+      <a href="dupont-site.html" data-page="dupont">杜邦分析</a>
+    </nav>
+    <div class="header-meta"><span class="badge-proto">HTML 原型</span></div>
+  </header>
+
+  <div class="app-body">
+    <aside class="sidebar"></aside>
+
+    <main class="main-content">
+      <div class="page-toolbar">
+        <div class="toolbar-head">
+          <div class="page-title">盈利效率分析<span class="level-tag">L2 经营成效</span></div>
+          <div class="page-desc">数据来源 BOSS · 集团考核/单体口径 · 成本/毛利/收入必做 · 科目树形展开（公式特殊，需对账）</div>
+        </div>
+        <div class="toolbar-controls">
+          <div class="seg-group" data-tab-group="period">
+            <span class="seg-label">周期</span>
+            <button class="sub-tab-btn active" data-value="month">月度</button>
+            <button class="sub-tab-btn" data-value="quarter">季度</button>
+          </div>
+          <div class="seg-group" data-tab-group="scope">
+            <span class="seg-label">口径</span>
+            <button class="sub-tab-btn active" data-value="group">集团考核</button>
+            <button class="sub-tab-btn" data-value="single">单体</button>
+          </div>
+        </div>
+        <div class="filter-bar" id="filter-bar"></div>
+      </div>
+      <div class="kpi-row" id="kpi-profit"></div>
+
+      <div class="panel-grid">
+        <div class="panel col-7">
+          <div class="panel-header"><span class="panel-title">毛利分组织（BU 内 FAB 堆积 · 悬浮显示占比 · 无 Others）</span></div>
+          <div class="panel-body"><div class="chart-box" id="chart-profit-stack"></div></div>
+        </div>
+        <div class="panel col-5">
+          <div class="panel-header"><span class="panel-title">毛利率分组织（柱状图）</span></div>
+          <div class="panel-body"><div class="chart-box" id="chart-margin-bar"></div></div>
+        </div>
+        <div class="panel col-4">
+          <div class="panel-header"><span class="panel-title">标准毛利结构（晶圆 / 非晶圆）</span></div>
+          <div class="panel-body"><div class="chart-box sm" id="chart-std-pie"></div></div>
+        </div>
+        <div class="panel col-4">
+          <div class="panel-header"><span class="panel-title">晶圆标准毛利 · 技术平台</span></div>
+          <div class="panel-body"><div class="chart-box sm" id="chart-platform-profit"></div></div>
+        </div>
+        <div class="panel col-4">
+          <div class="panel-header"><span class="panel-title">晶圆标准毛利 · 技术节点</span></div>
+          <div class="panel-body"><div class="chart-box sm" id="chart-node-profit"></div></div>
+        </div>
+        <div class="panel col-12">
+          <div class="panel-header"><span class="panel-title">毛利结构明细表（科目树形展开 · 各月毛利）</span></div>
+          <div class="panel-body" style="overflow-x:auto">
+            <table class="data-table">
+              <thead><tr><th>科目</th><th class="text-right">01月</th><th class="text-right">02月</th><th class="text-right">03月</th><th class="text-right">04月</th><th class="text-right">05月</th><th class="text-right">06月</th><th class="text-right">07月</th></tr></thead>
+              <tbody>
+                <tr><td><strong>毛利</strong></td><td class="num">82.1</td><td class="num">84.5</td><td class="num">86.2</td><td class="num">85.8</td><td class="num">87.5</td><td class="num">88.1</td><td class="num">89.2</td></tr>
+                <tr><td>　└ 晶圆毛利</td><td class="num">68.5</td><td class="num">70.2</td><td class="num">71.8</td><td class="num">71.2</td><td class="num">72.5</td><td class="num">73.1</td><td class="num">74.2</td></tr>
+                <tr><td>　└ 非晶圆毛利</td><td class="num">13.6</td><td class="num">14.3</td><td class="num">14.4</td><td class="num">14.6</td><td class="num">15.0</td><td class="num">15.0</td><td class="num">15.0</td></tr>
+                <tr><td>　└ Variance</td><td class="num down">-3.8</td><td class="num down">-3.5</td><td class="num down">-3.2</td><td class="num down">-3.4</td><td class="num down">-3.3</td><td class="num down">-3.3</td><td class="num down">-3.3</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="panel col-6">
+          <div class="panel-header"><span class="panel-title">标准晶圆毛利 TOP20 客户</span></div>
+          <div class="panel-body">
+            <table class="data-table">
+              <thead><tr><th>本期排名</th><th>上期排名</th><th>客户</th><th class="text-right">本期值</th><th class="text-right">环比</th><th class="text-right">占比</th></tr></thead>
+              <tbody id="top-profit-customers"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="panel col-6">
+          <div class="panel-header">
+            <span class="panel-title">毛利/毛利率趋势（目标 vs 实际 · 预测切换）</span>
+            <div class="panel-actions" data-toggle-group data-chart="chart-profit-trend">
+              <button class="sub-tab-btn active" data-mode="trend">趋势</button>
+              <button class="sub-tab-btn" data-mode="forecast">预测</button>
+            </div>
+          </div>
+          <div class="panel-body"><div class="chart-box" id="chart-profit-trend"></div></div>
+        </div>
+        <div class="panel col-12">
+          <div class="panel-header"><span class="panel-title">毛利/毛利率趋势分组织（多 FAB · 实际实柱 + 预测虚线）</span></div>
+          <div class="panel-body"><div class="chart-box lg" id="chart-profit-by-fab"></div></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="assets/js/echarts.min.js"></script>
+  <script src="assets/js/mock-data.js"></script>
+  <script src="assets/js/levels.js"></script>
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/charts.js"></script>
+  <script>
+    boot(function () {
+      Cockpit.initNav('profit');
+      Cockpit.renderFilterBar(document.getElementById('filter-bar'), { showVersion: true });
+      Cockpit.renderKpis(document.getElementById('kpi-profit'), MockData.profitKpis);
+      const bus = MockData.profitByOrg.map(o => o.bu);
+      Charts.stackedBar(document.getElementById('chart-profit-stack'), bus,
+        ['Fab1', 'Fab2', 'Fab3', 'Fab4'].map((name, fi) => ({
+          name, data: MockData.profitByOrg.map(o => o.fabs[fi]?.value || 0)
+        }))
+      );
+      Charts.bar(document.getElementById('chart-margin-bar'), bus,
+        [{ name: '毛利率%', data: [24.2, 22.8, 21.5], color: '#52c41a' }]);
+      Charts.pie(document.getElementById('chart-std-pie'), [{ name: '晶圆', value: 74.2 }, { name: '非晶圆', value: 15.0 }]);
+      Charts.pie(document.getElementById('chart-platform-profit'), MockData.waferByPlatform);
+      Charts.bar(document.getElementById('chart-node-profit'), ['7nm', '14nm', '28nm', '40nm', '55nm'],
+        [{ name: '毛利(亿)', data: [18, 22, 15, 10, 8], color: '#005293' }]);
+      Cockpit.renderCustomerTable(
+        document.querySelector('#top-profit-customers'),
+        MockData.topCustomers.slice(0, 6).map(c => ({ ...c, value: +(c.value * 0.35).toFixed(2), ratio: +(c.ratio * 0.9).toFixed(1) })),
+        { prevRank: true, showMom: true }
+      );
+      function renderProfitTrend(mode) {
+        if (mode === 'forecast') {
+          Charts.comboTrend(document.getElementById('chart-profit-trend'), MockData.months.concat(['2026-01']), 9);
+        } else {
+          Charts.line(document.getElementById('chart-profit-trend'), MockData.months, [
+            { name: '目标毛利', data: MockData.trendTarget.map(v => +(v * 0.28).toFixed(1)), color: '#91caff', dashed: true },
+            { name: '实际毛利', data: MockData.trendActual.map(v => +(v * 0.28).toFixed(1)), color: '#1890ff', area: true }
+          ]);
+        }
+      }
+      renderProfitTrend('trend');
+      document.addEventListener('cockpit:chartmode', e => {
+        if (e.detail.chartId === 'chart-profit-trend') renderProfitTrend(e.detail.mode);
+      });
+      Charts.comboTrend(document.getElementById('chart-profit-by-fab'), MockData.months, 9);
+    });
+  </script>
+</body>
+</html>

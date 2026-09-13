@@ -1,0 +1,1280 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>通用检索中台（KMS + Knowhow）</title>
+  <style>
+    :root {
+      --bg: #f5f8ff;
+      --card: #fff;
+      --line: #dce6fa;
+      --text: #21314f;
+      --muted: #64789d;
+      --brand: #3f78ff;
+      --brand-soft: #ecf3ff;
+      --ok: #1c9d78;
+      --warn: #b17b1f;
+      --err: #cc4a4a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background: radial-gradient(circle at 10% -20%, #eaf1ff 0%, transparent 45%), var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+    .app {
+      max-width: 1680px;
+      margin: 0 auto;
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 8px 22px rgba(29, 54, 108, .08);
+      min-width: 0;
+    }
+    .title { margin: 0; font-size: 22px; }
+    .title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .svc {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      background: #fbfdff;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-weight: 700;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #c6d3ea;
+      box-shadow: 0 0 0 2px rgba(198,211,234,.35);
+    }
+    .dot.ok { background: #21a878; box-shadow: 0 0 0 2px rgba(33,168,120,.22); }
+    .dot.err { background: #d04d4d; box-shadow: 0 0 0 2px rgba(208,77,77,.22); }
+    .sub { margin: 6px 0 0; color: var(--muted); font-size: 12px; }
+    /* 主检索行：恢复 5 列，避免挤扁（一页纸入口移到次行） */
+    .bar-main {
+      display: grid;
+      grid-template-columns: 1.35fr 0.9fr 0.65fr 0.9fr 0.6fr;
+      gap: 8px;
+      align-items: center;
+    }
+    .bar-extra {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .bar-extra .view-tabs {
+      margin-top: 0;
+      flex: 1;
+      min-width: 0;
+    }
+    .toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      padding: 8px 10px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+      min-height: 40px;
+    }
+    .toggle-wrap input[type="checkbox"] {
+      width: 14px;
+      height: 14px;
+      accent-color: var(--brand);
+    }
+    input, select, button {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--text);
+      padding: 10px 12px;
+      font-size: 13px;
+    }
+    input:focus, select:focus { outline: none; border-color: #bfd1ff; box-shadow: 0 0 0 3px rgba(63,120,255,.12); }
+    button {
+      border: 0;
+      cursor: pointer;
+      font-weight: 700;
+      background: linear-gradient(180deg, #6f99ff, #3f78ff);
+      color: #fff;
+    }
+    .btn-ghost {
+      background: #eff4ff;
+      color: #2f4f8f;
+      border: 1px solid #ceddfa;
+    }
+    .guide {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    .view-tabs {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .view-tab {
+      width: auto;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--muted);
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .view-tab.active {
+      color: #fff;
+      border-color: var(--brand);
+      background: linear-gradient(180deg, #6f99ff, #3f78ff);
+    }
+    /* view-panel 单独控制显隐；grid 在内层，避免 display:grid 覆盖 display:none */
+    .view-panel { display: none; }
+    .view-panel.active { display: block; }
+    .summary-body {
+      max-height: calc(100vh - 260px);
+      overflow: auto;
+      padding-right: 4px;
+    }
+    .summary-tools {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 8px 0 10px;
+    }
+    .summary-tools a {
+      display: inline-block;
+      border: 1px solid #ceddfa;
+      background: #eff4ff;
+      color: #2f4f8f;
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .summary-layout {
+      display: grid;
+      grid-template-columns: 1.05fr 1.45fr;
+      gap: 10px;
+    }
+    .summary-box {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fcfdff;
+      padding: 10px;
+    }
+    .summary-box h4 {
+      margin: 0 0 8px;
+      font-size: 14px;
+    }
+    .summary-list {
+      margin: 0;
+      padding-left: 16px;
+      color: #31466f;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .summary-list li { margin-bottom: 6px; }
+    .summary-items .item { cursor: default; }
+    .grid {
+      display: grid;
+      grid-template-columns: 0.92fr 1.3fr 1.3fr;
+      gap: 10px;
+      min-height: 560px;
+      min-width: 0;
+    }
+    .panel-title {
+      margin: 0 0 8px;
+      font-size: 14px;
+      font-weight: 800;
+    }
+    .chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin: 6px 0 0;
+    }
+    .chip {
+      font-size: 11px;
+      color: #31579d;
+      border: 1px solid #d1dfff;
+      border-radius: 999px;
+      background: var(--brand-soft);
+      padding: 4px 8px;
+      font-weight: 700;
+    }
+    .chip.src-kms { background: #eef7ff; border-color: #cde5ff; color: #2560b4; }
+    .chip.src-knowhow { background: #effcf8; border-color: #cdeede; color: #237a59; }
+    .status { margin-top: 8px; font-size: 12px; color: var(--muted); font-weight: 700; }
+    .status.ok { color: var(--ok); }
+    .status.warn { color: var(--warn); }
+    .status.err { color: var(--err); }
+    .list {
+      max-height: 680px;
+      overflow: auto;
+      padding-right: 4px;
+      min-width: 0;
+    }
+    .result-tabs {
+      display: flex;
+      gap: 8px;
+      margin: 0 0 8px;
+      flex-wrap: wrap;
+    }
+    .result-tab {
+      width: auto;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--muted);
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .result-tab.active {
+      color: #fff;
+      border-color: var(--brand);
+      background: linear-gradient(180deg, #6f99ff, #3f78ff);
+    }
+    .item {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 9px;
+      margin-bottom: 8px;
+      background: #fff;
+      cursor: pointer;
+      min-width: 0;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    .item.active { border-color: #91b4ff; background: #f5f9ff; }
+    .i-title { font-size: 13px; font-weight: 800; line-height: 1.45; }
+    .i-sub { margin-top: 4px; font-size: 11px; color: var(--muted); }
+    .i-brief {
+      margin-top: 5px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #31466f;
+      background: #f7faff;
+      border: 1px solid #e1eafb;
+      border-radius: 8px;
+      padding: 6px 8px;
+    }
+    .priority-badge {
+      display: inline-block;
+      margin-top: 4px;
+      font-size: 11px;
+      font-weight: 800;
+      color: #8a5c00;
+      background: #fff7df;
+      border: 1px solid #f3d58a;
+      border-radius: 999px;
+      padding: 2px 7px;
+    }
+    .sim-toggle {
+      margin-top: 6px;
+      width: auto;
+      border: 1px dashed #c9d7f1;
+      border-radius: 8px;
+      background: #f8fbff;
+      color: #4a679e;
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .sim-list {
+      margin-top: 5px;
+      border: 1px dashed #d7e3f7;
+      border-radius: 8px;
+      padding: 6px 8px;
+      background: #fcfdff;
+      font-size: 11px;
+      color: #4f6390;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    .star {
+      color: #e1a100;
+      font-weight: 900;
+      margin-right: 4px;
+    }
+    .detail {
+      max-height: 680px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fcfdff;
+      padding: 10px;
+      font-size: 13px;
+      line-height: 1.65;
+      min-width: 0;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    .detail h4 { margin: 4px 0 6px; font-size: 14px; }
+    .detail .muted { color: var(--muted); font-size: 12px; }
+    .detail p, .detail div, .detail a, .i-title, .i-sub, .i-brief {
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    .att a {
+      display: inline-block;
+      margin: 0 8px 6px 0;
+      font-size: 12px;
+      max-width: 100%;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    @media (max-width: 1320px) {
+      .bar-main, .auth, .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section class="card">
+      <div class="title-row">
+        <h1 class="title">通用检索中台（KMS + Knowhow）</h1>
+        <div id="serviceBadge" class="svc"><span id="serviceDot" class="dot"></span><span id="serviceText">检测中…</span></div>
+      </div>
+      <script>
+      (function () {
+        window.__workbenchProxyBase = (function () {
+          try {
+            if (window.location.protocol === "file:")
+              return "http://127.0.0.1:8765";
+            var host = String(window.location.hostname || "");
+            var port = String(window.location.port || "");
+            if (host === "localhost" || host === "127.0.0.1") {
+              if (port && port !== "8765")
+                return "http://127.0.0.1:8765";
+              return "";
+            }
+            return "";
+          } catch (e) {
+            return "http://127.0.0.1:8765";
+          }
+        })();
+        /* 单一实现：主脚本只调用 window.__proxyHealthPing；仅此处注册定时器，避免双 interval 竞态导致一直「检测中」 */
+        var reqSeq = 0;
+        var fallbackTimer = null;
+        function proxyHealthPing() {
+          var dot = document.getElementById("serviceDot");
+          var txt = document.getElementById("serviceText");
+          if (!dot || !txt) return;
+          var id = ++reqSeq;
+          if (fallbackTimer) {
+            window.clearTimeout(fallbackTimer);
+            fallbackTimer = null;
+          }
+          txt.textContent = "检测中…";
+          dot.className = "dot";
+          var path = "/api/health?nocache=" + Date.now();
+          var base = window.__workbenchProxyBase;
+          var href = base ? base.replace(/\/$/, "") + path : path;
+          var settled = false;
+          function settle(ok) {
+            if (id !== reqSeq || settled) return;
+            settled = true;
+            if (fallbackTimer) {
+              window.clearTimeout(fallbackTimer);
+              fallbackTimer = null;
+            }
+            if (ok) {
+              txt.textContent = "本地代理在线";
+              dot.className = "dot ok";
+            } else {
+              txt.textContent = "本地代理离线";
+              dot.className = "dot err";
+            }
+          }
+          fallbackTimer = window.setTimeout(function () {
+            fallbackTimer = null;
+            settle(false);
+          }, 5000);
+          var xhr = new XMLHttpRequest();
+          xhr.timeout = 5000;
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState !== 4) return;
+            settle(xhr.status === 200);
+          };
+          xhr.onerror = function () { settle(false); };
+          xhr.ontimeout = function () { settle(false); };
+          xhr.open("GET", href, true);
+          try {
+            xhr.send(null);
+          } catch (e1) {
+            settle(false);
+          }
+        }
+        window.__proxyHealthPing = proxyHealthPing;
+        proxyHealthPing();
+        window.setInterval(proxyHealthPing, 10000);
+        document.addEventListener("visibilitychange", function () {
+          if (document.visibilityState === "visible" && window.__proxyHealthPing) window.__proxyHealthPing();
+        });
+      })();
+      </script>
+      <p class="sub">沿用你之前页面的“输入需求 -> 自动解析 -> 结构化结果”逻辑，升级为双源联合检索：同一请求同时查询 Knowhow 与 KMS，并在结果中清晰标注来源与可复用程度。</p>
+      <div class="bar bar-main">
+        <input id="queryInput" placeholder="示例：半导体客户预算管控场景，找可复用案例卡片和汇报页面，优先近一年" />
+        <select id="sourceSelect">
+          <option value="both">检索范围：Knowhow + KMS</option>
+          <option value="knowhow">仅 Knowhow</option>
+          <option value="kms">仅 KMS</option>
+        </select>
+        <input id="topkInput" type="number" min="10" max="100" step="10" value="40" />
+        <label class="toggle-wrap">
+          <input id="includePersonalToggle" type="checkbox" />
+          <span>包含个人沉淀（高相关）</span>
+        </label>
+        <button id="runBtn">开始检索</button>
+      </div>
+      <div class="bar-extra">
+        <button id="exportHtmlBtn" class="btn-ghost" style="width:auto;min-width:108px;">生成一页纸</button>
+        <div id="viewTabs" class="view-tabs">
+          <button type="button" class="view-tab active" data-view="workspace">检索工作台</button>
+          <button type="button" class="view-tab" data-view="summary">一页纸检索</button>
+        </div>
+      </div>
+      <div class="guide">
+        通用标签体系：行业、场景主题、资料类型、对象角色、区域、时间偏好。<br />
+        默认使用本机代理（内置 Cursor MCP 配置）检索 KMS 全部可访问空间；Knowhow 与 KMS 标签并不完全同构，系统会做分源映射。<br />
+        本地开发默认代理：<code>http://127.0.0.1:8765</code>（运行 <code>unified_search_proxy.py</code>）。<br />
+        <strong>推荐：</strong><code>/workbench</code> 与 API 同源访问；云端部署时将整站发布在同一域名下即可，无需写死端口。
+      </div>
+    </section>
+
+    <section id="workspacePanel" class="view-panel active">
+      <div class="grid">
+        <section class="card">
+          <h3 class="panel-title">检索条件（业务可读）</h3>
+          <div id="commonTags" class="chips"></div>
+          <h3 class="panel-title" style="margin-top:12px;">Knowhow 条件映射</h3>
+          <div id="knowhowTags" class="chips"></div>
+          <h3 class="panel-title" style="margin-top:12px;">KMS 条件映射</h3>
+          <div id="kmsTags" class="chips"></div>
+          <div id="status" class="status">等待检索</div>
+        </section>
+
+        <section class="card">
+          <h3 class="panel-title">联合结果索引（按来源混排）</h3>
+          <div id="resultTabs" class="result-tabs"></div>
+          <div id="listBox" class="list"></div>
+        </section>
+
+        <section class="card">
+          <h3 class="panel-title">结果详情（结构化摘要 + 附件）</h3>
+          <div id="detailBox" class="detail">点击左侧结果查看详情。</div>
+        </section>
+      </div>
+    </section>
+    <section id="summaryPanel" class="card view-panel">
+      <h3 class="panel-title">一页纸检索（基于当前问题的材料整理）</h3>
+      <p class="sub" style="margin-top:4px;">此处不重复检索列表，只根据检索结果做问题导向的归纳与阅读路径；详细条目请回到「检索工作台」。</p>
+      <div class="summary-tools">
+        <button id="refreshSummaryBtn" class="btn-ghost" style="width:auto;">刷新一页纸</button>
+        <a id="summaryDownloadLink" href="#" download="检索一页纸.html">下载 HTML</a>
+      </div>
+      <div id="summaryContent" class="summary-body muted">先执行一次检索，再点「生成一页纸」。</div>
+    </section>
+  </div>
+
+  <script>
+    /* 与 API 同源部署（含 HTTPS 公网）时用相对路径；本机 file:// 或非 8765 的本地静态页仍指向 127.0.0.1:8765 */
+    var PROXY_BASE = typeof window.__workbenchProxyBase === "string" ? window.__workbenchProxyBase : "";
+    const DEFAULT_PREFILL = {
+    };
+    const el = {
+      q: document.getElementById("queryInput"),
+      src: document.getElementById("sourceSelect"),
+      topk: document.getElementById("topkInput"),
+      run: document.getElementById("runBtn"),
+      exportHtml: document.getElementById("exportHtmlBtn"),
+      includePersonal: document.getElementById("includePersonalToggle"),
+      commonTags: document.getElementById("commonTags"),
+      knowhowTags: document.getElementById("knowhowTags"),
+      kmsTags: document.getElementById("kmsTags"),
+      resultTabs: document.getElementById("resultTabs"),
+      list: document.getElementById("listBox"),
+      detail: document.getElementById("detailBox"),
+      status: document.getElementById("status"),
+      serviceBadge: document.getElementById("serviceBadge"),
+      serviceDot: document.getElementById("serviceDot"),
+      serviceText: document.getElementById("serviceText"),
+      viewTabs: document.getElementById("viewTabs"),
+      workspacePanel: document.getElementById("workspacePanel"),
+      summaryPanel: document.getElementById("summaryPanel"),
+      refreshSummary: document.getElementById("refreshSummaryBtn"),
+      summaryContent: document.getElementById("summaryContent"),
+      summaryDownloadLink: document.getElementById("summaryDownloadLink"),
+    };
+
+    const state = {
+      rows: [],
+      activeId: "",
+      parsed: null,
+      sourceTab: "all",
+      expandedSimilar: new Set(),
+      recommendedIds: new Set(),
+      activeView: "workspace",
+      summaryHtml: "",
+      summaryBlobUrl: "",
+    };
+
+    const esc = (s) => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    const uniq = (arr) => [...new Set(arr.filter(Boolean))];
+    const toList = (str) => (str || "").split(/[,，、\s/]+/).map(x => x.trim()).filter(Boolean);
+    const pick = (obj, keys, fb = "") => keys.map(k => (obj && obj[k])).find(v => v !== undefined && v !== null && v !== "") || fb;
+    const stripHtml = (html) => String(html || "").replace(/<style[\s\S]*?<\/style>/gi, " ").replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+    const toNum = (v, fb = 0) => {
+      const n = Number(v);
+      return Number.isFinite(n) ? n : fb;
+    };
+    const REC_LABEL = "统一推荐";
+    const clamp01 = (x) => Math.max(0, Math.min(1, x));
+    const sigmoid01 = (x) => 1 / (1 + Math.exp(-x));
+    const uniqTokens = (arr) => [...new Set((arr || []).filter(Boolean).map(x => String(x).trim()).filter(Boolean))];
+    function tokenizeText(text) {
+      return uniqTokens((String(text || "").toLowerCase().match(/[\u4e00-\u9fa5a-z0-9._-]{2,}/g) || []));
+    }
+    function rowTextSimilarity(a, b) {
+      const sa = new Set(tokenizeText(`${a.title || ""} ${a.summary || ""}`));
+      const sb = new Set(tokenizeText(`${b.title || ""} ${b.summary || ""}`));
+      if (!sa.size || !sb.size) return 0;
+      let inter = 0;
+      sa.forEach((t) => { if (sb.has(t)) inter += 1; });
+      return inter / Math.max(1, sa.size + sb.size - inter);
+    }
+    function queryTermsFromState() {
+      if (!state.parsed) return [];
+      const fromKms = (state.parsed.kms && state.parsed.kms.keywords) || [];
+      const qPayload = state.parsed.knowhow && state.parsed.knowhow.payload && state.parsed.knowhow.payload.query;
+      const fromKnowhow = String(qPayload || "").split(/\s+/).filter(Boolean);
+      return uniqTokens([].concat(fromKms, fromKnowhow)).slice(0, 8);
+    }
+    function intentMatchScore(row, queryTerms) {
+      if (!queryTerms.length) return 0.55;
+      const text = `${row.title || ""} ${row.summary || ""} ${(row.key_terms || []).join(" ")}`.toLowerCase();
+      const hit = queryTerms.reduce((n, t) => n + (text.includes(String(t).toLowerCase()) ? 1 : 0), 0);
+      return clamp01(hit / Math.max(1, queryTerms.length));
+    }
+    function sourceCalibratedScore(rows) {
+      const scoreMap = new Map();
+      const groups = {
+        KMS: rows.filter(r => r.source === "KMS"),
+        Knowhow: rows.filter(r => r.source === "Knowhow"),
+      };
+      Object.entries(groups).forEach(([src, arr]) => {
+        if (!arr.length) return;
+        const tab = src === "KMS" ? "kms" : "knowhow";
+        const baseVals = arr.map(r => rankRow(r, tab));
+        const mean = baseVals.reduce((a, b) => a + b, 0) / Math.max(1, baseVals.length);
+        const variance = baseVals.reduce((a, v) => a + Math.pow(v - mean, 2), 0) / Math.max(1, baseVals.length);
+        const std = Math.sqrt(variance) || 1;
+        const sorted = [...arr].sort((a, b) => rankRow(b, tab) - rankRow(a, tab));
+        sorted.forEach((r, i) => {
+          const percentile = sorted.length <= 1 ? 1 : 1 - (i / (sorted.length - 1));
+          const z = (rankRow(r, tab) - mean) / std;
+          const z01 = sigmoid01(z);
+          scoreMap.set(r._id, 0.62 * percentile + 0.38 * z01);
+        });
+      });
+      return scoreMap;
+    }
+    function rankRow(row, tab) {
+      const base = toNum(row.score, 0.5);
+      const att = Math.min(1, ((row.attachments && row.attachments.length) || 0) / 6);
+      const scope = String(row.material_scope || "");
+      const star = row.is_star ? 1 : 0;
+      if (tab === "all") {
+        const scopeBonus = scope === "通用材料" ? 0.06 : (scope === "混合材料" ? 0.03 : -0.02);
+        return 0.84 * base + 0.08 * att + 0.08 * star + scopeBonus;
+      }
+      if (tab === "kms") {
+        const scopeBonus = scope === "通用材料" ? 0.08 : (scope === "混合材料" ? 0.03 : -0.05);
+        return 0.82 * base + 0.12 * att + 0.06 * star + scopeBonus;
+      }
+      return 0.88 * base + 0.07 * star + 0.05 * att;
+    }
+    function mixBySource(sortedRows, tab) {
+      if (tab !== "all") return sortedRows;
+      const pool = [...sortedRows];
+      const out = [];
+      let lastSource = "";
+      let streak = 0;
+      while (pool.length) {
+        let bestIdx = 0;
+        let bestAdj = -1e9;
+        for (let i = 0; i < pool.length; i += 1) {
+          const r = pool[i];
+          let adj = rankRow(r, "all");
+          if (r.source === lastSource && streak >= 2) adj -= 0.06 * streak;
+          if (adj > bestAdj) {
+            bestAdj = adj;
+            bestIdx = i;
+          }
+        }
+        const pick = pool.splice(bestIdx, 1)[0];
+        out.push(pick);
+        if (pick.source === lastSource) streak += 1;
+        else {
+          lastSource = pick.source;
+          streak = 1;
+        }
+      }
+      return out;
+    }
+    function sortRowsByTab(rows, tab) {
+      const sorted = [...rows].sort((a, b) => rankRow(b, tab) - rankRow(a, tab));
+      return mixBySource(sorted, tab);
+    }
+    function pickGlobalRecommendations(rows) {
+      const calibrated = sourceCalibratedScore(rows);
+      const queryTerms = queryTermsFromState();
+      const scored = rows.map((r) => {
+        const global = rankRow(r, "all");
+        const intent = intentMatchScore(r, queryTerms);
+        const att = Math.min(1, ((r.attachments && r.attachments.length) || 0) / 6);
+        const scopeBonus = r.material_scope === "通用材料" ? 0.06 : (r.material_scope === "混合材料" ? 0.03 : -0.03);
+        const quality = clamp01(0.6 * att + 0.4 * (r.is_star ? 1 : 0));
+        const _cal = calibrated.get(r._id);
+        const srcCal = _cal !== undefined && _cal !== null ? _cal : 0.5;
+        const fusion = 0.45 * srcCal + 0.30 * global + 0.18 * intent + 0.07 * quality + scopeBonus;
+        return { row: r, fusion };
+      }).sort((a, b) => b.fusion - a.fusion);
+      const total = rows.length;
+      const target = total >= 12 ? 5 : total >= 6 ? 4 : 3;
+      const recCount = Math.max(1, Math.min(target, rows.length));
+
+      const srcCounts = {
+        KMS: rows.filter(r => r.source === "KMS").length,
+        Knowhow: rows.filter(r => r.source === "Knowhow").length,
+      };
+      const targetQuota = {
+        KMS: Math.round((srcCounts.KMS / Math.max(1, total)) * recCount),
+        Knowhow: Math.round((srcCounts.Knowhow / Math.max(1, total)) * recCount),
+      };
+      if (srcCounts.KMS >= 3) targetQuota.KMS = Math.max(1, targetQuota.KMS);
+      if (srcCounts.Knowhow >= 3) targetQuota.Knowhow = Math.max(1, targetQuota.Knowhow);
+      while (targetQuota.KMS + targetQuota.Knowhow > recCount) {
+        if (targetQuota.KMS > targetQuota.Knowhow) targetQuota.KMS -= 1;
+        else targetQuota.Knowhow -= 1;
+      }
+      while (targetQuota.KMS + targetQuota.Knowhow < recCount) {
+        if (srcCounts.KMS >= srcCounts.Knowhow) targetQuota.KMS += 1;
+        else targetQuota.Knowhow += 1;
+      }
+
+      const picked = [];
+      const used = new Set();
+      const pickedBySource = { KMS: 0, Knowhow: 0 };
+      while (picked.length < recCount && picked.length < scored.length) {
+        let best = null;
+        for (const cand of scored) {
+          const r = cand.row;
+          if (used.has(r._id)) continue;
+          let adj = cand.fusion;
+          const src = r.source === "KMS" ? "KMS" : "Knowhow";
+          if (pickedBySource[src] >= targetQuota[src]) adj -= 0.07;
+          if (picked.length) {
+            const redundancy = Math.max(...picked.map(x => rowTextSimilarity(x, r)));
+            adj -= 0.12 * redundancy;
+          }
+          if (!best || adj > best.adj) best = { row: r, adj };
+        }
+        if (!best) break;
+        used.add(best.row._id);
+        picked.push(best.row);
+        pickedBySource[best.row.source === "KMS" ? "KMS" : "Knowhow"] += 1;
+      }
+      const recSet = new Set(picked.map(x => x._id));
+      return { recSet, recRows: picked };
+    }
+    function rankAllWithGlobalRec(rows) {
+      const { recSet, recRows } = pickGlobalRecommendations(rows);
+      const orderedBase = sortRowsByTab(rows, "all");
+      const rest = orderedBase.filter(r => !recSet.has(r._id));
+      return { ordered: [...recRows, ...rest], recSet };
+    }
+
+    const LEX = {
+      industry: ["半导体", "银行", "光伏", "新能源", "制造", "交通", "医药", "大消费"],
+      material: ["案例卡片", "标杆", "准标杆", "方案", "汇报", "演示", "复盘", "预算", "经营分析"],
+      region: ["上海", "华东", "华南", "华北", "华中", "西南", "西北", "东北"],
+      role: ["CFO", "财务", "总监", "经营层", "销售", "售前", "项目经理"],
+    };
+    const KNOWHOW_TAG_WHITELIST = ["准标杆", "标杆", "案例卡片", "客户案例", "行业资料", "解决方案", "一页纸", "资料导航"];
+    const STOP_WORDS = new Set([
+      "找", "查", "一下", "一个", "可以", "优先", "需要", "相关", "场景", "客户", "材料",
+      "希望", "重点", "检索", "搜索", "页面", "内容", "公司级别", "个人", "通用"
+    ]);
+    function extractCoreKeywords(text, hit) {
+      const seeds = uniq([
+        ...hit["行业"],
+        ...hit["资料类型"],
+        ...hit["对象角色"],
+      ]);
+      const cleaned = String(text || "")
+        .replace(/(帮我|请|一下|优先|找|查|搜|检索|搜索|相关|材料|页面|内容|希望|重点)/g, " ");
+      const raw = (cleaned.match(/[\u4e00-\u9fa5A-Za-z0-9._-]{2,14}/g) || [])
+        .map(x => x.trim())
+        .filter(Boolean)
+        .filter(x => !STOP_WORDS.has(x))
+        .filter(x => !/^\d{4,}$/.test(x))
+        .filter(x => !/^[a-z]{1,4}$/i.test(x))
+        .filter(x => !["2024","2025","2026","Q1","Q2","Q3","Q4"].includes(x.toUpperCase()));
+      return uniq([...seeds, ...raw]).slice(0, 5);
+    }
+
+    function setStatus(text, type = "") {
+      el.status.className = `status ${type}`.trim();
+      el.status.textContent = text;
+    }
+
+    function switchView(view) {
+      state.activeView = view === "summary" ? "summary" : "workspace";
+      if (el.viewTabs) {
+        var tabs = el.viewTabs.querySelectorAll(".view-tab");
+        for (var i = 0; i < tabs.length; i++) {
+          var btn = tabs[i];
+          var v = btn.getAttribute("data-view");
+          btn.classList.toggle("active", v === state.activeView);
+        }
+      }
+      if (el.workspacePanel) el.workspacePanel.classList.toggle("active", state.activeView === "workspace");
+      if (el.summaryPanel) el.summaryPanel.classList.toggle("active", state.activeView === "summary");
+    }
+
+    function refreshServiceHealth() {
+      if (typeof window.__proxyHealthPing === "function") {
+        window.__proxyHealthPing();
+      }
+    }
+
+    function parseCommon(text) {
+      const q = (text || "").trim();
+      const hit = {
+        行业: LEX.industry.filter(x => q.includes(x)),
+        资料类型: LEX.material.filter(x => q.includes(x)),
+        区域: LEX.region.filter(x => q.includes(x)),
+        对象角色: LEX.role.filter(x => q.includes(x)),
+      };
+      const topk = Math.max(10, Math.min(100, Number(el.topk.value || 40)));
+      const queryKeywords = extractCoreKeywords(q, hit);
+
+      const knowhow = {
+        payload: {
+          query: queryKeywords.join(" "),
+          retrieval_model: { business_domain: "project", datasets: "both", rerank_enable: true, top_k: topk },
+        },
+        chips: [],
+      };
+      const metadata = {};
+      if (hit["行业"].length) { metadata.industry = { value: hit["行业"], operator: "containsAny" }; knowhow.chips.push(`industry=${hit["行业"].join("/")}`); }
+      const mappedTags = [];
+      hit["资料类型"].forEach((x) => {
+        if (x === "汇报") { mappedTags.push("一页纸"); return; }
+        if (x === "方案") { mappedTags.push("解决方案"); return; }
+        mappedTags.push(x);
+      });
+      const mappedFiltered = mappedTags.filter(x => KNOWHOW_TAG_WHITELIST.includes(x));
+      if (mappedFiltered.length) { metadata.tags = { value: uniq(mappedFiltered), operator: "containsAny" }; knowhow.chips.push(`标签=${uniq(mappedFiltered).join(" / ")}`); }
+      if (Object.keys(metadata).length) knowhow.payload.metadata_filters = metadata;
+      if (queryKeywords.length) knowhow.chips.push(`语义关键词=${queryKeywords.slice(0, 5).join(" / ")}`);
+
+      const kms = { keywords: queryKeywords, chips: [] };
+      kms.chips.push("空间=当前账号可访问全部空间");
+      if (hit["行业"].length) kms.chips.push(`行业词=${hit["行业"].join(" / ")}`);
+      if (hit["资料类型"].length) kms.chips.push(`主题词=${hit["资料类型"].join(" / ")}`);
+      if (queryKeywords.length) kms.chips.push(`全文关键词=${queryKeywords.slice(0, 5).join(" / ")}`);
+
+      return { q, common: hit, knowhow, kms };
+    }
+
+    function renderParsed(parsed) {
+      el.commonTags.innerHTML = "";
+      Object.entries(parsed.common).forEach(([k, arr]) => {
+        if (!arr.length) return;
+        arr.forEach(v => el.commonTags.insertAdjacentHTML("beforeend", `<span class="chip">${esc(k)}：${esc(v)}</span>`));
+      });
+      if (!el.commonTags.children.length) el.commonTags.innerHTML = `<span class="chip">未识别到显式通用标签，将按全文语义检索</span>`;
+      el.knowhowTags.innerHTML = parsed.knowhow.chips.length ? parsed.knowhow.chips.map(x => `<span class="chip src-knowhow">${esc(x)}</span>`).join("") : `<span class="chip src-knowhow">仅语义关键词检索</span>`;
+      el.kmsTags.innerHTML = parsed.kms.chips.length ? parsed.kms.chips.map(x => `<span class="chip src-kms">${esc(x)}</span>`).join("") : `<span class="chip src-kms">仅全文关键词检索</span>`;
+    }
+
+    async function searchKnowhow(parsed) {
+      const resp = await fetch(`${PROXY_BASE}/api/knowhow-search`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ payload: parsed.knowhow.payload }),
+      });
+      if (!resp.ok) throw new Error(`Knowhow proxy HTTP ${resp.status}`);
+      const data = await resp.json();
+      if (!data.ok) throw new Error(data.error || "Knowhow proxy error");
+      return data.rows || [];
+    }
+
+    async function searchKms(parsed) {
+      const resp = await fetch(`${PROXY_BASE}/api/kms-search`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          keywords: parsed.kms.keywords,
+          limit: Math.max(10, Math.min(50, Number(el.topk.value || 40))),
+        }),
+      });
+      if (!resp.ok) throw new Error(`KMS proxy HTTP ${resp.status}`);
+      const data = await resp.json();
+      if (!data.ok) throw new Error(data.error || "KMS proxy error");
+      return data.rows || [];
+    }
+
+    function renderList() {
+      const counts = {
+        all: state.rows.length,
+        kms: state.rows.filter(r => r.source === "KMS").length,
+        knowhow: state.rows.filter(r => r.source === "Knowhow").length,
+      };
+      el.resultTabs.innerHTML = `
+        <button class="result-tab ${state.sourceTab === "all" ? "active" : ""}" data-tab="all">全部（${counts.all}）</button>
+        <button class="result-tab ${state.sourceTab === "kms" ? "active" : ""}" data-tab="kms">KMS（${counts.kms}）</button>
+        <button class="result-tab ${state.sourceTab === "knowhow" ? "active" : ""}" data-tab="knowhow">Knowhow（${counts.knowhow}）</button>
+      `;
+      [...el.resultTabs.querySelectorAll(".result-tab")].forEach(btn => {
+        btn.onclick = () => {
+          state.sourceTab = btn.getAttribute("data-tab");
+          renderList();
+        };
+      });
+
+      el.list.innerHTML = "";
+      const filteredRows = state.rows.filter((r) => {
+        if (state.sourceTab === "all") return true;
+        if (state.sourceTab === "kms") return r.source === "KMS";
+        return r.source === "Knowhow";
+      }).filter((r) => {
+        if (el.includePersonal.checked) return true;
+        const scope = String(r.material_scope || "");
+        if (!scope || scope === "通用材料") return true;
+        if (scope === "个人沉淀") {
+          const score = Number(r.score);
+          return Number.isFinite(score) && score >= 0.75;
+        }
+        // 混合材料默认保留，确保召回覆盖
+        return true;
+      });
+
+      let rankedRows = [];
+      state.recommendedIds = new Set();
+      if (state.sourceTab === "all") {
+        const ranked = rankAllWithGlobalRec(filteredRows);
+        rankedRows = ranked.ordered;
+        state.recommendedIds = ranked.recSet;
+      } else {
+        rankedRows = sortRowsByTab(filteredRows, state.sourceTab);
+      }
+
+      if (!rankedRows.length) {
+        el.list.innerHTML = `<div class="item">暂无结果</div>`;
+        el.detail.textContent = "暂无可展示详情。";
+        return;
+      }
+      rankedRows.forEach((r, i) => {
+        const itemId = r._id;
+        const cls = itemId === state.activeId ? "item active" : "item";
+        const srcCls = r.source === "KMS" ? "src-kms" : "src-knowhow";
+        const globalStar = state.recommendedIds.has(itemId);
+        const similarItems = (r.similar_items || []).slice(0, 12);
+        el.list.insertAdjacentHTML("beforeend", `
+          <div class="${cls}" data-id="${esc(itemId)}">
+            <div class="chips">
+              <span class="chip ${srcCls}">${esc(r.source)}</span>
+              ${r.material_type ? `<span class="chip">${esc(r.material_type)}</span>` : ""}
+              ${r.material_scope ? `<span class="chip">${esc(r.material_scope)}</span>` : ""}
+              ${globalStar ? `<span class="chip" title="${esc(REC_LABEL)}"><span class="star">★</span>${esc(REC_LABEL)}</span>` : ""}
+              ${(r.key_terms || []).map(k => `<span class="chip">${esc(k)}</span>`).join("")}
+            </div>
+            <div class="i-title">${i + 1}. ${globalStar ? `<span class="star">★</span>` : ""}${esc(r.title)}</div>
+            <div class="i-brief">${esc(r.quick_summary || "暂无摘要")}</div>
+            ${globalStar ? `<div class="priority-badge">${esc(REC_LABEL)}</div>` : ""}
+            <div class="i-sub">相关度: ${esc(r.score)} ${(r.attachments && r.attachments.length) ? `| 附件: ${r.attachments.length}` : ""} ${r.source === "KMS" ? "| 类型: 页面" : "| 类型: 文档片段"} ${r.rank_reason ? `| ${esc(r.rank_reason)}` : ""}</div>
+            ${r.similar_count ? `<button class="sim-toggle" data-toggle-id="${esc(itemId)}">${state.expandedSimilar.has(itemId) ? "收起" : "展开"}相似结果（${r.similar_count}）</button>` : ""}
+            ${r.similar_count && state.expandedSimilar.has(itemId) ? `<div class="sim-list">${
+              similarItems.length
+                ? similarItems.map((x, idx) => `${idx + 1}. ${x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">${esc(x.title || "相似结果")}</a>` : esc(x.title || "相似结果")}${x.source ? ` <span class="muted">(${esc(x.source)})</span>` : ""}`).join("<br />")
+                : (r.similar_titles || []).map((t, idx) => `${idx + 1}. ${esc(t)}`).join("<br />")
+            }</div>` : ""}
+          </div>
+        `);
+      });
+      [...el.list.querySelectorAll(".sim-toggle")].forEach((btn) => {
+        btn.onclick = (e) => {
+          e.stopPropagation();
+          const id = btn.getAttribute("data-toggle-id");
+          if (!id) return;
+          if (state.expandedSimilar.has(id)) state.expandedSimilar.delete(id);
+          else state.expandedSimilar.add(id);
+          renderList();
+        };
+      });
+      [...el.list.querySelectorAll(".item")].forEach((node) => {
+        node.onclick = () => {
+          state.activeId = node.getAttribute("data-id") || "";
+          renderList();
+          renderDetail();
+        };
+      });
+      if (!state.activeId) state.activeId = rankedRows[0]._id;
+      if (!rankedRows.some(x => x._id === state.activeId)) state.activeId = rankedRows[0]._id;
+      renderDetail();
+    }
+
+    function filterRowsByTab(tab) {
+      return state.rows.filter((r) => {
+        if (tab === "all") return true;
+        if (tab === "kms") return r.source === "KMS";
+        return r.source === "Knowhow";
+      }).filter((r) => {
+        if (el.includePersonal.checked) return true;
+        const scope = String(r.material_scope || "");
+        if (!scope || scope === "通用材料") return true;
+        if (scope === "个人沉淀") {
+          const score = Number(r.score);
+          return Number.isFinite(score) && score >= 0.75;
+        }
+        return true;
+      });
+    }
+
+    const INDUSTRY_LEX = ["半导体", "银行", "光伏", "新能源", "制造", "医药", "大消费", "零售", "汽车", "交通", "政务", "教育"];
+    const BIZ_LEX = ["财务", "预算", "费控", "经营分析", "财务报表", "合并报表", "资金", "税务", "供应链", "销售", "营销", "生产", "库存", "采购", "项目管理", "研发", "人力", "客户经营", "BI", "数据仓库"];
+
+    function countTermHits(rows, lex, topn = 6) {
+      const freq = {};
+      rows.forEach((r) => {
+        const text = `${r.title || ""} ${r.summary || ""} ${(r.key_terms || []).join(" ")}`;
+        lex.forEach((t) => {
+          if (text.includes(t)) freq[t] = (freq[t] || 0) + 1;
+        });
+      });
+      return Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, topn).map(([k]) => k);
+    }
+
+    function inferFirstHit(text, lex, fallback) {
+      for (const t of lex) if (String(text || "").includes(t)) return t;
+      return fallback;
+    }
+
+    function topMaterialTypes(rows, topn = 6) {
+      const m = {};
+      rows.forEach((r) => {
+        const k = r.material_type || "未分类";
+        m[k] = (m[k] || 0) + 1;
+      });
+      return Object.entries(m).sort((a, b) => b[1] - a[1]).slice(0, topn);
+    }
+
+    function buildProblemNarrative(model) {
+      const { query, tags, industries, bizLines, baseRows } = model;
+      const tagStr = tags.length ? tags.join("、") : "未命中显式标签，系统按语义与全文召回";
+      const indStr = industries.length
+        ? `材料池中行业相关信号较多的有：${industries.slice(0, 4).join("、")}（按命中频次统计）。`
+        : "行业信号不集中，若目标是某行业案例，建议在检索句中写明行业。";
+      const bizStr = bizLines.length
+        ? `细分业务/职能线更集中于：${bizLines.slice(0, 5).join("、")}，可据此优先对齐方案结构。`
+        : "细分业务线不够清晰，可补充如预算、报表、费控、经营分析等关键词。";
+      return {
+        head: `围绕「${query || "（未填写需求）"}」共沉淀 ${baseRows.length} 条可追溯材料；已识别标签：${tagStr}。`,
+        indStr,
+        bizStr,
+      };
+    }
+
+    function buildOnePagerModel() {
+      const baseRows = filterRowsByTab("all");
+      if (!baseRows.length) return null;
+      const rankedAll = rankAllWithGlobalRec(baseRows);
+      const recSet = rankedAll.recSet;
+      const recRows = rankedAll.ordered.filter(r => recSet.has(r._id));
+      const kmsRows = sortRowsByTab(baseRows.filter(r => r.source === "KMS"), "kms");
+      const knowhowRows = sortRowsByTab(baseRows.filter(r => r.source === "Knowhow"), "knowhow");
+      const industries = countTermHits(baseRows, INDUSTRY_LEX, 6);
+      const bizLines = countTermHits(baseRows, BIZ_LEX, 8);
+      const query = (state.parsed && state.parsed.q) || el.q.value || "";
+      const tags = [];
+      Object.entries((state.parsed && state.parsed.common) || {}).forEach(([k, arr]) => {
+        (arr || []).forEach(v => tags.push(`${k}:${v}`));
+      });
+      const appRecs = recRows.slice(0, 5).map((r) => {
+        const text = `${r.title || ""} ${r.summary || ""} ${(r.key_terms || []).join(" ")}`;
+        const ind = inferFirstHit(text, INDUSTRY_LEX, industries[0] || "待结合上下文");
+        const biz = inferFirstHit(text, BIZ_LEX, bizLines[0] || "综合经营");
+        const use = r.source === "KMS"
+          ? "适合作为页面/模板与附件入口，优先看结构再落地改"
+          : "适合作为案例打法与表述参考，抽取可迁移动作";
+        const why = `${r.quick_summary || (r.summary || "").slice(0, 120)}`.trim();
+        return { ...r, ind, biz, use, why };
+      });
+      const materialTypes = topMaterialTypes(baseRows, 6);
+      const narrative = buildProblemNarrative({
+        query, tags, industries, bizLines, baseRows,
+      });
+      return {
+        baseRows, recRows, recSet, kmsRows, knowhowRows, industries, bizLines, query, tags, appRecs,
+        materialTypes, narrative,
+      };
+    }
+
+    function buildOnePagerHtml(model) {
+      const now = new Date();
+      const {
+        baseRows, recRows, recSet, kmsRows, knowhowRows, query, tags, appRecs,
+        materialTypes, narrative,
+      } = model;
+      const topSources = [
+        `KMS ${kmsRows.length} 条`,
+        `Knowhow ${knowhowRows.length} 条`,
+      ];
+      const typeLine = materialTypes.length
+        ? materialTypes.map(([k, v]) => `${esc(k)} ${v} 条`).join("；")
+        : "未统计到资料类型分布";
+      return `<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>检索一页纸_${esc(query || "未命名")}</title>
+  <style>
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;background:#f5f8ff;color:#21314f}
+    .wrap{max-width:1320px;margin:0 auto;padding:16px}
+    .card{background:#fff;border:1px solid #dce6fa;border-radius:12px;padding:12px;margin-bottom:12px}
+    h1{margin:0;font-size:22px} h2{margin:0 0 10px;font-size:18px} h4{margin:6px 0;font-size:15px}
+    .muted{color:#64789d;font-size:12px;line-height:1.6}
+    .chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+    .chip{font-size:11px;border:1px solid #d1dfff;background:#ecf3ff;color:#31579d;border-radius:999px;padding:3px 8px;font-weight:700}
+    .chip.src-kms{background:#eef7ff;border-color:#cde5ff;color:#2560b4}
+    .chip.src-knowhow{background:#effcf8;border-color:#cdeede;color:#237a59}
+    .chip.rec{background:#fff7df;border-color:#f3d58a;color:#8a5c00}
+    .star{color:#e1a100;font-weight:900;margin-right:4px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .item{border:1px solid #dce6fa;border-radius:10px;padding:10px;margin-bottom:8px;background:#fcfdff}
+    a{color:#2b60b7;text-decoration:none} a:hover{text-decoration:underline}
+    p{margin:8px 0;line-height:1.65}
+    ul{margin:8px 0 0;padding-left:18px}
+    li{margin-bottom:6px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="card">
+      <h1>检索一页纸（问题导向 · KMS + Knowhow）</h1>
+      <div class="muted">生成时间：${esc(now.toLocaleString())}</div>
+      <div class="muted">检索需求：${esc(query || "无")}</div>
+      <div class="muted">结果规模：全部 ${baseRows.length} 条 / 推荐 ${recRows.length} 条 / ${topSources.join(" / ")}</div>
+      <div class="chips">${tags.length ? tags.map(t => `<span class="chip">${esc(t)}</span>`).join("") : `<span class="chip">未识别到显式标签</span>`}</div>
+    </section>
+    <section class="card">
+      <h2>问题导向</h2>
+      <p>${esc(narrative.head)}</p>
+      <ul>
+        <li>${esc(narrative.indStr)}</li>
+        <li>${esc(narrative.bizStr)}</li>
+        <li>材料类型分布（粗画像）：${typeLine}。</li>
+        <li>使用策略：优先阅读下方「推荐阅读」${recRows.length} 条形成主线；需要模板/附件回到 KMS 深度页，需要案例表述回到 Knowhow。</li>
+      </ul>
+    </section>
+    <section class="card">
+      <h2>推荐阅读与用法（Top ${appRecs.length}）</h2>
+      <ul>
+        ${appRecs.map((x, i) => `<li>${i + 1}. <b>${esc(x.title)}</b>（${esc(x.source)}｜行业：${esc(x.ind)}；细分：${esc(x.biz)}）— ${esc(x.use)}${x.why ? `。要点：${esc(x.why)}` : ""} ${x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">打开</a>` : ""}</li>`).join("")}
+      </ul>
+    </section>
+    <section class="card">
+      <h2>附录：推荐条目链接</h2>
+      <ul>
+        ${recRows.map((r, i) => `<li>${i + 1}. [${esc(r.source)}] ${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener noreferrer">${esc(r.title)}</a>` : esc(r.title)}</li>`).join("")}
+      </ul>
+      <p class="muted">完整检索列表与详情请在「检索工作台」查看；本页仅做基于问题的材料整理与阅读路径。</p>
+    </section>
+  </div>
+</body>
+</html>`;
+    }
+
+    function renderOnePagerSummary() {
+      const model = buildOnePagerModel();
+      if (!model) {
+        setStatus("暂无可总结的结果，请先检索。", "warn");
+        return;
+      }
+      const html = buildOnePagerHtml(model);
+      state.summaryHtml = html;
+      if (state.summaryBlobUrl) URL.revokeObjectURL(state.summaryBlobUrl);
+      state.summaryBlobUrl = URL.createObjectURL(new Blob([html], { type: "text/html;charset=utf-8" }));
+      el.summaryDownloadLink.href = state.summaryBlobUrl;
+
+      const mtLine = model.materialTypes.length
+        ? model.materialTypes.map(([k, v]) => `${esc(k)} ${v} 条`).join("；")
+        : "暂无类型分布统计";
+      const onePagerSnippet = `
+        <div class="summary-layout">
+          <section class="summary-box">
+            <h4>问题导向</h4>
+            <p class="summary-list" style="list-style:none;padding-left:0;">${esc(model.narrative.head)}</p>
+            <ul class="summary-list">
+              <li>${esc(model.narrative.indStr)}</li>
+              <li>${esc(model.narrative.bizStr)}</li>
+              <li>共 ${model.baseRows.length} 条材料（KMS ${model.kmsRows.length} / Knowhow ${model.knowhowRows.length}）；类型粗画像：${mtLine}。</li>
+            </ul>
+          </section>
+          <section class="summary-box summary-items">
+            <h4>推荐阅读与用法（${model.appRecs.length}）</h4>
+            ${model.appRecs.map((x, i) => `
+              <div class="item">
+                <div class="i-title">${i + 1}. ${esc(x.title)}</div>
+                <div class="i-sub">${esc(x.source)} ｜ 行业 ${esc(x.ind)} ｜ 细分 ${esc(x.biz)}</div>
+                <div class="i-brief">${esc(x.use)}${x.why ? ` — ${esc(x.why)}` : ""}</div>
+                <div class="muted">${x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">打开原文</a>` : "无原文链接"}</div>
+              </div>
+            `).join("")}
+          </section>
+        </div>
+      `;
+      el.summaryContent.innerHTML = onePagerSnippet;
+      switchView("summary");
+      setStatus("已生成一页纸检索（问题导向整理），可在此 TAB 预览或下载 HTML。", "ok");
+    }
+
+    function renderDetail() {
+      const r = state.rows.find(x => x._id === state.activeId);
+      if (!r) return;
+      const detailRecommended = state.recommendedIds.has(r._id);
+      el.detail.innerHTML = `
+        <div class="chips">
+          <span class="chip ${r.source === "KMS" ? "src-kms" : "src-knowhow"}">${esc(r.source)}</span>
+          ${r.material_type ? `<span class="chip">${esc(r.material_type)}</span>` : ""}
+          ${r.material_scope ? `<span class="chip">${esc(r.material_scope)}</span>` : ""}
+          ${detailRecommended ? `<span class="chip"><span class="star">★</span>${esc(REC_LABEL)}</span>` : ""}
+          ${(r.key_terms || []).map(k => `<span class="chip">${esc(k)}</span>`).join("")}
+        </div>
+        <h4>${esc(r.title)}</h4>
+        <div class="muted">${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener noreferrer">打开原文链接</a>` : "无原文链接"}</div>
+        <p><b>核心摘要：</b>${esc(r.quick_summary || "无")}</p>
+        <p>${esc(r.summary || "无摘要")}</p>
+        ${detailRecommended ? `<p><span class="priority-badge">${esc(REC_LABEL)}</span></p>` : ""}
+        ${r.source === "KMS" ? `<div><b>KMS 页面结构化摘要：</b>该摘要已提炼页面正文前段，建议先看摘要判断是否进入深读，再按附件链接下载材料。</div>` : ""}
+        ${r.rank_reason ? `<div class="muted" style="margin-top:6px;">推荐依据：${esc(r.rank_reason)}</div>` : ""}
+        ${r.similar_count ? `<div class="muted" style="margin-top:6px;">已折叠相似结果：${r.similar_count} 条（可在左侧卡片展开并点击链接访问）</div>` : ""}
+        ${(r.attachments && r.attachments.length) ? `<div style="margin-top:8px;"><b>附件链接：</b><div class="att">${r.attachments.map(a => `<a href="${esc(a.url)}" target="_blank" rel="noopener noreferrer">${esc(a.name)}</a>`).join("")}</div></div>` : ""}
+      `;
+    }
+
+    async function runSearch() {
+      const q = el.q.value.trim();
+      if (!q) return setStatus("请先输入检索需求", "warn");
+      const parsed = parseCommon(q);
+      state.parsed = parsed;
+      renderParsed(parsed);
+
+      setStatus("检索中...", "warn");
+      el.run.disabled = true;
+      try {
+        const source = el.src.value;
+        const jobs = [];
+        if (source !== "kms") jobs.push(searchKnowhow(parsed));
+        if (source !== "knowhow") jobs.push(searchKms(parsed));
+        const chunks = await Promise.all(jobs);
+        var merged = [];
+        for (var ci = 0; ci < chunks.length; ci++) {
+          var part = chunks[ci];
+          for (var pj = 0; pj < part.length; pj++) merged.push(part[pj]);
+        }
+        state.rows = merged.map((r, i) => ({ ...r, _id: `${r.source}-${i}-${(r.url || r.title || "").slice(0, 60)}` }));
+        state.activeId = "";
+        state.expandedSimilar.clear();
+        state.recommendedIds.clear();
+        renderList();
+        setStatus(`检索完成，共 ${state.rows.length} 条；全局推荐 ${state.recommendedIds.size} 条`, "ok");
+        refreshServiceHealth();
+      } catch (err) {
+        state.rows = [];
+        state.activeId = "";
+        renderList();
+        setStatus(`检索失败：${err.message}（请确认本地代理已启动）`, "err");
+      } finally {
+        el.run.disabled = false;
+      }
+    }
+
+    function initWorkbench() {
+      try {
+        el.q.value = "半导体客户预算管控场景，找可复用案例卡片和汇报页面，优先近一年";
+        el.includePersonal.checked = false;
+        renderParsed(parseCommon(el.q.value));
+        switchView("workspace");
+      } catch (e) {
+        var t = document.getElementById("serviceText");
+        var d = document.getElementById("serviceDot");
+        if (t) t.textContent = "页面初始化异常";
+        if (d) d.className = "dot err";
+        console.error(e);
+        return;
+      }
+      refreshServiceHealth();
+    }
+
+    if (el.run) el.run.onclick = runSearch;
+    if (el.exportHtml) el.exportHtml.onclick = renderOnePagerSummary;
+    if (el.refreshSummary) el.refreshSummary.onclick = renderOnePagerSummary;
+    if (el.viewTabs) {
+      var tabBtns = el.viewTabs.querySelectorAll(".view-tab");
+      for (var j = 0; j < tabBtns.length; j++) {
+        tabBtns[j].onclick = (function (v) {
+          return function () { switchView(v); };
+        })(tabBtns[j].getAttribute("data-view"));
+      }
+    }
+    if (el.q) el.q.addEventListener("keydown", function (e) { if (e.key === "Enter") runSearch(); });
+    if (el.includePersonal) el.includePersonal.addEventListener("change", function () { renderList(); });
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initWorkbench);
+    } else {
+      initWorkbench();
+    }
+  </script>
+</body>
+</html>

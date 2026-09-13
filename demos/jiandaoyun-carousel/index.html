@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>简道云 AI 动图轮播</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --border: #2a2f3d;
+      --text: #e8eaef;
+      --muted: #8b92a5;
+      --accent: #00b899;
+      --accent-hover: #00d4b0;
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    header .meta {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 0;
+      min-height: 0;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .player-wrap {
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      gap: 16px;
+      min-height: 0;
+    }
+
+    .media-frame {
+      position: relative;
+      flex: 1;
+      background: #000;
+      border-radius: var(--radius);
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+      max-height: calc(100vh - 220px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .media-frame img,
+    .media-frame video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      background: #000;
+    }
+
+    .media-frame .hidden {
+      display: none;
+    }
+
+    .slide-title {
+      font-size: 1.1rem;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .slide-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .progress-row.disabled {
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .progress-bar {
+      flex: 1;
+      position: relative;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      touch-action: none;
+      user-select: none;
+    }
+
+    .progress-bar .track {
+      width: 100%;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-bar .fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      border-radius: 2px;
+      transition: width 0.1s linear;
+      pointer-events: none;
+    }
+
+    .progress-bar.dragging .fill {
+      transition: none;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    button:hover:not(:disabled) {
+      background: #252936;
+      border-color: #3d4458;
+    }
+
+    button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    button.primary:hover:not(:disabled) {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+
+    button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    button.icon {
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    label.toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    label.toggle input {
+      accent-color: var(--accent);
+    }
+
+    aside {
+      border-left: 1px solid var(--border);
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    @media (max-width: 900px) {
+      aside {
+        border-left: none;
+        border-top: 1px solid var(--border);
+        max-height: 240px;
+      }
+    }
+
+    aside h2 {
+      padding: 16px 18px 10px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .playlist {
+      list-style: none;
+      overflow-y: auto;
+      flex: 1;
+      padding: 0 10px 14px;
+    }
+
+    .playlist li {
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      line-height: 1.35;
+      color: var(--muted);
+      border: 1px solid transparent;
+      margin-bottom: 4px;
+      transition: background 0.12s, color 0.12s;
+    }
+
+    .playlist li:hover {
+      background: rgba(0, 184, 153, 0.08);
+      color: var(--text);
+    }
+
+    .playlist li.active {
+      background: rgba(0, 184, 153, 0.18);
+      color: var(--text);
+      border-color: rgba(0, 184, 153, 0.35);
+    }
+
+    .playlist li .idx {
+      display: inline-block;
+      width: 1.6em;
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .playlist li .tag {
+      float: right;
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+    }
+
+    .kbd {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-left: auto;
+    }
+
+    @media (max-width: 700px) {
+      .kbd { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>简道云 AI 动图轮播</h1>
+    <span class="meta" id="counter">加载中…</span>
+  </header>
+
+  <main>
+    <section class="player-wrap">
+      <div class="media-frame">
+        <img id="gifPlayer" class="hidden" alt="" />
+        <img id="framePlayer" class="hidden" alt="" />
+        <video id="videoPlayer" class="hidden" playsinline preload="metadata"></video>
+      </div>
+      <p class="slide-title" id="title">—</p>
+      <p class="slide-desc" id="desc"></p>
+      <div class="progress-row disabled" id="progressRow">
+        <span id="timeCurrent">0:00</span>
+        <div class="progress-bar" id="progressBar" title="点击或拖动快进">
+          <div class="track">
+            <div class="fill" id="progressFill"></div>
+          </div>
+        </div>
+        <span id="timeDuration">0:00</span>
+      </div>
+      <div class="controls">
+        <button type="button" class="icon" id="btnPrev" title="上一个 (←)">◀</button>
+        <button type="button" class="icon primary" id="btnPlay" title="播放/暂停 (空格)">▶</button>
+        <button type="button" class="icon" id="btnNext" title="下一个 (→)">▶</button>
+        <label class="toggle">
+          <input type="checkbox" id="autoNext" checked />
+          播完自动下一个
+        </label>
+        <label class="toggle">
+          <input type="checkbox" id="loopAll" checked />
+          列表循环
+        </label>
+        <span class="kbd">← → 切换 · 空格 播放/暂停</span>
+      </div>
+    </section>
+
+    <aside>
+      <h2>演示列表</h2>
+      <ul class="playlist" id="playlist"></ul>
+    </aside>
+  </main>
+
+  <script>
+    const TYPE_LABEL = { gif: "GIF", video: "视频", frames: "帧动画" };
+    const DESC = {
+      "AI 智能填报": "说一句话，表单帮你填好了 — 来自简道云 AI 助理演示",
+      "AI 知识库问答": "想问什么，小简同学都知道 — 知识库智能问答演示",
+      "AI 智能搭建演示": "一句话生成业务系统 — AI 智能搭建完整演示视频",
+    };
+
+    let slides = [];
+    let index = 0;
+    let isDragging = false;
+    let frameTimer = null;
+    let frameIndex = 0;
+    let framePlaying = true;
+    let gifTimer = null;
+
+    const gifPlayer = document.getElementById("gifPlayer");
+    const framePlayer = document.getElementById("framePlayer");
+    const videoPlayer = document.getElementById("videoPlayer");
+    const titleEl = document.getElementById("title");
+    const descEl = document.getElementById("desc");
+    const playlistEl = document.getElementById("playlist");
+    const counterEl = document.getElementById("counter");
+    const progressRow = document.getElementById("progressRow");
+    const progressBar = document.getElementById("progressBar");
+    const progressFill = document.getElementById("progressFill");
+    const timeCurrent = document.getElementById("timeCurrent");
+    const timeDuration = document.getElementById("timeDuration");
+    const btnPrev = document.getElementById("btnPrev");
+    const btnNext = document.getElementById("btnNext");
+    const btnPlay = document.getElementById("btnPlay");
+    const autoNext = document.getElementById("autoNext");
+    const loopAll = document.getElementById("loopAll");
+
+    function currentSlide() {
+      return slides[index];
+    }
+
+    function hideAll() {
+      gifPlayer.classList.add("hidden");
+      framePlayer.classList.add("hidden");
+      videoPlayer.classList.add("hidden");
+    }
+
+    function stopTimers() {
+      if (frameTimer) {
+        clearInterval(frameTimer);
+        frameTimer = null;
+      }
+      if (gifTimer) {
+        clearTimeout(gifTimer);
+        gifTimer = null;
+      }
+    }
+
+    function formatTime(sec) {
+      if (!Number.isFinite(sec) || sec < 0) return "0:00";
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m}:${String(s).padStart(2, "0")}`;
+    }
+
+    function renderPlaylist() {
+      playlistEl.innerHTML = "";
+      slides.forEach((slide, i) => {
+        const li = document.createElement("li");
+        li.innerHTML =
+          `<span class="idx">${i + 1}.</span>${slide.name}` +
+          `<span class="tag">${TYPE_LABEL[slide.type] || slide.type}</span>`;
+        li.addEventListener("click", () => goTo(i, true));
+        playlistEl.appendChild(li);
+      });
+      updateCounter();
+    }
+
+    function updateCounter() {
+      if (!slides.length) {
+        counterEl.textContent = "暂无内容";
+        return;
+      }
+      counterEl.textContent = `第 ${index + 1} / ${slides.length} 项`;
+    }
+
+    function setActiveItem() {
+      [...playlistEl.children].forEach((li, i) => {
+        li.classList.toggle("active", i === index);
+      });
+      const active = playlistEl.children[index];
+      if (active) active.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }
+
+    function updatePlayButton() {
+      const slide = currentSlide();
+      if (!slide) return;
+      if (slide.type === "video") {
+        btnPlay.textContent = videoPlayer.paused ? "▶" : "⏸";
+      } else if (slide.type === "frames") {
+        btnPlay.textContent = framePlaying ? "⏸" : "▶";
+      } else {
+        btnPlay.textContent = "▶";
+      }
+    }
+
+    function setProgressEnabled(enabled) {
+      progressRow.classList.toggle("disabled", !enabled);
+    }
+
+    function resetProgress() {
+      progressFill.style.width = "0%";
+      timeCurrent.textContent = "0:00";
+      timeDuration.textContent = "0:00";
+    }
+
+    function scheduleGifAdvance() {
+      if (gifTimer) clearTimeout(gifTimer);
+      if (!autoNext.checked) return;
+      gifTimer = setTimeout(() => next(), 12000);
+    }
+
+    function startFrameLoop() {
+      stopTimers();
+      const slide = currentSlide();
+      if (!slide || slide.type !== "frames") return;
+      frameIndex = 0;
+      framePlaying = true;
+      setProgressEnabled(true);
+
+      const fps = 6;
+      const total = slide.urls.length;
+      timeDuration.textContent = `${total} 帧`;
+
+      function tick() {
+        if (!framePlaying) return;
+        framePlayer.src = slide.urls[frameIndex];
+        timeCurrent.textContent = `${frameIndex + 1} / ${total}`;
+        progressFill.style.width = `${((frameIndex + 1) / total) * 100}%`;
+        frameIndex += 1;
+        if (frameIndex >= total) {
+          frameIndex = 0;
+          if (autoNext.checked) {
+            stopTimers();
+            next();
+            return;
+          }
+        }
+      }
+
+      tick();
+      frameTimer = setInterval(tick, 1000 / fps);
+      updatePlayButton();
+    }
+
+    function loadCurrent(autoplay = true) {
+      if (!slides.length) return;
+      stopTimers();
+      videoPlayer.pause();
+      hideAll();
+
+      const slide = currentSlide();
+      titleEl.textContent = slide.name;
+      descEl.textContent = DESC[slide.name] || "";
+      setActiveItem();
+      updateCounter();
+      resetProgress();
+
+      if (slide.type === "gif") {
+        setProgressEnabled(false);
+        gifPlayer.classList.remove("hidden");
+        gifPlayer.alt = slide.name;
+        gifPlayer.src = slide.url;
+        btnPlay.disabled = true;
+        updatePlayButton();
+        if (autoplay) scheduleGifAdvance();
+        return;
+      }
+
+      btnPlay.disabled = false;
+
+      if (slide.type === "video") {
+        setProgressEnabled(true);
+        videoPlayer.classList.remove("hidden");
+        videoPlayer.src = slide.url;
+        if (autoplay) videoPlayer.play().catch(() => {});
+        updatePlayButton();
+        return;
+      }
+
+      if (slide.type === "frames") {
+        framePlayer.classList.remove("hidden");
+        framePlayer.alt = slide.name;
+        if (autoplay) startFrameLoop();
+        else {
+          frameIndex = 0;
+          framePlaying = false;
+          framePlayer.src = slide.urls[0];
+          setProgressEnabled(true);
+          timeDuration.textContent = `${slide.urls.length} 帧`;
+          updatePlayButton();
+        }
+      }
+    }
+
+    function goTo(i, autoplay = true) {
+      if (!slides.length) return;
+      index = ((i % slides.length) + slides.length) % slides.length;
+      loadCurrent(autoplay);
+    }
+
+    function next() {
+      if (!slides.length) return;
+      if (index < slides.length - 1) goTo(index + 1);
+      else if (loopAll.checked) goTo(0);
+    }
+
+    function prev() {
+      if (!slides.length) return;
+      if (index > 0) goTo(index - 1);
+      else if (loopAll.checked) goTo(slides.length - 1);
+    }
+
+    function togglePlay() {
+      const slide = currentSlide();
+      if (!slide) return;
+
+      if (slide.type === "video") {
+        if (videoPlayer.paused) videoPlayer.play();
+        else videoPlayer.pause();
+        return;
+      }
+
+      if (slide.type === "frames") {
+        if (framePlaying) {
+          framePlaying = false;
+          if (frameTimer) clearInterval(frameTimer);
+          frameTimer = null;
+        } else {
+          framePlaying = true;
+          const fps = 6;
+          frameTimer = setInterval(() => {
+            const s = currentSlide();
+            if (!s || s.type !== "frames") return;
+            const total = s.urls.length;
+            framePlayer.src = s.urls[frameIndex];
+            timeCurrent.textContent = `${frameIndex + 1} / ${total}`;
+            progressFill.style.width = `${((frameIndex + 1) / total) * 100}%`;
+            frameIndex += 1;
+            if (frameIndex >= total) {
+              frameIndex = 0;
+              if (autoNext.checked) {
+                stopTimers();
+                next();
+              }
+            }
+          }, 1000 / fps);
+        }
+        updatePlayButton();
+      }
+    }
+
+    function getVideoDuration() {
+      const d = videoPlayer.duration;
+      return Number.isFinite(d) && d > 0 ? d : 0;
+    }
+
+    function ratioFromClientX(clientX) {
+      const rect = progressBar.getBoundingClientRect();
+      if (!rect.width) return 0;
+      return Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+    }
+
+    function applySeek(ratio) {
+      const slide = currentSlide();
+      if (!slide) return;
+      if (slide.type === "video") {
+        const dur = getVideoDuration();
+        if (dur) videoPlayer.currentTime = ratio * dur;
+      } else if (slide.type === "frames") {
+        const total = slide.urls.length;
+        const idx = Math.min(total - 1, Math.floor(ratio * total));
+        frameIndex = idx;
+        framePlayer.src = slide.urls[idx];
+        timeCurrent.textContent = `${idx + 1} / ${total}`;
+        progressFill.style.width = `${((idx + 1) / total) * 100}%`;
+      }
+    }
+
+    function onSeekStart(e) {
+      const slide = currentSlide();
+      if (!slide || slide.type === "gif") return;
+      isDragging = true;
+      progressBar.classList.add("dragging");
+      progressBar.setPointerCapture(e.pointerId);
+      applySeek(ratioFromClientX(e.clientX));
+    }
+
+    function onSeekMove(e) {
+      if (!isDragging) return;
+      e.preventDefault();
+      applySeek(ratioFromClientX(e.clientX));
+    }
+
+    function onSeekEnd(e) {
+      if (!isDragging) return;
+      isDragging = false;
+      progressBar.classList.remove("dragging");
+      try {
+        progressBar.releasePointerCapture(e.pointerId);
+      } catch (_) {}
+      applySeek(ratioFromClientX(e.clientX));
+    }
+
+    videoPlayer.addEventListener("play", updatePlayButton);
+    videoPlayer.addEventListener("pause", updatePlayButton);
+    videoPlayer.addEventListener("ended", () => {
+      if (autoNext.checked) next();
+    });
+    videoPlayer.addEventListener("timeupdate", () => {
+      if (isDragging) return;
+      const cur = videoPlayer.currentTime;
+      const dur = getVideoDuration();
+      timeCurrent.textContent = formatTime(cur);
+      timeDuration.textContent = formatTime(dur);
+      const pct = dur ? (cur / dur) * 100 : 0;
+      progressFill.style.width = `${pct}%`;
+    });
+    videoPlayer.addEventListener("loadedmetadata", () => {
+      timeDuration.textContent = formatTime(getVideoDuration());
+    });
+
+    progressBar.addEventListener("pointerdown", onSeekStart);
+    progressBar.addEventListener("pointermove", onSeekMove);
+    progressBar.addEventListener("pointerup", onSeekEnd);
+    progressBar.addEventListener("pointercancel", onSeekEnd);
+
+    btnPrev.addEventListener("click", prev);
+    btnNext.addEventListener("click", next);
+    btnPlay.addEventListener("click", togglePlay);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.target.tagName === "INPUT") return;
+      if (e.code === "ArrowRight") { e.preventDefault(); next(); }
+      if (e.code === "ArrowLeft") { e.preventDefault(); prev(); }
+      if (e.code === "Space") { e.preventDefault(); togglePlay(); }
+    });
+
+    async function loadSlides() {
+      try {
+        const res = await fetch("/api/slides");
+        if (!res.ok) throw new Error("API 不可用");
+        slides = await res.json();
+      } catch {
+        slides = [
+          { type: "gif", name: "AI 智能填报", url: "assets/gifs/assistant-fill-demo.gif" },
+          { type: "gif", name: "AI 知识库问答", url: "assets/gifs/assistant-qa-demo.gif" },
+          { type: "video", name: "AI 智能搭建演示", url: "assets/video/ai-build-demo.mp4" },
+        ];
+      }
+
+      if (!slides.length) {
+        titleEl.textContent = "未找到演示资源";
+        counterEl.textContent = "请将资源放在 assets 文件夹";
+        return;
+      }
+
+      renderPlaylist();
+      goTo(0, true);
+    }
+
+    loadSlides();
+  </script>
+</body>
+</html>

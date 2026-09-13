@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NVIDIA — 半导体知识库</title>
+<meta name="description" content="# NVIDIA  ## 公司概况  - 全称：NVIDIA Corporation - 总部：美国加州圣克拉拉 - 成立：1993年，创始人兼CEO黄仁勋（Jensen Huang） - 上市：NASDAQ: NVDA - 2025财年营收：约1300亿美元（全球第一家营收超千亿美元的纯芯片设计公">
+<link rel="stylesheet" href="/kb/assets/style.css">
+</head>
+<body>
+<div class="top-accent"></div>
+<header class="page-header">
+  <a href="/kb/首页.html" class="home-link">🔬 半导体知识库</a>
+</header>
+<main class="container">
+<nav class="breadcrumb"><a href="/kb/首页.html">半导体知识库</a> <span class="sep">›</span> <a href="/kb//行业知识体系/index.html">行业知识体系</a> <span class="sep">›</span> <a href="/kb//行业知识体系/04-IC设计/index.html">04-IC设计</a> <span class="sep">›</span> <a href="/kb//行业知识体系/04-IC设计/关键企业/index.html">关键企业</a></nav>
+<article class="note">
+<header class="note-header">
+  <h1>NVIDIA</h1>
+  <div class="meta-line"><span class="meta-item">📅 2026-07-09</span> · <span class="meta-item">📂 04-IC设计</span> · <span class="meta-item" style="color:#059669">⭐ high</span> · <span class="meta-item">🏷️ <span class="tag">企业</span> <span class="tag">IC设计</span> <span class="tag">AI芯片</span> <span class="tag">GPU</span> <span class="tag">美国</span></span></div>
+</header>
+<div class="note-body">
+<h1 id="nvidia">NVIDIA</h1>
+<h2 id="_1">公司概况</h2>
+<ul>
+<li>全称：NVIDIA Corporation</li>
+<li>总部：美国加州圣克拉拉</li>
+<li>成立：1993年，创始人兼CEO黄仁勋（Jensen Huang）</li>
+<li>上市：NASDAQ: NVDA</li>
+<li>2025财年营收：约1300亿美元（全球第一家营收超千亿美元的纯芯片设计公司）</li>
+<li>全球员工：约35,000人</li>
+<li>市值：2025年突破3万亿美元，全球市值前三大公司之一</li>
+</ul>
+<p>NVIDIA从一家"做游戏显卡的公司"成长为AI时代最核心的算力供应商，这是商业史上最经典的"技术趋势完美匹配核心能力"的案例。NVIDIA的GPU架构天然适合并行计算——而深度学习恰好是需要大规模并行计算的数学密集型任务。</p>
+<h2 id="_2">产品路线图</h2>
+<h3 id="gpu85">数据中心GPU（营收的85%+）</h3>
+<table>
+<thead>
+<tr>
+<th>架构</th>
+<th>代表产品</th>
+<th>制程</th>
+<th>量产年份</th>
+<th>性能跃升</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ampere</td>
+<td>A100</td>
+<td>TSMC 7nm</td>
+<td>2020</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Hopper</td>
+<td>H100/H200</td>
+<td>TSMC 4nm</td>
+<td>2022-2023</td>
+<td>H100 vs A100: ~3x</td>
+</tr>
+<tr>
+<td>Blackwell</td>
+<td>B100/B200</td>
+<td>TSMC 4nm</td>
+<td>2024</td>
+<td>B200 vs H100: ~2.5x</td>
+</tr>
+<tr>
+<td>Blackwell Ultra</td>
+<td>B300</td>
+<td>TSMC 4nm</td>
+<td>2026</td>
+<td>B300 vs B200: ~1.4x</td>
+</tr>
+<tr>
+<td>Rubin</td>
+<td>R100</td>
+<td>TSMC 3nm</td>
+<td>预计2027</td>
+<td>首款HBM4 GPU</td>
+</tr>
+</tbody>
+</table>
+<p>NVIDIA的产品发布节奏已经从"每两年一代"加速到"每年一代"。这不是因为研发变快了，而是因为AI军备竞赛使客户愿意接受更快的换代周期——云厂商（Microsoft/Amazon/Google/Meta）为了不落后于竞争对手，几乎不计成本地购买最新GPU。</p>
+<h3 id="cudanvidia">CUDA：NVIDIA真正的护城河</h3>
+<p>NVIDIA的硬件优势是暂时的（AMD和Intel都在追赶，中国也在自研），但CUDA生态的锁定效应才是最深层的壁垒：</p>
+<ul>
+<li>绝大多数AI框架（PyTorch、TensorFlow、JAX）以CUDA为底层计算平台</li>
+<li>数百万AI工程师的代码都是用CUDA写的</li>
+<li>几乎所有的AI模型（GPT、Llama、Gemini、Claude）的训练和推理代码依赖CUDA</li>
+<li>迁移到AMD的ROCm或Intel的OneAPI虽然理论上可行，但实际工作量极大，生态成熟度差距也很大</li>
+</ul>
+<p>CUDA不是技术上不可替代的——它之所以不可替代，是因为替代它的总切换成本（所有框架、模型、开发者习惯的重新适配）远超过NVIDIA GPU的硬件溢价。</p>
+<h2 id="nvidia_1">NVIDIA的"系统级"转型</h2>
+<p>NVIDIA正在从"卖芯片"转向"卖系统"和"卖数据中心"：</p>
+<ul>
+<li><strong>DGX系列</strong>：NVIDIA自有的AI超级计算机，8颗GPU+高速互连+软件全栈</li>
+<li><strong>GB200 NVL72</strong>：将72颗B200 GPU+36颗Grace CPU通过NVLink Switch连接在一个机柜内，作为一个单体AI超级计算机</li>
+<li><strong>NVIDIA Spectrum-X</strong>：NVIDIA自有的网络交换机，优化AI集群的数据传输</li>
+<li><strong>NVIDIA AI Enterprise</strong>：企业级AI软件套件</li>
+</ul>
+<p>这一转型的逻辑是：当芯片本身的性能提升开始放缓（物理极限），通过系统级优化（互连、网络、散热、软件）继续提升性能。这也使NVIDIA的单客户价值量从"几百万美元的GPU"变成了"几亿美元的完整系统"。</p>
+<h2 id="_3">竞争格局</h2>
+<table>
+<thead>
+<tr>
+<th>竞争者</th>
+<th>领域</th>
+<th style="text-align: center;">威胁程度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AMD MI系列</td>
+<td>数据中心GPU</td>
+<td style="text-align: center;">🟡增长中，推理市场有竞争力</td>
+</tr>
+<tr>
+<td>Intel Gaudi</td>
+<td>AI训练芯片</td>
+<td style="text-align: center;">⚪份额极小（&lt;5%）</td>
+</tr>
+<tr>
+<td>Google TPU</td>
+<td>自研训练/推理</td>
+<td style="text-align: center;">🟡只供Google Cloud，不对外卖</td>
+</tr>
+<tr>
+<td>Amazon Trainium/Inferentia</td>
+<td>自研推理</td>
+<td style="text-align: center;">🟡不对外卖，但蚕食了NVIDIA推理份额</td>
+</tr>
+<tr>
+<td>华为昇腾</td>
+<td>中国AI芯片</td>
+<td style="text-align: center;">🟢在中国市场快速替代NVIDIA</td>
+</tr>
+<tr>
+<td>各类AI芯片创业公司</td>
+<td>AI推理</td>
+<td style="text-align: center;">⚪生态差距太大</td>
+</tr>
+</tbody>
+</table>
+<p>NVIDIA最大的风险不是被某个竞争者"在技术上超越"，而是大客户（云厂商）的自研芯片大量替代NVIDIA——尤其是在推理场景（推理不需要CUDA的训练生态，ncnn/ONNX等开放框架更可行）。</p>
+<h2 id="_4">🔗 关联</h2>
+<ul>
+<li><a href="/kb/行业知识体系/04-IC设计/关键企业/AMD">AMD</a></li>
+<li><a href="/kb/04-IC设计/行业动态/2026年H1全球IC设计行业动态">2026年H1全球IC设计行业动态</a></li>
+<li><a href="/kb/行业知识体系/01-晶圆制造/关键企业/台积电_TSMC">台积电_TSMC</a>（NVIDIA的独家代工厂）</li>
+</ul>
+</div>
+</article>
+<footer class="note-footer">
+  <a href="/kb/行业知识体系/04-IC设计/关键企业/index.html">← 返回目录</a>
+</footer>
+</main>
+</body>
+</html>

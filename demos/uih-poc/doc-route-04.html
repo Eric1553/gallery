@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>联影医疗 · 路线二 POC 技术方案</title>
+  <style>
+    :root {
+      --text: #1b2940; --muted: #63748b; --line: #d7e1ef; --navy: #173b69;
+      --blue: #1f55cc; --teal: #0d8a7a; --orange: #d4820a; --red: #e04560;
+      --purple: #5a3fd4; --gray: #eef3f9; --shadow: 0 8px 24px rgba(22,52,95,.07);
+    }
+    * { box-sizing: border-box; margin: 0; }
+    body { font-family: "PingFang SC","Microsoft YaHei",sans-serif; color: var(--text); background: #f4f8fc; line-height: 1.55; font-size: 14px; }
+    .wrap { max-width: 1440px; margin: 0 auto; padding: 20px 20px 40px; }
+
+    .hero {
+      background: linear-gradient(135deg,#0f2952,#1a4a85); color: #fff;
+      border-radius: 16px; padding: 28px 32px; box-shadow: var(--shadow);
+      display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: start;
+    }
+    .hero h1 { font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+    .hero .lead { font-size: 14px; opacity: .92; max-width: 860px; }
+    .hero-meta { font-size: 12px; opacity: .75; text-align: right; line-height: 1.8; }
+    .hero-kpi { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+    .hero-kpi span { font-size: 12px; padding: 5px 12px; border-radius: 999px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18); }
+    .hero-formula { margin-top: 14px; padding: 12px 16px; border-radius: 10px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); font-size: 13px; line-height: 1.7; }
+    .hero-formula em { font-style: normal; opacity: .85; }
+
+    .sec { margin-top: 28px; }
+    .sec-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+    .sec-num { font-size: 11px; font-weight: 800; color: #fff; background: var(--blue); width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sec-head h2 { font-size: 18px; color: var(--navy); font-weight: 700; }
+    .sec-head p { font-size: 13px; color: var(--muted); margin-left: auto; }
+
+    .panel { background: #fff; border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 20px 22px; }
+
+    .layer-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .layer-table th { background: var(--gray); color: var(--navy); font-size: 11px; font-weight: 700; letter-spacing: .04em; padding: 10px 12px; text-align: left; }
+    .layer-table td { padding: 10px 12px; border-top: 1px solid var(--line); vertical-align: top; }
+    .layer-tag { display: inline-block; font-size: 10px; font-weight: 800; color: #fff; padding: 3px 8px; border-radius: 4px; min-width: 32px; text-align: center; }
+    .lt-l1{background:#3d5575}.lt-l2{background:var(--orange)}.lt-l3{background:var(--teal)}.lt-l4{background:var(--blue)}.lt-l5{background:var(--purple)}
+    .prod { font-weight: 700; color: var(--navy); }
+    .prod small { display: block; font-weight: 400; font-size: 11px; color: var(--muted); margin-top: 2px; }
+    code { font-size: 11px; background: var(--gray); padding: 1px 5px; border-radius: 3px; font-family: ui-monospace,Menlo,monospace; }
+
+    .dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media(max-width:1000px){ .dual { grid-template-columns: 1fr; } }
+
+    .pipe-card { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+    .pipe-head { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
+    .pipe-head.write { background: linear-gradient(90deg,#eef3f9,#f8fafc); border-bottom: 3px solid #3d5575; }
+    .pipe-head.read  { background: linear-gradient(90deg,#f0ecff,#faf8ff); border-bottom: 3px solid var(--purple); }
+    .pipe-head h3 { font-size: 15px; color: var(--navy); }
+    .pipe-head span { font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+    .pipe-head.write span { background: #dce4ef; color: #3d5575; }
+    .pipe-head.read span  { background: #e8e0ff; color: var(--purple); }
+    .pipe-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .pipe-body { padding: 14px 16px 16px; }
+
+    .step { display: grid; grid-template-columns: 36px 1fr; gap: 10px; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+    .step:last-child { border-bottom: none; }
+    .step-icon { width: 36px; height: 36px; border-radius: 8px; color: #fff; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-direction: column; line-height: 1.1; }
+    .step-title { font-size: 13px; font-weight: 700; color: var(--navy); }
+    .step-desc { font-size: 12px; color: var(--text); margin-top: 2px; }
+    .step-proto { margin-top: 5px; font-size: 10px; color: var(--muted); font-family: ui-monospace,Menlo,monospace; background: var(--gray); display: inline-block; padding: 2px 7px; border-radius: 4px; }
+    .step-data { margin-top: 5px; font-size: 11px; color: var(--muted); padding: 6px 8px; background: #fafcff; border-radius: 6px; border: 1px solid var(--line); }
+
+    .ic-src{background:#6b7c93}.ic-fdl{background:#3d5575}.ic-oss{background:var(--red)}.ic-rf{background:var(--orange)}
+    .ic-emb{background:#777}.ic-db{background:var(--teal)}.ic-api{background:var(--blue)}.ic-dora{background:var(--purple)}
+    .ic-user{background:var(--navy)}.ic-llm{background:#7a5cff}
+
+    .pipe-note { margin-top: 12px; padding: 8px 10px; border-radius: 8px; font-size: 11px; line-height: 1.5; }
+    .pipe-note.write { background: #f0f4f8; border: 1px solid #dce4ef; color: #3d5575; }
+    .pipe-note.read  { background: #f5f2ff; border: 1px solid #e0d9ff; color: var(--purple); }
+
+    .subflows { margin-top: 16px; display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+    @media(max-width:900px){ .subflows { grid-template-columns: 1fr; } }
+    .subflow { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; background: #fafcff; }
+    .subflow h4 { font-size: 13px; color: var(--navy); margin-bottom: 8px; }
+    .subflow .path { font-size: 11px; color: var(--muted); line-height: 1.6; }
+    .subflow .path b { color: var(--text); font-weight: 600; }
+
+    .matrix { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 16px; }
+    .matrix th { background: var(--gray); padding: 9px 12px; text-align: left; font-size: 11px; color: var(--navy); }
+    .matrix td { padding: 9px 12px; border-top: 1px solid var(--line); }
+    .tag-write { color: #3d5575; font-weight: 600; }
+    .tag-read  { color: var(--purple); font-weight: 600; }
+
+    .decisions-head { font-size: 12px; font-weight: 800; color: var(--navy); letter-spacing: .04em; margin: 18px 0 10px; display: flex; align-items: center; gap: 8px; }
+    .decisions-head::before { content: ""; width: 4px; height: 14px; background: var(--blue); border-radius: 2px; }
+    .decisions { display: grid; grid-template-columns: repeat(5,1fr); gap: 10px; }
+    @media(max-width:900px){ .decisions { grid-template-columns: 1fr 1fr; } }
+    .decision { border: 1px solid var(--line); border-left: 3px solid var(--blue); border-radius: 8px; padding: 10px 12px; background: #fafcff; }
+    .decision h5 { font-size: 11px; color: var(--blue); font-weight: 800; margin-bottom: 5px; letter-spacing: .02em; }
+    .decision p { font-size: 11px; color: var(--text); line-height: 1.5; }
+    .decision:nth-child(5) { border-left-color: var(--teal); }
+    .decision:nth-child(5) h5 { color: var(--teal); }
+
+    .poc-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+    @media(max-width:900px){ .poc-grid { grid-template-columns: 1fr; } }
+
+    .timeline { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; margin-top: 14px; }
+    @media(max-width:600px){ .timeline { grid-template-columns: 1fr; } }
+    .phase { border: 1px solid var(--line); border-radius: 10px; padding: 12px; border-top: 3px solid var(--blue); font-size: 12px; }
+    .phase:nth-child(2){ border-top-color: var(--purple); }
+    .phase .wk { font-size: 10px; font-weight: 700; color: var(--muted); }
+    .phase h4 { font-size: 13px; color: var(--navy); margin: 4px 0 6px; }
+    .phase li { color: var(--muted); margin-left: 14px; }
+
+    .kpi-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+    .kpi { flex: 1; min-width: 90px; text-align: center; padding: 12px; background: var(--gray); border-radius: 10px; border: 1px solid var(--line); }
+    .kpi .n { font-size: 20px; font-weight: 700; color: var(--navy); }
+    .kpi .l { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    .scene-box { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: #f8fbff; border: 1px solid #d4e2ff; font-size: 12px; line-height: 1.6; }
+    .scene-box strong { color: var(--navy); }
+
+    /* 待定章节 */
+    .badge-tbd {
+      display: inline-block; font-size: 11px; font-weight: 700; color: #b45309;
+      background: #fff7ed; border: 1px solid #fdba74; padding: 3px 10px;
+      border-radius: 999px; margin-left: 8px; vertical-align: middle;
+    }
+    .sec-draft .sec-num { background: #b45309; }
+    .draft-banner {
+      padding: 10px 14px; border-radius: 10px; margin-bottom: 14px;
+      background: #fffbeb; border: 1px dashed #f59e0b; font-size: 12px; color: #92400e; line-height: 1.55;
+    }
+    .draft-banner strong { color: #b45309; }
+    .poc-draft-wrap {
+      border: 2px dashed #fcd34d; border-radius: 14px; padding: 16px;
+      background: linear-gradient(180deg, #fffdf7 0%, #fff 100%);
+      position: relative;
+    }
+    .poc-draft-wrap::before {
+      content: "草案 · 待定";
+      position: absolute; top: 12px; right: 14px;
+      font-size: 10px; font-weight: 800; letter-spacing: .08em;
+      color: #d97706; opacity: .45; pointer-events: none;
+    }
+    .poc-draft-wrap .panel { box-shadow: none; border-style: dashed; border-color: #fde68a; }
+    .hero-kpi .tbd { border-style: dashed; opacity: .85; }
+
+    .footer { margin-top: 28px; text-align: center; font-size: 11px; color: var(--muted); padding: 12px; }
+    .footer .tbd-note { color: #b45309; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div>
+      <h1>联影医疗 · 路线二 POC 技术方案</h1>
+      <p class="lead">索引解耦与 OSS 存储层拆分 · 技术架构方案（§01–§02 已定版）</p>
+      <div class="hero-kpi">
+        <span>架构：五层模型 + 双链路</span>
+        <span>组件：FDL · RAGFlow · OSS · Doris · Index API · Dora</span>
+        <span class="tbd">POC 场景/计划/验收：待定</span>
+      </div>
+      <div class="hero-formula">
+        <strong>两条链路：</strong>
+        <em>写入</em> = 源 → FDL → OSS → RAGFlow → Doris &nbsp;｜&nbsp;
+        <em>调用</em> = 用户 → Dora → Index API / Doris SQL → LLM → 答案+引用
+      </div>
+    </div>
+    <div class="hero-meta">
+      架构路线：路线二<br />
+      §01–§02：<strong style="opacity:1">已定版</strong><br />
+      §03：<strong style="opacity:1;color:#fcd34d">待定</strong><br />
+      检索引擎：Doris 4.x
+    </div>
+  </header>
+
+  <!-- 01 五层架构 -->
+  <section class="sec">
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2>五层架构与组件分工</h2>
+      <p>Agent 只触达 L4/L5</p>
+    </div>
+    <div class="panel" style="padding:0;overflow:hidden;">
+      <table class="layer-table">
+        <thead>
+          <tr><th style="width:52px">层级</th><th style="width:130px">组件</th><th>层职责</th><th>POC 交付项</th><th style="width:110px">联影配合</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="layer-tag lt-l1">L1</span></td>
+            <td><span class="prod">FineDataLink<small>接入 · 调度</small></span></td>
+            <td>文件→OSS、预实/费用数据→Doris；登记 pending；触发 RAGFlow</td>
+            <td>文档同步任务 · 预算/核算样例表同步 · registry + Webhook</td>
+            <td>OSS · 样例数据</td>
+          </tr>
+          <tr>
+            <td><span class="layer-tag lt-l2">L2</span></td>
+            <td><span class="prod">RAGFlow<small>Ingest Only</small></span></td>
+            <td>解析→切片→Embedding→写 Doris；不用内置 ES 检索</td>
+            <td>Q&A/Table 模板 · 写入 Doris 适配</td>
+            <td>Embedding</td>
+          </tr>
+          <tr>
+            <td><span class="layer-tag lt-l3">L3</span></td>
+            <td><span class="prod">OSS + Doris<small>存储 · 索引 · 数仓</small></span></td>
+            <td><strong style="color:var(--red)">OSS</strong> 原文件 · <strong style="color:var(--teal)">Doris</strong> chunk 索引 + 预实/费用宽表</td>
+            <td>DDL · 索引表 · dws_budget_actual / dwd_expense_detail</td>
+            <td>Doris 集群</td>
+          </tr>
+          <tr>
+            <td><span class="layer-tag lt-l4">L4</span></td>
+            <td><span class="prod">Index API<small>检索服务</small></span></td>
+            <td>统一 RAG 出口：双路召回→融合→ACL→evidence JSON</td>
+            <td><code>POST /retrieve</code> · <code>GET /documents/{id}</code></td>
+            <td>网络</td>
+          </tr>
+          <tr>
+            <td><span class="layer-tag lt-l5">L5</span></td>
+            <td><span class="prod">帆软 Dora<small>Agent</small></span></td>
+            <td>意图路由→rag_search / sql_query→带引用回答</td>
+            <td>财务智能助手 · 2 Tool · 演示脚本</td>
+            <td>LLM</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 02 双链路 -->
+  <section class="sec">
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2>完整链路：写入 · 调用</h2>
+      <p>Index API 仅出现在 RAG 调用路径</p>
+    </div>
+
+    <div class="dual">
+      <div class="pipe-card">
+        <div class="pipe-head write">
+          <div><h3>写入链路</h3><div class="pipe-sub">FDL 触发 · 无用户 · 无 Dora / Index API</div></div>
+          <span>WRITE</span>
+        </div>
+        <div class="pipe-body">
+          <div class="step">
+            <div class="step-icon ic-src">源</div>
+            <div>
+              <div class="step-title">① 数据源</div>
+              <div class="step-desc">非结构化：财务制度、费用管理办法、预算细则、月结流程（PDF/Word/Excel）<br/>结构化：预算表、核算实际数、费用明细（SAP/Excel 样例）</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-icon ic-fdl">FDL</div>
+            <div>
+              <div class="step-title">② FDL 接入</div>
+              <div class="step-desc"><strong>文档线：</strong>→ OSS → registry(pending) → 触发 RAGFlow<br/><strong>数据线（并行）：</strong>→ Doris（dws_budget_actual / dwd_expense_detail）</div>
+              <span class="step-proto">OSS PUT · JDBC · HTTP POST</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-icon ic-oss">OSS</div>
+            <div>
+              <div class="step-title">③ OSS 存原文件</div>
+              <div class="step-desc"><code>oss://uih-kb/finance/{doc_id}/{version}/</code></div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-icon ic-rf">RF</div>
+            <div>
+              <div class="step-title">④ RAGFlow 处理</div>
+              <div class="step-desc">读 OSS → 预处理 → 切片（Q&A/Table）→ metadata（domain=finance, doc_type=policy/manual）</div>
+              <span class="step-proto">Pipeline</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-icon ic-emb">EMB</div>
+            <div>
+              <div class="step-title">⑤ Embedding</div>
+              <div class="step-desc">chunk → 向量（bge-large-zh）→ 与查询同模型/版本</div>
+              <span class="step-proto">POST /embed</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-icon ic-db">DB</div>
+            <div>
+              <div class="step-title">⑥ 写入 Doris</div>
+              <div class="step-desc">uih_doc_chunks + registry.status=indexed</div>
+              <span class="step-proto">Stream Load / JDBC</span>
+            </div>
+          </div>
+          <div class="pipe-note write"><strong>完成标志：</strong>Doris 可检索，预实/费用表可 SQL 查询。</div>
+        </div>
+      </div>
+
+      <div class="pipe-card">
+        <div class="pipe-head read">
+          <div><h3>调用链路</h3><div class="pipe-sub">用户提问 · Dora 发起</div></div>
+          <span>READ</span>
+        </div>
+        <div class="pipe-body">
+          <div class="step">
+            <div class="step-icon ic-user">用户</div>
+            <div>
+              <div class="step-title">① 用户提问</div>
+              <div class="step-desc">例：「差旅费报销需要哪些审批环节？」<code>dept=Finance</code></div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-icon ic-dora">Dora</div>
+            <div>
+              <div class="step-title">② 意图路由</div>
+              <div class="step-desc">制度/流程 → <strong>rag_search</strong> · 指标/预实 → <strong>sql_query</strong> · 混合 → 并行双 Tool</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-icon ic-api">API</div>
+            <div>
+              <div class="step-title">③ Index API</div>
+              <div class="step-desc">接收 query + filters + user_context</div>
+              <span class="step-proto">POST /api/v1/retrieve</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-icon ic-emb">EMB</div>
+            <div>
+              <div class="step-title">④a Query 向量化</div>
+              <div class="step-desc">bge-large-zh · 与写入同模型/同版本</div>
+              <span class="step-proto">POST /embed</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-icon ic-db">DB</div>
+            <div>
+              <div class="step-title">④b Doris 双路召回</div>
+              <div class="step-desc">BM25 全文 + ANN 向量，各取候选集 · ACL 过滤</div>
+              <span class="step-proto">JDBC / SQL</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-icon ic-api">API</div>
+            <div>
+              <div class="step-title">⑤ RRF 融合 + evidence</div>
+              <div class="step-desc">双路结果 RRF 融合 → Top-K → 组装 evidence<br/>document_id · snippet · score · oss_uri</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-icon ic-llm">LLM</div>
+            <div>
+              <div class="step-title">⑥ 生成回答</div>
+              <div class="step-desc">带制度引用或预实数据引用</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="subflows">
+      <div class="subflow">
+        <h4>A · 纯 RAG（问制度）</h4>
+        <div class="path"><b>用户</b> → Dora → rag_search → Index API → Doris → LLM<br/><br/>例：月结关账流程有哪些关键步骤？</div>
+      </div>
+      <div class="subflow">
+        <h4>B · 纯 SQL（问预实/费用）</h4>
+        <div class="path"><b>用户</b> → Dora → sql_query → Doris 数仓 → LLM<br/><br/>例：华东区 Q1 预算执行率是多少？<br/>某成本中心差旅费同比偏差多少？</div>
+      </div>
+      <div class="subflow">
+        <h4>C · 混合（POC 重点）</h4>
+        <div class="path"><b>用户</b> → Dora 并行 sql_query + rag_search → 合并 → LLM<br/><br/>例：华东区差旅费为何超支？相关费用制度如何规定？</div>
+      </div>
+    </div>
+
+    <table class="matrix">
+      <thead><tr><th>调用方</th><th>被调方</th><th>协议</th><th>链路</th></tr></thead>
+      <tbody>
+        <tr><td>FDL</td><td>OSS / Doris / RAGFlow</td><td><code>SDK · JDBC · Webhook</code></td><td class="tag-write">写入</td></tr>
+        <tr><td>RAGFlow</td><td>OSS · Embedding · Doris</td><td><code>GET · POST · JDBC</code></td><td class="tag-write">写入</td></tr>
+        <tr><td>用户</td><td>Dora</td><td><code>UI / API</code></td><td class="tag-read">调用</td></tr>
+        <tr><td>Dora</td><td>Index API</td><td><code>POST /retrieve</code></td><td class="tag-read">RAG</td></tr>
+        <tr><td>Dora</td><td>Doris</td><td><code>SQL / NL2SQL</code></td><td class="tag-read">问数</td></tr>
+        <tr><td>Index API</td><td>Embedding · Doris · OSS</td><td><code>HTTP · JDBC</code></td><td class="tag-read">RAG</td></tr>
+        <tr><td>Dora</td><td>LLM</td><td><code>API</code></td><td class="tag-read">调用</td></tr>
+      </tbody>
+    </table>
+
+    <div class="decisions-head">关键设计决策（已定版）</div>
+    <div class="decisions">
+      <div class="decision">
+        <h5>RAGFlow 角色</h5>
+        <p>仅 Ingest：解析 · 切片 · Embedding，写入 Doris。不启用其内置 ES 在线检索。</p>
+      </div>
+      <div class="decision">
+        <h5>检索引擎</h5>
+        <p>Doris 为唯一在线检索引擎：BM25 全文索引 + ANN 向量索引并存。</p>
+      </div>
+      <div class="decision">
+        <h5>混合融合</h5>
+        <p>双路召回后由 Index API 层做 RRF 融合排序，非单条 SQL 内拼接。</p>
+      </div>
+      <div class="decision">
+        <h5>Embedding</h5>
+        <p>bge-large-zh，写入与查询同模型/同版本；归一化向量 + inner_product 近似余弦。</p>
+      </div>
+      <div class="decision">
+        <h5>存储索引解耦</h5>
+        <p>OSS 存原文 · Doris 存索引；重建索引不影响 Dora 与 Tool 配置（路线二核心价值）。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 POC（待定 · 非定版） -->
+  <section class="sec sec-draft">
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2>POC 范围 · 计划 · 验收<span class="badge-tbd">待定</span></h2>
+      <p>草案参考 · 待与客户对齐后定版</p>
+    </div>
+    <div class="draft-banner">
+      <strong>本章节为 POC 实施草案，尚未定版。</strong>
+      下列场景、周期、演示题、验收标准等均供内部讨论与客户提供方向参考，最终以联影确认的对外 POC 文档为准。§01 架构与 §02 链路为已定版内容。
+    </div>
+    <div class="poc-draft-wrap">
+    <div class="poc-grid">
+      <div class="panel">
+        <div class="scene-box">
+          <strong>演示场景（草案 · 参考客户 POC 清单）：</strong><br/>
+          场景 8 · 财务预实分析 — 预算 + 核算实际 → 预实对比、偏差解读<br/>
+          场景 14 · 智能问数 — 自然语言查指标，多轮追问，引用数据来源<br/>
+          叠加：财务制度 / 费用管理办法 RAG 检索（路线二非结构化能力验证）
+        </div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="n">8–10</div><div class="l">制度文档</div></div>
+          <div class="kpi"><div class="n">2 表</div><div class="l">预实+费用</div></div>
+          <div class="kpi"><div class="n">2 Tool</div><div class="l">rag+sql</div></div>
+          <div class="kpi"><div class="n">6 题</div><div class="l">演示问</div></div>
+        </div>
+        <table class="layer-table">
+          <thead><tr><th>类型</th><th>演示问题</th><th>验证点</th></tr></thead>
+          <tbody>
+            <tr><td>RAG ×2</td><td>差旅费报销审批流程？ / 月结关账关键步骤？</td><td>写入+检索+引用</td></tr>
+            <tr><td>SQL ×2</td><td>华东区 Q1 预算执行率？ / 某成本中心费用同比？</td><td>NL2SQL+数仓</td></tr>
+            <tr><td>混合 ×1</td><td>华东差旅费为何超支？制度如何规定？</td><td>双 Tool 并行</td></tr>
+            <tr><td>路线二 ×1</td><td>重建索引后 Agent 仍可用</td><td>存储索引解耦</td></tr>
+          </tbody>
+        </table>
+        <div class="timeline">
+          <div class="phase">
+            <div class="wk">第 1 周 · 链路打通</div>
+            <h4>写入 + 检索 + Agent 联调</h4>
+            <ul>
+              <li>D1–2：FDL 文档/数据入湖 + Doris DDL</li>
+              <li>D3–4：RAGFlow ingest + Index API</li>
+              <li>D5：Dora 双 Tool 端到端</li>
+            </ul>
+          </div>
+          <div class="phase">
+            <div class="wk">第 2 周 · 演示就绪</div>
+            <h4>场景验证 + 现场演示</h4>
+            <ul>
+              <li>6 题全链路跑通 + 混合问答</li>
+              <li>索引重建演示（Dora 零改动）</li>
+              <li>10 分钟演示脚本定稿</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:14px;color:var(--navy);margin-bottom:10px;">验收（精简）</h3>
+        <table class="layer-table" style="margin-bottom:14px;">
+          <tbody>
+            <tr><td>写入</td><td>新文档当日可检索</td></tr>
+            <tr><td>问数</td><td>预实/费用 SQL 题准确返回</td></tr>
+            <tr><td>RAG</td><td>制度题带 document_id 引用</td></tr>
+            <tr><td>混合</td><td>1 题双源 evidence</td></tr>
+            <tr><td>解耦</td><td>重建索引 Tool 配置不变</td></tr>
+          </tbody>
+        </table>
+        <h3 style="font-size:14px;color:var(--navy);margin-bottom:10px;">分工</h3>
+        <table class="layer-table">
+          <thead><tr><th>事项</th><th>联影</th><th>帆软</th></tr></thead>
+          <tbody>
+            <tr><td>环境（OSS · Doris 集群）</td><td>提供</td><td>—</td></tr>
+            <tr><td>样例数据（制度 + 预实/费用）</td><td>提供</td><td>—</td></tr>
+            <tr><td>LLM · Embedding 服务</td><td>提供</td><td>—</td></tr>
+            <tr><td>FDL · RAGFlow · Index API · Dora 搭建</td><td>—</td><td>交付</td></tr>
+            <tr><td>演示脚本 · 联调</td><td>配合</td><td>交付</td></tr>
+          </tbody>
+        </table>
+        <div class="scene-box" style="margin-top:14px;margin-bottom:0;">
+          <strong>POC 裁剪原则（草案）：</strong>样例数据替代真实 SAP 全量接入；制度文档取 8–10 份代表性文件；Index API 最小接口集；混合问答 1 题即可验证架构价值。
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    联影医疗 × 帆软 · 路线二 POC 技术方案<br />
+    §01–§02 架构与链路（已定版）｜ §03 POC 实施细节（<span class="tbd-note">待定</span>）<br />
+    写入：FDL→OSS→RAGFlow→Doris ｜ 调用：Dora→Index API/Doris→LLM
+  </div>
+</div>
+</body>
+</html>

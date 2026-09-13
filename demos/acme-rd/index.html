@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>研发运营总览 - 盛美半导体研发运营看板</title>
+<link rel="stylesheet" href="assets/style.css?v=67">
+<link rel="stylesheet" href="assets/req-spec.css?v=67">
+</head>
+<body data-page="index">
+<div class="layout">
+<aside class="sidebar">
+    <div class="brand">
+    <div class="brand-logo">ACM</div>
+    <h1>研发运营看板</h1>
+    <p>盛美半导体 · 演示原型 v4.4</p>
+  </div>
+  <nav class="nav">
+    <div class="nav-section">业务模块</div>
+    <a href="index.html" class="active" data-page="index">总览</a>
+    <a href="hr.html" class="" data-page="hr">人力资源</a>
+    <a href="site-product.html" class="" data-page="site-product">Site 与产品</a>
+    <a href="case.html" class="" data-page="case">Case 追踪</a>
+    <a href="change.html" class="" data-page="change">变更管理</a>
+    <a href="wet-rd.html" class="" data-page="wet-rd">Wet-RD</a>
+    <a href="lingang.html" class="" data-page="lingang">临港研发线</a>
+    <a href="oa-monitor.html" class="" data-page="oa-monitor">OA 流程监控</a>
+    <a href="knowledge.html" class="" data-page="knowledge">知识库<span class="nav-badge">预览</span></a>
+  </nav>
+  <div class="footer-note">演示数据，口径以业务确认为准</div>
+</aside>
+<main class="main">
+  <header class="topbar">
+    <div class="breadcrumb"><span class="current">总览</span></div>
+    <div class="topbar-actions">
+                  <div class="topbar-period" data-period-mode="month">
+        <span>时间</span>
+    <select data-period-year aria-label="年份">
+      <option value="2025">2025 年</option>
+      <option value="2026" selected>2026 年</option>
+    </select>
+    <select data-period-month aria-label="月份">
+    <option value="all">全年</option>
+    <option value="01">1 月</option>
+    <option value="02">2 月</option>
+    <option value="03">3 月</option>
+    <option value="04">4 月</option>
+    <option value="05">5 月</option>
+    <option value="06" selected>6 月</option>
+    <option value="07">7 月</option>
+    <option value="08">8 月</option>
+    <option value="09">9 月</option>
+    <option value="10">10 月</option>
+    <option value="11">11 月</option>
+    <option value="12">12 月</option>
+    </select>
+      </div>
+      <span class="chip">演示数据</span>
+      <button class="btn" data-action="export"><span class="bi"></span>导出数据</button>
+      <a class="btn btn-primary" href="report.html">月度运营报告</a>
+    </div>
+  </header>
+  <div class="content">
+
+<header class="page-header overview-head">
+  <div>
+    <p class="eyebrow">OPS CONSOLE</p>
+    <h2>研发运营总览</h2>
+    <p>本月结论 / 异常 / 责任 / 待办一屏可见 · 指标可下钻至各业务模块 · 数据截止 2026-06</p>
+  </div>
+  <div class="overview-meta">
+    <span>8 个业务模块</span>
+    <span>11 类 OA 流程</span>
+    <span>v4.4</span>
+  </div>
+</header>
+
+<section class="focus-strip" aria-label="本月管理焦点">
+  <div><span>结论</span><strong>研发运营整体平稳，流程归档率持续改善</strong></div>
+  <div class="risk"><span>异常</span><strong>研发机台 Spec 变更率 14.2%，高于量产机台</strong></div>
+  <div><span>责任人</span><strong>变更管理负责人 · 产品经理 · OA 流程负责人</strong></div>
+  <div class="todo"><span>待办</span><strong>推进低入档率产品与 18 人超时事项</strong></div>
+</section>
+
+<h3 class="section-title">关键指标</h3>
+<div class="kpi-grid fixed3">
+  <div class="kpi-card accent-blue clickable" data-href="site-product.html">
+    <div class="kpi-label">在研立项项目</div>
+    <div class="kpi-value">186</div>
+    <div class="kpi-sub">成熟 62 · 量产 78 · 研发 46</div>
+    <div class="kpi-trend up">较上月 +12</div>
+    <div class="kpi-sparkline" data-sparkline="[142,158,165,172,178,186]" data-color="#1d4e89"></div>
+  </div>
+  <div class="kpi-card accent-green clickable" data-href="case.html">
+    <div class="kpi-label">Case 未归档</div>
+    <div class="kpi-value">47</div>
+    <div class="kpi-sub">PM 判断可关闭：23</div>
+    <div class="kpi-trend down">较上周 −5</div>
+    <div class="kpi-sparkline" data-sparkline="[58,52,51,49,48,47]" data-color="#3b6ea5"></div>
+  </div>
+  <div class="kpi-card accent-amber clickable" data-href="change.html">
+    <div class="kpi-label">本月 Spec 变更率</div>
+    <div class="kpi-value">8.3%</div>
+    <div class="kpi-sub">量产 6.1% · 研发 14.2%</div>
+    <div class="kpi-trend down">环比 −1.2pp</div>
+    <div class="kpi-sparkline" data-sparkline="[11.2,10.5,9.8,9.1,8.7,8.3]" data-color="#b45309"></div>
+  </div>
+  <div class="kpi-card accent-blue clickable" data-href="oa-monitor.html">
+    <div class="kpi-label">流程归档率</div>
+    <div class="kpi-value">76.4%</div>
+    <div class="kpi-sub">超时待办 18 人</div>
+    <div class="kpi-trend up">较上周 +2.1pp</div>
+    <div class="kpi-sparkline" data-sparkline="[68,70,72,73,75,76.4]" data-color="#1d4e89"></div>
+  </div>
+  <div class="kpi-card accent-green clickable" data-href="hr.html">
+    <div class="kpi-label">在岗研发人员</div>
+    <div class="kpi-value">342</div>
+    <div class="kpi-sub">本科及以上 89%</div>
+    <div class="kpi-trend up">较上月 +14</div>
+    <div class="kpi-sparkline" data-sparkline="[328,332,335,338,340,342]" data-color="#3b6ea5"></div>
+  </div>
+  <div class="kpi-card accent-amber clickable" data-href="lingang.html">
+    <div class="kpi-label">夜莺计划项目</div>
+    <div class="kpi-value">28</div>
+    <div class="kpi-sub">立项 8 · 中期 12 · 结案 8</div>
+    <div class="kpi-trend up">较上季 +4</div>
+    <div class="kpi-sparkline" data-sparkline="[18,20,22,24,26,28]" data-color="#b45309"></div>
+  </div>
+</div>
+
+<div class="tab-shell">
+  <div class="tabs">
+    <button class="tab active" data-target="tab-situation" data-group="overview">态势</button>
+    <button class="tab" data-target="tab-modules" data-group="overview">模块</button>
+    <button class="tab" data-target="tab-todos" data-group="overview">待办</button>
+  </div>
+
+  <div id="tab-situation" class="tab-content active" data-group="overview">
+    <p class="ops-dense-note">工作台密度：总览表 + 趋势对比 + 数据来源，对齐 OA 流程监控页节奏。</p>
+    <div class="panel" style="margin-bottom:12px">
+      <div class="panel-head"><div class="panel-head-left"><h3>模块态势总览</h3></div><a class="link" href="#" data-action="export">导出</a></div>
+      <div class="panel-body flush">
+        <table>
+          <tr><th>模块</th><th>关键指标</th><th>数值</th><th>环比</th><th>异常点</th><th>责任</th><th>状态</th></tr>
+          <tr><td>Site 与产品</td><td>在研立项</td><td>186</td><td>+12</td><td>低入档率产品待跟进</td><td>产品经理</td><td><span class="tag tag-warn">关注</span></td></tr>
+          <tr><td>Case 追踪</td><td>未归档</td><td>47</td><td>−5</td><td>PM 可关闭 23</td><td>Case Owner</td><td><span class="tag tag-close">改善</span></td></tr>
+          <tr class="highlight-row"><td>变更管理</td><td>Spec 变更率</td><td>8.3%</td><td>−1.2pp</td><td>研发机台 14.2%</td><td>变更负责人</td><td><span class="tag tag-warn">关注</span></td></tr>
+          <tr><td>OA 流程</td><td>归档率</td><td>76.4%</td><td>+2.1pp</td><td>超时待办 18 人</td><td>OA 流程负责人</td><td><span class="tag tag-close">改善</span></td></tr>
+          <tr><td>人力资源</td><td>在岗人数</td><td>342</td><td>+14</td><td>—</td><td>HRBP</td><td><span class="tag tag-close">正常</span></td></tr>
+          <tr><td>临港研发线</td><td>夜莺项目</td><td>28</td><td>+4</td><td>跨月完成率口径待确认</td><td>临港负责人</td><td><span class="tag tag-warn">待确认</span></td></tr>
+          <tr><td>Wet-RD</td><td>仪器借用</td><td>186</td><td>—</td><td>季度演示周期</td><td>Wet-RD</td><td><span class="tag tag-close">正常</span></td></tr>
+          <tr><td>知识库</td><td>知识条目</td><td>186</td><td>—</td><td>生产取数路径未定</td><td>IT</td><td><span class="tag tag-open">预览</span></td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="ops-workbench-row">
+      <div class="panel">
+        <div class="panel-head"><div class="panel-head-left"><h3>运营趋势（近 6 个月）</h3></div><span class="chip">2026 年 1–6 月</span></div>
+        <div class="panel-body"><div class="chart-wrap" data-tall="true" data-line='{"labels":["1月","2月","3月","4月","5月","6月"],"series":[{"name":"立项数","data":[142,158,165,172,178,186],"c":"#1d4e89","area":true},{"name":"Case未归档","data":[58,52,51,49,48,47],"c":"#3b6ea5"},{"name":"夜莺项目","data":[18,20,22,24,26,28],"c":"#b45309","dashed":true}]}'></div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h3>数据来源构成</h3></div>
+        <div class="panel-body" style="gap:10px;justify-content:flex-start">
+          <div class="chart-wrap" data-donut='[{"l":"OA","v":58,"c":"#1d4e89"},{"l":"CRM","v":28,"c":"#3b6ea5"},{"l":"HR","v":8,"c":"#334155"},{"l":"KM","v":6,"c":"#b45309"}]' data-total="4 源" data-label="数据源"></div>
+          <table style="width:100%;margin:0">
+            <tr><th>来源</th><th>占比</th><th>接入状态</th></tr>
+            <tr><td>OA</td><td>58%</td><td><span class="tag tag-warn">待接入</span></td></tr>
+            <tr><td>CRM</td><td>28%</td><td><span class="tag tag-warn">待接入</span></td></tr>
+            <tr><td>HR</td><td>8%</td><td><span class="tag tag-open">演示</span></td></tr>
+            <tr><td>KM</td><td>6%</td><td><span class="tag tag-open">预览</span></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="panel" style="margin-bottom:12px">
+      <div class="panel-head"><div class="panel-head-left"><h3>关键比率趋势（归档率 / Spec 变更率）</h3></div><span class="chip">百分比口径</span></div>
+      <div class="panel-body"><div class="chart-wrap" data-percent="true" data-line='{"labels":["1月","2月","3月","4月","5月","6月"],"series":[{"name":"流程归档率","data":[68,70,72,73,75,76],"c":"#1d4e89","area":true},{"name":"Spec变更率","data":[11.2,10.5,9.8,9.1,8.7,8.3],"c":"#b45309","dashed":true}]}'></div></div>
+    </div>
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-head"><div class="panel-head-left"><h3>需求覆盖（按模块）</h3></div></div>
+        <div class="panel-body"><div class="chart-wrap" data-hbars='[{"l":"Site","v":10,"c":"#1d4e89"},{"l":"OA","v":5,"c":"#3b6ea5"},{"l":"临港","v":5,"c":"#5b7c99"},{"l":"Case","v":4,"c":"#7a93b0"},{"l":"Wet-RD","v":4,"c":"#94a3b8"},{"l":"其他","v":8,"c":"#b45309"}]'></div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-head-left"><h3>本月异常聚焦</h3></div><a class="link" href="oa-monitor.html">OA 监控 →</a></div>
+        <div class="panel-body flush">
+          <table>
+            <tr><th>异常项</th><th>当前值</th><th>阈值</th><th>责任</th><th>动作</th></tr>
+            <tr class="highlight-row"><td>研发机台 Spec 变更率</td><td>14.2%</td><td>≤10%</td><td>变更负责人</td><td>本周复核</td></tr>
+            <tr><td>OA 超时待办人数</td><td>18</td><td>≤12</td><td>OA 流程负责人</td><td>催办清单</td></tr>
+            <tr><td>Case 未归档</td><td>47</td><td>≤40</td><td>Case Owner</td><td>关闭可关项</td></tr>
+            <tr><td>临港跨月完成率口径</td><td>—</td><td>已确认</td><td>临港负责人</td><td>书面确认</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-modules" class="tab-content" data-group="overview">
+    <p class="ops-dense-note">模块入口保留现有链接与数字；卡片补充状态与责任，提高信息密度。</p>
+    <div class="module-cards grid4">
+      <a class="mini-module-card" href="hr.html">
+        <div class="mmc-top"><div class="mmc-title">人力资源</div></div>
+        <div class="mmc-metrics"><div class="mmc-metric"><div class="mm-v">342</div><div class="mm-l">在岗人数</div></div><div class="mmc-metric"><div class="mm-v">127</div><div class="mm-l">本月出差</div></div></div>
+        <div class="module-card-extra"><span>本科及以上 89%</span><span>环比 +14</span></div>
+      </a>
+      <a class="mini-module-card" href="site-product.html">
+        <div class="mmc-top"><div class="mmc-title">Site 与产品</div></div>
+        <div class="mmc-metrics"><div class="mmc-metric"><div class="mm-v">186</div><div class="mm-l">立项项目</div></div><div class="mmc-metric"><div class="mm-v">524</div><div class="mm-l">在管机台</div></div></div>
+        <div class="module-card-extra"><span>成熟/量产/研发</span><span>含公司级 Fanout</span></div>
+      </a>
+      <a class="mini-module-card" href="case.html">
+        <div class="mmc-top"><div class="mmc-title">Case 追踪</div></div>
+        <div class="mmc-metrics"><div class="mmc-metric"><div class="mm-v">156</div><div class="mm-l">Case 总数</div></div><div class="mmc-metric"><div class="mm-v">69.9%</div><div class="mm-l">归档率</div></div></div>
+        <div class="module-card-extra"><span>未归档 47</span><span>可关闭 23</span></div>
+      </a>
+      <a class="mini-module-card" href="change.html">
+        <div class="mmc-top"><div class="mmc-title">变更管理</div></div>
+        <div class="mmc-metrics"><div class="mmc-metric"><div class="mm-v">28</div><div class="mm-l">Spec 变更</div></div><div class="mmc-metric"><div class="mm-v">8.3%</div><div class="mm-l">变更率</div></div></div>
+        <div class="module-card-extra"><span>研发 14.2%</span><span>量产 6.1%</span></div>
+      </a>
+      <a class="mini-module-card" href="wet-rd.html">
+        <div class="mmc-top"><div class="mmc-title">Wet-RD</div></div>
+        <div class="mmc-metrics"><div class="mmc-metric"><div class="mm-v">186</div><div class="mm-l">仪器借用</div></div><div class="mmc-metric"><div class="mm-v">234</div><div class="mm-l">样品测试</div></div></div>
+        <div class="module-card-extra"><span>2026 Q2</span><span>分维度完成率</span></div>
+      </a>
+      <a class="mini-module-card" href="lingang.html">
+        <div class="mmc-top"><div class="mmc-title">临港研发线</div></div>
+        <div class="mmc-metrics"><div class="mmc-metric"><div class="mm-v">28</div><div class="mm-l">夜莺项目</div></div><div class="mmc-metric"><div class="mm-v">45</div><div class="mm-l">外部需求</div></div></div>
+        <div class="module-card-extra"><span>跨月口径待确认</span></div>
+      </a>
+      <a class="mini-module-card" href="oa-monitor.html">
+        <div class="mmc-top"><div class="mmc-title">OA 流程监控</div></div>
+        <div class="mmc-metrics"><div class="mmc-metric"><div class="mm-v">76.4%</div><div class="mm-l">归档率</div></div><div class="mmc-metric"><div class="mm-v">18</div><div class="mm-l">超时待办</div></div></div>
+        <div class="module-card-extra"><span>10 类流程</span><span>每周三更新</span></div>
+      </a>
+      <a class="mini-module-card" href="knowledge.html">
+        <div class="mmc-top"><div class="mmc-title">知识库 <span class="tag tag-open">预览</span></div></div>
+        <div class="mmc-metrics"><div class="mmc-metric"><div class="mm-v">186</div><div class="mm-l">知识条目</div></div><div class="mmc-metric"><div class="mm-v">412</div><div class="mm-l">学习人次</div></div></div>
+        <div class="module-card-extra"><span>取数路径待确认</span></div>
+      </a>
+      <a class="mini-module-card" href="site-product.html#fanout">
+        <div class="mmc-top"><div class="mmc-title">公司级 Fanout</div></div>
+        <div class="mmc-metrics"><div class="mmc-metric"><div class="mm-v">12</div><div class="mm-l">本周期申请</div></div><div class="mmc-metric"><div class="mm-v">4</div><div class="mm-l">待选机</div></div></div>
+        <div class="module-card-extra"><span>内/外发布</span><span>选机 → 反馈 → 汇总</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div id="tab-todos" class="tab-content" data-group="overview">
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-head"><div class="panel-head-left"><h3>待确认事项</h3></div><a class="link" href="#" data-action="export">导出</a></div>
+        <div class="panel-body flush">
+          <table>
+            <tr><th>事项</th><th>责任方</th><th>模块</th><th>状态</th><th>优先级</th></tr>
+            <tr class="expand-row"><td><span class="exp-caret">▶</span>知识库生产取数路径</td><td>IT</td><td>KM</td><td><span class="tag tag-open">预览已出</span></td><td>高</td></tr>
+            <tr class="detail-row" style="display:none"><td colspan="5"><div class="detail-inner"><div class="detail-grid"><div class="detail-kv"><div class="k">原型</div><div class="v">知识库预览页已上</div></div><div class="detail-kv"><div class="k">阻塞</div><div class="v">弘毅导出加费 vs OA 发布</div></div><div class="detail-kv"><div class="k">下一步</div><div class="v">IT 书面确认取数路径</div></div></div></div></td></tr>
+            <tr><td>CRM / OA / 真实设备接入</td><td>IT / 业务</td><td>Site / OA</td><td><span class="tag tag-warn">待数据接入</span></td><td>高</td></tr>
+            <tr><td>临港完成率跨月归属口径</td><td>业务</td><td>临港</td><td><span class="tag tag-warn">待确认</span></td><td>高</td></tr>
+            <tr><td>产品类别历史字段映射</td><td>OA / IT</td><td>Site</td><td><span class="tag tag-open">跟进中</span></td><td>中</td></tr>
+            <tr><td>Layer RLS 对标数据维度</td><td>何采 / CRM</td><td>Site</td><td><span class="tag tag-open">跟进中</span></td><td>中</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-head-left"><h3>本周行动清单</h3></div><span class="chip">演示数据</span></div>
+        <div class="panel-body flush">
+          <table>
+            <tr><th>行动</th><th>Owner</th><th>截止</th><th>关联 KPI</th><th>状态</th></tr>
+            <tr class="highlight-row"><td>复核研发机台 Spec 变更清单</td><td>变更负责人</td><td>本周五</td><td>变更率 14.2%</td><td><span class="tag tag-warn">进行中</span></td></tr>
+            <tr><td>催办 OA 超时 18 人</td><td>OA 流程负责人</td><td>本周三</td><td>归档率 76.4%</td><td><span class="tag tag-open">待办</span></td></tr>
+            <tr><td>关闭 PM 判断可关 Case 23</td><td>Case Owner</td><td>下周</td><td>未归档 47</td><td><span class="tag tag-open">待办</span></td></tr>
+            <tr><td>确认临港跨月完成率口径</td><td>临港负责人</td><td>待排期</td><td>夜莺 28</td><td><span class="tag tag-warn">待确认</span></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="alert-box info" style="margin-top:12px">演示数据，口径以业务确认为准；Fanout 为公司级发布 / 选机 / 现场反馈 / 角色汇总</div>
+  </div>
+</div>
+
+  </div>
+</main>
+</div>
+<script src="assets/charts.js?v=67"></script>
+<script src="assets/app.js?v=67"></script>
+<script>setActiveNav('index');</script>
+
+<script
+  src="http://120.55.184.234:8787/embed.js?v=20260801acme4"
+  data-demo-id="acme-rd"
+  data-mode="basic"
+  data-api="http://120.55.184.234:8787"
+  async defer></script>
+
+</body>
+</html>

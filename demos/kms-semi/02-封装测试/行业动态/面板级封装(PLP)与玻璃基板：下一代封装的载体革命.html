@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面板级封装(PLP)与玻璃基板：下一代封装的载体革命 — 半导体知识库</title>
+<meta name="description" content="# 面板级封装(PLP)与玻璃基板：下一代封装的载体革命  > 先进封装的两场"载体革命"正在同步发生：一是从圆形晶圆→方形面板的Panel-Level Packaging（PLP），用面积效率换取成本下降；二是从有机基板→玻璃基板（Glass Substrate），用材料革命换取性能跃迁。两场革命">
+<link rel="stylesheet" href="/kb/assets/style.css">
+</head>
+<body>
+<div class="top-accent"></div>
+<header class="page-header">
+  <a href="/kb/首页.html" class="home-link">🔬 半导体知识库</a>
+</header>
+<main class="container">
+<nav class="breadcrumb"><a href="/kb/首页.html">半导体知识库</a> <span class="sep">›</span> <a href="/kb//02-封装测试/index.html">02-封装测试</a> <span class="sep">›</span> <a href="/kb//02-封装测试/行业动态/index.html">行业动态</a></nav>
+<article class="note">
+<header class="note-header">
+  <h1>面板级封装(PLP)与玻璃基板：下一代封装的载体革命</h1>
+  
+</header>
+<div class="note-body">
+<h1 id="plp">面板级封装(PLP)与玻璃基板：下一代封装的载体革命</h1>
+<blockquote>
+<p>先进封装的两场"载体革命"正在同步发生：一是从圆形晶圆→方形面板的Panel-Level Packaging（PLP），用面积效率换取成本下降；二是从有机基板→玻璃基板（Glass Substrate），用材料革命换取性能跃迁。两场革命的目标殊途同归：让下一代芯片——尤其是AI和HPC——不再被封装基板和载体的物理极限所困。</p>
+</blockquote>
+<hr />
+<h2 id="_1">📖 技术概述</h2>
+<p><strong>面板级封装（PLP）</strong> 和 <strong>玻璃基板</strong> 是两个独立但可能交汇的技术路线。PLP解决的是"效率"问题——用更大的方形面板替代300mm圆形晶圆，单次产出面积提升3-5倍。玻璃基板解决的是"性能"问题——用玻璃替代ABF有机基板，实现更低损耗/更高平整度/更大面积。</p>
+<p>两者交汇的可能场景极具想象力：<strong>在玻璃基板上做面板级Fan-Out封装</strong>——这将是封装效率+性能的同时跃迁。但2026年这两条技术路线尚在各自的导入期，交汇点预计在2028-2030年。</p>
+<p><strong>为什么是现在？</strong> ABF基板（有机材料）在L/S&lt;5/5μm时遇到物理极限（树脂热膨胀导致尺寸不稳定、高频介电损耗急剧增大），硅中介层虽然性能完美但成本极高且受光罩尺寸限制。玻璃恰好位于两者之间——性能优于ABF（接近硅）、成本低于硅中介层、面积可超越光罩限制。这是材料科学的"黄金中点"。</p>
+<hr />
+<h2 id="plp_1">🔬 第一篇：面板级封装（PLP）</h2>
+<h3 id="plp_2">为什么需要PLP？</h3>
+<div class="codehilite"><pre><span></span><code>晶圆级封装（FOWLP）在300mm圆片上进行：
+
+        ╭──────────────╮
+       ╱                ╲      可用面积 ≈ π×(300/2)² = 70,686 mm²
+      │    Die  Die      │     实际利用率 ≈ 85%（边缘浪费）
+      │   Die  Die Die   │     有效产出 ≈ 60,000 mm²
+      │  Die  Die  Die   │
+       ╲                ╱
+        ╰──────────────╯
+
+面板级封装（FOPLP）在510×515mm方形面板上进行：
+
+    ┌───────────────────┐      可用面积 = 510×515 = 262,650 mm²
+    │ Die Die Die Die  │      实际利用率 ≈ 95%+（方形→方形，边缘浪费极低）
+    │ Die Die Die Die  │      有效产出 ≈ 250,000 mm²
+    │ Die Die Die Die  │      **是晶圆级的4.2倍！**
+    │ Die Die Die Die  │
+    └───────────────────┘
+</code></pre></div>
+
+<p><strong>核心数据</strong>：一片510×515mm面板可放置的芯片数量，相当于4-5片300mm晶圆的量。对于PMIC（芯片面积~3×3mm）、RF前端（~2×2mm）这种小面积芯片，单面板产出可达数千颗——封装成本摊薄效应极为显著。</p>
+<h3 id="plp_3">PLP的技术挑战</h3>
+<p>PLP看起来只是"晶圆变大了+变方了"，但在工程上这是颠覆性的——整个封装设备生态系统是为300mm圆形晶圆构建的（光刻机、刻蚀机、电镀槽、PVD溅射台……）。把设备从300mm圆片扩展到510×515mm面板，不是简单的"放大"，而是一系列基础工艺的重新开发：</p>
+<table>
+<thead>
+<tr>
+<th>挑战</th>
+<th>300mm晶圆</th>
+<th>510×515mm面板</th>
+<th style="text-align: center;">难度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>翘曲控制</strong></td>
+<td>300mm圆片翘曲&lt;50μm（相对成熟）</td>
+<td>大面积面板的CTE失配导致翘曲&gt;200μm——RDL光刻无法对焦</td>
+<td style="text-align: center;">🔴 极高</td>
+</tr>
+<tr>
+<td><strong>RDL曝光</strong></td>
+<td>步进式光刻机（Stepper）——每次曝光一小区域，拼接完成</td>
+<td>需要面板级光刻机——全球只有少数几款（Canon/ORC）</td>
+<td style="text-align: center;">🔴 极高</td>
+</tr>
+<tr>
+<td><strong>电镀均匀性</strong></td>
+<td>300mm电镀槽均匀性&lt;5%（成熟）</td>
+<td>510×515mm面板电镀均匀性&gt;10% → RDL铜厚不一致→阻抗偏差</td>
+<td style="text-align: center;">🟡 高</td>
+</tr>
+<tr>
+<td><strong>模塑均匀性</strong></td>
+<td>300mm压缩成型技术成熟</td>
+<td>面板级模塑——大面积下树脂填充均匀性极难控制</td>
+<td style="text-align: center;">🟡 高</td>
+</tr>
+<tr>
+<td><strong>载板/搬运</strong></td>
+<td>标准晶圆FOUP/FOSB搬运体系</td>
+<td>面板需要全套新搬运机器人、载具和洁净室物流体系</td>
+<td style="text-align: center;">🟡 中（投资问题）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>PLP的核心矛盾</strong>：理论上成本可以降3-5倍，但导入PLP需要替换整条产线——新设备+新工艺+新搬运系统+新洁净室布局。没有足够大的单一产品量（年产几亿颗同规格芯片）支撑，前期投入无法摊薄。<strong>PMIC和RF前端是PLP的理想"first customer"</strong>——芯片面积小、量大、成本敏感、CTE要求相对低。</p>
+</blockquote>
+<h3 id="plp_4">主要PLP玩家</h3>
+<table>
+<thead>
+<tr>
+<th>厂商</th>
+<th>国家/地区</th>
+<th>PLP进展</th>
+<th>面板规格</th>
+<th>目标应用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Nepes</strong></td>
+<td>韩国</td>
+<td>全球最早量产FOPLP（2019年），已有稳定产能</td>
+<td>510×515mm</td>
+<td>PMIC/显示驱动/射频</td>
+</tr>
+<tr>
+<td><strong>ASE</strong></td>
+<td>台湾</td>
+<td>2024年启动FOPLP中试线，2026年扩产</td>
+<td>600×600mm（更大！）</td>
+<td>PMIC/消费SiP</td>
+</tr>
+<tr>
+<td><strong>PTI（力成）</strong></td>
+<td>台湾</td>
+<td>FOPLP布局，存储器封装方向</td>
+<td>510×515mm</td>
+<td>DRAM/NAND封装</td>
+</tr>
+<tr>
+<td><strong>SPIL（矽品）</strong></td>
+<td>台湾</td>
+<td>FOPLP研发线，与ASE步伐接近</td>
+<td>510×515mm</td>
+<td>消费SiP</td>
+</tr>
+<tr>
+<td><strong>JCET（长电）</strong></td>
+<td>中国</td>
+<td>绍兴基地具备FOPLP实验能力，但量产节奏慢于台湾/韩国</td>
+<td>510×515mm（规划）</td>
+<td>PMIC/射频</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>中国在PLP上的位置</strong>：长电科技在绍兴的先进封装基地规划了FOPLP能力，但2026年仍在设备验证和工艺攻关阶段。PLP设备几乎全为日韩欧美供应商（Canon曝光机/TEL电镀/Disco划片），中国面板级封装设备的国产化几近空白。</p>
+</blockquote>
+<hr />
+<h2 id="glass-substrate">🔬 第二篇：玻璃基板（Glass Substrate）</h2>
+<h3 id="abf">为什么用玻璃替代ABF？</h3>
+<p>ABF（Ajinomoto Build-up Film）基板是过去20年高端芯片封装的基石——从Intel CPU到NVIDIA GPU都用ABF基板。但AI芯片尺寸（&gt;800mm²）和信号速率（&gt;112Gbps SerDes）正在把ABF推向物理极限：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th style="text-align: center;">ABF有机基板</th>
+<th style="text-align: center;">玻璃基板</th>
+<th style="text-align: center;">硅中介层</th>
+<th>玻璃的优势</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>介电常数（Dk）</strong></td>
+<td style="text-align: center;">3.5-4.5</td>
+<td style="text-align: center;"><strong>3.5-4.0</strong></td>
+<td style="text-align: center;">—</td>
+<td>更低Dk=更低信号延迟——112Gbps SerDes的关键</td>
+</tr>
+<tr>
+<td><strong>介电损耗（Df）</strong></td>
+<td style="text-align: center;">0.01-0.02 (1GHz)</td>
+<td style="text-align: center;"><strong>0.003-0.005 (1GHz)</strong></td>
+<td style="text-align: center;">—</td>
+<td>Df低3-5倍——高频信号衰减大幅降低</td>
+</tr>
+<tr>
+<td><strong>CTE（热膨胀系数）</strong></td>
+<td style="text-align: center;">15-18 ppm/°C</td>
+<td style="text-align: center;"><strong>3-8 ppm/°C</strong></td>
+<td style="text-align: center;">3 ppm/°C</td>
+<td>接近硅（3ppm）→翘曲大幅降低</td>
+</tr>
+<tr>
+<td><strong>平整度</strong></td>
+<td style="text-align: center;">~5-10μm（树脂固化收缩不均）</td>
+<td style="text-align: center;"><strong>&lt;1μm</strong>（玻璃天然平整）</td>
+<td style="text-align: center;">&lt;0.1μm</td>
+<td>平整度比ABF高一个数量级→可以做更细L/S</td>
+</tr>
+<tr>
+<td><strong>可实现的L/S</strong></td>
+<td style="text-align: center;">5/5μm（极限）</td>
+<td style="text-align: center;"><strong>&lt;2/2μm</strong>（理论上）</td>
+<td style="text-align: center;">0.4/0.4μm</td>
+<td>玻璃的表面平整度允许光刻更细线宽</td>
+</tr>
+<tr>
+<td><strong>面板尺寸潜力</strong></td>
+<td style="text-align: center;">100×100mm（最大基板）</td>
+<td style="text-align: center;"><strong>510×515mm</strong>（玻璃面板，无光罩限制！）</td>
+<td style="text-align: center;">26×33mm（单光罩）</td>
+<td>面积&gt;20倍于硅中介层</td>
+</tr>
+<tr>
+<td><strong>成本</strong></td>
+<td style="text-align: center;">中等</td>
+<td style="text-align: center;">中高（导入期）</td>
+<td style="text-align: center;">极高（$3000+/片300mm）</td>
+<td>成本远低于硅中介层，长期可接近ABF</td>
+</tr>
+<tr>
+<td><strong>脆性</strong></td>
+<td style="text-align: center;">柔韧（可弯曲加工）</td>
+<td style="text-align: center;">脆（钻孔/切割须激光+特殊工艺）</td>
+<td style="text-align: center;">脆</td>
+<td>脆性是玻璃基板的最大工程挑战</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>一句话总结玻璃基板的定位</strong>：性能接近硅中介层（Dk/Df/CTE/平整度均优于ABF一个量级），成本有潜力接近ABF基板，面积无光罩限制——它将高性能封装从"硅中介层的极致+天价"中解放出来，提供了一个"80%性能，30%成本"的中间选项。</p>
+</blockquote>
+<h3 id="_2">玻璃基板的关键工艺挑战</h3>
+<ol>
+<li>
+<p><strong>TGV（Through-Glass Via，玻璃通孔）</strong>：硅基板用TSV（DRIE刻蚀+Cu电镀），玻璃基板需要TGV——在玻璃上钻微孔并金属化。玻璃的刻蚀特性与硅完全不同（非晶体、各向同性刻蚀），TGV的深宽比和侧壁粗糙度控制是最大技术难题。激光诱导深度刻蚀（LIDE）是主流方案。</p>
+</li>
+<li>
+<p><strong>金属化/附着力</strong>：铜在玻璃上的附着力远弱于在硅或有机树脂上——需要特殊的种子层（Ti/Cr粘结层）和表面处理工艺，防止Cu线路在热循环中剥离。</p>
+</li>
+<li>
+<p><strong>脆性加工</strong>：玻璃的脆性意味着传统机械钻孔（PCB级）无法使用——所有通孔和切割必须用激光+化学蚀刻完成，设备体系和工艺know-how与ABF完全不同。</p>
+</li>
+</ol>
+<h3 id="_3">全球玻璃基板路线图</h3>
+<table>
+<thead>
+<tr>
+<th>厂商</th>
+<th>角色</th>
+<th>路线图</th>
+<th>关键里程碑</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Intel</strong></td>
+<td><strong>最大推手</strong></td>
+<td>2023年宣布投资$1B+建玻璃基板产线，目标2027-2028年量产用于下一代至强/数据中心GPU</td>
+<td>全球唯一将玻璃基板作为公司级战略方向推进的IDM</td>
+</tr>
+<tr>
+<td><strong>Samsung/ABS</strong></td>
+<td>三星集团子公司ABS（Samsung Electro-Mechanics的基板部门）主导</td>
+<td>2025年启动玻璃基板中试线，目标2027-2028年用于三星Exynos和HBM封装</td>
+<td>三星"代工+HBM+玻璃基板"一体方案——对抗台积电CoWoS的长期战略</td>
+</tr>
+<tr>
+<td><strong>SKC（SK集团）</strong></td>
+<td>玻璃基板材料+工艺</td>
+<td>2024年收购美国玻璃基板专业公司Absolics，2026年计划建量产线</td>
+<td>绑定SK海力士HBM封装</td>
+</tr>
+<tr>
+<td><strong>Corning（康宁）</strong></td>
+<td>玻璃材料供应商</td>
+<td>为Intel/三星提供专用封装玻璃（低CTE/高平整度配方）</td>
+<td>玻璃材料端的技术源头——没有康宁的特种玻璃，就没有玻璃基板</td>
+</tr>
+<tr>
+<td><strong>Schott（肖特）</strong></td>
+<td>德国玻璃巨头</td>
+<td>提供MEMS/封装级特种玻璃</td>
+<td>与EVG/SUSS在键合领域有合作</td>
+</tr>
+<tr>
+<td><strong>京东方/彩虹/东旭</strong></td>
+<td>中国面板玻璃</td>
+<td>2025年开始布局封装级玻璃基板</td>
+<td>中国在面板玻璃上有全球产能优势，但封装级（TGV/平整度/m级缺陷控制）要求远高于显示面板</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>中国玻璃基板现状</strong>：京东方/彩虹在显示面板玻璃（G10.5，2940×3370mm）上已是全球最大产能，但封装级玻璃基板（510×515mm起步，要求零气泡/微米级平整度/超低CTE）的技术台阶极高。目前中国在封装级玻璃基板上的整体布局处于概念验证到中试阶段，落后Intel/三星约3-4年。但面板玻璃制造的基本功（浮法工艺/退火/切割）是中国在半导体材料领域少有的全球级优势之一。</p>
+</blockquote>
+<hr />
+<h2 id="vs-abf-vs">📊 玻璃基板 vs ABF vs 硅中介层的竞争替代关系</h2>
+<div class="codehilite"><pre><span></span><code>          性能 →（互连密度、信号完整性、CTE匹配）
+        低       中       高       极高
+成本     │        │        │        │
+低       │ ABF基板│        │        │
+         │ 12/12μm│        │        │
+中       │        │ 玻璃基板│        │
+         │        │ &lt;2/2μm │        │
+高       │        │        │        │
+         │        │        │        │ 硅中介层
+极高     │        │        │        │ 0.4/0.4μm
+</code></pre></div>
+
+<p><strong>替代时间线预估</strong>：
+- <strong>2026-2028</strong>：ABF基板仍为主流（12/12μm→8/8μm→5/5μm渐进改良）。玻璃基板在Intel/三星内部小批量验证，不对外代工
+- <strong>2028-2030</strong>：玻璃基板开始在AI/数据中心GPU中替代部分ABF和硅中介层（最先替代CoWoS中的硅中介层——"玻璃中介层"概念）。ABF基板退守中低端
+- <strong>2030+</strong>：玻璃基板+PLP（面板级玻璃封装）组合可能成为AI/HPC芯片封装的标准配置——一块600×600mm玻璃面板上同时完成RDL+Die互连+基板功能，从晶圆级到面板级的范式转换完成</p>
+<hr />
+<h2 id="_4">🎯 帆软产品关联度分析</h2>
+<table>
+<thead>
+<tr>
+<th>产品线</th>
+<th style="text-align: center;">关联度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FineReport</td>
+<td style="text-align: center;">🟢</td>
+<td>PLP面板的RDL良率/翘曲量测/电镀均匀性监控——与FOWLP类似但面板尺寸从300mm圆片换为510×515mm方板，数据量更大、监控维度更多；玻璃基板TGV的孔径/侧壁粗糙度/金属化缺陷SPC监控</td>
+</tr>
+<tr>
+<td>FineBI</td>
+<td style="text-align: center;">🟢</td>
+<td>PLP vs FOWLP产线效率+成本对比分析、玻璃基板良率从面板级下钻到单颗基板位置、玻璃供应商（康宁/肖特/国产）批次质量对比——管理层工艺路线决策的核心分析工具</td>
+</tr>
+<tr>
+<td>FDL数据底座</td>
+<td style="text-align: center;">🟡</td>
+<td>PLP新设备体系（面板级光刻机/电镀槽/模塑机）的数据格式可能各厂商不统一→FDL做统一管道；但PLP设备生态尚未标准化，前期投入大</td>
+</tr>
+<tr>
+<td>简道云与AI Agent</td>
+<td style="text-align: center;">🟡</td>
+<td>简道云：PLP面板载具/玻璃基板运输治具的流转和清洁周期管理；AI Agent：TGV钻孔缺陷的AOI图像自动分类（孔形椭圆/侧壁裂纹/金属化不完整？）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_5">🎤 售前场景</h2>
+<h3 id="1plp">场景1：PLP产线导入——工艺路线决策数据建模</h3>
+<p><strong>① 客户画像</strong>：ASE/长电/华天的高层技术规划团队，正在评估新建FOWLP产线还是直接上FOPLP。两条路线总投资相差2-3倍，FOPLP风险更高但潜在成本优势巨大。</p>
+<p><strong>② 痛点</strong>：FOPLP的"成本优势"取决于良率爬坡速度——如果FOPLP良率三年才爬到85%而FOWLP六个月就能到95%，前者的累计成本优势在前三年为负。但良率爬坡曲线是假设性的——需要基于自身历史FOWLP爬坡数据、设备供应商承诺和竞品情报做综合建模。目前用Excel建敏感性分析——"改一个假设全表崩溃"。</p>
+<p><strong>③ 帆软切入方案</strong>：FineBI构建FOWLP vs FOPLP全生命周期TCO对比模型——输入变量（初期良率/爬坡斜率/面板尺寸/设备CAPEX/折旧年限/UPH/芯片尺寸）→ 动态输出逐年累计成本对比和NPV分析。底层数据接入公司已有的FOWLP产线良率和成本历史数据做参数校准。</p>
+<p><strong>④ 参考话术</strong>："你们在纠结FOWLP还是FOPLP——FineBI把两条路线的TCO模型拉通：输入你们自己的FOWLP历史良率数据做参数校准，设定FOPLP的几种保守/激进爬坡假设——五年累计成本曲线一出来，哪个假设下有优势一目了然。这个决策值几个亿，不能靠Excel拍。"</p>
+<hr />
+<h3 id="2tgv">场景2：玻璃基板TGV良率监控——新工艺的"数据地基"</h3>
+<p><strong>① 客户画像</strong>：Intel/三星/ABS的玻璃基板TGV（Through-Glass Via）制程工程部。TGV是玻璃基板制造中良率最关键的工序——钻孔孔径偏差、侧壁粗糙度、金属化填充空洞，任何一个缺陷都可能导致基板报废。</p>
+<p><strong>② 痛点</strong>：TGV工艺涉及激光钻孔→化学蚀刻→PVD种子层→Cu电镀→CMP多道工序，每道都有独立的量测设备输出数据——但数据格式各不同（SEM图像/共聚焦显微镜/四探针电阻/AOI光学），工程师靠手动截图+Excel对比排查。一块玻璃基板上有<strong>数万至数十万个TGV</strong>——单靠人眼排查缺陷几乎不可能。</p>
+<p><strong>③ 帆软切入方案</strong>：FDL统一管道整合激光钻孔参数（功率/脉宽/焦点）、蚀刻后SEM量测、电镀后电阻量测、CMP后CMP量测 → FineReport按基板坐标输出TGV良率热力图 → FineBI跨批次TGV参数与最终基板良率关联分析。</p>
+<p><strong>④ 参考话术</strong>："你们一块玻璃基板十几万个TGV——AOI扫一遍发现几千个缺陷点，现在靠工程师一个个截图分析？FineReport给你一张基板上每个TGV孔径和电阻的分布热力图——哪片区域TGV孔径偏大、是不是激光扫描路径的边缘效应，一眼看出来。FineBI拉通激光+蚀刻+电镀+CMP全参数——到底是哪道工序在拖TGV良率，三分钟定位。"</p>
+<hr />
+<h3 id="3">场景3：先进封装路线图追踪——产业情报的数据整合</h3>
+<p><strong>① 客户画像</strong>：帆软售前团队自身——在面对先进封装客户时，需要快速呈现"我们懂你的技术路线"。PLP和玻璃基板是前沿热点，客户可能已经在做技术评估但不会主动分享内部路线图。</p>
+<p><strong>② 痛点</strong>：PLP和玻璃基板的产业信息分散在Intel公开演讲、三星财报电话会、Yole/Prismark付费报告、学术论文和供应链传言中。售前团队缺乏一个结构化的快速查阅工具来在客户交流中展现行业认知。</p>
+<p><strong>③ 帆软切入方案</strong>：FineReport制作"PLP与玻璃基板产业追踪看板"——汇总主要玩家（Intel/三星/ASE/长电/康宁/肖特）的技术路线图时间线、公开投资数据、产能规划 → 售前团队在客户拜访前5分钟快速刷新，展现产业视野 + 植入帆软自己的数据能力展示。</p>
+<p><strong>④ 参考话术（内部）</strong>："去拜访长电绍兴基地——他们评估FOPLP还是扩FOWLP，这是他们CTO今年最大的决策。我们打开自建的PLP产业追踪看板，Intel和ASE的PLP路线图一目了然——长电的人看到我们对产业方向门清，信任感就上来了。"</p>
+<hr />
+<h2 id="_6">🔗 延伸阅读</h2>
+<ul>
+<li><a href="/kb/02-封装测试/行业动态/Fan-Out封装技术：从InFO到FOPLP">Fan-Out封装技术：从InFO到FOPLP</a> — FOPLP面板级Fan-Out的详细展开——本文的PLP篇与Fan-Out笔记互补</li>
+<li><a href="/kb/02-封装测试/行业动态/先进封装技术深度：CoWoS、3D堆叠与Chiplet的技术路线与产业格局">先进封装技术深度：CoWoS、3D堆叠与Chiplet的技术路线与产业格局</a> — 硅中介层/CoWoS的定位——玻璃基板试图替代的核心组件</li>
+<li><a href="/kb/02-封装测试/行业动态/封装基板与先进封装设备：从ABF到混合键合">封装基板与先进封装设备：从ABF到混合键合</a> — ABF基板的技术现状与极限——玻璃基板要颠覆的对象</li>
+<li><a href="/kb/02-封装测试/行业动态/封装材料体系：Underfill、TIM、Molding与基板材料">封装材料体系：Underfill、TIM、Molding与基板材料</a> — 玻璃基板配套的材料体系变化</li>
+<li><a href="/kb/02-封装测试/行业动态/半导体测试技术：CP、FT与ATE体系">半导体测试技术：CP、FT与ATE体系</a> — PLP/玻璃基板带来的新测试挑战</li>
+</ul>
+<hr />
+<p><em>创建于 2026-07-13 · 徐文浩 (Lorin) · 帆软上海售前</em></p>
+</div>
+</article>
+<footer class="note-footer">
+  <a href="/kb/02-封装测试/行业动态/index.html">← 返回目录</a>
+</footer>
+</main>
+</body>
+</html>

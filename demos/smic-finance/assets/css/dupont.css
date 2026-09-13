@@ -1,0 +1,489 @@
+/* 杜邦分析 · 增强样式 */
+
+/* ===== 专业架构图 ===== */
+.dupont-arch {
+  position: relative;
+  background: linear-gradient(165deg, #f4f8fc 0%, #fafcfe 45%, #fff 100%);
+  border: 1px solid #dce4ef;
+  border-radius: 8px;
+  padding: 16px 12px 14px;
+  overflow: hidden;
+}
+
+.da-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 0 8px 14px;
+  border-bottom: 1px dashed #d0dbe8;
+  margin-bottom: 8px;
+}
+
+.da-formula-block .da-formula-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.da-formula-block .da-formula-eq {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.da-formula-block .da-formula-eq em {
+  font-style: normal;
+  color: var(--accent);
+  padding: 0 6px;
+  font-weight: 800;
+}
+
+.da-legend {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+
+.da-legend span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.da-legend i {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.da-legend i.c-profit { background: #005293; }
+.da-legend i.c-turn { background: #fa8c16; }
+.da-legend i.c-lev { background: #722ed1; }
+
+.da-stage {
+  position: relative;
+  min-height: 420px;
+  padding: 8px 4px 12px;
+}
+
+.da-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.da-svg path {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.da-svg path.l-main { stroke: #91caff; }
+.da-svg path.l-profit { stroke: #4a9fd4; }
+.da-svg path.l-turn { stroke: #ffc069; }
+.da-svg path.l-lev { stroke: #b37feb; }
+
+.da-root-wrap {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 6px;
+}
+
+.da-branches {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  gap: 0 6px;
+  align-items: start;
+}
+
+.da-op {
+  align-self: start;
+  margin-top: 72px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #c5d9ef;
+  color: var(--primary);
+  font-size: 14px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 82, 147, 0.1);
+}
+
+.da-branch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+
+.da-branch-head {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 3px 10px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+.da-branch.b-profit .da-branch-head { background: linear-gradient(90deg, #003d6b, #005293); }
+.da-branch.b-turn .da-branch-head { background: linear-gradient(90deg, #d46b08, #fa8c16); }
+.da-branch.b-lev .da-branch-head { background: linear-gradient(90deg, #531dab, #722ed1); }
+
+.da-vline {
+  width: 2px;
+  height: 14px;
+  background: linear-gradient(180deg, #91caff, #4a9fd4);
+  margin: 0 auto 4px;
+}
+
+.da-branch.b-turn .da-vline { background: linear-gradient(180deg, #ffc069, #fa8c16); }
+.da-branch.b-lev .da-vline { background: linear-gradient(180deg, #b37feb, #722ed1); }
+
+.da-node {
+  position: relative;
+  background: #fff;
+  border: 1px solid #dce4ef;
+  border-radius: 8px;
+  padding: 10px 12px 9px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(30, 55, 110, 0.07);
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+  min-width: 118px;
+  max-width: 148px;
+}
+
+.da-node.is-link {
+  cursor: pointer;
+  border-color: #91caff;
+  background: linear-gradient(180deg, #f0f7ff 0%, #fff 100%);
+}
+
+.da-node.is-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(24, 144, 255, 0.18);
+  border-color: var(--accent);
+}
+
+.da-node.is-active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.25);
+}
+
+.da-node.n-root {
+  min-width: 168px;
+  max-width: 200px;
+  padding: 14px 18px;
+  border-width: 2px;
+  border-color: var(--primary);
+  background: linear-gradient(180deg, #e6f4ff 0%, #fff 55%);
+  box-shadow: 0 4px 14px rgba(0, 82, 147, 0.15);
+}
+
+.da-node.n-factor {
+  min-width: 136px;
+  border-top-width: 3px;
+}
+
+.da-branch.b-profit .da-node.n-factor { border-top-color: #005293; }
+.da-branch.b-turn .da-node.n-factor { border-top-color: #fa8c16; }
+.da-branch.b-lev .da-node.n-factor { border-top-color: #722ed1; }
+
+.da-node.n-leaf {
+  min-width: 100px;
+  max-width: 120px;
+  padding: 8px 8px 7px;
+}
+
+.da-node.n-leaf.fill-tag { border-left: 3px solid var(--warning); }
+
+.dn-lv {
+  position: absolute;
+  left: 6px;
+  top: 5px;
+  font-size: 8px;
+  font-weight: 800;
+  color: #fff;
+  background: rgba(18, 32, 59, 0.55);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.da-node.n-root .dn-lv { background: var(--primary); }
+
+.dn-name {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.35;
+  margin-top: 2px;
+}
+
+.da-node.n-root .dn-name { font-size: 12px; color: var(--primary-dark); font-weight: 600; }
+
+.dn-abbr {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.dn-val {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-top: 4px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.da-node.n-root .dn-val { font-size: 26px; color: var(--primary); }
+
+.dn-chg {
+  font-size: 10px;
+  margin-top: 5px;
+  line-height: 1.3;
+}
+
+.dn-chg.up { color: var(--success); }
+.dn-chg.dn { color: var(--danger); }
+
+.dn-formula {
+  font-size: 9px;
+  color: var(--accent);
+  margin-top: 5px;
+  padding-top: 5px;
+  border-top: 1px dashed #e4e8ef;
+  font-weight: 600;
+}
+
+.da-ratio-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.da-ratio-op {
+  font-size: 12px;
+  font-weight: 800;
+  color: #8c98a8;
+  flex-shrink: 0;
+}
+
+.da-detail-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #eef2f8;
+  width: 100%;
+}
+
+.da-footer {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #eef2f8;
+  text-align: center;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.da-level-rail {
+  position: absolute;
+  left: 0;
+  top: 60px;
+  bottom: 20px;
+  width: 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 4px 0;
+  z-index: 0;
+}
+
+.da-level-rail span {
+  font-size: 9px;
+  font-weight: 700;
+  color: #9aa3b5;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  text-align: center;
+}
+
+.da-stage-inner {
+  margin-left: 36px;
+}
+
+@media (max-width: 1100px) {
+  .da-branches {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .da-op { display: none; }
+  .da-branch { border-bottom: 1px dashed #e4e8ef; padding-bottom: 16px; }
+}
+
+/* ===== 旧金字塔（保留兼容） ===== */
+.dupont-pyramid-wrap {
+  padding: 20px 16px 12px;
+  background: linear-gradient(180deg, #f8fafd 0%, #fff 100%);
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+.dupont-detail-panel { border-left: 4px solid var(--accent); }
+.dupont-detail-panel .panel-header { background: #fafcfe; }
+
+.dupont-fill-box {
+  width: 100%;
+  margin-top: 12px;
+  background: #fff;
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  border-radius: 4px;
+  min-height: 64px;
+  font-size: 12px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.indicator-tag {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin-left: 4px;
+  font-weight: 600;
+}
+
+.tag-sys { background: #f6ffed; color: #389e0d; border: 1px solid #b7eb8f; }
+.tag-mix { background: #e6f7ff; color: #096dd9; border: 1px solid #91d5ff; }
+.tag-manual { background: #fff7e6; color: #d48806; border: 1px solid #ffd591; }
+.tag-formula { background: #f9f0ff; color: #722ed1; border: 1px solid #d3adf7; }
+
+.dupont-mega-table { font-size: 11px; }
+.dupont-mega-table th { position: sticky; top: 0; z-index: 2; background: #f5f8fc; }
+.dupont-mega-table tr.cat-row td {
+  background: #eef4fb;
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 12px;
+  padding: 8px 12px;
+}
+
+.dupont-mega-table tr.fill-row td:first-child { border-left: 3px solid var(--warning); }
+
+.dupont-search input {
+  width: 100%;
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.dupont-site-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.dupont-site-tab {
+  padding: 4px 12px;
+  font-size: 11px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+
+.dupont-site-tab.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.dupont-note {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: linear-gradient(90deg, #eef4fb, #f6f9fd);
+  border: 1px dashed #b9cce4;
+  border-left: 4px solid var(--primary);
+  border-radius: 6px;
+  font-size: 12px;
+  color: #3a4660;
+  line-height: 1.55;
+}
+
+.dupont-note b { color: var(--primary); }
+.dupont-note a { color: var(--primary); font-weight: 700; text-decoration: none; }
+
+.dupont-subnav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.dupont-subnav a {
+  padding: 6px 14px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  background: #fff;
+}
+
+.dupont-subnav a.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.dupont-subnav a:hover:not(.active) {
+  border-color: var(--accent);
+  color: var(--primary);
+}
+
+.dupont-subnav .sub-lv {
+  margin-left: 6px;
+  padding: 1px 6px;
+  font-size: 10px;
+  border-radius: 3px;
+  background: rgba(0, 82, 147, 0.08);
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.dupont-subnav a.active .sub-lv {
+  background: rgba(255, 255, 255, 0.22);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.dupont-meta-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.dupont-meta-row span b { color: var(--text-secondary); }

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>变更管理看板 - 盛美半导体研发运营看板</title>
+<link rel="stylesheet" href="assets/style.css?v=67">
+<link rel="stylesheet" href="assets/req-spec.css?v=67">
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+    <div class="brand">
+    <div class="brand-logo">ACM</div>
+    <h1>研发运营看板</h1>
+    <p>盛美半导体 · 演示原型 v4.4</p>
+  </div>
+  <nav class="nav">
+    <div class="nav-section">业务模块</div>
+    <a href="index.html" class="" data-page="index">总览</a>
+    <a href="hr.html" class="" data-page="hr">人力资源</a>
+    <a href="site-product.html" class="" data-page="site-product">Site 与产品</a>
+    <a href="case.html" class="" data-page="case">Case 追踪</a>
+    <a href="change.html" class="active" data-page="change">变更管理</a>
+    <a href="wet-rd.html" class="" data-page="wet-rd">Wet-RD</a>
+    <a href="lingang.html" class="" data-page="lingang">临港研发线</a>
+    <a href="oa-monitor.html" class="" data-page="oa-monitor">OA 流程监控</a>
+    <a href="knowledge.html" class="" data-page="knowledge">知识库<span class="nav-badge">预览</span></a>
+  </nav>
+  <div class="footer-note">演示数据，口径以业务确认为准</div>
+</aside>
+<main class="main">
+  <header class="topbar">
+    <div class="breadcrumb"><a href="index.html">总览</a><span class="sep">/</span><span class="current">变更管理</span></div>
+    <div class="topbar-actions">
+                  <div class="topbar-period" data-period-mode="month">
+        <span>时间</span>
+    <select data-period-year aria-label="年份">
+      <option value="2025">2025 年</option>
+      <option value="2026" selected>2026 年</option>
+    </select>
+    <select data-period-month aria-label="月份">
+    <option value="all">全年</option>
+    <option value="01">1 月</option>
+    <option value="02">2 月</option>
+    <option value="03">3 月</option>
+    <option value="04">4 月</option>
+    <option value="05">5 月</option>
+    <option value="06" selected>6 月</option>
+    <option value="07">7 月</option>
+    <option value="08">8 月</option>
+    <option value="09">9 月</option>
+    <option value="10">10 月</option>
+    <option value="11">11 月</option>
+    <option value="12">12 月</option>
+    </select>
+      </div>
+      <span class="chip">演示数据</span>
+      <button class="btn" data-action="export"><span class="bi"></span>导出数据</button>
+      <a class="btn btn-primary" href="report.html">月度运营报告</a>
+    </div>
+  </header>
+  <div class="content">
+    <div class="page-header">
+      <div class="ph-titles"><h2>变更管理看板</h2><p>Spec · Checksheet · 产品文档变更管控</p></div>
+      <div class="ph-actions"><button class="btn" data-action="req">需求说明</button></div>
+    </div>
+    
+    
+
+<div id="req-spec-data" data-title="变更管理看板 · 需求说明" data-sub="对应客户原始需求（Spec / Checksheet / 产品文档变更管控）" style="display:none">
+  <div class="req-list">
+    <div class="req-item"><div class="req-idx">1</div><div class="req-body2"><div class="req-item-t">Spec 变更</div><div class="req-item-d">统计 Spec 变更次数与变更率。机台类别取自项目启动流程：是否首次发布 = 0 取选择机台类别，= 1 取变更机台类别。变更率 = Spec 申请类型 = 1 的项目号数 ÷ 对应机台类型项目总数。支持 按项目 / Site / 产品 / 机台类型，展示环比升降，可钻取明细。</div></div></div>
+    <div class="req-item"><div class="req-idx">2</div><div class="req-body2"><div class="req-item-t">Checksheet 变更</div><div class="req-item-d">逻辑同 Spec：Checksheet 申请类型 = 1 计为变更；变更率 = 变更项目数 ÷ 对应机台类型项目总数；按同产品类别聚合展示。</div></div></div>
+    <div class="req-item"><div class="req-idx">3</div><div class="req-body2"><div class="req-item-t">产品文档变更</div><div class="req-item-d">产品文档变更次数 按Site / 产品类别 / 文档类型，产品文档共 7 种类型；支持 按项目号筛选查看每个文件的变更情况，用于变更管控。</div></div></div>
+  </div>
+</div>
+<div class="filter-bar" data-filter-live="true">
+  <span class="chip">Site / 项目号可筛选</span>
+  <div class="filter-group"><label>变更类型</label><select disabled aria-disabled="true"><option>Spec变更</option><option>Checksheet变更</option><option>产品文档变更</option></select></div>
+  <div class="filter-group"><label>Site</label><select id="change-site-filter"><option>全部</option><option>TSMC</option><option>SMIC</option><option>Intel</option></select></div>
+  <div class="filter-group"><label>机台类型</label><select disabled aria-disabled="true"><option>全部</option><option>量产</option><option>成熟</option><option>研发</option></select></div>
+  <div class="filter-group"><label>项目号</label><select id="change-project-filter"><option>全部项目</option><option>P-2026-0142</option><option>P-2026-0201</option><option>P-2025-0887</option></select></div>
+  </div>
+
+<div class="kpi-grid">
+  <div class="kpi-card accent-blue"><div class="kpi-top"><div class="kpi-label">Spec 变更次数</div></div><div class="kpi-value">28</div><div class="kpi-sub">变更率 8.3%</div></div>
+  <div class="kpi-card accent-green"><div class="kpi-top"><div class="kpi-label">Checksheet 变更</div></div><div class="kpi-value">19</div><div class="kpi-sub">变更率 5.6%</div></div>
+  <div class="kpi-card accent-purple"><div class="kpi-top"><div class="kpi-label">产品文档变更</div></div><div class="kpi-value">42</div><div class="kpi-sub">7 类文档 · 变更管控</div></div>
+  <div class="kpi-card accent-amber"><div class="kpi-top"><div class="kpi-label">Spec 变更率环比</div></div><div class="kpi-value">-1.2pp</div><div class="kpi-sub">较上月下降</div></div>
+</div>
+
+<div class="grid-2">
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>变更率 按Site · Spec vs Checksheet</h3></div><a class="link" href="#" data-action="drill" data-title="变更明细" data-sub="按Site · Spec/CS" data-cols="项目号,Site,变更类型,变更次数,变更率">钻取 →</a></div>
+    <div class="panel-body"><div class="chart-wrap" data-percent="true" data-group-bars='{"groups":[{"label":"TSMC","values":[9.2,5.8]},{"label":"SMIC","values":[7.8,4.9]},{"label":"Intel","values":[10.5,6.2]},{"label":"Samsung","values":[6.4,4.1]}],"series":["Spec","Checksheet"]}'></div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>变更率 按产品 · Spec vs Checksheet</h3></div></div>
+    <div class="panel-body"><div class="chart-wrap" data-percent="true" data-group-bars='{"groups":[{"label":"WET-CMP","values":[7.1,4.8]},{"label":"WET-Clean","values":[8.9,5.2]},{"label":"ECP","values":[11.2,7.1]},{"label":"Track","values":[6.8,4.2]}],"series":["Spec","Checksheet"]}'></div>
+      <p class="chart-footnote">变更口径：CS 申请类型 = 1</p></div>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-head"><div class="panel-head-left"><h3>变更率 按机台类型 · Spec vs Checksheet</h3></div><a class="link" href="#" data-action="drill">钻取明细 →</a></div>
+  <div class="panel-body"><div class="chart-wrap" data-percent="true" data-group-bars='{"groups":[{"label":"量产","values":[6,5]},{"label":"成熟","values":[5,4]},{"label":"研发","values":[14,10]}],"series":["Spec","Checksheet"]}'></div></div>
+</div>
+
+<div class="panel">
+  <div class="panel-head"><div class="panel-head-left"><h3>月度变更次数趋势 (Spec vs Checksheet)</h3></div></div>
+  <div class="panel-body"><div class="chart-wrap" data-line='{"labels":["1月","2月","3月","4月","5月","6月"],"series":[{"name":"Spec","data":[18,21,26,24,30,28],"c":"#2563eb"},{"name":"Checksheet","data":[12,14,18,16,21,19],"c":"#4a7ab0"}]}'></div></div>
+</div>
+
+<div class="grid-2">
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>产品文档变更 按Site</h3></div></div>
+    <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"TSMC","v":14},{"l":"SMIC","v":11},{"l":"Intel","v":9},{"l":"Samsung","v":8}]'></div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>产品文档变更 按产品类别</h3></div></div>
+    <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"WET-CMP","v":16},{"l":"ECP","v":12},{"l":"Track","v":8},{"l":"WET-Clean","v":6}]'></div></div>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-head"><div class="panel-head-left"><h3>产品文档变更 按文档类型 (7 类)</h3></div><a class="link" href="#" data-action="drill" data-title="产品文档变更明细 (按项目 × 文档类型)" data-sub="每个项目下各类文档的变更情况" data-cols="项目号,Site,文档类型,变更次数,最近变更,负责人">按项目明细 →</a></div>
+  <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"规格书","v":18},{"l":"作业指导书","v":14},{"l":"检查表","v":12},{"l":"图纸","v":9},{"l":"BOM","v":7},{"l":"测试报告","v":6},{"l":"变更通知ECN","v":5}]'></div>
+    <p class="chart-footnote">按文档类型统计；可按项目号下钻</p>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-head"><h3>产品文档变更 · 单文件明细 (按项目号)</h3></div>
+  <div class="panel-body flush">
+    <table id="change-file-table">
+      <tr><th>项目号</th><th>Site</th><th>文档类型</th><th>文件名</th><th>变更次数</th><th>最近变更</th><th>负责人</th></tr>
+      <tr data-project="P-2026-0142" data-site="TSMC"><td>P-2026-0142</td><td>TSMC</td><td>规格书</td><td>SPEC-WET-CMP-v4.pdf</td><td>2</td><td>2026-06-12</td><td>张**</td></tr>
+      <tr data-project="P-2026-0142" data-site="TSMC"><td>P-2026-0142</td><td>TSMC</td><td>作业指导书</td><td>SOP-CMP-0142.docx</td><td>1</td><td>2026-06-08</td><td>李**</td></tr>
+      <tr class="highlight-row" data-project="P-2026-0201" data-site="Intel"><td>P-2026-0201</td><td>Intel</td><td>测试报告</td><td>TR-ECP-0201.pdf</td><td>3</td><td>2026-06-18</td><td>王**</td></tr>
+      <tr data-project="P-2025-0887" data-site="SMIC"><td>P-2025-0887</td><td>SMIC</td><td>变更通知ECN</td><td>ECN-0887-Rev2.pdf</td><td>1</td><td>2026-05-22</td><td>刘**</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-head"><h3>变更明细 (可钻取)</h3><a class="link" href="#" data-action="export">导出 →</a></div>
+  <div class="panel-body flush">
+    <table>
+      <tr><th>项目号</th><th>Site</th><th>产品类别</th><th>机台类型</th><th>变更类型</th><th>变更次数</th><th>占总项目比</th></tr>
+      <tr><td>P-2026-0142</td><td>TSMC</td><td>WET</td><td>量产</td><td>Spec</td><td>3</td><td>12%</td></tr>
+      <tr><td>P-2026-0201</td><td>Intel</td><td>ECP</td><td>研发</td><td>Spec</td><td>5</td><td>20%</td></tr>
+      <tr><td>P-2025-0887</td><td>SMIC</td><td>Track</td><td>成熟</td><td>Checksheet</td><td>2</td><td>8%</td></tr>
+    </table>
+  </div>
+</div>
+<div class="alert-box info">机台类别从项目启动流程取 · spec申请类型=1 计变更 · 同产品类别聚合展示</div>
+  </div>
+</main>
+</div>
+<script src="assets/charts.js?v=67"></script>
+<script src="assets/app.js?v=67"></script>
+<script>setActiveNav('change');</script>
+
+<script
+  src="http://120.55.184.234:8787/embed.js?v=20260801acme4"
+  data-demo-id="acme-rd"
+  data-mode="basic"
+  data-api="http://120.55.184.234:8787"
+  async defer></script>
+
+</body>
+</html>

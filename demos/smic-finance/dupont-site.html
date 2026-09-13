@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>杜邦分析 · Site | 财经驾驶舱</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/dupont.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="logo-area">
+      <div class="logo-mark">SMIC</div>
+      <div class="logo-text"><h1>财经驾驶舱</h1><span>杜邦 · L2 经营成效</span></div>
+    </div>
+    <nav class="header-nav">
+      <a href="index.html" data-page="overview">总览</a>
+      <a href="revenue.html" data-page="revenue">收入专题</a>
+      <a href="cost.html" data-page="cost">成本专题</a>
+      <a href="profit.html" data-page="profit">盈利效率</a>
+      <a href="dupont-site.html" data-page="dupont" class="active">杜邦分析</a>
+    </nav>
+    <div class="header-meta"><span class="badge-proto">HTML 原型</span><span>2025-07 · 月度</span></div>
+  </header>
+
+  <div class="app-body">
+    <aside class="sidebar"></aside>
+
+    <main class="main-content">
+      <div class="dupont-subnav">
+        <a href="dupont-site.html" class="active">Site 视图 <span class="sub-lv">L2 经营成效</span></a>
+        <a href="dupont-tree.html">集团树状图 <span class="sub-lv">L4 专题分析</span></a>
+        <a href="dupont-table.html">集团表格报告 <span class="sub-lv">L5 下钻穿透</span></a>
+      </div>
+
+      <div class="page-toolbar">
+        <div class="toolbar-head">
+          <div class="page-title">杜邦分析 · Site 视图<span class="level-tag">L2 经营成效</span></div>
+          <div class="page-desc">四层固定展开 · 蓝色指标锚点跳转 · Oracle + 部分填报 · 比上期 / 比上年同期</div>
+        </div>
+        <div class="toolbar-controls">
+          <div class="dupont-site-tabs" id="site-tabs">
+            <button type="button" class="dupont-site-tab active" data-site="group">集团合并</button>
+            <button type="button" class="dupont-site-tab" data-site="smic">SMIC</button>
+            <button type="button" class="dupont-site-tab" data-site="smic-n">SMIC-N</button>
+            <button type="button" class="dupont-site-tab" data-site="smic-s">SMIC-S</button>
+          </div>
+          <div class="toolbar-divider"></div>
+          <div class="seg-group" data-tab-group="period">
+            <span class="seg-label">周期</span>
+            <button class="sub-tab-btn active" data-value="month">月度</button>
+            <button class="sub-tab-btn" data-value="quarter">季度</button>
+          </div>
+        </div>
+        <div class="filter-bar" id="filter-bar"></div>
+      </div>
+
+      <div class="kpi-row" id="dupont-kpis"></div>
+
+      <div class="panel col-12">
+        <div class="panel-header">
+          <span class="panel-title">杜邦分解架构图（四层 · 三因素 · 固定展开）</span>
+          <div class="panel-actions">
+            <button class="panel-action" onclick="location.href='dupont-tree.html'">九层树状图 ↗</button>
+            <button class="panel-action" onclick="location.href='dupont-table.html'">108 项指标表 ↗</button>
+          </div>
+        </div>
+        <div class="panel-body" style="padding:10px 12px"><div id="dupont-arch"></div></div>
+      </div>
+
+      <div class="panel-grid" style="margin-top:12px">
+        <div class="panel col-4">
+          <div class="panel-header"><span class="panel-title">ROE 三因素趋势（近 12 月）</span></div>
+          <div class="panel-body"><div class="chart-box sm" id="chart-roe-trend"></div></div>
+        </div>
+        <div class="panel col-4">
+          <div class="panel-header"><span class="panel-title">Site ROE 对比</span><span class="panel-sub">当期</span></div>
+          <div class="panel-body"><div class="chart-box sm" id="chart-site-compare"></div></div>
+        </div>
+        <div class="panel col-4">
+          <div class="panel-header"><span class="panel-title">杜邦三因素 · 当期 vs 同期</span></div>
+          <div class="panel-body"><div class="chart-box sm" id="chart-factor-bar"></div></div>
+        </div>
+      </div>
+
+      <div class="panel col-12" id="section-roe-table" style="margin-top:12px">
+        <div class="panel-header">
+          <span class="panel-title">净资产收益率及杜邦核心指标表</span>
+          <div class="panel-actions"><button class="panel-action" onclick="location.href='dupont-table.html'">108 项全景表 ↗</button></div>
+        </div>
+        <div class="panel-body" style="overflow-x:auto">
+          <table class="data-table dupont-mega-table">
+            <thead>
+              <tr>
+                <th>指标</th><th>来源</th><th class="text-right">当期</th><th class="text-right">上期</th>
+                <th class="text-right">环比差异</th><th class="text-right">上年同期</th><th class="text-right">同比差异</th>
+                <th class="text-right">当年累计</th><th class="text-right">累计同比</th>
+              </tr>
+            </thead>
+            <tbody id="roe-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel col-12 dupont-detail-panel" id="detail-section" style="margin-top:12px;display:none">
+        <div class="panel-header"><span class="panel-title" id="detail-title">指标详情</span></div>
+        <div class="panel-body">
+          <div class="dupont-meta-row" id="detail-meta"></div>
+          <div class="chart-box sm" id="detail-chart"></div>
+          <table class="data-table" style="margin-top:14px" id="detail-mini-table">
+            <thead><tr><th>期间</th><th class="text-right">数值</th><th class="text-right">环比</th><th class="text-right">同比</th></tr></thead>
+            <tbody></tbody>
+          </table>
+          <label style="display:block;margin-top:12px;font-size:12px;color:var(--text-muted)">经营建议 / 评论填报（部分指标）</label>
+          <textarea class="dupont-fill-box" placeholder="请输入分析说明或填报备注…"></textarea>
+        </div>
+      </div>
+
+      <div class="dupont-note">
+        <b>分析思路：</b>Site 视图聚焦 ROE 三因素分解，蓝色节点可锚点跳转至下方详情区；
+        完整九层树与长期资产/存货/权益专题见 <a href="dupont-tree.html">集团树状图</a>，
+        108 项指标填报见 <a href="dupont-table.html">集团表格</a>。
+      </div>
+    </main>
+  </div>
+
+  <nav class="anchor-nav">
+    <a href="#section-roe-table">指标表</a>
+    <a href="#detail-section">指标详情</a>
+  </nav>
+
+  <script src="assets/js/echarts.min.js"></script>
+  <script src="assets/js/mock-data.js"></script>
+  <script src="assets/js/dupont-data.js"></script>
+  <script src="assets/js/dupont.js"></script>
+  <script src="assets/js/levels.js"></script>
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/charts.js"></script>
+  <script>
+    boot(function () {
+      Cockpit.initNav('dupont', { sidebarPage: 'dupont-site' });
+      Cockpit.renderFilterBar(document.getElementById('filter-bar'));
+
+      bootStep('KPI', () => {
+        const k = DupontData.coreKpis;
+        document.getElementById('dupont-kpis').innerHTML = [
+          { label: '净资产收益率 ROE', value: k.roe.value, unit: '%', yoy: `+${k.roe.yoy}pp`, mom: `+${k.roe.mom}pp`, hi: true },
+          { label: '销售净利率', value: k.npm.value, unit: '%', yoy: `+${k.npm.yoy}pp`, mom: `+${k.npm.mom}pp` },
+          { label: '总资产周转率', value: k.tat.value, unit: '次', yoy: `+${k.tat.yoy}`, mom: `+${k.tat.mom}` },
+          { label: '权益乘数', value: k.em.value, unit: '', yoy: `${k.em.yoy}`, mom: `${k.em.mom}` }
+        ].map(x => `
+          <div class="kpi-card ${x.hi ? 'highlight' : ''}">
+            <div class="kpi-label">${x.label}</div>
+            <div class="kpi-value">${x.value}<span class="kpi-unit">${x.unit}</span></div>
+            <div class="kpi-metrics">
+              ${x.yoy ? `<span class="${String(x.yoy).startsWith('-') ? 'down' : 'up'}">同比 ${x.yoy}</span>` : ''}
+              ${x.mom ? `<span class="${String(x.mom).startsWith('-') ? 'down' : 'up'}">环比 ${x.mom}</span>` : ''}
+            </div>
+          </div>`).join('');
+      });
+
+      bootStep('架构图', () => {
+        Dupont.renderArchitecture(document.getElementById('dupont-arch'), DupontData.architecture, showDetail);
+      });
+
+      bootStep('ROE趋势', () => {
+        const t = DupontData.roeTrend;
+        const labels = t.months.map(m => m + '月');
+        Charts.init(document.getElementById('chart-roe-trend'), {
+          tooltip: { trigger: 'axis' },
+          legend: { data: ['ROE', '销售净利率', '周转率'], top: 4, left: 'center', itemGap: 12, textStyle: { fontSize: 10 } },
+          grid: { left: 48, right: 48, top: 42, bottom: 28 },
+          xAxis: { type: 'category', data: labels },
+          yAxis: [
+            { type: 'value', name: 'ROE %', splitLine: { lineStyle: { type: 'dashed', color: '#eef1f6' } } },
+            { type: 'value', name: '净利率/周转', splitLine: { show: false } }
+          ],
+          series: [
+            { type: 'line', name: 'ROE', data: t.roe, yAxisIndex: 0, smooth: true, itemStyle: { color: '#005293' }, lineStyle: { width: 2 } },
+            { type: 'line', name: '销售净利率', data: t.npm, yAxisIndex: 1, smooth: true, itemStyle: { color: '#52c41a' } },
+            { type: 'line', name: '周转率', data: t.tat, yAxisIndex: 1, smooth: true, itemStyle: { color: '#fa8c16' } }
+          ]
+        });
+      });
+
+      bootStep('Site对比', () => {
+        const sc = DupontData.siteCompare;
+        Charts.bar(document.getElementById('chart-site-compare'), sc.map(s => s.site), [
+          { name: 'ROE', data: sc.map(s => s.roe), color: '#005293' }
+        ], { yName: '%' });
+      });
+
+      bootStep('三因素柱图', () => {
+        const core = DupontData.indicatorRows.filter(r => r.cat === 'core');
+        Charts.bar(document.getElementById('chart-factor-bar'), core.slice(1).map(r => r.name.replace('销售净利率', '净利率').replace('总资产周转率', '周转率')), [
+          { name: '当期', data: core.slice(1).map(r => r.current), color: '#005293' },
+          { name: '同期', data: core.slice(1).map(r => r.yoyPrev), color: '#91caff' }
+        ]);
+      });
+
+      bootStep('指标表', () => {
+        Dupont.renderIndicatorTable(document.getElementById('roe-table-body'), DupontData.indicatorRows.filter(r => r.cat === 'core'), { groupByCat: false });
+      });
+
+      bootStep('Site切换', () => {
+        Dupont.bindSiteTabs(document.getElementById('site-tabs'), siteId => {
+          Dupont.updateArchitectureForSite(document.getElementById('dupont-arch'), siteId);
+        });
+      });
+    });
+
+    function showDetail(node) {
+      if (!node) return;
+      const sec = document.getElementById('detail-section');
+      sec.style.display = 'block';
+      document.getElementById('detail-title').textContent = node.name + ' — 指标详情';
+      document.getElementById('detail-meta').innerHTML = `
+        <span><b>指标编号：</b>${node.id || '—'}</span>
+        <span><b>层级：</b>${node.level || '—'}</span>
+        <span><b>数据来源：</b>Oracle / BOSS</span>
+        <span><b>可比：</b>比上期 · 比上年同期</span>`;
+      const months = DupontData.roeTrend.months.slice(-8).map(m => '2025-' + m);
+      const map = { npm: DupontData.roeTrend.npm, tat: DupontData.roeTrend.tat, roe: DupontData.roeTrend.roe };
+      const base = map[node.id] || map.npm || DupontData.roeTrend.roe;
+      Charts.line(document.getElementById('detail-chart'), months,
+        [{ name: node.name, data: base.slice(-8), color: '#1890ff', area: true }]);
+      document.querySelector('#detail-mini-table tbody').innerHTML = months.map((m, i) => {
+        const v = base.slice(-8)[i];
+        const mom = i > 0 ? (v - base.slice(-8)[i - 1]).toFixed(2) : '—';
+        return `<tr><td>${m}</td><td class="num">${Cockpit.fmt.num(v)}</td><td class="num up">${mom}</td><td class="num up">+${(0.3 + i * 0.08).toFixed(2)}</td></tr>`;
+      }).join('');
+      sec.scrollIntoView({ behavior: 'smooth' });
+      Charts.resizeAll();
+    }
+  </script>
+</body>
+</html>

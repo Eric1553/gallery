@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>半导体行业知识库 — 全景首页</title>
+<style>
+  :root { --bg:#0f1117; --panel:#161822; --border:#252836; --text:#c9d1d9; --text2:#8b949e; --accent:#58a6ff; --green:#3fb950; --yellow:#d29922; --red:#f85149; --purple:#bc8cff; --orange:#f0883e; --teal:#39c5cf; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; background:var(--bg); color:var(--text); line-height:1.6; min-height:100vh; }
+  .container { max-width:1400px; margin:0 auto; padding:24px 32px; }
+  /* Hero */
+  .hero { text-align:center; padding:64px 0 40px; border-bottom:1px solid var(--border); margin-bottom:32px; }
+  .hero h1 { font-size:2.4em; font-weight:700; background:linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:8px; }
+  .hero p { color:var(--text2); font-size:1.1em; max-width:700px; margin:0 auto 24px; }
+  .hero-stats { display:flex; justify-content:center; gap:48px; flex-wrap:wrap; }
+  .hero-stat { text-align:center; }
+  .hero-stat .num { font-size:2.4em; font-weight:700; color:var(--accent); }
+  .hero-stat .label { color:var(--text2); font-size:0.9em; margin-top:4px; }
+  /* Grid */
+  .grid { display:grid; gap:24px; }
+  .grid-2 { grid-template-columns:1fr 1fr; }
+  .grid-3 { grid-template-columns:repeat(3,1fr); }
+  .grid-5 { grid-template-columns:repeat(5,1fr); }
+  .grid-4-2 { grid-template-columns:2fr 1fr; }
+  .col-span-2 { grid-column:span 2; }
+  /* Panels */
+  .panel { background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:24px; }
+  .panel h2 { font-size:1.15em; margin-bottom:16px; color:var(--accent); display:flex; align-items:center; gap:8px; }
+  .panel h2 .icon { font-size:1.2em; }
+  .section-title { font-size:1.4em; font-weight:700; color:var(--text); margin:32px 0 16px; }
+  /* Coverage bars */
+  .coverage-card { text-align:center; padding:20px 12px; border-radius:8px; background:var(--bg); border:1px solid var(--border); transition:transform .15s; }
+  .coverage-card:hover { transform:translateY(-2px); }
+  .coverage-card .domain { font-size:1.05em; font-weight:600; margin-bottom:8px; }
+  .coverage-card .count { font-size:0.85em; color:var(--text2); margin-bottom:12px; }
+  .coverage-card .bar { height:6px; border-radius:3px; margin-bottom:6px; }
+  .coverage-card .rating { font-size:0.85em; font-weight:600; }
+  .bar-green { background:linear-gradient(90deg,var(--green),#6be085); }
+  .bar-yellow { background:linear-gradient(90deg,var(--yellow),#f0c040); }
+  .bar-red { background:linear-gradient(90deg,var(--red),#ff6b6b); }
+  .rating-complete { color:var(--green); }
+  .rating-basic { color:var(--yellow); }
+  .rating-gap { color:var(--red); }
+  /* Tables */
+  table { width:100%; border-collapse:collapse; font-size:0.9em; }
+  th, td { padding:10px 12px; text-align:left; border-bottom:1px solid var(--border); }
+  th { color:var(--text2); font-weight:600; font-size:0.85em; text-transform:uppercase; letter-spacing:.5px; }
+  .tag { display:inline-block; padding:2px 8px; border-radius:4px; font-size:0.8em; font-weight:600; }
+  .tag-green { background:#1a3a2a; color:var(--green); }
+  .tag-yellow { background:#3a2e0a; color:var(--yellow); }
+  .tag-red { background:#3a1a1a; color:var(--red); }
+  .tag-purple { background:#2a1a3a; color:var(--purple); }
+  /* Enterprise grid */
+  .ent-list { display:flex; flex-wrap:wrap; gap:8px; }
+  .ent-chip { display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:20px; font-size:0.85em; background:var(--bg); border:1px solid var(--border); }
+  .ent-chip .flag { font-size:1em; }
+  .ent-chip .name { font-weight:500; }
+  .ent-chip .lines { color:var(--text2); font-size:0.8em; }
+  /* Quality */
+  .quality-bar { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+  .quality-bar .label { width:100px; font-size:0.85em; color:var(--text2); }
+  .quality-bar .track { flex:1; height:8px; background:var(--bg); border-radius:4px; overflow:hidden; }
+  .quality-bar .fill { height:100%; border-radius:4px; }
+  .fill-green { background:var(--green); }
+  .fill-yellow { background:var(--yellow); }
+  .fill-red { background:var(--red); }
+  .quality-bar .pct { width:50px; text-align:right; font-size:0.85em; font-weight:600; }
+  /* Gaps */
+  .gap-item { padding:8px 12px; border-left:3px solid; margin-bottom:8px; font-size:0.9em; border-radius:0 6px 6px 0; }
+  .gap-critical { border-color:var(--red); background:#1a0f0f; }
+  .gap-moderate { border-color:var(--yellow); background:#1a1408; }
+  .gap-minor { border-color:var(--orange); background:#1a1008; }
+  /* Nav */
+  .nav-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px; }
+  .nav-card { display:block; padding:14px 16px; background:var(--bg); border:1px solid var(--border); border-radius:8px; text-decoration:none; color:var(--text); transition:all .15s; }
+  .nav-card:hover { border-color:var(--accent); background:#1a1f2e; }
+  .nav-card .path { font-size:0.8em; color:var(--text2); margin-bottom:4px; }
+  .nav-card .title { font-weight:600; font-size:0.95em; }
+  .nav-card .meta { font-size:0.8em; color:var(--text2); margin-top:4px; }
+  /* Footer */
+  .footer { text-align:center; padding:48px 0 24px; color:var(--text2); font-size:0.85em; border-top:1px solid var(--border); margin-top:48px; }
+  .last-updated { color:var(--teal); }
+  /* Responsive */
+  @media(max-width:900px) {
+    .grid-2,.grid-3,.grid-5,.grid-4-2 { grid-template-columns:1fr; }
+    .col-span-2 { grid-column:span 1; }
+    .container { padding:16px; }
+    .hero h1 { font-size:1.8em; }
+    .hero-stats { gap:24px; }
+    .hero-stat .num { font-size:1.8em; }
+  }
+  /* Scrollbar */
+  ::-webkit-scrollbar { width:8px; }
+  ::-webkit-scrollbar-track { background:var(--bg); }
+  ::-webkit-scrollbar-thumb { background:var(--border); border-radius:4px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ═══════ HERO ═══════ -->
+<div class="hero">
+  <h1>🔬 半导体行业知识库</h1>
+  <p>面向帆软售前团队的半导体产业知识体系 — 覆盖晶圆制造、封装测试、半导体设备、IC设计四大核心领域，融合行业洞察与售前场景方案</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">86</div><div class="label">知识笔记</div></div>
+    <div class="hero-stat"><div class="num">5</div><div class="label">覆盖领域</div></div>
+    <div class="hero-stat"><div class="num">39</div><div class="label">核心笔记</div></div>
+    <div class="hero-stat"><div class="num">15</div><div class="label">企业档案</div></div>
+    <div class="hero-stat"><div class="num">10</div><div class="label">售前方案</div></div>
+  </div>
+</div>
+
+<!-- ═══════ 领域覆盖 ═══════ -->
+<h2 class="section-title">📊 五大领域覆盖度</h2>
+<div class="grid grid-5">
+  <div class="coverage-card">
+    <div class="domain">🏭 晶圆制造</div>
+    <div class="count">18篇笔记</div>
+    <div class="bar bar-green" style="width:100%"></div>
+    <div class="rating rating-complete">🟢 完整覆盖</div>
+  </div>
+  <div class="coverage-card">
+    <div class="domain">🔬 半导体设备</div>
+    <div class="count">12篇笔记</div>
+    <div class="bar bar-green" style="width:95%"></div>
+    <div class="rating rating-complete">🟢 完整覆盖</div>
+  </div>
+  <div class="coverage-card">
+    <div class="domain">💻 IC设计</div>
+    <div class="count">10篇笔记</div>
+    <div class="bar bar-green" style="width:90%"></div>
+    <div class="rating rating-complete">🟢 完整覆盖</div>
+  </div>
+  <div class="coverage-card">
+    <div class="domain">📦 封装测试</div>
+    <div class="count">6篇笔记</div>
+    <div class="bar bar-yellow" style="width:50%"></div>
+    <div class="rating rating-basic">🟡 基础覆盖</div>
+  </div>
+  <div class="coverage-card">
+    <div class="domain">🔗 其他细分</div>
+    <div class="count">2篇笔记</div>
+    <div class="bar bar-red" style="width:25%"></div>
+    <div class="rating rating-gap">🔴 待充实</div>
+  </div>
+</div>
+
+<!-- ═══════ 关键指标 ═══════ -->
+<div class="grid grid-2" style="margin-top:24px;">
+  <div class="panel">
+    <h2><span class="icon">📈</span> 知识库规模</h2>
+    <table>
+      <tr><td>总笔记数</td><td style="text-align:right;font-weight:700;">86 篇</td></tr>
+      <tr><td>总大小</td><td style="text-align:right;font-weight:700;">~150 KB</td></tr>
+      <tr><td>总行数</td><td style="text-align:right;font-weight:700;">~5,385 行</td></tr>
+      <tr><td>创建周期</td><td style="text-align:right;">2026-07-08 → 07-09（2天）</td></tr>
+      <tr><td>日更新量</td><td style="text-align:right;">~43 篇/天</td></tr>
+      <tr><td>目录数</td><td style="text-align:right;">60 个</td></tr>
+    </table>
+  </div>
+
+  <div class="panel">
+    <h2><span class="icon">📝</span> 笔记类型分布</h2>
+    <table>
+      <tr><td>🏢 企业档案</td><td style="text-align:right;">19篇 <span style="color:var(--text2)">22%</span></tr>
+      <tr><td>🗺️ MOC 索引</td><td style="text-align:right;">19篇 <span style="color:var(--text2)">22%</span></tr>
+      <tr><td>🎯 售前方案</td><td style="text-align:right;">10篇 <span style="color:var(--text2)">12%</span></tr>
+      <tr><td>🌐 行业全景</td><td style="text-align:right;">8篇 <span style="color:var(--text2)">9%</span></tr>
+      <tr><td>🔧 技术深潜</td><td style="text-align:right;">8篇 <span style="color:var(--text2)">9%</span></tr>
+      <tr><td>📋 其他</td><td style="text-align:right;">22篇 <span style="color:var(--text2)">26%</span></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════ 元数据质量 ═══════ -->
+<div class="panel" style="margin-top:24px;">
+  <h2><span class="icon">🏷️</span> 元数据覆盖度</h2>
+  <div class="quality-bar">
+    <span class="label">Tags 标签</span>
+    <div class="track"><div class="fill fill-green" style="width:100%"></div></div>
+    <span class="pct" style="color:var(--green)">100%</span>
+  </div>
+  <div class="quality-bar">
+    <span class="label">Date 日期</span>
+    <div class="track"><div class="fill fill-green" style="width:93%"></div></div>
+    <span class="pct" style="color:var(--green)">93%</span>
+  </div>
+  <div class="quality-bar">
+    <span class="label">Importance</span>
+    <div class="track"><div class="fill fill-yellow" style="width:73%"></div></div>
+    <span class="pct" style="color:var(--yellow)">73%</span>
+  </div>
+  <div class="quality-bar">
+    <span class="label">Category</span>
+    <div class="track"><div class="fill fill-yellow" style="width:56%"></div></div>
+    <span class="pct" style="color:var(--yellow)">56%</span>
+  </div>
+  <div class="quality-bar">
+    <span class="label">帆软关联度</span>
+    <div class="track"><div class="fill fill-red" style="width:0%"></div></div>
+    <span class="pct" style="color:var(--red)">0% ⚠️</span>
+  </div>
+</div>
+
+<!-- ═══════ 企业覆盖 ═══════ -->
+<h2 class="section-title">🏢 企业档案覆盖（15家深度档案）</h2>
+<div class="grid grid-3">
+  <div class="panel">
+    <h2 style="color:var(--teal)">🏭 晶圆制造</h2>
+    <div class="ent-list">
+      <span class="ent-chip"><span class="flag">🇹🇼</span><span class="name">台积电</span><span class="lines">92行</span></span>
+      <span class="ent-chip"><span class="flag">🇨🇳</span><span class="name">中芯国际</span><span class="lines">70行</span></span>
+      <span class="ent-chip"><span class="flag">🇨🇳</span><span class="name">华虹半导体</span><span class="lines">58行</span></span>
+      <span class="ent-chip"><span class="flag">🇰🇷</span><span class="name">三星半导体</span><span class="lines">60行</span></span>
+    </div>
+  </div>
+  <div class="panel">
+    <h2 style="color:var(--purple)">🔬 半导体设备</h2>
+    <div class="ent-list">
+      <span class="ent-chip"><span class="flag">🇳🇱</span><span class="name">ASML</span><span class="lines">81行</span></span>
+      <span class="ent-chip"><span class="flag">🇺🇸</span><span class="name">应用材料</span><span class="lines">100行</span></span>
+      <span class="ent-chip"><span class="flag">🇺🇸</span><span class="name">泛林 Lam</span><span class="lines">83行</span></span>
+      <span class="ent-chip"><span class="flag">🇯🇵</span><span class="name">东京电子</span><span class="lines">85行</span></span>
+      <span class="ent-chip"><span class="flag">🇺🇸</span><span class="name">科磊 KLA</span><span class="lines">82行</span></span>
+      <span class="ent-chip"><span class="flag">🇨🇳</span><span class="name">北方华创</span><span class="lines">87行</span></span>
+      <span class="ent-chip"><span class="flag">🇨🇳</span><span class="name">中微公司</span><span class="lines">70行</span></span>
+    </div>
+  </div>
+  <div class="panel">
+    <h2 style="color:var(--orange)">💻 IC设计</h2>
+    <div class="ent-list">
+      <span class="ent-chip"><span class="flag">🇺🇸</span><span class="name">NVIDIA</span><span class="lines">75行</span></span>
+      <span class="ent-chip"><span class="flag">🇺🇸</span><span class="name">AMD</span><span class="lines">67行</span></span>
+      <span class="ent-chip"><span class="flag">🇺🇸</span><span class="name">高通</span><span class="lines">72行</span></span>
+      <span class="ent-chip"><span class="flag">🇨🇳</span><span class="name">海思</span><span class="lines">73行</span></span>
+    </div>
+  </div>
+</div>
+<div class="grid grid-2" style="margin-top:24px;">
+  <div class="panel">
+    <h2 style="color:var(--yellow)">📦 封装测试</h2>
+    <div class="ent-list">
+      <span class="ent-chip"><span class="flag">🇹🇼</span><span class="name">日月光</span><span class="lines">49行</span></span>
+      <span class="ent-chip"><span class="flag">🇨🇳</span><span class="name">长电科技</span><span class="lines">53行</span></span>
+      <span class="ent-chip"><span class="flag">🇨🇳</span><span class="name">通富微电</span><span class="lines">55行</span></span>
+      <span class="ent-chip"><span class="flag">🇨🇳</span><span class="name">华天科技</span><span class="lines">49行</span></span>
+    </div>
+  </div>
+  <div class="panel">
+    <h2 style="color:var(--text2)">🏷️ 高频提及但无专属档案</h2>
+    <div class="ent-list">
+      <span class="ent-chip"><span class="name">Synopsys</span></span>
+      <span class="ent-chip"><span class="name">Cadence</span></span>
+      <span class="ent-chip"><span class="name">华大九天</span></span>
+      <span class="ent-chip"><span class="name">Intel</span></span>
+      <span class="ent-chip"><span class="name">Micron</span></span>
+      <span class="ent-chip"><span class="name">SK海力士</span></span>
+      <span class="ent-chip"><span class="name">韦尔股份</span></span>
+      <span class="ent-chip"><span class="name">拓荆科技</span></span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ 核心笔记 ═══════ -->
+<h2 class="section-title">⭐ 核心笔记 TOP 10</h2>
+<div class="panel">
+  <table>
+    <thead><tr><th>#</th><th>笔记标题</th><th>领域</th><th>规模</th><th>重要性</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>中国半导体产业政策与大基金体系</td><td>半导体设备</td><td>117行</td><td><span class="tag tag-green">high</span></td></tr>
+      <tr><td>2</td><td>SPC与良率管理：半导体制造的质量控制体系</td><td>晶圆制造</td><td>117行</td><td><span class="tag tag-green">high</span></td></tr>
+      <tr><td>3</td><td>OEE与设备效率管理：半导体制造的产能管理</td><td>晶圆制造</td><td>105行</td><td><span class="tag tag-green">high</span></td></tr>
+      <tr><td>4</td><td>2026H1全球封测行业动态与先进封装趋势</td><td>封装测试</td><td>102行</td><td><span class="tag tag-green">high</span></td></tr>
+      <tr><td>5</td><td>应用材料 Applied Materials</td><td>半导体设备</td><td>100行</td><td><span class="tag tag-green">high</span></td></tr>
+      <tr><td>6</td><td>第三代半导体：SiC与GaN的技术、市场与产业链</td><td>晶圆制造</td><td>95行</td><td><span class="tag tag-green">high</span></td></tr>
+      <tr><td>7</td><td>存储芯片行业全景：DRAM、NAND与HBM</td><td>晶圆制造</td><td>94行</td><td><span class="tag tag-green">high</span></td></tr>
+      <tr><td>8</td><td>台积电 TSMC</td><td>晶圆制造</td><td>92行</td><td><span class="tag tag-green">high</span></td></tr>
+      <tr><td>9</td><td>北方华创 NAURA</td><td>半导体设备</td><td>87行</td><td><span class="tag tag-green">high</span></td></tr>
+      <tr><td>10</td><td>晶体管技术演进：MOSFET→FinFET→GAA</td><td>晶圆制造</td><td>85行</td><td><span class="tag tag-green">high</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════ 短板 ═══════ -->
+<h2 class="section-title">🔍 内容短板与建议</h2>
+<div class="grid grid-2">
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <div class="gap-item gap-critical"><strong>🔴 帆软关联度 0%</strong> — 模板已定义4产品线矩阵但未执行，39篇核心笔记急需回填</div>
+    <div class="gap-item gap-moderate"><strong>🟡 封装测试薄弱</strong> — 仅1篇技术笔记 vs 晶圆制造14篇，需补充先进封装深度</div>
+    <div class="gap-item gap-moderate"><strong>🟡 EDA工具链</strong> — 仅1篇市场格局，缺三巨头深度对比与国产EDA进展</div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <div class="gap-item gap-moderate"><strong>🟡 材料细分缺失</strong> — 仅有全景概览，缺光刻胶/硅片/电子特气独立笔记</div>
+    <div class="gap-item gap-minor"><strong>🟠 10个空目录</strong> — 产业链×5 + 技术路线×4 预建但未填充</div>
+    <div class="gap-item gap-minor"><strong>🟠 IP核与设计服务</strong> — 完全空白领域</div>
+  </div>
+</div>
+
+<!-- ═══════ 快速导航 ═══════ -->
+<h2 class="section-title">🧭 快速导航</h2>
+<div class="nav-grid">
+  <a class="nav-card" href="#">
+    <div class="path">📁 产业全景</div>
+    <div class="title">半导体产业链上下游关系</div>
+    <div class="meta">3篇 · 宏观概览</div>
+  </a>
+  <a class="nav-card" href="#">
+    <div class="path">📁 帆软售前引擎</div>
+    <div class="title">数据分析-半导体场景矩阵</div>
+    <div class="meta">10篇 · 7大售前维度</div>
+  </a>
+  <a class="nav-card" href="#">
+    <div class="path">📁 导航</div>
+    <div class="title">售前速查手册</div>
+    <div class="meta">3篇 · 快速索引</div>
+  </a>
+  <a class="nav-card" href="#">
+    <div class="path">📁 行业知识体系 / 晶圆制造</div>
+    <div class="title">01-晶圆制造 MOC</div>
+    <div class="meta">8篇 · 结构化知识</div>
+  </a>
+  <a class="nav-card" href="#">
+    <div class="path">📁 行业知识体系 / 半导体设备</div>
+    <div class="title">03-半导体设备 MOC</div>
+    <div class="meta">6篇 · 五大设备商</div>
+  </a>
+  <a class="nav-card" href="#">
+    <div class="path">📁 知识来源</div>
+    <div class="title">RSS源与媒体清单</div>
+    <div class="meta">7篇 · 持续更新</div>
+  </a>
+</div>
+
+<!-- ═══════ 知识库架构 ═══════ -->
+<h2 class="section-title">🏗️ 知识库架构</h2>
+<div class="panel">
+  <table style="font-size:0.9em;">
+    <thead><tr><th>一级目录</th><th>定位</th><th>文件数</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><strong>产业全景</strong></td><td>🌐 宏观概览层</td><td>3</td><td>全球格局 + 中国现状 + 产业链关系</td></tr>
+      <tr><td><strong>行业知识体系/</strong></td><td>📚 结构化知识库</td><td>31</td><td>5大领域 × MOC/企业/概念/产业/技术/动态 六维度</td></tr>
+      <tr><td><strong>01-05 领域/行业动态</strong></td><td>📰 深度分析层</td><td>28</td><td>各领域技术深潜 + 行业动态 + 企业档案</td></tr>
+      <tr><td><strong>帆软售前引擎/</strong></td><td>💼 业务应用层</td><td>10</td><td>四产品线场景矩阵 + 话术 + 竞品 + 客户</td></tr>
+      <tr><td><strong>导航/</strong></td><td>🧭 索引导航层</td><td>3</td><td>知识地图 + 速查手册 + 产品矩阵</td></tr>
+      <tr><td><strong>知识来源/</strong></td><td>📥 原始资料层</td><td>7</td><td>KMS文献 + RSS策略 + 客户调研</td></tr>
+      <tr><td><strong>模板/</strong></td><td>📐 规范层</td><td>3</td><td>企业档案 / 技术专题 / 行业动态 模板</td></tr>
+      <tr><td><strong>日报周报/</strong></td><td>📓 工作记录层</td><td>4</td><td>4轮入库总结（07-08 ~ 07-09）</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════ Footer ═══════ -->
+<div class="footer">
+  <p>半导体行业知识库 · 帆软上海售前团队 · 徐文浩 (Lorin)</p>
+  <p class="last-updated">最后更新：2026-07-09 · 86篇笔记 · 5大领域 · 持续迭代中</p>
+</div>
+
+</div>
+</body>
+</html>
