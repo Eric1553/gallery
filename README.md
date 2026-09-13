@@ -38,10 +38,15 @@ gallery/
 - `GALLERY_PASSWORD` — 门禁密码
 - `GALLERY_MAXKB_TOKEN` / `GALLERY_MAXKB_TOKEN_FILE` — MaxKB 联邦检索
 - `GALLERY_KMS_BASE` + `GALLERY_KMS_TOKEN` — KMS 检索
+- `FEEDBACK_PUBLIC_BASE` 或 `GALLERY_FEEDBACK_BASE` — 反馈台对外基址（默认 `http://120.55.184.234:8787`，联邦检索里的 admin / shot URL 用它）
+- `GALLERY_FED_TIMEOUT` — 联邦检索每路超时秒数（默认 `10`）
+- `GALLERY_FED_TIMEOUT_DEMOS` / `_FEEDBACK` / `_KNOWLEDGE` / `_FEISHU` — 单路覆盖
 
 ## 本地 / CI
 
 ```bash
+python3 scripts/validate_catalog.py
+python3 scripts/build_search_index.py --demos-dir demos
 python3 -m pytest tests/
 python3 server.py   # 默认 :8788
 ```

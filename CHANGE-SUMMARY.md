@@ -1,5 +1,17 @@
 # Gallery Change Summary
 
+## 2026-09-13 · Catalog contract / federation / junk cleanup
+
+- Catalog: every demo now has explicit `audience` (`client`|`internal`); `biren-finance__baseline` is archived in family `biren-finance` so it is not in the default latest pool. Tags remain 4.
+- Added `scripts/validate_catalog.py` (fields / audience / family / entry+thumb / search index). Pytest wraps it. Historical `biren-finance__rev1/2/3` stay uncatalogued (warn-only orphans).
+- Federated search runs MaxKB / KMS / 反馈 / 飞书 channels concurrently with a per-source deadline (`GALLERY_FED_TIMEOUT`, default 10s). Feedback admin/shot URLs read `FEEDBACK_PUBLIC_BASE` or `GALLERY_FEEDBACK_BASE` (legacy ECS IP is the default).
+- Removed Mac-path junk under `biren-finance/Users`, carousel local-server residue, and unused office docs. Functional GIFs / hejian PNGs deferred — see `demos/CLEANUP.md`.
+- `retrieve_query` / demo needles now strip `怎么讲` tails even when the demo-knowledge account pack is absent (same documented behavior).
+- `tests/test_gallery_brief.py` skips when `KNOWLEDGE_ROOT` / demo-knowledge is not mounted (2 tests). Other pytest cases pass locally.
+- Merge ≠ deploy; no ECS / systemd changes.
+
+---
+
 ## 2026-08-06 · 主列表按时间排序
 
 - 筛选面板新增「排序」：时间升序（默认）、时间降序；`清除筛选` 不重置排序。

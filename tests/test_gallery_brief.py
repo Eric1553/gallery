@@ -7,9 +7,18 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from gallery_brief import build_gallery_brief
+from gallery_brief import _load_knowledge, build_gallery_brief
 
 
+def _knowledge_pack_available() -> bool:
+    account_mod, briefing_mod = _load_knowledge()
+    return bool(account_mod and briefing_mod)
+
+
+@unittest.skipUnless(
+    _knowledge_pack_available(),
+    "requires demo-knowledge account pack (KNOWLEDGE_ROOT or /opt/demo-runtime/demo-knowledge)",
+)
 class GalleryBriefTests(unittest.TestCase):
     def test_libang_card_has_coverage_and_lanes(self):
         brief = build_gallery_brief(

@@ -257,7 +257,13 @@ def main() -> None:
     demos_dir = args.demos_dir
     if demos_dir is None:
         env = Path("/opt/demos")
-        demos_dir = env if env.is_dir() else None
+        local = ROOT / "demos"
+        if env.is_dir():
+            demos_dir = env
+        elif local.is_dir():
+            demos_dir = local
+        else:
+            demos_dir = None
 
     items = []
     missing = []

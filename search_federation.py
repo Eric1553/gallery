@@ -6,9 +6,11 @@ import json
 import re
 import os
 import sqlite3
+import threading
 import urllib.error
 import urllib.parse
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -20,6 +22,35 @@ FEEDBACK_DB = Path(
         "/opt/demo-feedback/data/feedback.sqlite",
     )
 )
+_DEFAULT_FEEDBACK_BASE = "http://120.55.184.234:8787"
+_DEFAULT_FED_TIMEOUT = 10.0
+_FED_CHANNELS = ("demos", "feedback", "knowledge", "feishu")
+
+
+def feedback_public_base() -> str:
+    """Public feedback admin/embed origin. Env overrides keep ECS IP as default."""
+    raw = (
+        os.environ.get("FEEDBACK_PUBLIC_BASE")
+        or os.environ.get("GALLERY_FEEDBACK_BASE")
+        or _DEFAULT_FEEDBACK_BASE
+    )
+    return str(raw).rstrip("/")
+
+
+def federation_timeout(channel: str | None = None) -> float:
+    """Per-source deadline (seconds). Default 10s; override with GALLERY_FED_TIMEOUT[_CHANNEL]."""
+    if channel:
+        specific = os.environ.get(f"GALLERY_FED_TIMEOUT_{channel.upper()}")
+        if specific not in (None, ""):
+            try:
+                return max(0.05, float(specific))
+            except ValueError:
+                pass
+    raw = os.environ.get("GALLERY_FED_TIMEOUT", str(_DEFAULT_FED_TIMEOUT))
+    try:
+        return max(0.05, float(raw or _DEFAULT_FED_TIMEOUT))
+    except ValueError:
+        return _DEFAULT_FED_TIMEOUT
 
 # MaxKB (primary knowledge channel)
 MAXKB_BASE = os.environ.get("GALLERY_MAXKB_BASE", "").rstrip("/")
@@ -79,6 +110,17 @@ def _http_json(method: str, url: str, body=None, headers=None, timeout: float = 
         return res.status, json.loads(raw)
 
 
+_QUESTION_TAILS = ("怎么讲", "怎么比", "怎么说", "如何讲", "怎样讲")
+
+
+def _strip_question_tail(q: str) -> str:
+    text = (q or "").strip()
+    for tail in _QUESTION_TAILS:
+        if text.endswith(tail):
+            return text[: -len(tail)].strip()
+    return text
+
+
 def _account_needles(q: str) -> list[str]:
     try:
         from gallery_brief import _load_knowledge
@@ -91,7 +133,7 @@ def _account_needles(q: str) -> list[str]:
                 return [n for n in names if n and len(n) >= 2]
     except Exception:
         pass
-    qn = (q or "").strip()
+    qn = _strip_question_tail(q)
     return [qn] if len(qn) >= 2 else []
 
 
@@ -109,7 +151,7 @@ def retrieve_query(q: str) -> str:
                 return (acc.retrieval_query or acc.canonical or q).strip()
     except Exception:
         pass
-    return (q or "").strip()
+    return _strip_question_tail(q) or (q or "").strip()
 
 
 def demo_public_url(demo: dict) -> str:
@@ -240,10 +282,10 @@ def search_feedback(q: str, limit: int = 20) -> list[dict]:
                     "body": r["body"],
                     "status": r["status"],
                     "snippet": snip,
-                    "shot_url": f"http://120.55.184.234:8787/{r['shot_path']}"
+                    "shot_url": f"{feedback_public_base()}/{r['shot_path']}"
                     if r["shot_path"]
                     else None,
-                    "url": f"http://120.55.184.234:8787/admin/",
+                    "url": f"{feedback_public_base()}/admin/",
                     "demo_url": f"/demos/{r['demo_id']}/",
                     "channel": "feedback",
                     "created_at": r["created_at"],
@@ -790,6 +832,7 @@ def _emit_fed(on_progress, step: str, status: str, **extra) -> None:
     }
     payload = {
         "step": step,
+        "channel": extra.pop("channel", None) or step,
         "label": extra.pop("label", None) or labels.get(step, step),
         "status": status,
     }
@@ -800,43 +843,150 @@ def _emit_fed(on_progress, step: str, status: str, **extra) -> None:
         pass
 
 
+def _call_with_timeout(fn, timeout: float):
+    """Run fn() on a daemon thread; raise TimeoutError if it exceeds `timeout`."""
+    box: dict = {}
+
+    def target() -> None:
+        try:
+            box["value"] = fn()
+        except Exception as exc:  # noqa: BLE001 — isolate channel failures
+            box["error"] = exc
+
+    worker = threading.Thread(target=target, daemon=True)
+    worker.start()
+    worker.join(timeout)
+    if "value" in box:
+        return box["value"]
+    if "error" in box:
+        raise box["error"]
+    raise TimeoutError(f"exceeded {timeout:g}s")
+
+
+def _normalize_feedback(raw) -> tuple[list, str | None]:
+    if raw is None:
+        return [], None
+    if isinstance(raw, dict) and raw.get("error"):
+        return [], str(raw.get("error"))
+    if not isinstance(raw, list):
+        return [], f"unexpected feedback payload: {type(raw).__name__}"
+    items = [x for x in raw if isinstance(x, dict) and "error" not in x]
+    err = next((x.get("error") for x in raw if isinstance(x, dict) and "error" in x), None)
+    return items, err
+
+
+def _normalize_knowledge_like(raw, *, empty_status: str = "empty") -> dict:
+    if isinstance(raw, dict):
+        items = raw.get("items") if isinstance(raw.get("items"), list) else []
+        status = raw.get("status") or (empty_status if not items else "ok")
+        return {"items": items, "status": status, "hint": raw.get("hint")}
+    if isinstance(raw, list):
+        return {"items": raw, "status": "ok" if raw else empty_status, "hint": None}
+    return {"items": [], "status": "error", "hint": f"unexpected payload: {type(raw).__name__}"}
+
+
+def _finish_channel(on_progress, name: str, status: str, hits: int, hint: str | None = None) -> None:
+    extra = {"hits": hits, "channel": name}
+    if hint:
+        extra["hint"] = hint
+    _emit_fed(on_progress, name, status, **extra)
+
+
 def federated_search(q: str, on_progress=None) -> dict:
     retrieve = retrieve_query(q) or (q or "").strip()
-    _emit_fed(on_progress, "demos", "run")
-    demos = search_demos(q)
-    _emit_fed(on_progress, "demos", "done" if demos else "empty", hits=len(demos or []))
 
-    _emit_fed(on_progress, "feedback", "run")
-    feedback = search_feedback(q)
-    feedback_items = [x for x in feedback if "error" not in x]
-    feedback_error = next((x.get("error") for x in feedback if "error" in x), None)
-    if feedback_error:
-        _emit_fed(on_progress, "feedback", "error", hint=str(feedback_error), hits=len(feedback_items))
-    else:
-        _emit_fed(
-            on_progress,
-            "feedback",
-            "done" if feedback_items else "empty",
-            hits=len(feedback_items),
+    def run_demos():
+        return search_demos(q)
+
+    def run_feedback():
+        return search_feedback(q)
+
+    def run_knowledge():
+        return search_knowledge(retrieve)
+
+    def run_feishu():
+        return search_feishu(retrieve)
+
+    runners = {
+        "demos": run_demos,
+        "feedback": run_feedback,
+        "knowledge": run_knowledge,
+        "feishu": run_feishu,
+    }
+
+    raw: dict[str, object] = {}
+    channel_errors: dict[str, str] = {}
+    demos: list = []
+    feedback_items: list = []
+    feedback_error: str | None = None
+    knowledge = {"items": [], "status": "empty", "hint": None}
+    feishu = {"items": [], "status": "empty", "hint": None}
+
+    def accept(name: str, value, err: str | None) -> None:
+        nonlocal demos, feedback_items, feedback_error, knowledge, feishu
+        raw[name] = value
+        if err:
+            channel_errors[name] = err
+        if name == "demos":
+            demos = value if isinstance(value, list) else []
+            if err:
+                _finish_channel(on_progress, "demos", "error", len(demos), err)
+            else:
+                _finish_channel(on_progress, "demos", "done" if demos else "empty", len(demos))
+            return
+        if name == "feedback":
+            feedback_items, parsed_err = _normalize_feedback(value)
+            feedback_error = err or parsed_err
+            if feedback_error:
+                _finish_channel(
+                    on_progress, "feedback", "error", len(feedback_items), str(feedback_error)
+                )
+            else:
+                _finish_channel(
+                    on_progress,
+                    "feedback",
+                    "done" if feedback_items else "empty",
+                    len(feedback_items),
+                )
+            return
+        packed = (
+            {
+                "items": [],
+                "status": "timeout" if err.startswith("timeout") else "error",
+                "hint": err,
+            }
+            if err
+            else _normalize_knowledge_like(value)
         )
+        items = packed.get("items") or []
+        status = packed.get("status")
+        if name == "knowledge":
+            knowledge = packed
+        else:
+            feishu = packed
+        if status and status not in {"ok", "empty"}:
+            _finish_channel(on_progress, name, "error", len(items), str(packed.get("hint") or status))
+        else:
+            _finish_channel(on_progress, name, "done" if items else "empty", len(items))
 
-    _emit_fed(on_progress, "knowledge", "run")
-    knowledge = search_knowledge(retrieve)
-    k_items = knowledge.get("items") or []
-    k_status = knowledge.get("status")
-    if k_status and k_status not in {"ok", "empty"}:
-        _emit_fed(on_progress, "knowledge", "error", hint=str(knowledge.get("hint") or k_status), hits=len(k_items))
-    else:
-        _emit_fed(on_progress, "knowledge", "done" if k_items else "empty", hits=len(k_items))
+    for name in _FED_CHANNELS:
+        _emit_fed(on_progress, name, "run", channel=name)
 
-    _emit_fed(on_progress, "feishu", "run")
-    feishu = search_feishu(retrieve)
-    f_items = feishu.get("items") or []
-    f_status = feishu.get("status")
-    if f_status and f_status not in {"ok", "empty"}:
-        _emit_fed(on_progress, "feishu", "error", hint=str(feishu.get("hint") or f_status), hits=len(f_items))
-    else:
-        _emit_fed(on_progress, "feishu", "done" if f_items else "empty", hits=len(f_items))
+    max_workers = min(len(runners), 4)
+    with ThreadPoolExecutor(max_workers=max_workers) as pool:
+        future_map = {
+            pool.submit(_call_with_timeout, fn, federation_timeout(name)): name
+            for name, fn in runners.items()
+        }
+        for fut in as_completed(future_map):
+            name = future_map[fut]
+            try:
+                accept(name, fut.result(), None)
+            except TimeoutError as exc:
+                accept(name, None, f"timeout: {exc}")
+            except Exception as exc:  # noqa: BLE001 — keep other channels
+                accept(name, None, str(exc))
+
     from gallery_brief import build_gallery_brief
 
     payload = {

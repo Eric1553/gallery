@@ -22,3 +22,7 @@ data/maxkb_token
 # Large transient artifacts (keep demo HTML/assets; skip bulk archives)
 *.zip
 node_modules/
+
+# Demo local-server residue
+**/.*.pid
+**/.*.log

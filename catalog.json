@@ -2,8 +2,8 @@
   "meta": {
     "title": "DEMO案例库",
     "subtitle": "Vibe coding 成果的展示、检索与客户演示入口",
-    "version": "1.4.1",
-    "updated_at": "2026-08-13",
+    "version": "1.6.0",
+    "updated_at": "2026-09-13",
     "host_hint": "http://120.55.184.234",
     "cover_policy": "webp_thumb_800 + cover_1600",
     "cover_size": "3200x2000",
@@ -206,7 +206,8 @@
       "form_factor": "mobile",
       "cover": "cover.webp",
       "thumb": "thumb.webp",
-      "added_at": "2026-03-22"
+      "added_at": "2026-03-22",
+      "audience": "client"
     },
     {
       "id": "biren-ops-loop",
@@ -230,7 +231,8 @@
       "form_factor": "mobile",
       "cover": "cover.webp",
       "thumb": "thumb.webp",
-      "added_at": "2026-03-28"
+      "added_at": "2026-03-28",
+      "audience": "client"
     },
     {
       "id": "biren-finance",
@@ -253,7 +255,10 @@
       "baseline_id": "biren-finance__baseline",
       "cover": "cover.webp",
       "thumb": "thumb.webp",
-      "added_at": "2026-04-02"
+      "added_at": "2026-04-02",
+      "family": "biren-finance",
+      "is_latest": true,
+      "audience": "client"
     },
     {
       "id": "biren-finance__baseline",
@@ -266,7 +271,8 @@
       "tags": [
         "半导体",
         "财务分析",
-        "批注基线"
+        "批注基线",
+        "对照基线"
       ],
       "entry": "index.html",
       "source": "B-壁仞科技/财务项目/finance-dashboard-prototype__baseline",
@@ -274,7 +280,11 @@
       "version_label": "批注基线",
       "cover": "cover.webp",
       "thumb": "thumb.webp",
-      "added_at": "2026-03-30"
+      "added_at": "2026-03-30",
+      "family": "biren-finance",
+      "archived": true,
+      "is_latest": false,
+      "audience": "client"
     },
     {
       "id": "smic-finance",
@@ -296,7 +306,8 @@
       "version_label": "最新",
       "cover": "cover.webp",
       "thumb": "thumb.webp",
-      "added_at": "2026-04-15"
+      "added_at": "2026-04-15",
+      "audience": "client"
     },
     {
       "id": "sigenergy-ceo",
@@ -319,7 +330,8 @@
       "form_factor": "mobile",
       "cover": "cover.webp",
       "thumb": "thumb.webp",
-      "added_at": "2026-05-20"
+      "added_at": "2026-05-20",
+      "audience": "client"
     },
     {
       "id": "acme-rd",
@@ -341,7 +353,8 @@
       "version_label": "v4.4",
       "cover": "cover.webp",
       "thumb": "thumb.webp",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "audience": "client"
     },
     {
       "id": "hejian-wall",
@@ -363,7 +376,8 @@
       "version_label": "最新",
       "cover": "cover-v2.webp",
       "thumb": "thumb-v2.webp",
-      "added_at": "2026-05-06"
+      "added_at": "2026-05-06",
+      "audience": "client"
     },
     {
       "id": "weijie-sales",
@@ -387,7 +401,8 @@
       "is_latest": true,
       "cover": "cover.webp",
       "thumb": "thumb.webp",
-      "added_at": "2026-06-03"
+      "added_at": "2026-06-03",
+      "audience": "client"
     },
     {
       "id": "weijie-sales-lite",
@@ -413,7 +428,8 @@
       "version_label": "单页轻量版",
       "is_latest": false,
       "archived": true,
-      "added_at": "2026-06-05"
+      "added_at": "2026-06-05",
+      "audience": "client"
     },
     {
       "id": "yinguang-efficiency",
@@ -438,7 +454,8 @@
       "version_label": "最新",
       "cover": "cover.webp",
       "thumb": "thumb.webp",
-      "added_at": "2026-06-18"
+      "added_at": "2026-06-18",
+      "audience": "client"
     },
     {
       "id": "yinguang-hours",
@@ -463,7 +480,8 @@
       "version_label": "最新",
       "cover": "cover.webp",
       "thumb": "thumb.webp",
-      "added_at": "2026-06-20"
+      "added_at": "2026-06-20",
+      "audience": "client"
     },
     {
       "id": "yinguang-ipd",
@@ -489,7 +507,8 @@
       "version_label": "最新",
       "cover": "cover.webp",
       "thumb": "thumb.webp",
-      "added_at": "2026-06-22"
+      "added_at": "2026-06-22",
+      "audience": "client"
     },
     {
       "id": "jiangyuan-rd-pm",
@@ -536,7 +555,8 @@
       "version_label": "最新",
       "cover": "cover.webp",
       "thumb": "thumb.webp",
-      "added_at": "2026-07-02"
+      "added_at": "2026-07-02",
+      "audience": "client"
     },
     {
       "id": "luomu-extractor",
@@ -558,7 +578,8 @@
       "version_label": "最新",
       "cover": "cover.webp",
       "thumb": "thumb.webp",
-      "added_at": "2026-07-10"
+      "added_at": "2026-07-10",
+      "audience": "client"
     },
     {
       "id": "fde-carousel",
@@ -629,7 +650,8 @@
       "version_label": "最新",
       "cover": "cover.webp",
       "thumb": "thumb.webp",
-      "added_at": "2026-01-15"
+      "added_at": "2026-01-15",
+      "audience": "internal"
     },
     {
       "id": "ammo-unified-v10",
@@ -653,7 +675,8 @@
       "is_latest": true,
       "cover": "cover.webp",
       "thumb": "thumb.webp",
-      "added_at": "2026-02-10"
+      "added_at": "2026-02-10",
+      "audience": "internal"
     },
     {
       "id": "ammo-search",
@@ -682,7 +705,8 @@
       "version_label": "通用检索工作台",
       "is_latest": false,
       "archived": true,
-      "added_at": "2026-02-20"
+      "added_at": "2026-02-20",
+      "audience": "internal"
     },
     {
       "id": "poc-mindmap",
@@ -707,7 +731,8 @@
       "version_label": "最新",
       "cover": "cover.webp",
       "thumb": "thumb.webp",
-      "added_at": "2025-11-12"
+      "added_at": "2025-11-12",
+      "audience": "internal"
     },
     {
       "id": "visit-board",
@@ -732,7 +757,8 @@
       "version_label": "最新",
       "cover": "cover.webp",
       "thumb": "thumb.webp",
-      "added_at": "2025-12-03"
+      "added_at": "2025-12-03",
+      "audience": "internal"
     },
     {
       "id": "finance-qc-arch",
@@ -757,7 +783,8 @@
       "version_label": "最新",
       "cover": "cover.webp",
       "thumb": "thumb.webp",
-      "added_at": "2026-03-05"
+      "added_at": "2026-03-05",
+      "audience": "internal"
     },
     {
       "id": "kms-semi",
@@ -779,7 +806,8 @@
       "version_label": "最新",
       "cover": "cover.webp",
       "thumb": "thumb.webp",
-      "added_at": "2026-03-18"
+      "added_at": "2026-03-18",
+      "audience": "internal"
     }
   ]
 }
