@@ -9,6 +9,13 @@ from unittest.mock import Mock, patch
 import server
 
 
+class PublicPathTests(unittest.TestCase):
+    def test_strips_gallery_mount(self):
+        self.assertEqual(server.public_path("/gallery/api/auth/gate"), "/api/auth/gate")
+        self.assertEqual(server.public_path("/gallery"), "/")
+        self.assertEqual(server.public_path("/api/auth/gate"), "/api/auth/gate")
+
+
 class CookieSecureHelperTests(unittest.TestCase):
     def test_plain_http_is_not_secure(self):
         self.assertFalse(
@@ -214,6 +221,35 @@ class DemoCoverAuthTests(unittest.TestCase):
             with patch.object(server, "DEMOS_DIR", demos):
                 handler.do_GET()
             handler._send_file.assert_called_once_with(thumb.resolve())
+
+
+class AuthGateEndpointTests(unittest.TestCase):
+    def test_unauthenticated_gate_is_401_not_200(self):
+        handler = _handler("/api/auth/gate", authed=False)
+        handler.do_GET()
+        handler.send_response.assert_called_once_with(401)
+        self.assertFalse(
+            any(c.args and c.args[0] == 200 for c in handler.send_response.call_args_list)
+        )
+        self.assertFalse(
+            any(c.args and c.args[0] == 204 for c in handler.send_response.call_args_list)
+        )
+
+    def test_authenticated_gate_is_204(self):
+        handler = _handler("/api/auth/gate", authed=True)
+        handler.do_GET()
+        handler.send_response.assert_called_once_with(204)
+        handler._send_json.assert_not_called()
+
+    def test_gallery_prefix_reaches_gate(self):
+        handler = _handler("/gallery/api/auth/gate", authed=True)
+        handler.do_GET()
+        handler.send_response.assert_called_once_with(204)
+
+    def test_status_stays_json_200_when_logged_out(self):
+        handler = _handler("/api/auth/status", authed=False)
+        handler.do_GET()
+        handler._send_json.assert_called_once_with({"ok": False})
 
 
 class LoginMisconfigTests(unittest.TestCase):

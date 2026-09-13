@@ -2,6 +2,7 @@
 
 ## 2026-09-13 · Auth on demos/covers, fail-closed password, Secure cookie
 
+- `GET /api/auth/gate` (also `/gallery/api/auth/gate`) for nginx `auth_request`: **204** if session valid, **401** if not. `/api/auth/status` stays 200 JSON for the SPA.
 - `/demos/*` and `/covers/*` require a valid `gallery_session`, same as catalog/search. `/`, `/index.html`, `/assets/` stay public so the gate can load.
 - Unauthenticated XHR/fetch/images → `401` JSON `{ok:false,error:unauthorized}` (same as catalog APIs). Browser HTML navigations (`Sec-Fetch-Mode: navigate` / `Accept: text/html`) → `302 Location: /`.
 - Removed hardcoded default password. Startup fails closed unless `GALLERY_PASSWORD` or `auth.json` password is set.
