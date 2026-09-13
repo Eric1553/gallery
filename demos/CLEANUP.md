@@ -57,3 +57,18 @@ No unused echarts copy was found inside demos. Shared `/assets/vendor` was consi
 | `*.bak-*` under biren-ceo / biren-ops-loop | small | Kept; not blocking runtime |
 
 Git LFS / `demos/.gitattributes` was not added: remaining large files are functional GIF/PNG assets, not vendor duplicates.
+
+## Verified 2026-09-13
+
+Re-read this file on current `main` and re-scanned `demos/`. Policy unchanged; no unsafe deletes.
+
+| Item | Status |
+|---|---|
+| `biren-finance__rev1/2/3` catalog stubs | **Already on main.** `family=biren-finance`, `archived=true`, `is_latest=false`, `audience=client`（壁仞）, `featured=false`. Latest remains `biren-finance`; `biren-finance__baseline` already archived. Out of default latest pool; shown on the biren-finance Archive panel. |
+| rev1 / rev2 thumb/cover | Still missing. Validator warn-only. **Do not invent** fake covers. |
+| rev3 thumb/cover | Present (`thumb.webp` / `cover.webp`). |
+| jiandaoyun `assistant-*-demo.gif` | Still referenced by `jiandaoyun-carousel/index.html` fallback slides. **Keep.** |
+| echarts copies (5× biren + smic + weijie) | Still per-package, still referenced. Dedup across frozen trees remains **unsafe**. |
+| New junk matching the Removed table | None found (no nested `Users/…` Mac paths, no carousel `start-server` / `启动轮播` leftovers, no unreferenced office blobs). `biren-ceo/壁仞科技_CEO决策看板_客户演示操作说明.docx` is linked from that demo’s README — keep. `static-demos/` remains README-only. |
+
+Handoff steps for later DEMO work: [`docs/DEMO-CHANGE-FLOW.md`](../docs/DEMO-CHANGE-FLOW.md). Merge ≠ deploy.

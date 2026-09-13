@@ -60,9 +60,13 @@ class CatalogContractTests(unittest.TestCase):
         for did in ("biren-finance__rev1", "biren-finance__rev2", "biren-finance__rev3"):
             demo = by_id[did]
             self.assertEqual(demo.get("family"), "biren-finance")
-            self.assertTrue(demo.get("archived") is True or demo.get("is_latest") is False)
+            self.assertIs(demo.get("archived"), True)
+            self.assertIs(demo.get("is_latest"), False)
             self.assertEqual(demo.get("audience"), "client")
+            self.assertEqual(demo.get("client"), "壁仞科技")
             self.assertFalse(demo.get("featured"))
+        latest = [d["id"] for d in catalog["demos"] if d.get("family") == "biren-finance" and d.get("archived") is not True and d.get("is_latest") is not False]
+        self.assertEqual(latest, ["biren-finance"])
 
     def test_internal_carousels_are_not_customer_featured(self):
         catalog = json.loads((ROOT / "catalog.json").read_text(encoding="utf-8"))

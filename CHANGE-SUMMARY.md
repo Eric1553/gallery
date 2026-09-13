@@ -1,5 +1,16 @@
 # Gallery Change Summary
 
+## 2026-09-13 · Cleanup follow-through + DEMO change flow
+
+- Re-read `demos/CLEANUP.md` on current `main`. Priority A stubs already registered; fields match policy (`family=biren-finance`, `archived=true`, `is_latest=false`, `audience=client`, `featured=false`). Latest stays `biren-finance`. rev1/rev2 thumb/cover remain warn-only — no invented covers. Catalog `meta.version` left at **1.6.3** (no catalog.json edit).
+- Priority B: re-scanned for Removed-table leftovers. No new nested Mac paths, carousel local-server scripts, or unreferenced office blobs. Functional GIFs (`jiandaoyun-carousel/assets/gifs/assistant-*-demo.gif`) and per-package echarts copies **kept** (dedup still unsafe). Stamped CLEANUP.md `Verified 2026-09-13`.
+- Added [`docs/DEMO-CHANGE-FLOW.md`](docs/DEMO-CHANGE-FLOW.md)（需求澄清 → 风格/去 AI → 入库 → 验收 → 上线）。demo-craft 清单可随后共改。不写门户 / MaxKB / Nginx 步骤。
+- `docs/GB-HANDOFF.md` §7.3 no longer claims `__rev*` are uncatalogued; §6.5 / 文档索引指向新流程。README 同步。
+- `tests/test_catalog_contract.py` now requires both `archived=true` and `is_latest=false` on the three rev stubs.
+- No ECS / systemd / `/opt` / MaxKB / Nginx. **Merge ≠ deploy.**
+
+---
+
 ## 2026-09-13 · Missing DEMO covers (catalog 1.6.2)
 
 - Added `cover.webp` (1600×1000) and `thumb.webp` (800×500) for `weijie-sales-lite`, `jiandaoyun-carousel`, `ammo-search`.
