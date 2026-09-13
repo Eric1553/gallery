@@ -3,7 +3,7 @@
 Heavy or questionable files that were inventoried for this pass.
 Prefer deleting true junk over functional assets.
 
-## Removed (this PR)
+## Removed
 
 | Path | Why |
 |---|---|
@@ -14,18 +14,45 @@ Prefer deleting true junk over functional assets.
 | `jiandaoyun-carousel/server.py`, `启动轮播.command`, `启动轮播.bat` | Same local-server leftovers; page already falls back to bundled GIFs |
 | `acme-rd/帆软修改建议.xlsx` | Internal review spreadsheet, not used by `index.html` |
 | `acme-rd/优化建议/帆软修改建议20260627.xlsx` | Duplicate office blob |
+| `static-demos/jingxin-helmsman/index.html` | Byte-identical to `demos/jingxin-helmsman/index.html`; `demos/` is canonical |
+| `static-demos/jingxin-helmsman-mobile/index.html` | Byte-identical to `demos/jingxin-helmsman-mobile/index.html` |
+
+`static-demos/` now holds only a README pointing at `demos/` so the two trees cannot drift.
+
+## `__rev*` orphans → archived catalog stubs
+
+**Choice: keep the trees and register archived catalog stubs** (`family=biren-finance`, `archived=true`, `is_latest=false`). Not deleted: each revision is a frozen working copy (`REVISION.json` + its own `index.html` / JS), not an unused identical duplicate of `biren-finance`.
+
+| id | Note |
+|---|---|
+| `biren-finance` | Latest, `family=biren-finance` |
+| `biren-finance__baseline` | Already archived in the family |
+| `biren-finance__rev1` | Archived stub — 订单总览日期维度; no thumb/cover (validator warn-only) |
+| `biren-finance__rev2` | Archived stub — same theme, later stamp; no thumb/cover |
+| `biren-finance__rev3` | Archived stub — CEO 五板块; has `thumb.webp` / `cover.webp` |
+
+They stay out of the default latest pool and show under the biren-finance Archive panel. Still **client** audience (壁仞), not 帆软/FDE.
+
+## echarts copies — kept (dedup unsafe)
+
+| Path | md5 | Why kept |
+|---|---|---|
+| `biren-finance*/js/vendor/echarts.min.js` (5 trees) | identical | Each frozen package is self-contained; HTML uses a relative `js/vendor/` path. Pointing them at `/assets/vendor` would break offline/standalone copies and mix a shared public asset into private demo packages. |
+| `smic-finance/assets/js/echarts.min.js` | different | Different build than biren |
+| `weijie-sales/assets/echarts.min.js` | different | Different build than biren / smic |
+
+No unused echarts copy was found inside demos. Shared `/assets/vendor` was considered and rejected for this pass.
 
 ## Deferred (do not delete without a replace asset)
 
 | Path | Size (approx) | Why kept |
 |---|---|---|
-| `jiandaoyun-carousel/assets/gifs/assistant-qa-demo.gif` | 6.9 MB | Referenced by `index.html` fallback slides |
-| `jiandaoyun-carousel/assets/gifs/assistant-fill-demo.gif` | 4.3 MB | Same — removing blanks the archived carousel |
+| `jiandaoyun-carousel/assets/gifs/assistant-qa-demo.gif` | 6.9 MB | Required by `index.html` fallback slides (`assets/gifs/assistant-qa-demo.gif`) |
+| `jiandaoyun-carousel/assets/gifs/assistant-fill-demo.gif` | 4.3 MB | Same — `assistant-fill-demo.gif`. No unused GIF duplicate. |
 | `hejian-wall/png/*.png` | ~0.7–1.8 MB each | Prototype-wall preview images used by the HTML cards |
 | `fde-carousel` missing `DEMO/*.mp4|mov` | (already absent) | Videos were stripped earlier; page lists them as fallback URLs |
 | `acme-rd/docs/screenshots/*.png` | ~1 MB each | Authoring screenshots, not the live entry path |
 | `acme-rd/cover.png` | ~1 MB | Fallback cover next to `cover.webp` |
-| `biren-finance__rev1/2/3/` | full trees | Uncatalogued historical revs; validator warns only |
 | `biren-ceo/server.py`, `biren-ops-loop/server.py` | small | Live MOSS demo servers, not accidental static leftovers |
 | `*.bak-*` under biren-ceo / biren-ops-loop | small | Kept; not blocking runtime |
 

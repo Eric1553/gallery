@@ -50,11 +50,8 @@ CLIENT_OVERRIDE_IDS = {
 
 # Historical working copies under demos/ that are intentionally uncatalogued.
 # Warn only; do not fail CI. Do not add to the default latest pool.
-KNOWN_ORPHAN_DIRS = {
-    "biren-finance__rev1",
-    "biren-finance__rev2",
-    "biren-finance__rev3",
-}
+# biren-finance__rev1/2/3 are now archived catalog stubs (family=biren-finance).
+KNOWN_ORPHAN_DIRS: set[str] = set()
 
 
 def infer_audience(demo: dict) -> str:

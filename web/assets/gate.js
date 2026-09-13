@@ -184,7 +184,10 @@
     }
   }
 
+  let gateWired = false;
   function wireGateControls() {
+    if (gateWired) return;
+    gateWired = true;
     $("gate-submit")?.addEventListener("click", loginPassword);
     $("gate-password")?.addEventListener("keydown", (e) => {
       if (e.key === "Enter") loginPassword();
@@ -193,9 +196,18 @@
     $("gate-bio-register")?.addEventListener("click", registerBiometric);
   }
 
+  window.addEventListener("gallery-lock", (e) => {
+    showGate(true);
+    wireGateControls();
+    const msg = e && e.detail && e.detail.message;
+    setMsg(msg || "会话已过期，请重新验证");
+    $("gate-password")?.focus();
+  });
+
   async function bootGate() {
     const gate = $("auth-gate");
     if (!gate) return;
+    wireGateControls();
 
     // 1) 仍有有效会话 cookie → 直接进
     try {
@@ -208,7 +220,6 @@
     } catch (_) {}
 
     showGate(true);
-    wireGateControls();
 
     const hasToken = !!localStorage.getItem(TOKEN_KEY);
     const hasBio = !!localStorage.getItem(WEBAUTHN_KEY);

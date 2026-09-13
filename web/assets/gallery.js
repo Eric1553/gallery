@@ -1305,6 +1305,46 @@
     }
   }
 
+  function promptUnlock(message) {
+    window.dispatchEvent(
+      new CustomEvent("gallery-lock", {
+        detail: { message: message || "请先解锁展览馆" },
+      })
+    );
+  }
+
+  function showStageError(message) {
+    const el = $("stage-error");
+    const msg = $("stage-error-msg");
+    if (msg) msg.textContent = message || "目录加载失败";
+    if (el) el.hidden = false;
+  }
+
+  function hideStageError() {
+    const el = $("stage-error");
+    if (el) el.hidden = true;
+  }
+
+  function showFedUnlock(query, message) {
+    const box = $("fed-progress");
+    if (box) box.hidden = true;
+    $("fed-blurb").textContent = message || "需要解锁后才能检索全库";
+    const cols = $("fed-cols");
+    if (cols) {
+      cols.hidden = false;
+      cols.innerHTML = `
+        <div class="fed-col">
+          <p class="fed-empty">会话无效或已过期。请先解锁展览馆，再检索「${escapeHtml(query)}」。</p>
+          <p class="fed-unlock-row">
+            <button type="button" class="btn" id="fed-unlock">解锁展览馆</button>
+          </p>
+        </div>`;
+    }
+    $("fed-unlock")?.addEventListener("click", () => {
+      promptUnlock("检索需要有效会话，请先解锁展览馆");
+    });
+  }
+
   async function runFederated(q) {
     const query = String(q || "").trim();
     const panel = $("fed-panel");
@@ -1342,7 +1382,10 @@
         credentials: "same-origin",
         signal,
       });
-      if (res.status === 401) return;
+      if (res.status === 401) {
+        showFedUnlock(query, "需要解锁后才能检索全库");
+        return;
+      }
       const data = await readFedStream(res, signal, applyFedStep);
       if (signal.aborted) return;
       box.hidden = true;
@@ -1384,39 +1427,47 @@
   }
 
   async function loadCatalog() {
-    const res = await fetch("/api/catalog.json", { cache: "no-store", credentials: "same-origin" });
-    if (res.status === 401) {
+    hideStageError();
+    try {
+      const res = await fetch("/api/catalog.json", { cache: "no-store", credentials: "same-origin" });
+      if (res.status === 401) {
+        promptUnlock("会话无效或已过期，请解锁后再进入展览馆");
+        return false;
+      }
+      if (!res.ok) {
+        throw new Error(`目录接口 HTTP ${res.status}`);
+      }
+      state.catalog = await res.json();
+      rebuildCatalogIndex();
+      if (state.catalog?.meta?.sort_policy?.default === "time-desc") {
+        state.sort = "time-desc";
+      } else {
+        state.sort = "time-asc";
+      }
+      document.title = state.catalog.meta?.title || "DEMO案例库";
+      document.body.dataset.scope = state.scope;
+      await loadSearchIndex();
+      for (const g of clientGroups()) {
+        if (g.demos.length > 1 && g.demos.some((d) => d.featured)) state.openFolders.add(g.client);
+      }
+      render({ mode: "full", animate: true });
+      return true;
+    } catch (err) {
+      showStageError(err.message || "目录加载失败");
       return false;
     }
-    state.catalog = await res.json();
-    rebuildCatalogIndex();
-    if (state.catalog?.meta?.sort_policy?.default === "time-desc") {
-      state.sort = "time-desc";
-    } else {
-      state.sort = "time-asc";
-    }
-    document.title = state.catalog.meta?.title || "DEMO案例库";
-    document.body.dataset.scope = state.scope;
-    await loadSearchIndex();
-    for (const g of clientGroups()) {
-      if (g.demos.length > 1 && g.demos.some((d) => d.featured)) state.openFolders.add(g.client);
-    }
-    render({ mode: "full", animate: true });
-    return true;
   }
 
   async function boot() {
+    $("stage-error-retry")?.addEventListener("click", () => {
+      loadCatalog();
+    });
     const ready = await loadCatalog();
     if (!ready) {
       window.addEventListener(
         "gallery-unlocked",
         () => {
-          loadCatalog().catch((err) => {
-            document.body.insertAdjacentHTML(
-              "beforeend",
-              `<p style="padding:2rem;color:#c45c4a">目录加载失败：${escapeHtml(err.message)}</p>`
-            );
-          });
+          loadCatalog();
         },
         { once: true }
       );
@@ -1504,9 +1555,6 @@
   }
 
   boot().catch((err) => {
-    document.body.insertAdjacentHTML(
-      "beforeend",
-      `<p style="padding:2rem;color:#c45c4a">目录加载失败：${escapeHtml(err.message)}</p>`
-    );
+    showStageError(err.message || "目录加载失败");
   });
 })();

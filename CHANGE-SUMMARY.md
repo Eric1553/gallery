@@ -1,5 +1,18 @@
 # Gallery Change Summary
 
+## 2026-09-13 · Auth on demos/covers, fail-closed password, Secure cookie
+
+- `/demos/*` and `/covers/*` require a valid `gallery_session`, same as catalog/search. `/`, `/index.html`, `/assets/` stay public so the gate can load.
+- Unauthenticated XHR/fetch/images → `401` JSON `{ok:false,error:unauthorized}` (same as catalog APIs). Browser HTML navigations (`Sec-Fetch-Mode: navigate` / `Accept: text/html`) → `302 Location: /`.
+- Removed hardcoded default password. Startup fails closed unless `GALLERY_PASSWORD` or `auth.json` password is set.
+- Session cookie gets `Secure` only on HTTPS, `X-Forwarded-Proto=https`, or `GALLERY_COOKIE_SECURE=1`.
+- Federated search 401 shows unlock prompt (progress no longer freezes). Catalog load failure shows visible error + retry.
+- Asset cache stamp `?v=20260913auth`.
+- `biren-finance__rev1/2/3` registered as archived family stubs (trees kept). `static-demos/` HTML removed (canonical = `demos/`). echarts copies and jiandaoyun GIFs kept — see `demos/CLEANUP.md`.
+- Tests: `tests/test_gallery_auth.py`. Merge ≠ deploy.
+
+---
+
 ## 2026-09-13 · Catalog contract / federation / junk cleanup
 
 - Catalog: every demo now has explicit `audience` (`client`|`internal`); `biren-finance__baseline` is archived in family `biren-finance` so it is not in the default latest pool. Tags remain 4.

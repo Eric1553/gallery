@@ -86,8 +86,13 @@ echo "==> restart demo-gallery"
 echo "==> verify"
 curl -s -o /dev/null -w "demo %{http_code}\n" "http://${HOST}/demos/${DEMO_ID}/"
 COOKIE_JAR="$(mktemp)"
-curl -s -c "$COOKIE_JAR" -b "$COOKIE_JAR" -H 'Content-Type: application/json' \
-  -d '{"password":"FanRuan@Demo"}' "http://${HOST}/api/auth/login" >/dev/null || true
+if [[ -n "${GALLERY_PASSWORD:-}" ]]; then
+  LOGIN_JSON="$(python3 -c 'import json,os; print(json.dumps({"password": os.environ["GALLERY_PASSWORD"]}))')"
+  curl -s -c "$COOKIE_JAR" -b "$COOKIE_JAR" -H 'Content-Type: application/json' \
+    -d "$LOGIN_JSON" "http://${HOST}/api/auth/login" >/dev/null || true
+else
+  echo "WARN: GALLERY_PASSWORD unset; skip catalog verify login" >&2
+fi
 curl -s -b "$COOKIE_JAR" "http://${HOST}/api/catalog.json" \
   | python3 -c "import json,sys; d=next(x for x in json.load(sys.stdin)['demos'] if x['id']=='jiangyuan-rd-pm'); print('catalog', d.get('version_label'), 'featured=', d.get('featured'))"
 rm -f "$COOKIE_JAR"

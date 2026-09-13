@@ -51,13 +51,15 @@ def catalog_entry_for(demo_id: str) -> str:
             mapping = {}
         _CATALOG_ENTRY = mapping
     return _CATALOG_ENTRY.get(did) or "index.html"
+
+
 AUTH_DIR = Path(os.environ.get("GALLERY_AUTH_DIR", str(ROOT / "data")))
 AUTH_STORE = AUTH_DIR / "auth.json"
 COOKIE_NAME = "gallery_session"
-# 默认密码可用环境变量覆盖：GALLERY_PASSWORD
-DEFAULT_PASSWORD = os.environ.get("GALLERY_PASSWORD", "FanRuan@Demo")
+# Password is required: GALLERY_PASSWORD env or auth.json "password". No code default.
 SESSION_DAYS = int(os.environ.get("GALLERY_SESSION_DAYS", "7"))
 _AUTH_SECRET_CACHE = os.environ.get("GALLERY_AUTH_SECRET", "").strip()
+_TRUE_FLAGS = {"1", "true", "yes", "on"}
 
 # 不改写的站点级前缀
 KEEP_ROOT_PREFIXES = ("/demos/", "/api/", "/assets/")
@@ -331,7 +333,6 @@ def load_auth_store() -> dict:
         except json.JSONDecodeError:
             pass
     data = {
-        "password": DEFAULT_PASSWORD,
         "secret": secrets.token_hex(32),
         "device_tokens": {},  # token -> exp
     }
@@ -353,11 +354,111 @@ def auth_secret() -> str:
     return _AUTH_SECRET_CACHE
 
 
-def gallery_password() -> str:
+def _header_get(headers, name: str) -> str:
+    """Read an HTTP header from email.message or a plain dict (case-insensitive)."""
+    if headers is None:
+        return ""
+    getter = getattr(headers, "get", None)
+    if not callable(getter):
+        return ""
+    val = getter(name)
+    if val is None:
+        val = getter(name.lower())
+    if val is None and name != name.title():
+        val = getter(name.title())
+    return str(val or "")
+
+
+def wants_json_unauthorized(headers) -> bool:
+    """401 JSON for XHR/fetch/assets; False for browser HTML navigations (302 to gate).
+
+    Matches existing catalog/search APIs (always JSON 401). Browser document
+    navigations to /demos or /covers go to `/` so the public gate can load.
+    """
+    dest = _header_get(headers, "Sec-Fetch-Dest").strip().lower()
+    mode = _header_get(headers, "Sec-Fetch-Mode").strip().lower()
+    accept = _header_get(headers, "Accept").lower()
+    xhr = _header_get(headers, "X-Requested-With").strip().lower()
+    if xhr == "xmlhttprequest":
+        return True
+    if dest in {"image", "style", "script", "font", "empty", "video", "audio", "track"}:
+        return True
+    if mode in {"cors", "same-origin", "no-cors"}:
+        return True
+    if dest == "document" or mode == "navigate":
+        return False
+    first = accept.split(",")[0].strip()
+    if first.startswith("text/html"):
+        return False
+    if "application/json" in accept:
+        return True
+    return True
+
+
+def cookie_secure_enabled(*, headers=None, environ=None, https: bool = False) -> bool:
+    """Set Secure on gallery_session only for HTTPS (or forced via env).
+
+    True when GALLERY_COOKIE_SECURE is truthy, X-Forwarded-Proto is https,
+    or the request itself is HTTPS. Plain HTTP stays non-Secure so current
+    ECS http:// login keeps working.
+    """
+    env = os.environ if environ is None else environ
+    flag = str(env.get("GALLERY_COOKIE_SECURE") or "").strip().lower()
+    if flag in _TRUE_FLAGS:
+        return True
+    if https:
+        return True
+    proto = _header_get(headers, "X-Forwarded-Proto").split(",")[0].strip().lower()
+    return proto == "https"
+
+
+def session_cookie_header(
+    token: str,
+    *,
+    max_age: int,
+    headers=None,
+    environ=None,
+    https: bool = False,
+) -> str:
+    parts = [
+        f"{COOKIE_NAME}={token}",
+        "Path=/",
+        f"Max-Age={max_age}",
+        "HttpOnly",
+        "SameSite=Lax",
+    ]
+    if cookie_secure_enabled(headers=headers, environ=environ, https=https):
+        parts.append("Secure")
+    return "; ".join(parts)
+
+
+def configured_gallery_password() -> str | None:
+    """Return the configured password, or None if neither env nor auth.json set one."""
     env = os.environ.get("GALLERY_PASSWORD")
-    if env:
-        return env
-    return str(load_auth_store().get("password") or DEFAULT_PASSWORD)
+    if env is not None and str(env).strip():
+        return str(env)
+    store = load_auth_store()
+    pw = str(store.get("password") or "").strip()
+    return pw or None
+
+
+def gallery_password() -> str:
+    pw = configured_gallery_password()
+    if not pw:
+        raise RuntimeError(
+            "gallery password missing: set GALLERY_PASSWORD or auth.json password"
+        )
+    return pw
+
+
+def require_gallery_password() -> str:
+    """Fail closed at startup when no password is configured."""
+    pw = configured_gallery_password()
+    if not pw:
+        raise SystemExit(
+            "gallery auth: set GALLERY_PASSWORD or put password in auth.json; refusing to start"
+        )
+    return pw
 
 
 def sign_session(exp: int) -> str:
@@ -481,12 +582,37 @@ class GalleryHandler(SimpleHTTPRequestHandler):
             tok = morsel.value
         return verify_session(tok)
 
+    def _request_is_https(self) -> bool:
+        sock = getattr(self, "connection", None)
+        if sock is not None and (
+            sock.__class__.__name__ == "SSLSocket" or hasattr(sock, "context")
+        ):
+            return True
+        return False
+
     def _set_session_cookie(self, token: str) -> None:
         max_age = SESSION_DAYS * 86400
         self.send_header(
             "Set-Cookie",
-            f"{COOKIE_NAME}={token}; Path=/; Max-Age={max_age}; HttpOnly; SameSite=Lax",
+            session_cookie_header(
+                token,
+                max_age=max_age,
+                headers=self.headers,
+                https=self._request_is_https(),
+            ),
         )
+
+    def _require_gallery_session(self) -> bool:
+        if self._authed():
+            return True
+        if wants_json_unauthorized(self.headers):
+            self._send_json({"ok": False, "error": "unauthorized"}, code=401)
+            return False
+        self.send_response(302)
+        self.send_header("Location", "/")
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        return False
 
     def _send_search_sse(self, q: str) -> None:
         self.close_connection = True
@@ -563,8 +689,13 @@ class GalleryHandler(SimpleHTTPRequestHandler):
         body = self._read_json()
 
         if path == "/api/auth/login":
+            try:
+                expected = gallery_password()
+            except RuntimeError:
+                self._send_json({"ok": False, "error": "server misconfigured"}, code=503)
+                return
             pw = str(body.get("password") or "")
-            if not hmac.compare_digest(pw, gallery_password()):
+            if len(pw) != len(expected) or not hmac.compare_digest(pw, expected):
                 self._send_json({"ok": False, "error": "密码错误"}, code=401)
                 return
             session = sign_session(int(time.time()) + SESSION_DAYS * 86400)
@@ -584,7 +715,15 @@ class GalleryHandler(SimpleHTTPRequestHandler):
         if path == "/api/auth/logout":
             self.send_response(200)
             self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.send_header("Set-Cookie", f"{COOKIE_NAME}=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax")
+            self.send_header(
+                "Set-Cookie",
+                session_cookie_header(
+                    "",
+                    max_age=0,
+                    headers=self.headers,
+                    https=self._request_is_https(),
+                ),
+            )
             self.send_header("Cache-Control", "no-store")
             data = b'{"ok":true}'
             self.send_header("Content-Length", str(len(data)))
@@ -663,7 +802,12 @@ class GalleryHandler(SimpleHTTPRequestHandler):
             self._send_file(target)
             return
 
-        if path.startswith("/covers/webp/"):
+        if path == "/covers" or path.startswith("/covers/"):
+            if not self._require_gallery_session():
+                return
+            if not path.startswith("/covers/webp/"):
+                self.send_error(404, "Not found")
+                return
             # Canonical card URLs: /covers/webp/<demo_id>/thumb.webp|cover.webp
             # Files live beside the demo: /opt/demos/<id>/thumb.webp
             rel = path[len("/covers/webp/") :].lstrip("/")
@@ -678,7 +822,12 @@ class GalleryHandler(SimpleHTTPRequestHandler):
             self._send_file(target)
             return
 
-        if path.startswith("/demos/"):
+        if path == "/demos" or path.startswith("/demos/"):
+            if not self._require_gallery_session():
+                return
+            if path == "/demos":
+                self.send_error(404, "Not found")
+                return
             rel = path[len("/demos/") :]
             base = demo_base_from_rel(rel)
             target = resolve_static_path(DEMOS_DIR, rel)
@@ -713,7 +862,7 @@ def main() -> None:
 
     if not CATALOG.is_file():
         raise SystemExit(f"missing catalog: {CATALOG}")
-    load_auth_store()
+    require_gallery_password()
     print(f"gallery web: {WEB}")
     print(f"demos dir : {DEMOS_DIR}")
     print(f"auth store: {AUTH_STORE}")

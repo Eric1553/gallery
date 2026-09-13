@@ -15,7 +15,7 @@ gallery/
 ├── web/                   # 主馆 UI（gallery.css / gallery.js / gate.js）
 ├── scripts/               # 运维脚本（封面、索引、ECS 同步）
 ├── tests/                 # pytest
-├── static-demos/          # 内嵌在主馆模块内的静态 Demo
+├── static-demos/          # pointer only — canonical HTML is demos/
 ├── covers/                # 卡片 thumb / 详情 cover（WebP）
 ├── data/                  # 运行时数据目录（auth/token 不入库，见 .gitignore）
 └── demos/                 # 全部 Demo 静态包（对应 ECS /opt/demos/<id>/）
@@ -35,7 +35,8 @@ gallery/
 
 环境变量（生产在 systemd / 服务器配置，**勿提交密钥**）：
 
-- `GALLERY_PASSWORD` — 门禁密码
+- `GALLERY_PASSWORD` — 门禁密码（**必填**，或写在 `data/auth.json` 的 `password`；无配置则拒绝启动，代码无默认口令）
+- `GALLERY_COOKIE_SECURE` — 设为 `1` 时会话 Cookie 带 `Secure`；HTTPS / `X-Forwarded-Proto=https` 时也会自动带，纯 HTTP 不带（避免 ECS http 登录失败）
 - `GALLERY_MAXKB_TOKEN` / `GALLERY_MAXKB_TOKEN_FILE` — MaxKB 联邦检索
 - `GALLERY_KMS_BASE` + `GALLERY_KMS_TOKEN` — KMS 检索
 - `FEEDBACK_PUBLIC_BASE` 或 `GALLERY_FEEDBACK_BASE` — 反馈台对外基址（默认 `http://120.55.184.234:8787`，联邦检索里的 admin / shot URL 用它）

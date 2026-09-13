@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/assets/gallery.css?v=20260903k51" />
+  <link rel="stylesheet" href="/assets/gallery.css?v=20260913auth" />
 </head>
 <body class="gated">
   <div class="stage-bg" aria-hidden="true">
@@ -132,6 +132,10 @@
         <p id="section-blurb">面向客户交付与售前演示</p>
       </div>
       <div id="grid" class="grid"></div>
+      <div id="stage-error" class="stage-error" hidden>
+        <p id="stage-error-msg">目录加载失败</p>
+        <button type="button" class="btn" id="stage-error-retry">重试加载</button>
+      </div>
       <p class="empty" id="empty" hidden>没有匹配的案例，试试切换范围或清空筛选。</p>
       <section class="fed-panel" id="fed-panel" hidden>
         <div class="section-head tight">
@@ -157,7 +161,7 @@
     <div class="drawer-body" id="drawer-body"></div>
   </aside>
 
-  <script src="/assets/gate.js?v=20260731p2"></script>
-  <script src="/assets/gallery.js?v=20260903k51"></script>
+  <script src="/assets/gate.js?v=20260913auth"></script>
+  <script src="/assets/gallery.js?v=20260913auth"></script>
 </body>
 </html>

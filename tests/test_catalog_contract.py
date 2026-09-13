@@ -54,6 +54,16 @@ class CatalogContractTests(unittest.TestCase):
         self.assertNotEqual(current.get("archived"), True)
         self.assertNotEqual(current.get("is_latest"), False)
 
+    def test_biren_finance_revs_are_archived_family_stubs(self):
+        catalog = json.loads((ROOT / "catalog.json").read_text(encoding="utf-8"))
+        by_id = {d["id"]: d for d in catalog["demos"]}
+        for did in ("biren-finance__rev1", "biren-finance__rev2", "biren-finance__rev3"):
+            demo = by_id[did]
+            self.assertEqual(demo.get("family"), "biren-finance")
+            self.assertTrue(demo.get("archived") is True or demo.get("is_latest") is False)
+            self.assertEqual(demo.get("audience"), "client")
+            self.assertFalse(demo.get("featured"))
+
     def test_internal_carousels_are_not_customer_featured(self):
         catalog = json.loads((ROOT / "catalog.json").read_text(encoding="utf-8"))
         for did in ("fde-carousel", "jiandaoyun-carousel"):

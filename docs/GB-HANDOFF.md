@@ -41,9 +41,9 @@
 | 项 | 值 |
 |---|---|
 | 用途 | 主馆 `/gallery/` 登录；**仅 Lorin 私人使用**，不对客户开放 |
-| 默认密码 | `FanRuan@Demo` |
-| 环境变量 | `GALLERY_PASSWORD`（ECS systemd 可覆盖） |
-| 会话 | 密码成功后本机 `gallery_device_token`；Cookie `gallery_session` |
+| 密码 | **无代码默认值**。必须设 `GALLERY_PASSWORD` 或 `data/auth.json` 的 `password`；缺一则拒绝启动。生产口令只放在 ECS systemd / 本机 secret，**不要写回本仓库** |
+| 环境变量 | `GALLERY_PASSWORD`（ECS systemd）；`GALLERY_COOKIE_SECURE=1` 可强制 Cookie `Secure` |
+| 会话 | 密码成功后本机 `gallery_device_token`；Cookie `gallery_session`（HTTPS 或 `X-Forwarded-Proto=https` 时带 Secure） |
 | 数据目录 | `GALLERY_AUTH_DIR=/opt/demo-gallery/data`（`auth.json` **不入 Git**） |
 
 ### 2.2 MaxKB（半导体等领域知识库）
@@ -153,7 +153,7 @@ gallery/                          # GitHub 根
 ├── web/                            # 主馆 UI（gallery.css 为视觉基准）
 ├── scripts/                        # capture_covers, sync_to_ecs, build_search_index…
 ├── tests/
-├── static-demos/                   # 内嵌在主馆内的静态 Demo
+├── static-demos/                   # README only; canonical HTML is demos/
 ├── covers/                         # thumb.webp / cover.webp
 ├── data/                           # 运行时（auth/token 不入库）
 └── demos/                          # 32 个静态包目录（含历史 rev 文件夹）
