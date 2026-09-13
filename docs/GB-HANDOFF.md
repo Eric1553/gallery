@@ -366,6 +366,7 @@ kind：`major` 重构 | `minor` 小迭代 | `patch` 修复
 | 本手册 | `docs/GB-HANDOFF.md` |
 | Presales Brief v1 | `docs/PRESALES-BRIEF.md` + `schemas/presales_brief.v1.json` |
 | GitHub 连接 | `docs/GITHUB-GB-SETUP.md` |
+| FR 模板解析台 / fr-spec-lite | `docs/FR-SPEC-LITE-LOGIC.md` |
 | README | `README.md` |
 | MaxKB 权威（ECS） | `/Users/lorin/Documents/ECS服务器/docs/MAXKB.md` |
 | DEV/PROD | `/Users/lorin/Documents/ECS服务器/docs/DEV_PROD.md` |
