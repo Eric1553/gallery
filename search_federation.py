@@ -174,6 +174,26 @@ def _account_needles(q: str) -> list[str]:
     return [qn] if len(qn) >= 2 else []
 
 
+_SEARCH_SEP_RE = re.compile(r"[\s·\-_／/]+")
+
+
+def compact_query_text(s: str) -> str:
+    """Remove whitespace and title separators so colloquial needles match middot titles."""
+    return _SEARCH_SEP_RE.sub("", s or "").lower()
+
+
+def _text_matches(haystack: str, needle: str) -> bool:
+    if not needle:
+        return False
+    hay = haystack or ""
+    if needle.lower() in hay.lower():
+        return True
+    compact_needle = compact_query_text(needle)
+    if len(compact_needle) < 2:
+        return False
+    return compact_needle in compact_query_text(hay)
+
+
 def retrieve_query(q: str) -> str:
     """Drop 怎么讲 tails; use subject + industry when resolved."""
     try:
@@ -219,34 +239,61 @@ def search_demos(q: str, limit: int = 20) -> list[dict]:
             demo.get("type") or "",
             demo.get("summary") or "",
             " ".join(demo.get("tags") or []),
+            " ".join(demo.get("aliases") or []),
             " ".join(idx.get("keywords") or []),
             " ".join(idx.get("aliases") or []),
             " ".join(modules),
         ]
         blob = " ".join(blob_parts)
         blob_l = blob.lower()
-        hit_n = next((n for n in needles if n.lower() in blob_l), "")
+        # Join compacted fields with a sentinel so stripping separators cannot
+        # concatenate adjacent catalog fields into a false match.
+        blob_compact = "\x1e".join(compact_query_text(p) for p in blob_parts)
+        hit_n = next(
+            (
+                n
+                for n in needles
+                if n.lower() in blob_l
+                or (
+                    len(compact_query_text(n)) >= 2
+                    and compact_query_text(n) in blob_compact
+                )
+            ),
+            "",
+        )
         if not hit_n:
             continue
         score = 0
         reason = "相关命中"
-        if hit_n.lower() in (demo.get("client") or "").lower():
+        if _text_matches(demo.get("client") or "", hit_n):
             score, reason = 50, f"客户 · {demo.get('client')}"
-        elif hit_n.lower() in (demo.get("title") or "").lower():
+        elif _text_matches(demo.get("title") or "", hit_n):
             score, reason = 40, "标题命中"
         else:
             tag = next(
-                (t for t in (demo.get("tags") or []) if hit_n.lower() in str(t).lower()),
+                (t for t in (demo.get("tags") or []) if _text_matches(str(t), hit_n)),
                 None,
             )
             if tag:
                 score, reason = 30, f"标签 · {tag}"
             else:
-                mod = next((m for m in modules if hit_n.lower() in m.lower()), None)
-                if mod:
-                    score, reason = 25, f"模块 · {mod}"
+                alias = next(
+                    (
+                        a
+                        for a in (demo.get("aliases") or [])
+                        + (idx.get("aliases") or [])
+                        if _text_matches(str(a), hit_n)
+                    ),
+                    None,
+                )
+                if alias:
+                    score, reason = 28, f"别名 · {alias}"
                 else:
-                    score, reason = 15, "正文命中"
+                    mod = next((m for m in modules if _text_matches(m, hit_n)), None)
+                    if mod:
+                        score, reason = 25, f"模块 · {mod}"
+                    else:
+                        score, reason = 15, "正文命中"
         if demo.get("featured"):
             score += 5
         scored.append(

@@ -32,6 +32,14 @@ NAV_TEXT_RE = re.compile(
     re.I,
 )
 WS_RE = re.compile(r"\s+")
+# Middot / space / hyphen titles ("旌芯 · 掌舵者") vs colloquial queries ("旌芯掌舵者")
+SEPARATOR_RE = re.compile(r"[\s·\-_／/]+")
+# Durable colloquial forms rebuild always keeps, even if catalog aliases are absent.
+QUERY_ALIASES: dict[str, tuple[str, ...]] = {
+    "jingxin-helmsman": ("旌芯掌舵者", "掌舵者"),
+    "jingxin-helmsman-mobile": ("旌芯掌舵者", "掌舵者"),
+    "yinguang-efficiency": ("隐冠人效", "隐冠人效看板"),
+}
 # UI chrome — indexing these causes over-broad hits like「关闭/刷新」
 NOISE_LABELS = {
     "关闭",
@@ -64,6 +72,60 @@ def clean_text(s: str) -> str:
     s = unescape(TAG_RE.sub(" ", s or ""))
     s = WS_RE.sub(" ", s).strip()
     return s
+
+
+def compact_text(s: str) -> str:
+    """Strip whitespace and title separators so「旌芯掌舵者」matches「旌芯 · 掌舵者」."""
+    return SEPARATOR_RE.sub("", s or "").strip()
+
+
+def unique_nonempty(items: list[str]) -> list[str]:
+    out: list[str] = []
+    seen: set[str] = set()
+    for raw in items:
+        t = str(raw or "").strip()
+        if not t or t in seen:
+            continue
+        seen.add(t)
+        out.append(t)
+    return out
+
+
+def compact_aliases_from(*texts: str) -> list[str]:
+    generated: list[str] = []
+    for text in texts:
+        src = str(text or "").strip()
+        if not src:
+            continue
+        # Demo ids / latin slugs: stripping hyphens is not a colloquial query.
+        if re.fullmatch(r"[A-Za-z0-9._-]+", src):
+            continue
+        compact = compact_text(src)
+        if compact and compact != src and len(compact) >= 2:
+            generated.append(compact)
+    return unique_nonempty(generated)
+
+
+def collect_aliases(demo: dict) -> list[str]:
+    did = str(demo.get("id") or "")
+    catalog_aliases = [str(x) for x in (demo.get("aliases") or []) if str(x).strip()]
+    seeds = unique_nonempty(
+        [
+            did,
+            str(demo.get("client") or ""),
+            *[str(t) for t in (demo.get("tags") or [])],
+            str(demo.get("industry") or ""),
+            str(demo.get("hall") or ""),
+            *catalog_aliases,
+            *QUERY_ALIASES.get(did, ()),
+        ]
+    )
+    compact_sources = [
+        str(demo.get("title") or ""),
+        str(demo.get("client") or ""),
+        *seeds,
+    ]
+    return unique_nonempty([*seeds, *compact_aliases_from(*compact_sources)])
 
 
 def is_noise_label(t: str) -> bool:
@@ -173,21 +235,12 @@ def collect_html_files(demo_dir: Path, entry: str) -> list[Path]:
 
 def build_one(demo: dict, demos_dir: Path | None) -> dict:
     did = demo["id"]
+    aliases = collect_aliases(demo)
     base = {
         "id": did,
         "title": demo.get("title") or "",
         "client": demo.get("client") or "",
-        "aliases": list(
-            dict.fromkeys(
-                [
-                    did,
-                    demo.get("client") or "",
-                    *(demo.get("tags") or []),
-                    demo.get("industry") or "",
-                    demo.get("hall") or "",
-                ]
-            )
-        ),
+        "aliases": aliases,
         "summary": demo.get("summary") or "",
         "modules": [],
         "keywords": [],
@@ -197,16 +250,15 @@ def build_one(demo: dict, demos_dir: Path | None) -> dict:
     demo_dir = resolve_demo_dir(demo, demos_dir)
     if not demo_dir:
         # metadata-only fallback
-        base["keywords"] = [
-            x
-            for x in [
-                demo.get("title"),
-                demo.get("client"),
-                demo.get("summary"),
+        base["keywords"] = unique_nonempty(
+            [
+                demo.get("title") or "",
+                demo.get("client") or "",
+                demo.get("summary") or "",
                 *(demo.get("tags") or []),
+                *aliases,
             ]
-            if x
-        ]
+        )
         return base
 
     entry = demo.get("entry") or "index.html"
@@ -227,7 +279,7 @@ def build_one(demo: dict, demos_dir: Path | None) -> dict:
             if k not in base["keywords"]:
                 base["keywords"].append(k)
 
-    # keep catalog fields in keyword pool
+    # keep catalog fields + compact/query aliases in keyword pool
     for k in [
         demo.get("title"),
         demo.get("client"),
@@ -236,6 +288,7 @@ def build_one(demo: dict, demos_dir: Path | None) -> dict:
         demo.get("summary"),
         *(demo.get("tags") or []),
         did,
+        *aliases,
     ]:
         if k and k not in base["keywords"]:
             base["keywords"].append(k)

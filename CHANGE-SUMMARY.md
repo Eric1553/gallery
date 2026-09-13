@@ -1,5 +1,17 @@
 # Gallery Change Summary
 
+## 2026-09-13 · Demos search: compact aliases + rebuild 1.6.3
+
+- Empty demos-channel hits for「旌芯掌舵者」「隐冠人效」came from whole-substring match against titles with middots/spaces (`旌芯 · 掌舵者…`, `隐冠 · 人效看板`).
+- `scripts/build_search_index.py` now auto-generates compact aliases (strip `·` / spaces / `-` / `_` / `/`) from title, client, and existing alias strings. Deduped. Optional catalog `aliases` are picked up on rebuild.
+- Explicit durable aliases: `jingxin-helmsman` / `jingxin-helmsman-mobile` → `旌芯掌舵者`, `掌舵者`; `yinguang-efficiency` → `隐冠人效`, `隐冠人效看板` (catalog field + builder `QUERY_ALIASES` fallback).
+- Rebuilt `search_index.json` from catalog **1.6.3** so `jiangyuan-rd-pm` no longer carries stale「简道云」in title/summary/aliases/keywords. Do **not** add 简道云 back to jiangyuan catalog or aliases. Featured / audience unchanged.
+- `search_federation.search_demos` also compares needle/blob after stripping the same separators (per-field, so adjacent fields cannot concatenate into a false hit). Scoring still prefers 客户 / 标题 / 标签, then 别名, then 模块 / 正文.
+- Tests: `tests/test_search_accuracy.py` (colloquial queries + 简道云 ≠ 江原 + 江原 still hits); `tests/test_search_index_build.py`.
+- No ECS / SSH / systemd / MaxKB / Nginx / release playbooks. **Merge ≠ deploy** (GB merges & pushes ECS).
+
+---
+
 ## 2026-09-13 · MaxKB knowledge-channel ranking (RRF + expansion)
 
 - Knowledge lane only (`search_maxkb` in `search_federation.py`). Multi-lane UI / cross-channel merge unchanged. Catalog stays **1.6.3**.
