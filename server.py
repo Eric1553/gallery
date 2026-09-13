@@ -22,6 +22,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
+from presales_brief import from_gallery_federation, normalize as normalize_presales_brief
 from search_federation import federated_search
 
 ROOT = Path(__file__).resolve().parent
@@ -791,6 +792,35 @@ class GalleryHandler(SimpleHTTPRequestHandler):
                 self._send_search_sse(q)
                 return
             self._send_json(federated_search(q))
+            return
+
+        if path == "/api/brief":
+            if not self._authed():
+                self._send_json({"ok": False, "error": "unauthorized"}, code=401)
+                return
+            qs = parse_qs(parsed.query)
+            q = (qs.get("q") or qs.get("customer") or [""])[0].strip()
+            if len(q) < 2:
+                self._send_json(
+                    {
+                        "ok": True,
+                        "query": q,
+                        "brief": normalize_presales_brief({}, query=q, owner="gallery"),
+                        "meta": {"note": "query too short"},
+                    }
+                )
+                return
+            fed = federated_search(q)
+            briefing = fed.get("briefing") if isinstance(fed, dict) else None
+            if isinstance(briefing, dict) and isinstance(briefing.get("presales_brief"), dict):
+                brief = briefing["presales_brief"]
+            else:
+                brief = from_gallery_federation(
+                    q,
+                    fed if isinstance(fed, dict) else {},
+                    knowledge_card=briefing if isinstance(briefing, dict) else None,
+                )
+            self._send_json({"ok": True, "query": q, "brief": brief})
             return
 
         if path.startswith("/assets/"):

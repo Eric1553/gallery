@@ -106,6 +106,7 @@
 | 展览馆 | http://120.55.184.234/gallery/ |
 | Gallery 内网端口 | `:8788` |
 | Demo 静态 | http://120.55.184.234/demos/`<id>`/ |
+| Presales Brief 只读 API（门禁） | `GET /api/brief?q=` 或 `?customer=`（PR 已加，**未部署**；见 `docs/PRESALES-BRIEF.md`） |
 
 ### 3.2 DEV vs PROD
 
@@ -149,7 +150,10 @@ gallery/                          # GitHub 根
 ├── catalog.json                    # Demo 目录（29 条登记）
 ├── search_index.json               # 本地检索索引
 ├── search_federation.py            # MaxKB/KMS/KH/反馈 联邦搜
-├── gallery_brief.py                # 会前 brief
+├── gallery_brief.py                # 会前 brief（meeting-card + presales_brief v1）
+├── presales_brief.py               # Presales Brief v1 规范与适配
+├── schemas/presales_brief.v1.json  # JSON Schema
+├── docs/PRESALES-BRIEF.md          # 字段与投影
 ├── web/                            # 主馆 UI（gallery.css 为视觉基准）
 ├── scripts/                        # capture_covers, sync_to_ecs, build_search_index…
 ├── tests/
@@ -360,6 +364,7 @@ kind：`major` 重构 | `minor` 小迭代 | `patch` 修复
 | 文档 | 位置 |
 |---|---|
 | 本手册 | `docs/GB-HANDOFF.md` |
+| Presales Brief v1 | `docs/PRESALES-BRIEF.md` + `schemas/presales_brief.v1.json` |
 | GitHub 连接 | `docs/GITHUB-GB-SETUP.md` |
 | README | `README.md` |
 | MaxKB 权威（ECS） | `/Users/lorin/Documents/ECS服务器/docs/MAXKB.md` |

@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from gallery_brief import _load_knowledge, build_gallery_brief
+from presales_brief import validate as validate_presales_brief
 
 
 def _knowledge_pack_available() -> bool:
@@ -35,6 +36,9 @@ class GalleryBriefTests(unittest.TestCase):
         self.assertIn("会后反馈", labels)
         self.assertTrue(brief.get("internal"))
         self.assertTrue(brief.get("demos"))
+        v1 = brief.get("presales_brief") or {}
+        ok, errors = validate_presales_brief(v1)
+        self.assertTrue(ok, errors)
 
     def test_compare_query_keeps_peers(self):
         brief = build_gallery_brief(

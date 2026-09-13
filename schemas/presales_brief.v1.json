@@ -1,0 +1,228 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Eric1553/gallery/schemas/presales_brief.v1.json",
+  "title": "Presales Brief v1",
+  "description": "Canonical pre-meeting brief shared by Gallery, Knowledge, and Ammo. Modules project into this shape; they do not invent parallel schemas.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["meta", "customer", "visit", "demos", "talking_points", "materials", "gaps", "provenance"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["schema_version", "brief_id", "updated_at", "owner", "status"],
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "1",
+          "description": "Always \"1\" for this document. Bump only with a new schema file."
+        },
+        "brief_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Stable id, e.g. psb-biren or an ammo pack id."
+        },
+        "updated_at": {
+          "type": "string",
+          "description": "ISO-8601 UTC timestamp (…Z) or YYYY-MM-DD."
+        },
+        "owner": {
+          "type": "string",
+          "description": "Person or producing module (gallery / knowledge / ammo)."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["draft", "ready", "archived"]
+        }
+      }
+    },
+    "customer": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "description": "Display / legal name." },
+        "short_name": { "type": "string", "description": "Short or alias name." },
+        "industry": { "type": "string" },
+        "audience_notes": {
+          "type": "string",
+          "description": "Who is in the room; sensitivity; language."
+        }
+      }
+    },
+    "visit": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "date": {
+          "type": ["string", "null"],
+          "description": "Visit date YYYY-MM-DD when known."
+        },
+        "goal": { "type": "string", "description": "This visit's outcome." },
+        "narrative": {
+          "type": "string",
+          "description": "今天讲什么 — the story of the meeting."
+        },
+        "red_lines": {
+          "type": "array",
+          "description": "红线 — do-not-say / do-not-show.",
+          "items": {
+            "oneOf": [
+              { "type": "string" },
+              {
+                "type": "object",
+                "additionalProperties": true,
+                "properties": {
+                  "text": { "type": "string" },
+                  "note": { "type": "string" }
+                }
+              }
+            ]
+          }
+        },
+        "shareability": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "external": {
+              "type": "array",
+              "description": "Safe to send or show externally.",
+              "items": { "$ref": "#/$defs/shareItem" }
+            },
+            "internal_only": {
+              "type": "array",
+              "description": "Internal-only notes, Feishu, feedback.",
+              "items": { "$ref": "#/$defs/shareItem" }
+            }
+          }
+        }
+      }
+    },
+    "demos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["id", "title"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "hall": {
+            "type": "string",
+            "description": "Gallery hall: ceo | ops | poc | platform | misc."
+          },
+          "why": { "type": "string", "description": "Why this demo for this visit." },
+          "featured": { "type": "boolean" }
+        }
+      }
+    },
+    "talking_points": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["title", "body"],
+        "properties": {
+          "title": { "type": "string" },
+          "body": { "type": "string" },
+          "source": { "type": "string" }
+        }
+      }
+    },
+    "materials": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "knowledge": {
+          "type": "array",
+          "description": "Knowledge / MaxKB / KMS hits.",
+          "items": { "$ref": "#/$defs/materialRef" }
+        },
+        "ammo_pack_ids": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Ammo pack folder ids (data/packs/<id>/)."
+        },
+        "links": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/materialRef" }
+        }
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "description": "Missing coverage the advisor still needs.",
+      "items": {
+        "oneOf": [
+          { "type": "string" },
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "id": { "type": "string" },
+              "note": { "type": "string" },
+              "area": { "type": "string" }
+            }
+          }
+        ]
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": ["module"],
+            "properties": {
+              "module": {
+                "type": "string",
+                "description": "gallery | knowledge | ammo | feedback | feishu | catalog"
+              },
+              "ref": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Per-module leftovers. Ammo pack fields that are not in v1 live under extensions.ammo so a round-trip does not drop them."
+    }
+  },
+  "$defs": {
+    "shareItem": {
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "title": { "type": "string" },
+            "snippet": { "type": "string" },
+            "url": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "materialRef": {
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "title": { "type": "string" },
+            "url": { "type": "string" },
+            "snippet": { "type": "string" },
+            "ref": { "type": "string" }
+          }
+        }
+      ]
+    }
+  }
+}

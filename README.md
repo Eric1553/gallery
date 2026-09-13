@@ -11,7 +11,10 @@ gallery/
 ├── catalog.json           # Demo 目录元数据（客户/内部、标签、入口）
 ├── search_index.json      # 本地检索索引
 ├── search_federation.py   # MaxKB / KMS / KH 联邦检索
-├── gallery_brief.py       # 会前 brief 生成
+├── gallery_brief.py       # 会前 brief 生成（meeting-card + v1 dual-write）
+├── presales_brief.py      # Presales Brief v1：校验 / 联邦投影 / Ammo·Knowledge 适配
+├── schemas/               # JSON Schema（presales_brief.v1.json）
+├── docs/PRESALES-BRIEF.md # 字段与 Gallery / Knowledge / Ammo 投影
 ├── web/                   # 主馆 UI（gallery.css / gallery.js / gate.js）
 ├── scripts/               # 运维脚本（封面、索引、ECS 同步）
 ├── tests/                 # pytest
@@ -64,3 +67,14 @@ python3 server.py   # 默认 :8788
 - **内部 DEMO**：`audience: "internal"` 或 client 为「内部 / 帆软…」
 
 详细入库流程见 Cursor skill `demo-gallery-ecs`。
+
+## Presales Brief v1
+
+跨 Gallery / Knowledge / Ammo 的会前 brief 规范。本仓库是 schema 源；`/api/search` 的 `briefing` 仍是前端 meeting-card，并附加 `briefing.presales_brief`。只读接口（需门禁）：
+
+```
+GET /api/brief?q=壁仞怎么讲
+GET /api/brief?customer=壁仞
+```
+
+字段与投影见 [`docs/PRESALES-BRIEF.md`](docs/PRESALES-BRIEF.md)。上线由 GB / release-ops 另走，本变更只开 PR。

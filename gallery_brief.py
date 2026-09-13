@@ -1,10 +1,16 @@
-"""Turn federated gallery hits into the same meeting-card shape as /knowledge/."""
+"""Turn federated gallery hits into the same meeting-card shape as /knowledge/.
+
+Also dual-writes canonical Presales Brief v1 at `brief["presales_brief"]`.
+See presales_brief.py and docs/PRESALES-BRIEF.md.
+"""
 
 from __future__ import annotations
 
 import os
 import sys
 from pathlib import Path
+
+from presales_brief import from_gallery_federation, to_meeting_card
 
 
 def _knowledge_roots() -> list[Path]:
@@ -90,16 +96,9 @@ def build_gallery_brief(query: str, payload: dict) -> dict:
             sources=sources,
         )
     else:
-        brief = {
-            "account": {"name": query, "resolved": False, "peers": []},
-            "stance": f"「{query}」全库检索",
-            "talk": [],
-            "demos": [],
-            "coverage": [],
-            "share": [],
-            "internal": [],
-            "redlines": [],
-        }
+        # Knowledge pack absent: project v1 → meeting-card so UI keys still exist.
+        brief = to_meeting_card(from_gallery_federation(query, payload))
+        brief.pop("presales_brief", None)
 
     if demos:
         brief["demos"] = [
@@ -120,4 +119,6 @@ def build_gallery_brief(query: str, payload: dict) -> dict:
     )
     brief["coverage"] = coverage
     brief["feedback_count"] = len(feedback)
+    # Dual-write: keep meeting-card keys the frontend already reads; attach v1.
+    brief["presales_brief"] = from_gallery_federation(query, payload, knowledge_card=brief)
     return brief
