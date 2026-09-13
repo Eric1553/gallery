@@ -538,6 +538,16 @@ def from_gallery_federation(
     fed_demos = [d for d in fed_demos if d.get("id") or d.get("title")]
     if fed_demos:
         brief["demos"] = fed_demos
+        first_cat = catalog_by_id.get(fed_demos[0].get("id") or "") or {}
+        client = _as_str(first_cat.get("client"))
+        if client:
+            current = brief["customer"]["name"]
+            if current and current != client and current in client and not brief["customer"]["short_name"]:
+                brief["customer"]["short_name"] = current
+            if not current or current in client:
+                brief["customer"]["name"] = client
+        if not brief["customer"]["industry"]:
+            brief["customer"]["industry"] = _as_str(first_cat.get("industry"))
 
     knowledge_hits = [_normalize_material(x) for x in _as_list(payload.get("knowledge"))]
     if knowledge_hits:

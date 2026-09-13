@@ -118,7 +118,9 @@ class AdapterTests(unittest.TestCase):
         brief = pb.from_gallery_federation("壁仞怎么讲", FED_PAYLOAD)
         ok, errors = pb.validate(brief)
         self.assertTrue(ok, errors)
-        self.assertEqual(brief["customer"]["name"], "壁仞")
+        self.assertIn("壁仞", brief["customer"]["name"])
+        self.assertEqual(brief["customer"]["industry"], "半导体")
+        self.assertEqual(brief["customer"]["short_name"], "壁仞")
         ids = [d["id"] for d in brief["demos"]]
         self.assertIn("biren-ceo", ids)
         demo = next(d for d in brief["demos"] if d["id"] == "biren-ceo")
@@ -206,7 +208,8 @@ class GalleryBriefMappingTests(unittest.TestCase):
         ok, errors = pb.validate(v1)
         self.assertTrue(ok, errors)
         self.assertEqual(v1["meta"]["schema_version"], "1")
-        self.assertEqual(v1["customer"]["name"], "壁仞")
+        self.assertIn("壁仞", v1["customer"]["name"])
+        self.assertEqual(v1["customer"]["industry"], "半导体")
         self.assertTrue(any(d.get("id") == "biren-ceo" for d in v1["demos"]))
 
     def test_to_meeting_card_keeps_frontend_shape(self):

@@ -7,6 +7,7 @@
 - `gallery_brief.build_gallery_brief` dual-writes `presales_brief` (v1) while keeping meeting-card keys the frontend already reads (`account`, `stance`, `talk`, `demos.href`, `share`, `internal`, `redlines`, `coverage`).
 - Additive read API `GET /api/brief?q=` or `?customer=` (same `_authed()` as `/api/search`). `/api/search` contract unchanged.
 - Tests: `tests/test_presales_brief.py` (schema, adapters, gallery mapping, API auth). Knowledge-pack tests remain skip-when-absent.
+- Verification: `python3 -m unittest discover -s tests -v` → 38 tests, 2 skipped (demo-knowledge not mounted), 0 failed. `pytest` is not installed in this environment; unittest is the documented runner.
 - No secrets, no ECS / systemd, no MaxKB password, no UI theme changes. Merge ≠ deploy; GB wires later.
 
 ---
