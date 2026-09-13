@@ -49,7 +49,8 @@ python3 server.py   # 默认 :8788
 ## Grok Bot / Cloud Agent 用法
 
 1. Cursor Dashboard → Integrations → GitHub → 授权本仓库
-2. 对 GB 说：`读 gallery 仓库 main 分支，catalog 在 catalog.json，Demo 静态资源在 demos/`
+2. **先读** [`docs/GB-HANDOFF.md`](docs/GB-HANDOFF.md)（账户、规范、Demo 梗概、硬约束）
+3. 对 GB 说：`读 Eric1553/gallery 的 main 与 docs/GB-HANDOFF.md，按手册执行，不要重问背景`
 
 ## 归属约定
 
