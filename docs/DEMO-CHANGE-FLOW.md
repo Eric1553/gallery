@@ -19,17 +19,27 @@
 1. 场景：谁看（职务）、拜访还是内部复盘、要投屏哪一页 / 哪几个指标。
 2. 客户 vs 内部：具名客户交付 = audience=client；内部弹药、横向产品、方法页 = internal。帆软 / FDE / 简道云一律内部，不写进客户 DEMO 标题、摘要、tags。
 3. 馆区 hall：ceo 一把手 / 财经；ops 研发运营、销售、人效、IPD；poc 行业验证现场；platform Agentic / 弹药 / 检索；misc 方法与素材。
-4. 去 AI 化：短句、可落地、带客户语境。禁「赋能 / 抓手 / 闭环堆砌 / 综上所述」。指标和故事优先于形容词。
-5. 视觉 token（跟 gallery.css，不另起皮肤）：背景 #f3f6f9 · 正文 #15202b · 次要 #667687 · 主色 #0f766e · 辅色 #1d4e89 · 圆角 20px · 字体 Plus Jakarta Sans + Noto Sans SC。骨架：stage-bg + 毛玻璃顶栏 + 青绿渐变胶囊主按钮 + scene-chip。
+4. 去 AI 化：文案像售前备忘——短句、可落地、带客户语境。指标和故事优先于空形容词。禁「综上所述 / 赋能 / 抓手 / 闭环堆砌 / 作为AI助手 / 值得注意的是 / 首先其次最后排比」。客户现场可投屏：少黑话、少英文堆砌；内部 DEMO 可稍技术但仍克制。
+5. 视觉 token（跟 gallery.css，不另起暖色纸质风或深色皮肤）：背景 #f3f6f9 · 正文 #15202b · 次要 #667687 · 主色 #0f766e · 辅色 #1d4e89 · 圆角 20px · 字体 Plus Jakarta Sans + Noto Sans SC。骨架：stage-bg + 毛玻璃顶栏 + 青绿渐变胶囊主按钮 + scene-chip。
 
 对照馆内相近 DEMO：写清可复用的结构 / 文案，和必须避开的。
 
+澄清还须一次写清（缺一不派）：
+
+- 范围：只改 catalog，还是列出 `demos/<id>/` 哪些页 / 文案；默认封面不动、不动 MaxKB。
+- 系列：多条才挂 family + archived / is_latest；单条不挂。family 是系列号，不是客户名。
+- 卡片：title / client / summary / type；tags 恰好 4 个 = [行业, 业务域, 核心内容, 补充]；featured 仅 client。
+
 ## 2. 方案确认 → gallery-ops 改 catalog / demos
 
-demo-craft 交清单，GB 确认后只派 gallery-ops Cloud Agent 开 PR。清单字段一次给齐：id（已有则不改）、title、client、summary、type；audience、hall、featured（仅客户）、industry；tags 恰好 4 个 [行业, 业务域, 核心内容, 补充]；多条才挂 family + archived / is_latest（family 是系列号，不是客户名）；封面 thumb.webp ~800×500、cover.webp 1600×1000，不改就写「封面不动」；范围写死「只改 catalog」或列出 demos/<id>/ 文件；默认不动 MaxKB、search_index 密钥、部署脚本；meta.version 由你们按现网递增。  
+demo-craft 只出「假设 + 对照馆藏 + 改动清单 + 验收勾选」，停在方案；不直接下工程指令、不锁死 catalog `meta.version`（gallery-ops 按现网递增）。  
+GB 确认清单后再派 gallery-ops Cloud Agent 开 PR。清单字段一次给齐：id（已有则不改）、title、client、summary、type；audience、hall、featured（仅客户）、industry；tags 恰好 4 个 [行业, 业务域, 核心内容, 补充]；多条才挂 family + archived / is_latest（family 是系列号，不是客户名）；封面 thumb.webp ~800×500、cover.webp 1600×1000，不改就写「封面不动」；范围写死「只改 catalog」或列出 demos/<id>/ 文件；默认不动 MaxKB、search_index 密钥、部署脚本。  
+开 PR / 改 catalog.json / 压封面 / validate / search_index 归 gallery-ops。  
 合并 ≠ 上线。上线等 Lorin，GB / release-ops 切。
 
 ## 3. 验收标准模板
+
+验收用清单勾选，不另起一套口径。
 
 对象：<id>　范围：catalog only / catalog + 页内　馆区 / 受众：<hall> / client|internal
 
