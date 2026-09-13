@@ -367,6 +367,7 @@ kind：`major` 重构 | `minor` 小迭代 | `patch` 修复
 | Presales Brief v1 | `docs/PRESALES-BRIEF.md` + `schemas/presales_brief.v1.json` |
 | GitHub 连接 | `docs/GITHUB-GB-SETUP.md` |
 | README | `README.md` |
+| Gallery 发版剧本 | `docs/RELEASE-PLAYBOOK.md` |
 | MaxKB 权威（ECS） | `/Users/lorin/Documents/ECS服务器/docs/MAXKB.md` |
 | DEV/PROD | `/Users/lorin/Documents/ECS服务器/docs/DEV_PROD.md` |
 | Agent 路由 | `/Users/lorin/Documents/ECS服务器/docs/agent-fleet/REGISTRY.md` |
