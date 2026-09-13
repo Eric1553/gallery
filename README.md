@@ -15,6 +15,7 @@ gallery/
 ├── presales_brief.py      # Presales Brief v1：校验 / 联邦投影 / Ammo·Knowledge 适配
 ├── schemas/               # JSON Schema（presales_brief.v1.json）
 ├── docs/PRESALES-BRIEF.md # 字段与 Gallery / Knowledge / Ammo 投影
+├── docs/DEMO-CHANGE-FLOW.md # DEMO 改动协作规范（demo-craft 一页；合并≠上线）
 ├── web/                   # 主馆 UI（gallery.css / gallery.js / gate.js）
 ├── scripts/               # 运维脚本（封面、索引、ECS 同步）
 ├── tests/                 # pytest
@@ -68,7 +69,7 @@ python3 server.py   # 默认 :8788
 - **客户 DEMO**：`audience: "client"` 或具名客户
 - **内部 DEMO**：`audience: "internal"` 或 client 为「内部 / 帆软…」
 
-详细入库流程见 Cursor skill `demo-gallery-ecs`。
+详细入库与上线交接见 [`docs/DEMO-CHANGE-FLOW.md`](docs/DEMO-CHANGE-FLOW.md)。**合并 ≠ 上线。**
 
 ## Presales Brief v1
 

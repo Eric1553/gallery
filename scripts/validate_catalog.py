@@ -48,9 +48,8 @@ CLIENT_OVERRIDE_IDS = {
     "jiangyuan-rd-pm",
 }
 
-# Historical working copies under demos/ that are intentionally uncatalogued.
-# Warn only; do not fail CI. Do not add to the default latest pool.
-# biren-finance__rev1/2/3 are now archived catalog stubs (family=biren-finance).
+# Intentionally uncatalogued demo dirs (warn-only). Empty: biren-finance__rev1/2/3
+# are archived catalog stubs (family=biren-finance, archived=true, is_latest=false).
 KNOWN_ORPHAN_DIRS: set[str] = set()
 
 
@@ -216,8 +215,8 @@ def validate(root: Path | None = None) -> tuple[list[str], list[str]]:
         for name in orphans:
             if name in KNOWN_ORPHAN_DIRS:
                 warnings.append(
-                    f"uncatalogued orphan demos/{name}/ (historical biren-finance rev; "
-                    "warn-only, not in latest pool)"
+                    f"uncatalogued orphan demos/{name}/ "
+                    "(known historical tree; warn-only, not in latest pool)"
                 )
             else:
                 warnings.append(f"uncatalogued directory demos/{name}/")

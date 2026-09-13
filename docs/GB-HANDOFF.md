@@ -147,20 +147,21 @@
 gallery/                          # GitHub 根
 ├── docs/GB-HANDOFF.md              # ← 本文件
 ├── server.py                       # HTTP 服务：主馆 + /demos 代理 + 门禁 + API
-├── catalog.json                    # Demo 目录（29 条登记）
+├── catalog.json                    # Demo 目录（32 条登记，含归档 stub）
 ├── search_index.json               # 本地检索索引
 ├── search_federation.py            # MaxKB/KMS/KH/反馈 联邦搜
 ├── gallery_brief.py                # 会前 brief（meeting-card + presales_brief v1）
 ├── presales_brief.py               # Presales Brief v1 规范与适配
 ├── schemas/presales_brief.v1.json  # JSON Schema
 ├── docs/PRESALES-BRIEF.md          # 字段与投影
+├── docs/DEMO-CHANGE-FLOW.md        # DEMO 改动协作规范（demo-craft 一页）
 ├── web/                            # 主馆 UI（gallery.css 为视觉基准）
 ├── scripts/                        # capture_covers, sync_to_ecs, build_search_index…
 ├── tests/
 ├── static-demos/                   # README only; canonical HTML is demos/
 ├── covers/                         # thumb.webp / cover.webp
 ├── data/                           # 运行时（auth/token 不入库）
-└── demos/                          # 32 个静态包目录（含历史 rev 文件夹）
+└── demos/                          # 32 个静态包目录（与 catalog id 一一对应）
 ```
 
 ---
@@ -228,16 +229,18 @@ gallery/                          # GitHub 根
 
 ### 6.5 新 DEMO 入库流程（摘要）
 
-1. 定 id → 静态文件进 `demos/<id>/`（本仓库）及 ECS `/opt/demos/<id>/`  
-2. 改 `catalog.json` → `python3 scripts/build_search_index.py`  
-3. ECS 跑封面脚本 → sync runtime current → `systemctl restart demo-gallery`  
-4. 验收：侧栏归属、卡片可点、thumb 200、登录后 `/api/catalog.json` 含新 id  
+权威一页见 [`docs/DEMO-CHANGE-FLOW.md`](DEMO-CHANGE-FLOW.md)（demo-craft《DEMO 改动协作规范》）。**合并 ≠ 上线。**
+
+1. demo-craft 先复述五个必答（场景 / 客户vs内部 / hall / 去 AI / 视觉 token），对照馆藏后出清单  
+2. GB 确认后只派 gallery-ops：按清单改 `catalog.json` / `demos/<id>/`、封面、`validate_catalog.py` + `build_search_index.py`  
+3. 验收用该页模板勾选（featured 仅 client；客户文案不含 帆软/FDE/简道云）  
+4. 上线等 **Lorin**，GB / release-ops 切 runtime current；demo-craft 不开 PR、不推 ECS  
 
 ---
 
-## 7. Demo 目录梗概（catalog 登记 29 条）
+## 7. Demo 目录梗概（catalog 登记 32 条，含归档 stub）
 
-### 7.1 客户 DEMO（20）
+### 7.1 客户 DEMO（23，含 biren-finance 归档 stub）
 
 | id | 客户 | 标题 | 馆区 |
 |---|---|---|---|
@@ -246,8 +249,8 @@ gallery/                          # GitHub 根
 | taihu-supply-dark / light | 钛虎机器人 | 供应链看板 深/浅 | ceo |
 | biren-ceo | 壁仞科技 | CEO 决策看板 | ceo |
 | biren-ops-loop | 壁仞科技 | 经营闭环 | ops |
-| biren-finance | 壁仞科技 | 财务数字化一期 | ceo |
-| biren-finance__baseline | 壁仞科技 | 财务数字化（批注基线） | ceo |
+| biren-finance | 壁仞科技 | 财务数字化一期（现行 latest） | ceo |
+| biren-finance__baseline / __rev1 / __rev2 / __rev3 | 壁仞科技 | 同 family 归档 stub（不进 latest 池，Archive 面板） | ceo |
 | smic-finance | 中芯国际 | 财经驾驶舱 | ceo |
 | sigenergy-ceo | 思格新能源 | 一把手看板 | ceo |
 | acme-rd | 盛美半导体 | 研发运营看板 | ops |
@@ -270,9 +273,9 @@ gallery/                          # GitHub 根
 | finance-qc-arch | 财经数据质检 AI 一页版 | misc |
 | kms-semi | 半导体知识库站点 | misc |
 
-### 7.3 仓库 `demos/` 额外目录（未全部入 catalog）
+### 7.3 归档 family stub（已入 catalog）
 
-含壁仞财务历史 rev 文件夹等，供对比/归档；以 `catalog.json` 为展示权威。
+`biren-finance__rev1/2/3` 已按 `demos/CLEANUP.md` 登记：`family=biren-finance`，`archived=true`，`is_latest=false`，audience 仍为 **client**（壁仞），不是帆软/FDE。树保留；rev1/rev2 缺封面为 warn-only。`demos/` 与 catalog id 现已一一对应。
 
 ---
 
@@ -364,6 +367,7 @@ kind：`major` 重构 | `minor` 小迭代 | `patch` 修复
 | 文档 | 位置 |
 |---|---|
 | 本手册 | `docs/GB-HANDOFF.md` |
+| DEMO 改动协作规范 | `docs/DEMO-CHANGE-FLOW.md` |
 | Presales Brief v1 | `docs/PRESALES-BRIEF.md` + `schemas/presales_brief.v1.json` |
 | GitHub 连接 | `docs/GITHUB-GB-SETUP.md` |
 | README | `README.md` |
