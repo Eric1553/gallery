@@ -154,7 +154,7 @@ gallery/                          # GitHub 根
 ├── presales_brief.py               # Presales Brief v1 规范与适配
 ├── schemas/presales_brief.v1.json  # JSON Schema
 ├── docs/PRESALES-BRIEF.md          # 字段与投影
-├── docs/DEMO-CHANGE-FLOW.md        # DEMO 交接：澄清 → 风格 → 入库 → 验收 → 上线
+├── docs/DEMO-CHANGE-FLOW.md        # DEMO 改动协作规范（demo-craft 一页）
 ├── web/                            # 主馆 UI（gallery.css 为视觉基准）
 ├── scripts/                        # capture_covers, sync_to_ecs, build_search_index…
 ├── tests/
@@ -229,12 +229,12 @@ gallery/                          # GitHub 根
 
 ### 6.5 新 DEMO 入库流程（摘要）
 
-完整五步（需求澄清 → 风格/去 AI → 入库 → 验收 → 上线）见 [`docs/DEMO-CHANGE-FLOW.md`](DEMO-CHANGE-FLOW.md)。**合并 ≠ 上线。**
+权威一页见 [`docs/DEMO-CHANGE-FLOW.md`](DEMO-CHANGE-FLOW.md)（demo-craft《DEMO 改动协作规范》）。**合并 ≠ 上线。**
 
-1. demo-craft 先澄清客户 vs 内部、目标与必须保留的事实，再去 AI 腔  
-2. gallery-ops：`demos/<id>/` + `catalog.json` 必填字段 + `audience` + tags×4 + thumb/cover → `python3 scripts/build_search_index.py`  
-3. 验收：卡片标题/四标签、thumb 200、精选仅客户、归档 rev 只在 Archive  
-4. 上线须 **Lorin 批准** 后 GB 编排 release-ops，并同步 runtime current；本仓库合并不等于 ECS 已更新  
+1. demo-craft 先复述五个必答（场景 / 客户vs内部 / hall / 去 AI / 视觉 token），对照馆藏后出清单  
+2. GB 确认后只派 gallery-ops：按清单改 `catalog.json` / `demos/<id>/`、封面、`validate_catalog.py` + `build_search_index.py`  
+3. 验收用该页模板勾选（featured 仅 client；客户文案不含 帆软/FDE/简道云）  
+4. 上线等 **Lorin**，GB / release-ops 切 runtime current；demo-craft 不开 PR、不推 ECS  
 
 ---
 
@@ -367,7 +367,7 @@ kind：`major` 重构 | `minor` 小迭代 | `patch` 修复
 | 文档 | 位置 |
 |---|---|
 | 本手册 | `docs/GB-HANDOFF.md` |
-| DEMO 变更流程 | `docs/DEMO-CHANGE-FLOW.md` |
+| DEMO 改动协作规范 | `docs/DEMO-CHANGE-FLOW.md` |
 | Presales Brief v1 | `docs/PRESALES-BRIEF.md` + `schemas/presales_brief.v1.json` |
 | GitHub 连接 | `docs/GITHUB-GB-SETUP.md` |
 | README | `README.md` |

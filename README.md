@@ -15,7 +15,7 @@ gallery/
 ├── presales_brief.py      # Presales Brief v1：校验 / 联邦投影 / Ammo·Knowledge 适配
 ├── schemas/               # JSON Schema（presales_brief.v1.json）
 ├── docs/PRESALES-BRIEF.md # 字段与 Gallery / Knowledge / Ammo 投影
-├── docs/DEMO-CHANGE-FLOW.md # DEMO：澄清 → 风格 → 入库 → 验收 → 上线（合并≠上线）
+├── docs/DEMO-CHANGE-FLOW.md # DEMO 改动协作规范（demo-craft 一页；合并≠上线）
 ├── web/                   # 主馆 UI（gallery.css / gallery.js / gate.js）
 ├── scripts/               # 运维脚本（封面、索引、ECS 同步）
 ├── tests/                 # pytest
