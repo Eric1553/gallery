@@ -1,5 +1,13 @@
 # Gallery Change Summary
 
+## 2026-09-13 · nginx auth_request gate
+
+- `GET /api/auth/gate` (also `/gallery/api/auth/gate`): **204** if `gallery_session` is valid, **401** if not. Never 2xx when unauthenticated.
+- `/api/auth/status` unchanged: still 200 JSON `{ok: true|false}` for the SPA.
+- `public_path()` strips a `/gallery` mount prefix so the gate works with or without nginx path strip.
+
+---
+
 ## 2026-09-13 · Presales Brief v1（规范，未部署）
 
 - Canonical schema `schemas/presales_brief.v1.json` + `docs/PRESALES-BRIEF.md`. Fields: meta / customer / visit (narrative=今天讲什么, red_lines=红线, shareability) / demos / talking_points / materials / gaps / provenance.

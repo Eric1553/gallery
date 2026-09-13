@@ -81,6 +81,14 @@ META_REFRESH_RE = re.compile(
 )
 
 
+def public_path(path: str) -> str:
+    """Normalize a request path when nginx mounts the app at /gallery/ without stripping."""
+    if path == "/gallery" or path.startswith("/gallery/"):
+        rest = path[len("/gallery") :]
+        return rest if rest else "/"
+    return path
+
+
 def demo_base_from_rel(rel: str) -> str | None:
     """rel like 'uih-poc/index.html' -> '/demos/uih-poc'."""
     parts = [p for p in rel.split("/") if p]
@@ -615,6 +623,24 @@ class GalleryHandler(SimpleHTTPRequestHandler):
         self.end_headers()
         return False
 
+    def _send_auth_gate(self) -> None:
+        """nginx auth_request: 204 = allow, 401 = deny. Never 2xx when unauthenticated."""
+        if self._authed():
+            self.send_response(204)
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return
+        data = b'{"ok":false,"error":"unauthorized"}'
+        self.send_response(401)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("Content-Length", str(len(data)))
+        self.end_headers()
+        if getattr(self, "_head_only", False):
+            return
+        self.wfile.write(data)
+
     def _send_search_sse(self, q: str) -> None:
         self.close_connection = True
         self.send_response(200)
@@ -686,7 +712,7 @@ class GalleryHandler(SimpleHTTPRequestHandler):
 
     def do_POST(self) -> None:  # noqa: N802
         parsed = urlparse(self.path)
-        path = unquote(parsed.path)
+        path = public_path(unquote(parsed.path))
         body = self._read_json()
 
         if path == "/api/auth/login":
@@ -736,7 +762,11 @@ class GalleryHandler(SimpleHTTPRequestHandler):
 
     def do_GET(self) -> None:  # noqa: N802
         parsed = urlparse(self.path)
-        path = unquote(parsed.path)
+        path = public_path(unquote(parsed.path))
+
+        if path == "/api/auth/gate":
+            self._send_auth_gate()
+            return
 
         if path == "/api/auth/status":
             self._send_json({"ok": self._authed()})
