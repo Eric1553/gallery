@@ -110,7 +110,44 @@ def _http_json(method: str, url: str, body=None, headers=None, timeout: float = 
         return res.status, json.loads(raw)
 
 
-_QUESTION_TAILS = ("怎么讲", "怎么比", "怎么说", "如何讲", "怎样讲")
+_QUESTION_TAILS = (
+    "怎么讲",
+    "怎么比",
+    "怎么说",
+    "如何讲",
+    "怎样讲",
+    "如何说",
+    "怎样说",
+    "怎么介绍",
+)
+
+# Small in-file synonym / intent map. Optional JSON override: GALLERY_MAXKB_SYNONYMS
+_DEFAULT_SYNONYMS: dict[str, tuple[str, ...]] = {
+    "稽核": ("迎检", "驻厂", "审计包", "追溯"),
+    "迎检": ("稽核", "驻厂", "审计包"),
+    "稼动": ("OEE", "WIP", "良率"),
+    "稼动率": ("OEE", "WIP", "良率"),
+    "OEE": ("稼动", "稼动率", "WIP"),
+    "园区": ("填报", "月报"),
+    "套表": ("审计包", "检查表", "追溯"),
+}
+
+_AMMO_PATH_TOKENS = ("售前武器/", "作战卡", "开场", "反对意见", "Playbook", "检索卡")
+_WIKI_STUB_RE = re.compile(
+    r"(百科|词条|维基|未命名|Untitled|知识库首页|新建文档|空白页)",
+    re.I,
+)
+_OBJECTION_CUES = (
+    "怎么讲",
+    "怎么说",
+    "怎么比",
+    "反对",
+    "异议",
+    "客户说",
+    "为什么不用",
+    "如何讲",
+)
+_PROCESS_NOUNS = ("流程", "工序", "SOP", "工艺", "制程", "节点", "规范")
 
 
 def _strip_question_tail(q: str) -> str:
@@ -321,8 +358,274 @@ def _maxkb_doc_url(knowledge_id: str, document_id: str) -> str:
     return f"{base}/ui/knowledge/{knowledge_id}"
 
 
+def _env_int(name: str, default: int, *, lo: int | None = None, hi: int | None = None) -> int:
+    raw = os.environ.get(name)
+    try:
+        val = int(raw) if raw not in (None, "") else default
+    except ValueError:
+        val = default
+    if lo is not None:
+        val = max(lo, val)
+    if hi is not None:
+        val = min(hi, val)
+    return val
+
+
+def _expand_enabled() -> bool:
+    raw = os.environ.get("GALLERY_MAXKB_EXPAND", "1").strip().lower()
+    return raw not in {"0", "false", "off", "no"}
+
+
+def synonym_map() -> dict[str, list[str]]:
+    """In-file synonyms, optionally merged with GALLERY_MAXKB_SYNONYMS JSON."""
+    out: dict[str, list[str]] = {k: list(v) for k, v in _DEFAULT_SYNONYMS.items()}
+    raw = os.environ.get("GALLERY_MAXKB_SYNONYMS", "").strip()
+    if not raw:
+        return out
+    try:
+        extra = json.loads(raw)
+    except Exception:
+        return out
+    if not isinstance(extra, dict):
+        return out
+    for key, val in extra.items():
+        if not key or not isinstance(val, list):
+            continue
+        out[str(key)] = [str(x) for x in val if str(x).strip()]
+    return out
+
+
+def classify_knowledge_intent(q: str) -> str:
+    """Light intent: objection / process / neutral. Demos channel is unchanged."""
+    text = q or ""
+    if any(cue in text for cue in _OBJECTION_CUES):
+        return "objection"
+    if any(noun in text for noun in _PROCESS_NOUNS):
+        return "process"
+    return "neutral"
+
+
+def _synonym_variants(text: str) -> list[str]:
+    blob = (text or "").strip()
+    if not blob:
+        return []
+    mapping = synonym_map()
+    seeds = sorted(mapping.keys(), key=len, reverse=True)
+    blob_l = blob.lower()
+    extras: list[str] = []
+    for seed in seeds:
+        idx = blob_l.find(seed.lower())
+        if idx < 0:
+            continue
+        syns = [s for s in mapping[seed] if s and s.lower() not in blob_l]
+        if not syns:
+            continue
+        extras.append(f"{blob} {' '.join(syns[:3])}".strip())
+        replaced = blob[:idx] + syns[0] + blob[idx + len(seed) :]
+        if replaced.strip() and replaced != blob:
+            extras.append(replaced.strip())
+        break
+    return extras
+
+
+def expand_maxkb_queries(q: str, max_variants: int | None = None) -> list[str]:
+    """Build 2–4 query variants: original, stripped tail, synonym/intent, retrieve."""
+    if max_variants is None:
+        max_variants = _env_int("GALLERY_MAXKB_VARIANTS", 4, lo=1, hi=6)
+    original = (q or "").strip()
+    out: list[str] = []
+
+    def add(text: str) -> None:
+        item = (text or "").strip()
+        if len(item) >= 2 and item not in out:
+            out.append(item)
+
+    add(original)
+    if not _expand_enabled():
+        return out[:1] or out
+    stripped = _strip_question_tail(original)
+    add(stripped)
+    for extra in _synonym_variants(stripped or original):
+        add(extra)
+    try:
+        add(retrieve_query(original))
+    except Exception:
+        pass
+    return out[: max(1, max_variants)]
+
+
+def _paragraph_key(item: dict) -> str:
+    pid = str(item.get("paragraph_id") or item.get("id") or "").strip()
+    if pid:
+        return f"p:{pid}"
+    kid = str(item.get("knowledge_id") or "")
+    did = str(item.get("document_id") or "")
+    snip = str(item.get("snippet") or "")[:80]
+    if did or snip:
+        return f"d:{kid}:{did}:{snip}"
+    return f"t:{item.get('title') or ''}:{item.get('document_name') or ''}"
+
+
+def rrf_fuse(
+    ranked_lists: list[list[dict]],
+    *,
+    k: int = 60,
+    key_fn=None,
+) -> list[dict]:
+    """Reciprocal rank fusion across (kb × query_variant) lists. Identity = paragraph id."""
+    key_fn = key_fn or _paragraph_key
+    rrf_k = k if k > 0 else 60
+    scores: dict[str, float] = {}
+    best: dict[str, dict] = {}
+    for lst in ranked_lists:
+        for rank, item in enumerate(lst, start=1):
+            if not isinstance(item, dict):
+                continue
+            key = key_fn(item)
+            if not key:
+                continue
+            scores[key] = scores.get(key, 0.0) + 1.0 / (rrf_k + rank)
+            prev = best.get(key)
+            raw = float(item.get("raw_score") or item.get("score") or 0)
+            prev_raw = float((prev or {}).get("raw_score") or (prev or {}).get("score") or 0)
+            if prev is None or raw > prev_raw:
+                best[key] = dict(item)
+    fused = []
+    for key, item in best.items():
+        row = dict(item)
+        row["rrf"] = round(scores[key], 6)
+        fused.append(row)
+    fused.sort(key=lambda x: (-float(x.get("rrf") or 0), x.get("title") or ""))
+    return fused
+
+
+def _has_ammo_path(path: str) -> bool:
+    blob = path or ""
+    low = blob.lower()
+    return any(tok.lower() in low for tok in _AMMO_PATH_TOKENS)
+
+
+def path_title_boost_factor(item: dict, intent: str = "neutral") -> float:
+    path = f"{item.get('document_name') or ''} {item.get('title') or ''}"
+    ammo = _has_ammo_path(path)
+    stub = bool(_WIKI_STUB_RE.search(path)) and not ammo
+    factor = 1.0
+    if ammo:
+        if intent == "objection":
+            factor *= 1.35
+        elif intent == "process":
+            factor *= 1.08
+        else:
+            factor *= 1.22
+    if stub:
+        factor *= 0.82
+    return factor
+
+
+def apply_path_title_boosts(items: list[dict], intent: str = "neutral") -> list[dict]:
+    """Multiply RRF by path/title boosts. Ammo paths up; wiki-stub patterns down."""
+    out: list[dict] = []
+    for item in items:
+        row = dict(item)
+        factor = path_title_boost_factor(row, intent)
+        rrf = float(row.get("rrf") or 0)
+        row["boost"] = round(factor, 4)
+        row["rank_score"] = rrf * factor
+        row["score"] = round(row["rank_score"], 6)
+        if _has_ammo_path(f"{row.get('document_name') or ''} {row.get('title') or ''}"):
+            row["reason"] = "MaxKB · 售前武器"
+        else:
+            row["reason"] = "MaxKB · RRF"
+        out.append(row)
+    out.sort(key=lambda x: (-float(x.get("rank_score") or 0), x.get("title") or ""))
+    return out
+
+
+def cap_paragraphs_per_document(items: list[dict], cap: int = 3) -> list[dict]:
+    """Keep paragraph-id identity; allow up to `cap` paragraphs per document_name."""
+    limit = cap if cap > 0 else 3
+    seen_para: set[str] = set()
+    counts: dict[str, int] = {}
+    out: list[dict] = []
+    for item in items:
+        para = _paragraph_key(item)
+        if para in seen_para:
+            continue
+        seen_para.add(para)
+        doc = (
+            item.get("document_name")
+            or item.get("document_id")
+            or item.get("title")
+            or ""
+        )
+        n = counts.get(doc, 0)
+        if n >= limit:
+            continue
+        counts[doc] = n + 1
+        out.append(item)
+    return out
+
+
+def _maxkb_item_from_row(row: dict, kid: str, query_variant: str = "") -> dict:
+    score = float(row.get("comprehensive_score") or row.get("similarity") or 0)
+    title = row.get("title") or row.get("document_name") or "知识段落"
+    doc_name = row.get("document_name") or ""
+    content = (row.get("content") or "").strip().replace("\n", " ")
+    kid_id = str(row.get("knowledge_id") or kid)
+    doc_id = str(row.get("document_id") or "")
+    para_id = str(row.get("id") or row.get("paragraph_id") or "").strip()
+    if not para_id:
+        para_id = f"{doc_id}:{hash(content) & 0xFFFFFFFF:08x}"
+    return {
+        "id": para_id,
+        "paragraph_id": para_id,
+        "title": str(title).strip() or doc_name,
+        "snippet": content[:160],
+        "document_name": doc_name,
+        "document_id": doc_id,
+        "knowledge_id": kid_id,
+        "knowledge_name": row.get("knowledge_name") or "",
+        "score": round(score, 4),
+        "raw_score": score,
+        "url": _maxkb_doc_url(kid_id, doc_id),
+        "channel": "knowledge",
+        "reason": f"MaxKB · {round(score * 100):.0f}%",
+        "query_variant": query_variant,
+    }
+
+
+def _maxkb_hit_test(
+    knowledge_id: str,
+    query_text: str,
+    *,
+    token: str,
+    top_number: int,
+    timeout: float = 20,
+) -> list[dict]:
+    url = (
+        f"{MAXKB_BASE}/admin/api/workspace/{MAXKB_WORKSPACE}"
+        f"/knowledge/{knowledge_id}/hit_test"
+    )
+    _, pl = _http_json(
+        "POST",
+        url,
+        body={
+            "query_text": query_text,
+            "top_number": top_number,
+            "similarity": MAXKB_SIMILARITY,
+            "search_mode": MAXKB_MODE,
+        },
+        headers={"Authorization": f"Bearer {token}"},
+        timeout=timeout,
+    )
+    rows = pl.get("data") if isinstance(pl, dict) else pl
+    if not isinstance(rows, list):
+        return []
+    return [r for r in rows if isinstance(r, dict)]
+
+
 def search_maxkb(q: str, limit: int = 10) -> dict:
-    """MaxKB vector/keyword hit_test. Returns {items, status, hint?}."""
+    """MaxKB hit_test with query expansion, RRF across (kb × variant), path boosts."""
     qn = (q or "").strip()
     if len(qn) < 2:
         return {"items": [], "status": "empty_query"}
@@ -339,70 +642,46 @@ def search_maxkb(q: str, limit: int = 10) -> dict:
         kids = MAXKB_KNOWLEDGE_IDS or _list_maxkb_knowledge_ids(token)
         if not kids:
             return {"items": [], "status": "empty", "hint": "MaxKB 无知识库"}
-        merged: list[tuple[float, dict]] = []
+        variants = expand_maxkb_queries(qn)
+        intent = classify_knowledge_intent(qn)
         per_kb = max(3, min(limit, MAXKB_TOP))
-        for kid in kids:
-            url = (
-                f"{MAXKB_BASE}/admin/api/workspace/{MAXKB_WORKSPACE}"
-                f"/knowledge/{kid}/hit_test"
+        rrf_k = _env_int("GALLERY_MAXKB_RRF_K", 60, lo=1, hi=200)
+        per_doc = _env_int("GALLERY_MAXKB_PER_DOC", 3, lo=1, hi=5)
+        jobs = [(kid, variant) for kid in kids for variant in variants]
+        ranked_lists: list[list[dict]] = []
+        last_http: urllib.error.HTTPError | None = None
+        last_err: Exception | None = None
+
+        def _one(kid: str, variant: str) -> list[dict]:
+            rows = _maxkb_hit_test(
+                kid,
+                variant,
+                token=token,
+                top_number=per_kb,
             )
-            _, pl = _http_json(
-                "POST",
-                url,
-                body={
-                    "query_text": qn,
-                    "top_number": per_kb,
-                    "similarity": MAXKB_SIMILARITY,
-                    "search_mode": MAXKB_MODE,
-                },
-                headers={"Authorization": f"Bearer {token}"},
-                timeout=20,
-            )
-            rows = pl.get("data") if isinstance(pl, dict) else pl
-            if not isinstance(rows, list):
-                continue
-            for row in rows:
-                if not isinstance(row, dict):
-                    continue
-                score = float(
-                    row.get("comprehensive_score")
-                    or row.get("similarity")
-                    or 0
-                )
-                title = (
-                    row.get("title")
-                    or row.get("document_name")
-                    or "知识段落"
-                )
-                doc_name = row.get("document_name") or ""
-                content = (row.get("content") or "").strip().replace("\n", " ")
-                kid_id = str(row.get("knowledge_id") or kid)
-                doc_id = str(row.get("document_id") or "")
-                merged.append(
-                    (
-                        score,
-                        {
-                            "id": row.get("id") or doc_id,
-                            "title": str(title).strip() or doc_name,
-                            "snippet": content[:160],
-                            "document_name": doc_name,
-                            "knowledge_name": row.get("knowledge_name") or "",
-                            "score": round(score, 4),
-                            "url": _maxkb_doc_url(kid_id, doc_id),
-                            "channel": "knowledge",
-                            "reason": f"MaxKB · {round(score * 100):.0f}%",
-                        },
-                    )
-                )
-        # dedupe by document_id / title, keep best score
-        best: dict[str, tuple[float, dict]] = {}
-        for score, item in merged:
-            key = item.get("document_name") or item.get("id") or item.get("title")
-            prev = best.get(key)
-            if not prev or score > prev[0]:
-                best[key] = (score, item)
-        ranked = sorted(best.values(), key=lambda x: -x[0])
-        return {"items": [x[1] for x in ranked[:limit]], "status": "ok"}
+            return [_maxkb_item_from_row(row, kid, variant) for row in rows]
+
+        workers = min(8, max(1, len(jobs)))
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            future_map = {pool.submit(_one, kid, variant): (kid, variant) for kid, variant in jobs}
+            for fut in as_completed(future_map):
+                try:
+                    ranked_lists.append(fut.result())
+                except urllib.error.HTTPError as exc:
+                    last_http = exc
+                except Exception as exc:  # noqa: BLE001 — one (kb, variant) must not drop the lane
+                    last_err = exc
+        if not ranked_lists:
+            if last_http is not None:
+                hint = last_http.read().decode("utf-8", errors="replace")[:240]
+                return {"items": [], "status": "http_error", "hint": f"{last_http.code} {hint}"}
+            if last_err is not None:
+                return {"items": [], "status": "error", "hint": str(last_err)}
+            return {"items": [], "status": "ok"}
+        fused = rrf_fuse(ranked_lists, k=rrf_k)
+        boosted = apply_path_title_boosts(fused, intent)
+        capped = cap_paragraphs_per_document(boosted, cap=per_doc)
+        return {"items": capped[:limit], "status": "ok"}
     except urllib.error.HTTPError as e:
         hint = e.read().decode("utf-8", errors="replace")[:240]
         return {"items": [], "status": "http_error", "hint": f"{e.code} {hint}"}
@@ -466,7 +745,7 @@ def search_knowledge(q: str, limit: int = 10) -> dict:
     """Prefer MaxKB; fall back to Confluence only when MaxKB is absent."""
     if MAXKB_BASE or _maxkb_token():
         return search_maxkb(q, limit=limit)
-    return search_confluence(q, limit=limit)
+    return search_confluence(retrieve_query(q) or q, limit=limit)
 
 
 
@@ -902,7 +1181,8 @@ def federated_search(q: str, on_progress=None) -> dict:
         return search_feedback(q)
 
     def run_knowledge():
-        return search_knowledge(retrieve)
+        # Pass the raw user query so MaxKB expansion / intent see tails like 怎么讲.
+        return search_knowledge(q)
 
     def run_feishu():
         return search_feishu(retrieve)
