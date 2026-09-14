@@ -2775,3 +2775,10 @@ html, body {
   .fanout-form-grid, .fanout-form-grid .span-2 { grid-template-columns: 1fr; grid-column: auto; }
 }
 
+/* panel-body 后段有 display:flex !important，分段隐藏必须再压一层 */
+.panel-body.is-hidden,
+[data-panel-group].is-hidden,
+[data-rd-pane].is-hidden {
+  display: none !important;
+}
+

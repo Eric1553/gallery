@@ -691,7 +691,10 @@ function initDataPanels() {
         seg.querySelectorAll('button').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         document.querySelectorAll(`[data-panel-group="${targetId}"]`).forEach(p => {
-          p.style.display = p.dataset.panelView === btn.dataset.panelView ? '' : 'none';
+          const on = p.dataset.panelView === btn.dataset.panelView;
+          p.classList.toggle('is-hidden', !on);
+          if (!on) p.hidden = true;
+          else p.hidden = false;
         });
         refreshChartsSoon();
       });

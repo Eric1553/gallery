@@ -99,17 +99,19 @@
         <button data-panel-view="ic">IC 组</button>
       </div>
     </div>
-    <div class="panel-body" data-panel-group="kb-dim" data-panel-view="rd">
-      <div class="chart-wrap" data-hbars='[{"l":"湿法产品部","v":168,"c":"#2563eb"},{"l":"工艺研发","v":142,"c":"#4a7ab0"},{"l":"应用工程","v":96,"c":"#5b7c99"},{"l":"测试验证","v":74,"c":"#7c3aed"}]'></div>
-      <p class="chart-footnote">研发组织维度 · 演示人次，未接生产学习系统</p>
-    </div>
-    <div class="panel-body" data-panel-group="kb-dim" data-panel-view="lg" style="display:none">
-      <div class="chart-wrap" data-hbars='[{"l":"临港线","v":118,"c":"#2563eb"},{"l":"张江线","v":86,"c":"#4a7ab0"},{"l":"夜莺组","v":54,"c":"#5b7c99"},{"l":"物料组","v":32,"c":"#7c3aed"}]'></div>
-      <p class="chart-footnote">临港张江研发线 · 演示人次</p>
-    </div>
-    <div class="panel-body" data-panel-group="kb-dim" data-panel-view="ic" style="display:none">
-      <div class="chart-wrap" data-hbars='[{"l":"IC1 组","v":128,"c":"#2563eb"},{"l":"IC2 组","v":96,"c":"#4a7ab0"},{"l":"IC3 组","v":110,"c":"#5b7c99"},{"l":"IC4 组","v":78,"c":"#7c3aed"}]'></div>
-      <p class="chart-footnote">IC 组维度 · 与 Recipe/WPH 组别对齐</p>
+    <div class="panel-body">
+      <div data-panel-group="kb-dim" data-panel-view="rd">
+        <div class="chart-wrap" data-hbars='[{"l":"湿法产品部","v":168,"c":"#2563eb"},{"l":"工艺研发","v":142,"c":"#4a7ab0"},{"l":"应用工程","v":96,"c":"#5b7c99"},{"l":"测试验证","v":74,"c":"#7c3aed"}]'></div>
+        <p class="chart-footnote">研发组织维度 · 演示人次，未接生产学习系统</p>
+      </div>
+      <div data-panel-group="kb-dim" data-panel-view="lg" class="is-hidden" hidden>
+        <div class="chart-wrap" data-hbars='[{"l":"临港线","v":118,"c":"#2563eb"},{"l":"张江线","v":86,"c":"#4a7ab0"},{"l":"夜莺组","v":54,"c":"#5b7c99"},{"l":"物料组","v":32,"c":"#7c3aed"}]'></div>
+        <p class="chart-footnote">临港张江研发线 · 演示人次</p>
+      </div>
+      <div data-panel-group="kb-dim" data-panel-view="ic" class="is-hidden" hidden>
+        <div class="chart-wrap" data-hbars='[{"l":"IC1 组","v":128,"c":"#2563eb"},{"l":"IC2 组","v":96,"c":"#4a7ab0"},{"l":"IC3 组","v":110,"c":"#5b7c99"},{"l":"IC4 组","v":78,"c":"#7c3aed"}]'></div>
+        <p class="chart-footnote">IC 组维度 · 与 Recipe/WPH 组别对齐</p>
+      </div>
     </div>
   </div>
   <div class="panel">
