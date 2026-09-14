@@ -4,16 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>知识库看板 - 盛美半导体研发运营看板</title>
-<link rel="stylesheet" href="assets/style.css?v=67">
-<link rel="stylesheet" href="assets/req-spec.css?v=67">
+<link rel="stylesheet" href="assets/style.css?v=68">
+<link rel="stylesheet" href="assets/req-spec.css?v=68">
 </head>
-<body>
+<body data-page="knowledge">
 <div class="layout">
 <aside class="sidebar">
     <div class="brand">
     <div class="brand-logo">ACM</div>
     <h1>研发运营看板</h1>
-    <p>盛美半导体 · 演示原型 v4.4</p>
+    <p>盛美半导体 · 演示原型 v4.5</p>
   </div>
   <nav class="nav">
     <div class="nav-section">业务模块</div>
@@ -92,8 +92,27 @@
 
 <div class="grid-2">
   <div class="panel">
-    <div class="panel-head"><h3>按组别 · 学习人次</h3></div>
-    <div class="panel-body"><div class="chart-wrap" data-hbars='[{"l":"IC1 组","v":128,"c":"#2563eb"},{"l":"IC2 组","v":96,"c":"#4a7ab0"},{"l":"IC3 组","v":110,"c":"#5b7c99"},{"l":"IC4 组","v":78,"c":"#7c3aed"}]'></div></div>
+    <div class="panel-head"><div class="panel-head-left"><h3 id="kb-dim-title">按研发组织 · 学习人次</h3></div>
+      <div class="segmented" data-panel-seg="kb-dim">
+        <button class="active" data-panel-view="rd">研发</button>
+        <button data-panel-view="lg">临港研发线</button>
+        <button data-panel-view="ic">IC 组</button>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div data-panel-group="kb-dim" data-panel-view="rd">
+        <div class="chart-wrap" data-hbars='[{"l":"湿法产品部","v":168,"c":"#2563eb"},{"l":"工艺研发","v":142,"c":"#4a7ab0"},{"l":"应用工程","v":96,"c":"#5b7c99"},{"l":"测试验证","v":74,"c":"#7c3aed"}]'></div>
+        <p class="chart-footnote">研发组织维度 · 演示人次，未接生产学习系统</p>
+      </div>
+      <div data-panel-group="kb-dim" data-panel-view="lg" class="is-hidden" hidden>
+        <div class="chart-wrap" data-hbars='[{"l":"临港线","v":118,"c":"#2563eb"},{"l":"张江线","v":86,"c":"#4a7ab0"},{"l":"夜莺组","v":54,"c":"#5b7c99"},{"l":"物料组","v":32,"c":"#7c3aed"}]'></div>
+        <p class="chart-footnote">临港张江研发线 · 演示人次</p>
+      </div>
+      <div data-panel-group="kb-dim" data-panel-view="ic" class="is-hidden" hidden>
+        <div class="chart-wrap" data-hbars='[{"l":"IC1 组","v":128,"c":"#2563eb"},{"l":"IC2 组","v":96,"c":"#4a7ab0"},{"l":"IC3 组","v":110,"c":"#5b7c99"},{"l":"IC4 组","v":78,"c":"#7c3aed"}]'></div>
+        <p class="chart-footnote">IC 组维度 · 与 Recipe/WPH 组别对齐</p>
+      </div>
+    </div>
   </div>
   <div class="panel">
     <div class="panel-head"><h3>最近发布（演示数据）</h3><a class="link" href="#" data-action="export">导出 →</a></div>
@@ -113,7 +132,7 @@
   <div class="panel-body">
     <table>
       <tr><th>需求</th><th>分析维度</th><th>数据来源方案</th><th>状态</th></tr>
-      <tr><td>知识地图</td><td>按数量 / 类型 / 产品 / 组别 / Site / 学习人次</td><td>OA 发布流程（优先）</td><td><span class="tag tag-open">演示预览</span></td></tr>
+      <tr><td>知识地图</td><td>按数量 / 类型 / 产品 / 研发 / 临港研发线 / IC 组 / Site / 学习人次</td><td>OA 发布流程（优先）</td><td><span class="tag tag-open">演示预览</span></td></tr>
       <tr><td>Lesson Learn</td><td>按数量 / 按产品 / 按项目</td><td>OA / Case 流程</td><td><span class="tag tag-open">演示预览</span></td></tr>
       <tr><td>生产取数</td><td>—</td><td>IT 确认（弘毅 vs OA）</td><td><span class="tag tag-warn">待确认</span></td></tr>
     </table>
@@ -122,8 +141,8 @@
   </div>
 </main>
 </div>
-<script src="assets/charts.js?v=67"></script>
-<script src="assets/app.js?v=67"></script>
+<script src="assets/charts.js?v=68"></script>
+<script src="assets/app.js?v=68"></script>
 <script>setActiveNav('knowledge');</script>
 
 <script

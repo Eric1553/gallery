@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>人力资源看板 - 盛美半导体研发运营看板</title>
-<link rel="stylesheet" href="assets/style.css?v=67">
-<link rel="stylesheet" href="assets/req-spec.css?v=67">
+<link rel="stylesheet" href="assets/style.css?v=68">
+<link rel="stylesheet" href="assets/req-spec.css?v=68">
 </head>
 <body data-page="hr">
 <div class="layout">
@@ -13,7 +13,7 @@
     <div class="brand">
     <div class="brand-logo">ACM</div>
     <h1>研发运营看板</h1>
-    <p>盛美半导体 · 演示原型 v4.4</p>
+    <p>盛美半导体 · 演示原型 v4.5</p>
   </div>
   <nav class="nav">
     <div class="nav-section">业务模块</div>
@@ -80,17 +80,40 @@
     <div class="req-item"><div class="req-idx">+</div><div class="req-body2"><div class="req-item-t">补充需求</div><div class="req-item-d">在人员资历基础上增加司龄、工龄维度，并补充每月人员离职情况分析。</div></div></div>
   </div>
 </div>
-<div class="filter-bar">
-  <div class="filter-group"><label>职能线</label><select><option>全部</option><option>Site</option><option>产品</option><option>研发</option><option>临港研发线</option></select></div>
+<div class="filter-bar" id="hr-filter-bar" data-filter-live="true">
+  <div class="filter-group"><label>职能线</label><select>
+    <option>全部</option>
+    <option>Site</option>
+    <option>产品</option>
+    <option>研发</option>
+    <option>临港研发线</option>
+    <option>临港张江研发线</option>
+  </select></div>
   <div class="filter-group"><label>工龄</label><select><option>全部</option><option>0-3年</option><option>3-5年</option><option>5-10年</option><option>10年+</option></select></div>
   <div class="filter-group"><label>司龄</label><select><option>全部</option><option>0-3年</option><option>3-5年</option><option>5-10年</option><option>10年+</option></select></div>
   <div class="filter-group"><label>学历</label><select><option>全部</option><option>大专</option><option>本科</option><option>硕士</option><option>博士</option></select></div>
+  <div class="filter-group"><label>技能等级</label><select>
+    <option>全部</option>
+    <option>L1</option>
+    <option>L2</option>
+    <option>L3</option>
+    <option>L4</option>
+    <option>L5</option>
+  </select></div>
+  <div class="filter-group"><label>IC组</label><select>
+    <option>全部</option>
+    <option>IC1</option>
+    <option>IC2</option>
+    <option>IC3</option>
+    <option>IC4</option>
+  </select></div>
   <button class="btn-apply" type="button">应用</button>
 </div>
-<div class="alert-box info" id="hr-cross-result" style="margin-bottom:18px">筛选结果：<strong>职能线=Site · 司龄=3-5年 · 学历=本科</strong> → 匹配 <strong>28</strong> 人 · <a class="link" href="#" data-action="drill" data-title="人员资历明细" data-sub="HR+OA 员工编号关联 · 交叉筛选结果" data-cols="工号,姓名,职能线,司龄,工龄,学历,技能等级,所属部门">查看人员明细 →</a></div>
+<div class="alert-box info" id="hr-cross-result" style="margin-bottom:18px">筛选结果：当前为全部在岗人员 → <strong>342</strong> 人 · <a class="link" href="#" data-action="drill" data-title="人员资历明细" data-sub="HR+OA 员工编号关联 · 交叉筛选 · 演示" data-cols="工号,姓名,职能线,IC组,司龄,工龄,学历,技能等级">查看人员明细 →</a></div>
+<p class="chart-footnote" style="text-align:left;margin:-8px 0 16px">技能等级取 OA 技能评定（L1–L5，季度更新）· 张江人员挂在临港张江研发线 · 演示可筛选</p>
 
 <div class="kpi-grid fixed3">
-  <div class="kpi-card accent-blue"><div class="kpi-top"><div class="kpi-label">在岗总人数</div></div><div class="kpi-value">342</div><div class="kpi-sub">HR / OA 工号关联</div></div>
+  <div class="kpi-card accent-blue" id="hr-headcount"><div class="kpi-top"><div class="kpi-label">在岗总人数</div></div><div class="kpi-value">342</div><div class="kpi-sub">HR / OA 工号关联</div></div>
   <div class="kpi-card accent-green"><div class="kpi-top"><div class="kpi-label">本科及以上</div></div><div class="kpi-value">89%</div><div class="kpi-sub">硕士 34% · 博士 8%</div></div>
   <div class="kpi-card accent-amber"><div class="kpi-top"><div class="kpi-label">出差人次</div></div><div class="kpi-value">127</div><div class="kpi-sub">2026 年 6 月</div></div>
   <div class="kpi-card accent-purple"><div class="kpi-top"><div class="kpi-label">支援流程(进行中)</div></div><div class="kpi-value">18</div><div class="kpi-sub">6 个大区 · 4 产品类型</div></div>
@@ -184,8 +207,8 @@
   </div>
 </main>
 </div>
-<script src="assets/charts.js?v=67"></script>
-<script src="assets/app.js?v=67"></script>
+<script src="assets/charts.js?v=68"></script>
+<script src="assets/app.js?v=68"></script>
 <script>setActiveNav('hr');</script>
 
 <script

@@ -4,16 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Case 追踪看板 - 盛美半导体研发运营看板</title>
-<link rel="stylesheet" href="assets/style.css?v=67">
-<link rel="stylesheet" href="assets/req-spec.css?v=67">
+<link rel="stylesheet" href="assets/style.css?v=68">
+<link rel="stylesheet" href="assets/req-spec.css?v=68">
 </head>
-<body>
+<body data-page="case">
 <div class="layout">
 <aside class="sidebar">
     <div class="brand">
     <div class="brand-logo">ACM</div>
     <h1>研发运营看板</h1>
-    <p>盛美半导体 · 演示原型 v4.4</p>
+    <p>盛美半导体 · 演示原型 v4.5</p>
   </div>
   <nav class="nav">
     <div class="nav-section">业务模块</div>
@@ -99,7 +99,7 @@
   <div class="panel-body" data-panel-group="case-progress" data-panel-view="product">
     <div class="chart-wrap" data-group-bars='{"groups":[{"label":"WET-CMP","values":[42,31,8]},{"label":"WET-Clean","values":[28,18,6]},{"label":"ECP","values":[24,16,5]},{"label":"Track","values":[18,12,4]}],"series":["流程数","已归档","PM 可关闭"]}'></div>
   </div>
-  <div class="panel-body" data-panel-group="case-progress" data-panel-view="site" style="display:none">
+  <div class="panel-body" data-panel-group="case-progress" data-panel-view="site" class="is-hidden" hidden>
     <div class="chart-wrap" data-group-bars='{"groups":[{"label":"TSMC","values":[38,28,8]},{"label":"SMIC","values":[26,19,6]},{"label":"Intel","values":[22,15,5]},{"label":"Samsung","values":[18,12,4]}],"series":["流程数","已归档","PM 可关闭"]}'></div>
   </div>
 </div>
@@ -215,8 +215,8 @@
   </div>
 </main>
 </div>
-<script src="assets/charts.js?v=67"></script>
-<script src="assets/app.js?v=67"></script>
+<script src="assets/charts.js?v=68"></script>
+<script src="assets/app.js?v=68"></script>
 <script>setActiveNav('case');</script>
 
 <script
