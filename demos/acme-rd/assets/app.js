@@ -20,12 +20,19 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavPrefetch();
   initPeriodFilters();
   initFanoutWorkbench();
+  initKnowledgeDim();
+  initHrFilters();
+  initSiteScopeFilters();
+  initShipPlan();
   parkFeedbackOverlay();
 });
 
 function normalizeV4Shell() {
   document.querySelectorAll('.brand p').forEach(el => {
-    el.textContent = '盛美半导体 · 演示原型 v4.4';
+    el.textContent = '盛美半导体 · 演示原型 v4.5';
+  });
+  document.querySelectorAll('[data-demo-ver]').forEach(el => {
+    el.textContent = 'v4.5';
   });
 }
 
@@ -89,9 +96,9 @@ function currentPageId() {
     || 'index';
 }
 
-/** OA / Wet-RD 晶圆有季度口径；其余页只用年+月 */
-function periodNeedsQuarter(page) {
-  return page === 'oa-monitor' || page === 'wet-rd';
+/** 各模块顶栏统一年 / 季 / 月；Wet-RD 另加按周 */
+function periodNeedsQuarter() {
+  return true;
 }
 
 function yearSelectHtml() {
@@ -239,7 +246,7 @@ function initNavPrefetch() {
   const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 350));
   idle(() => {
     document.querySelectorAll('.nav a[href]').forEach(a => prefetch(a.getAttribute('href')));
-    ['assets/style.css?v=67', 'assets/charts.js?v=67', 'assets/app.js?v=67'].forEach(href => {
+    ['assets/style.css?v=68', 'assets/charts.js?v=68', 'assets/app.js?v=68'].forEach(href => {
       if (seen.has(href)) return;
       seen.add(href);
       const l = document.createElement('link');
@@ -693,11 +700,19 @@ function initDataPanels() {
 }
 
 /** 布局稳定后再补绘，避免与 charts 首屏 boot / ResizeObserver 叠成二次刷新 */
-function refreshChartsSoon() {
+function refreshChartsSoon(force) {
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      if (window.DashboardCharts) DashboardCharts.init(false);
+      if (window.DashboardCharts) DashboardCharts.init(!!force);
     });
+  });
+}
+
+function invalidateCharts() {
+  document.querySelectorAll('.chart-wrap, [data-sparkline]').forEach(el => {
+    el.classList.remove('chart-rendered');
+    delete el.dataset.chartW;
+    if (el.hasAttribute('data-sparkline')) el.replaceChildren();
   });
 }
 
@@ -740,27 +755,180 @@ function openPushSettings() {
 }
 window.openPushSettings = openPushSettings;
 
+function periodLabelOf(value) {
+  const raw = String(value || '');
+  if (raw === 'mtd-half') return '近半月';
+  if (raw === 'mtd-hy') return '近半年';
+  const week = raw.match(/^(\d{4})-W(\d{2})$/);
+  if (week) return `${week[1]} 年第 ${Number(week[2])} 周`;
+  const yq = raw.match(/^(\d{4})-Q([1-4])$/);
+  if (yq) return `${yq[1]} 年 ${yq[2]} 季度`;
+  const qOnly = raw.match(/^Q([1-4])$/);
+  if (qOnly) return `2026 年 ${qOnly[1]} 季度`;
+  const month = raw.match(/^(\d{4})-(\d{2})$/);
+  if (month) return `${month[1]} 年 ${Number(month[2])} 月`;
+  if (/^\d{4}$/.test(raw)) return `${raw} 年`;
+  return raw;
+}
+
+function periodSeed(value) {
+  const s = String(value || '');
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619);
+  return Math.abs(h);
+}
+
+/** 演示切片系数：基准期保持原稿数字，其余区间确定性偏移 */
+function periodFactor(value) {
+  const v = String(value || '');
+  if (v === '2026-Q2' || v === '2026-06') return 1;
+  if (v === '2026') return 1.68;
+  if (v === '2025') return 1.42;
+  if (v === 'mtd-half') return 0.38;
+  if (v === 'mtd-hy') return 0.86;
+  if (v === '2026-Q1') return 0.79;
+  if (v === '2026-Q3') return 1.11;
+  if (v === '2026-Q4') return 0.93;
+  if (v === '2025-Q2') return 0.84;
+  const seed = periodSeed(v);
+  let f = 0.64 + (seed % 52) / 100;
+  if (v.startsWith('2025')) f *= 0.88;
+  return Math.round(f * 100) / 100;
+}
+
+function scaleDemoNumber(n, factor, asPercent) {
+  if (!Number.isFinite(n)) return n;
+  let next = n * factor;
+  if (asPercent) next = Math.min(99.4, Math.max(24, next));
+  if (Number.isInteger(n)) return Math.max(n === 0 ? 0 : 1, Math.round(next));
+  return Math.round(next * 10) / 10;
+}
+
+function scaleKpiText(text, factor) {
+  const raw = String(text || '');
+  const m = raw.match(/^(\s*)([0-9]{1,3}(?:,[0-9]{3})*(?:\.[0-9]+)?)(.*)$/);
+  if (!m) return raw;
+  const num = parseFloat(m[2].replace(/,/g, ''));
+  if (!Number.isFinite(num)) return raw;
+  const suffix = m[3] || '';
+  const asPercent = /%/.test(suffix) || /%/.test(raw);
+  const next = scaleDemoNumber(num, factor, asPercent);
+  const hasComma = m[2].includes(',');
+  const hasDot = m[2].includes('.');
+  const formatted = hasDot
+    ? (Number.isInteger(num) ? String(next) : Number(next).toFixed(1))
+    : (hasComma ? Number(next).toLocaleString('zh-CN') : String(next));
+  return m[1] + formatted + suffix;
+}
+
+function scaleChartPayload(raw, factor, percentHint) {
+  let data;
+  try { data = JSON.parse(raw); } catch (e) { return raw; }
+  const pct = !!percentHint;
+  const scaleVal = (v, itemPct) => scaleDemoNumber(v, factor, pct || itemPct);
+  if (Array.isArray(data)) {
+    return JSON.stringify(data.map(item => {
+      if (item && typeof item === 'object' && typeof item.v === 'number') {
+        return { ...item, v: scaleVal(item.v, item.unit === '%') };
+      }
+      if (typeof item === 'number') return scaleVal(item, false);
+      return item;
+    }));
+  }
+  if (data && Array.isArray(data.groups)) {
+    return JSON.stringify({
+      ...data,
+      groups: data.groups.map(g => ({
+        ...g,
+        values: (g.values || []).map(v => scaleVal(v, false))
+      }))
+    });
+  }
+  if (data && Array.isArray(data.series)) {
+    return JSON.stringify({
+      ...data,
+      series: data.series.map(s => ({
+        ...s,
+        data: (s.data || []).map(v => scaleVal(v, false))
+      }))
+    });
+  }
+  return raw;
+}
+
+function rememberPeriodBase() {
+  document.querySelectorAll('.kpi-value').forEach(el => {
+    if (el.dataset.periodBase == null) el.dataset.periodBase = el.textContent.trim();
+  });
+  document.querySelectorAll('[data-period-num]').forEach(el => {
+    if (el.dataset.periodBase == null) el.dataset.periodBase = el.textContent.trim();
+  });
+  document.querySelectorAll('[data-bars], [data-hbars], [data-group-bars], [data-donut], [data-line], [data-sparkline]').forEach(el => {
+    ['bars', 'hbars', 'groupBars', 'donut', 'line', 'sparkline', 'total'].forEach(key => {
+      const live = el.dataset[key];
+      const baseKey = 'periodBase' + key.charAt(0).toUpperCase() + key.slice(1);
+      if (live != null && el.dataset[baseKey] == null) el.dataset[baseKey] = live;
+    });
+  });
+}
+
+function applyPeriodSlice(value) {
+  const factor = periodFactor(value);
+  const first = document.body.dataset.periodApplied !== '1';
+  document.body.dataset.periodApplied = '1';
+  rememberPeriodBase();
+  document.querySelectorAll('.kpi-value').forEach(el => {
+    el.textContent = scaleKpiText(el.dataset.periodBase || el.textContent, factor);
+  });
+  document.querySelectorAll('[data-period-num]').forEach(el => {
+    el.textContent = scaleKpiText(el.dataset.periodBase || el.textContent, factor);
+  });
+  document.querySelectorAll('[data-bars], [data-hbars], [data-group-bars], [data-donut], [data-line], [data-sparkline]').forEach(el => {
+    const percent = el.hasAttribute('data-percent');
+    const map = [
+      ['bars', 'periodBaseBars'],
+      ['hbars', 'periodBaseHbars'],
+      ['groupBars', 'periodBaseGroupBars'],
+      ['donut', 'periodBaseDonut'],
+      ['line', 'periodBaseLine'],
+      ['sparkline', 'periodBaseSparkline']
+    ];
+    map.forEach(([live, base]) => {
+      if (el.dataset[base] != null) el.dataset[live] = scaleChartPayload(el.dataset[base], factor, percent);
+    });
+    if (el.dataset.periodBaseTotal != null) {
+      el.dataset.total = scaleKpiText(el.dataset.periodBaseTotal, factor);
+    }
+  });
+  if (first && factor === 1) return;
+  invalidateCharts();
+  refreshChartsSoon(true);
+}
+
+function ensurePeriodBanner() {
+  if (document.querySelector('[data-period-banner]')) return;
+  const content = document.querySelector('.content, .paper');
+  if (!content) return;
+  const banner = document.createElement('div');
+  banner.className = 'demo-banner';
+  banner.setAttribute('data-period-banner', '');
+  const header = content.querySelector('.page-header, .overview-head, .r-cover');
+  if (header && header.parentElement === content) content.insertBefore(banner, header.nextSibling);
+  else content.insertBefore(banner, content.firstChild);
+}
+
 function initPeriodFilters() {
-  const labelOf = (value) => {
-    const raw = String(value || '');
-    if (raw === 'mtd-half') return '近半月';
-    if (raw === 'mtd-hy') return '近半年';
-    const week = raw.match(/^(\d{4})-W(\d{2})$/);
-    if (week) return `${week[1]} 年第 ${Number(week[2])} 周`;
-    const yq = raw.match(/^(\d{4})-Q([1-4])$/);
-    if (yq) return `${yq[1]} 年 ${yq[2]} 季度`;
-    const qOnly = raw.match(/^Q([1-4])$/);
-    if (qOnly) return `2026 年 ${qOnly[1]} 季度`;
-    const month = raw.match(/^(\d{4})-(\d{2})$/);
-    if (month) return `${month[1]} 年 ${Number(month[2])} 月`;
-    if (/^\d{4}$/.test(raw)) return `${raw} 年`;
-    return raw;
-  };
   const apply = (value, silent) => {
-    const text = labelOf(value || readPeriodValue());
+    const period = value || readPeriodValue();
+    const text = periodLabelOf(period);
+    ensurePeriodBanner();
     document.querySelectorAll('[data-period-banner]').forEach(banner => {
       banner.textContent = `数据周期：${text}（演示口径，按所选区间统计）`;
     });
+    document.querySelectorAll('[data-period-asof]').forEach(el => {
+      el.textContent = el.dataset.periodAsof.replace('{period}', text);
+    });
+    applyPeriodSlice(period);
     if (!silent) showToast(`已切换时间范围：${text}`);
   };
   const box = document.querySelector('.topbar-period');
@@ -777,6 +945,7 @@ function initPeriodFilters() {
   syncPeriodGrainUi();
   apply(readPeriodValue(), true);
   document.querySelectorAll('.filter-bar .btn-apply').forEach(btn => {
+    if (btn.closest('[data-filter-live="true"]')) return;
     btn.disabled = false;
     btn.removeAttribute('aria-disabled');
     if (btn.dataset.periodBound) return;
@@ -864,4 +1033,165 @@ function initFanoutWorkbench() {
   check?.addEventListener('change', applySite);
   exec?.addEventListener('change', applySite);
   query?.addEventListener('input', applySite);
+}
+
+function initKnowledgeDim() {
+  if (currentPageId() !== 'knowledge') return;
+  const seg = document.querySelector('[data-panel-seg="kb-dim"]');
+  if (!seg) return;
+  const title = document.getElementById('kb-dim-title');
+  const labels = { rd: '按研发组织 · 学习人次', lg: '按临港研发线 · 学习人次', ic: '按 IC 组 · 学习人次' };
+  seg.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const view = btn.dataset.panelView;
+      if (title && labels[view]) title.textContent = labels[view];
+    });
+  });
+}
+
+function initHrFilters() {
+  if (currentPageId() !== 'hr') return;
+  const bar = document.getElementById('hr-filter-bar');
+  const result = document.getElementById('hr-cross-result');
+  if (!bar) return;
+  bar.dataset.filterLive = 'true';
+  const apply = () => {
+    const parts = [];
+    bar.querySelectorAll('.filter-group').forEach(group => {
+      const name = (group.querySelector('label')?.textContent || '').trim();
+      const sel = group.querySelector('select');
+      if (!name || !sel || sel.value === '全部') return;
+      parts.push(`${name}=${sel.value}`);
+    });
+    const seed = parts.join('|') || 'all';
+    let n = 342;
+    if (parts.length) {
+      let h = 0;
+      for (let i = 0; i < seed.length; i++) h = ((h << 5) - h) + seed.charCodeAt(i);
+      n = 16 + (Math.abs(h) % 92);
+    }
+    const head = document.querySelector('#hr-headcount .kpi-value');
+    if (head) {
+      head.dataset.periodBase = String(n);
+      head.textContent = scaleKpiText(String(n), periodFactor(readPeriodValue()));
+    }
+    if (result) {
+      const drill = 'data-action="drill" data-title="人员资历明细" data-sub="HR+OA 员工编号关联 · 交叉筛选 · 演示" data-cols="工号,姓名,职能线,IC组,司龄,工龄,学历,技能等级"';
+      result.innerHTML = parts.length
+        ? `筛选结果：<strong>${parts.join(' · ')}</strong> → 匹配 <strong>${n}</strong> 人 · <a class="link" href="#" ${drill}>查看人员明细 →</a>`
+        : `筛选结果：当前为全部在岗人员 → <strong>${n}</strong> 人 · <a class="link" href="#" ${drill}>查看人员明细 →</a>`;
+      initActionLinks();
+    }
+  };
+  bar.querySelectorAll('select').forEach(sel => sel.addEventListener('change', apply));
+  bar.querySelector('.btn-apply')?.addEventListener('click', event => {
+    event.preventDefault();
+    apply();
+  });
+  apply();
+}
+
+const SITE_DEMO_ROWS = [
+  { site: 'TSMC', n: 38, wet: 86, ecp: 42, track: 28, progress: 'T2/T3 占 38%', tier: 1 },
+  { site: 'SMIC', n: 31, wet: 64, ecp: 38, track: 22, progress: 'T2/T3 占 42%', tier: 1 },
+  { site: 'Intel', n: 26, wet: 52, ecp: 34, track: 18, progress: 'T2/T3 占 35%', tier: 1 },
+  { site: 'Samsung', n: 21, wet: 48, ecp: 28, track: 16, progress: 'T2/T3 占 40%', tier: 1 },
+  { site: 'Micron', n: 18, wet: 36, ecp: 22, track: 12, progress: 'T2/T3 占 33%', tier: 1 },
+  { site: 'UMC', n: 14, wet: 28, ecp: 16, track: 10, progress: 'T2/T3 占 31%', tier: 1 },
+  { site: 'YMTC', n: 12, wet: 24, ecp: 14, track: 8, progress: 'T2/T3 占 29%', tier: 1 },
+  { site: 'CXMT', n: 10, wet: 20, ecp: 12, track: 7, progress: 'T2/T3 占 28%', tier: 1 },
+  { site: 'Infineon', n: 9, wet: 16, ecp: 10, track: 6, progress: 'T2/T3 占 27%', tier: 1 },
+  { site: 'GlobalFoundries', n: 8, wet: 14, ecp: 9, track: 5, progress: 'T2/T3 占 26%', tier: 1 },
+  { site: 'Nanya', n: 7, wet: 12, ecp: 7, track: 4, progress: 'T2/T3 占 24%', tier: 2 },
+  { site: 'ST', n: 6, wet: 10, ecp: 6, track: 3, progress: 'T2/T3 占 22%', tier: 2 },
+  { site: 'HHGrace', n: 5, wet: 9, ecp: 5, track: 3, progress: 'T2/T3 占 21%', tier: 2 },
+  { site: 'Powerchip', n: 4, wet: 7, ecp: 4, track: 2, progress: 'T2/T3 占 20%', tier: 2 }
+];
+
+function visibleSiteDemo(siteVal) {
+  if (siteVal === 'top10') return SITE_DEMO_ROWS.filter(r => r.tier === 1);
+  if (siteVal && siteVal !== 'all') return SITE_DEMO_ROWS.filter(r => r.site === siteVal);
+  return SITE_DEMO_ROWS.slice();
+}
+
+function initSiteScopeFilters() {
+  if (currentPageId() !== 'site-product') return;
+  const siteSel = document.getElementById('site-scope-site');
+  const prodSel = document.getElementById('site-scope-prod');
+  if (!siteSel || !prodSel) return;
+  const apply = () => {
+    const siteVal = siteSel.value;
+    const prodVal = prodSel.value;
+    const rows = visibleSiteDemo(siteVal);
+    const factor = periodFactor(readPeriodValue());
+    const pick = (row) => {
+      if (prodVal === 'WET') return row.wet;
+      if (prodVal === 'ECP') return row.ecp;
+      if (prodVal === 'Track') return row.track;
+      return row.wet + row.ecp + row.track;
+    };
+    const lxChart = document.getElementById('lx-site-chart');
+    if (lxChart) {
+      const payload = JSON.stringify(rows.map(r => ({ l: r.site, v: r.n })));
+      lxChart.dataset.periodBaseBars = payload;
+    }
+    const cover = document.getElementById('kpi-site-cover');
+    if (cover) cover.dataset.periodBase = String(rows.length);
+    const total = document.getElementById('kpi-site-total');
+    if (total) {
+      const sum = (siteVal === 'all' && prodVal === 'all')
+        ? 186
+        : rows.reduce((a, r) => a + r.n, 0);
+      total.dataset.periodBase = String(sum);
+    }
+    applyPeriodSlice(readPeriodValue());
+    const jitaiBody = document.getElementById('jitai-site-body');
+    if (jitaiBody) {
+      jitaiBody.innerHTML = rows.map(r => {
+        const wet = scaleDemoNumber(r.wet, factor, false);
+        const ecp = scaleDemoNumber(r.ecp, factor, false);
+        const track = scaleDemoNumber(r.track, factor, false);
+        const sum = prodVal === 'all' ? wet + ecp + track : pick({ ...r, wet, ecp, track });
+        return `<tr data-site="${r.site}" data-tier="${r.tier}"><td>${r.site}</td><td>${prodVal === 'all' || prodVal === 'WET' ? wet : '—'}</td><td>${prodVal === 'all' || prodVal === 'ECP' ? ecp : '—'}</td><td>${prodVal === 'all' || prodVal === 'Track' ? track : '—'}</td><td>${sum}</td><td>${r.progress}</td></tr>`;
+      }).join('');
+    }
+    const hint = document.getElementById('site-scope-hint');
+    if (hint) {
+      const siteTxt = siteVal === 'all' ? '全部 Site（演示全集）' : siteVal === 'top10' ? 'Top 10' : siteVal;
+      const prodTxt = prodVal === 'all' ? '全部产品类型' : prodVal;
+      hint.textContent = `当前范围：${siteTxt} · ${prodTxt} · ${rows.length} 个 Site`;
+    }
+    document.querySelectorAll('[data-site-row]').forEach(row => {
+      const okSite = siteVal === 'all' || (siteVal === 'top10' && row.dataset.tier !== '2') || row.dataset.site === siteVal;
+      row.classList.toggle('is-hidden', !okSite);
+      const detail = row.nextElementSibling;
+      if (detail?.classList.contains('detail-row')) detail.classList.toggle('is-hidden', !okSite);
+    });
+  };
+  siteSel.addEventListener('change', apply);
+  prodSel.addEventListener('change', apply);
+  document.querySelector('#site-scope-bar .btn-apply')?.addEventListener('click', event => {
+    event.preventDefault();
+    apply();
+  });
+  apply();
+}
+
+function initShipPlan() {
+  const form = document.getElementById('ship-plan-form');
+  const body = document.getElementById('ship-plan-body');
+  const submit = document.getElementById('ship-plan-submit');
+  if (!form || !body || !submit) return;
+  submit.addEventListener('click', () => {
+    const site = document.getElementById('ship-site')?.value || 'TSMC';
+    const month = document.getElementById('ship-month')?.value || '2026-10';
+    const qty = document.getElementById('ship-qty')?.value || '1';
+    const [y, m] = month.split('-').map(Number);
+    const asmMonth = m === 1 ? `${y - 1}-12` : `${y}-${String(m - 1).padStart(2, '0')}`;
+    const note = document.getElementById('ship-note')?.value || '演示填报';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${escapeHtml(site)}</td><td>${escapeHtml(month)}</td><td>${escapeHtml(qty)}</td><td>${escapeHtml(asmMonth)}</td><td>临港装配提前 1 个月</td><td>${escapeHtml(note)}</td><td><span class="tag tag-open">演示</span></td>`;
+    body.prepend(tr);
+    showToast('已写入演示出机计划（未对接生产计划）');
+  });
 }

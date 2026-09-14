@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wet-RD 新工艺研发部 - 盛美半导体研发运营看板</title>
-<link rel="stylesheet" href="assets/style.css?v=67">
-<link rel="stylesheet" href="assets/req-spec.css?v=67">
+<link rel="stylesheet" href="assets/style.css?v=68">
+<link rel="stylesheet" href="assets/req-spec.css?v=68">
 </head>
 <body data-page="wet-rd">
 <div class="layout">
@@ -13,7 +13,7 @@
     <div class="brand">
     <div class="brand-logo">ACM</div>
     <h1>研发运营看板</h1>
-    <p>盛美半导体 · 演示原型 v4.4</p>
+    <p>盛美半导体 · 演示原型 v4.5</p>
   </div>
   <nav class="nav">
     <div class="nav-section">业务模块</div>
@@ -174,7 +174,7 @@
     <div class="kpi-card accent-blue"><div class="kpi-label">总申请数</div><div class="kpi-value">67</div></div>
     <div class="kpi-card accent-amber"><div class="kpi-label">进行中</div><div class="kpi-value">18</div></div>
     <div class="kpi-card accent-green"><div class="kpi-label">已关闭</div><div class="kpi-value">42</div></div>
-    <div class="kpi-card accent-purple"><div class="kpi-label">完成率</div><div class="kpi-value">62.7%</div><div class="kpi-sub">已关闭 / 总申请</div></div>
+    <div class="kpi-card accent-purple"><div class="kpi-label">完成率</div><div class="kpi-value">62.7%</div><div class="kpi-sub">已关闭 / 总申请 · 演示按申请月归属</div></div>
     <div class="kpi-card"><div class="kpi-label">规划中</div><div class="kpi-value">7</div><div class="kpi-sub">待启动需求</div></div>
     <div class="kpi-card"><div class="kpi-label">平均研发周期</div><div class="kpi-value">38天</div></div>
   </div>
@@ -201,33 +201,81 @@
     </div>
     <div data-rd-pane="group">
       <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"IC1 组 · 62%","v":13},{"l":"IC2 组 · 60%","v":10},{"l":"IC3 组 · 70%","v":10},{"l":"IC4 组 · 71%","v":7}]'></div></div>
+      <div class="panel-body flush" style="border-top:1px solid var(--border-light)">
+        <table>
+          <tr><th>产品组 / 负责人</th><th>数量</th><th>进行中</th><th>已关闭</th><th>完成率</th><th>平均周期</th><th>明细</th></tr>
+          <tr class="expand-row"><td><span class="exp-caret">▶</span>IC1 组 (张**)</td><td data-period-num>13</td><td data-period-num>5</td><td data-period-num>8</td><td>61.5%</td><td>42天</td><td><a class="table-link" data-action="drill" data-title="IC1 组 · 研发需求明细" data-sub="按产品组 · 演示数据" data-cols="需求号,需求类型,负责人,状态,周期,账套">查看</a></td></tr>
+          <tr class="detail-row" style="display:none"><td colspan="7"><div class="detail-inner"><div class="detail-grid"><div class="detail-kv"><div class="k">新工艺开发</div><div class="v">6 项</div></div><div class="detail-kv"><div class="k">工艺优化</div><div class="v">4 项</div></div><div class="detail-kv"><div class="k">软件验证</div><div class="v">3 项</div></div></div></div></td></tr>
+          <tr class="expand-row"><td><span class="exp-caret">▶</span>IC2 组 (李**)</td><td data-period-num>10</td><td data-period-num>4</td><td data-period-num>6</td><td>60.0%</td><td>36天</td><td><a class="table-link" data-action="drill" data-title="IC2 组 · 研发需求明细" data-sub="按产品组 · 演示数据" data-cols="需求号,需求类型,负责人,状态,周期,账套">查看</a></td></tr>
+          <tr class="detail-row" style="display:none"><td colspan="7"><div class="detail-inner"><div class="detail-grid"><div class="detail-kv"><div class="k">新功能开发</div><div class="v">5 项</div></div><div class="detail-kv"><div class="k">工艺优化</div><div class="v">3 项</div></div><div class="detail-kv"><div class="k">新工艺开发</div><div class="v">2 项</div></div></div></div></td></tr>
+          <tr><td>IC3 组 (王**)</td><td data-period-num>10</td><td data-period-num>3</td><td data-period-num>7</td><td>70.0%</td><td>31天</td><td><a class="table-link" data-action="drill" data-title="IC3 组 · 研发需求明细" data-cols="需求号,需求类型,负责人,状态,周期,账套">查看</a></td></tr>
+          <tr><td>IC4 组 (刘**)</td><td data-period-num>7</td><td data-period-num>2</td><td data-period-num>5</td><td>71.4%</td><td>26天</td><td><a class="table-link" data-action="drill" data-title="IC4 组 · 研发需求明细" data-cols="需求号,需求类型,负责人,状态,周期,账套">查看</a></td></tr>
+        </table>
+      </div>
     </div>
     <div data-rd-pane="owner" style="display:none">
       <div class="panel-body"><div class="chart-wrap" data-hbars='[{"l":"张** · 62%","v":13,"c":"#2563eb"},{"l":"李** · 60%","v":10,"c":"#4a7ab0"},{"l":"王** · 70%","v":10,"c":"#5b7c99"},{"l":"刘** · 71%","v":7,"c":"#7c3aed"}]'></div></div>
+      <div class="panel-body flush" style="border-top:1px solid var(--border-light)">
+        <table>
+          <tr><th>负责人</th><th>数量</th><th>进行中</th><th>已关闭</th><th>完成率</th><th>平均周期</th><th>明细</th></tr>
+          <tr><td>张**</td><td data-period-num>13</td><td data-period-num>5</td><td data-period-num>8</td><td>61.5%</td><td>42天</td><td><a class="table-link" data-action="drill" data-title="张** · 研发需求明细" data-sub="按负责人 · 演示数据" data-cols="需求号,需求类型,产品组,状态,周期,账套">查看</a></td></tr>
+          <tr><td>李**</td><td data-period-num>10</td><td data-period-num>4</td><td data-period-num>6</td><td>60.0%</td><td>36天</td><td><a class="table-link" data-action="drill" data-title="李** · 研发需求明细" data-sub="按负责人 · 演示数据" data-cols="需求号,需求类型,产品组,状态,周期,账套">查看</a></td></tr>
+          <tr><td>王**</td><td data-period-num>10</td><td data-period-num>3</td><td data-period-num>7</td><td>70.0%</td><td>31天</td><td><a class="table-link" data-action="drill" data-title="王** · 研发需求明细" data-cols="需求号,需求类型,产品组,状态,周期,账套">查看</a></td></tr>
+          <tr><td>刘**</td><td data-period-num>7</td><td data-period-num>2</td><td data-period-num>5</td><td>71.4%</td><td>26天</td><td><a class="table-link" data-action="drill" data-title="刘** · 研发需求明细" data-cols="需求号,需求类型,产品组,状态,周期,账套">查看</a></td></tr>
+        </table>
+      </div>
     </div>
     <div data-rd-pane="type" style="display:none">
       <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"新工艺开发 · 61%","v":18},{"l":"工艺优化 · 64%","v":14},{"l":"新功能开发 · 67%","v":12},{"l":"软件验证 · 75%","v":8}]'></div></div>
+      <div class="panel-body flush" style="border-top:1px solid var(--border-light)">
+        <table>
+          <tr><th>需求类型</th><th>数量</th><th>进行中</th><th>已关闭</th><th>完成率</th><th>平均周期</th><th>明细</th></tr>
+          <tr><td>新工艺开发</td><td data-period-num>18</td><td data-period-num>7</td><td data-period-num>11</td><td>61.1%</td><td>40天</td><td><a class="table-link" data-action="drill" data-title="新工艺开发 · 明细" data-sub="按需求类型 · 演示数据" data-cols="需求号,产品组,负责人,状态,周期,账套">查看</a></td></tr>
+          <tr><td>工艺优化</td><td data-period-num>14</td><td data-period-num>5</td><td data-period-num>9</td><td>64.3%</td><td>36天</td><td><a class="table-link" data-action="drill" data-title="工艺优化 · 明细" data-cols="需求号,产品组,负责人,状态,周期,账套">查看</a></td></tr>
+          <tr><td>新功能开发</td><td data-period-num>12</td><td data-period-num>4</td><td data-period-num>8</td><td>66.7%</td><td>32天</td><td><a class="table-link" data-action="drill" data-title="新功能开发 · 明细" data-cols="需求号,产品组,负责人,状态,周期,账套">查看</a></td></tr>
+          <tr><td>软件验证</td><td data-period-num>8</td><td data-period-num>2</td><td data-period-num>6</td><td>75.0%</td><td>22天</td><td><a class="table-link" data-action="drill" data-title="软件验证 · 明细" data-cols="需求号,产品组,负责人,状态,周期,账套">查看</a></td></tr>
+        </table>
+      </div>
     </div>
     <div data-rd-pane="cat" style="display:none">
       <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"湿法产品 · 64%","v":28},{"l":"湿法化学 · 61%","v":18},{"l":"ECP · 71%","v":14},{"l":"Track · 57%","v":7}]'></div></div>
+      <div class="panel-body flush" style="border-top:1px solid var(--border-light)">
+        <table>
+          <tr><th>产品大类</th><th>数量</th><th>进行中</th><th>已关闭</th><th>完成率</th><th>平均周期</th><th>明细</th></tr>
+          <tr><td>湿法产品</td><td data-period-num>28</td><td data-period-num>10</td><td data-period-num>18</td><td>64.3%</td><td>38天</td><td><a class="table-link" data-action="drill" data-title="湿法产品 · 明细" data-sub="按产品大类 · 演示数据" data-cols="需求号,需求类型,负责人,状态,周期,账套">查看</a></td></tr>
+          <tr><td>湿法化学</td><td data-period-num>18</td><td data-period-num>7</td><td data-period-num>11</td><td>61.1%</td><td>36天</td><td><a class="table-link" data-action="drill" data-title="湿法化学 · 明细" data-cols="需求号,需求类型,负责人,状态,周期,账套">查看</a></td></tr>
+          <tr><td>ECP</td><td data-period-num>14</td><td data-period-num>4</td><td data-period-num>10</td><td>71.4%</td><td>29天</td><td><a class="table-link" data-action="drill" data-title="ECP · 明细" data-cols="需求号,需求类型,负责人,状态,周期,账套">查看</a></td></tr>
+          <tr><td>Track</td><td data-period-num>7</td><td data-period-num>3</td><td data-period-num>4</td><td>57.1%</td><td>33天</td><td><a class="table-link" data-action="drill" data-title="Track · 明细" data-cols="需求号,需求类型,负责人,状态,周期,账套">查看</a></td></tr>
+        </table>
+      </div>
     </div>
     <div data-rd-pane="subcat" style="display:none">
       <div class="panel-body"><div class="chart-wrap" data-hbars='[{"l":"CMP · 69%","v":16,"c":"#2563eb"},{"l":"Clean · 58%","v":12,"c":"#4a7ab0"},{"l":"ECP-Cu · 67%","v":9,"c":"#5b7c99"},{"l":"Bevel · 71%","v":7,"c":"#7c3aed"},{"l":"其他 · 60%","v":5,"c":"#d97706"}]'></div></div>
+      <div class="panel-body flush" style="border-top:1px solid var(--border-light)">
+        <table>
+          <tr><th>产品小类</th><th>数量</th><th>进行中</th><th>已关闭</th><th>完成率</th><th>平均周期</th><th>明细</th></tr>
+          <tr><td>CMP</td><td data-period-num>16</td><td data-period-num>5</td><td data-period-num>11</td><td>68.8%</td><td>34天</td><td><a class="table-link" data-action="drill" data-title="CMP · 明细" data-sub="按产品小类 · 演示数据" data-cols="需求号,需求类型,负责人,状态,周期,账套">查看</a></td></tr>
+          <tr><td>Clean</td><td data-period-num>12</td><td data-period-num>5</td><td data-period-num>7</td><td>58.3%</td><td>37天</td><td><a class="table-link" data-action="drill" data-title="Clean · 明细" data-cols="需求号,需求类型,负责人,状态,周期,账套">查看</a></td></tr>
+          <tr><td>ECP-Cu</td><td data-period-num>9</td><td data-period-num>3</td><td data-period-num>6</td><td>66.7%</td><td>30天</td><td><a class="table-link" data-action="drill" data-title="ECP-Cu · 明细" data-cols="需求号,需求类型,负责人,状态,周期,账套">查看</a></td></tr>
+          <tr><td>Bevel</td><td data-period-num>7</td><td data-period-num>2</td><td data-period-num>5</td><td>71.4%</td><td>28天</td><td><a class="table-link" data-action="drill" data-title="Bevel · 明细" data-cols="需求号,需求类型,负责人,状态,周期,账套">查看</a></td></tr>
+          <tr><td>其他</td><td data-period-num>5</td><td data-period-num>2</td><td data-period-num>3</td><td>60.0%</td><td>26天</td><td><a class="table-link" data-action="drill" data-title="其他小类 · 明细" data-cols="需求号,需求类型,负责人,状态,周期,账套">查看</a></td></tr>
+        </table>
+      </div>
     </div>
     <div data-rd-pane="dept" style="display:none">
       <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"湿法-CMP · 67%","v":15},{"l":"湿法-Clean · 58%","v":12},{"l":"湿法-ECP · 70%","v":10},{"l":"应用工程 · 67%","v":9},{"l":"工艺验证 · 63%","v":8}]'></div></div>
+      <div class="panel-body flush" style="border-top:1px solid var(--border-light)">
+        <table>
+          <tr><th>申请部门</th><th>数量</th><th>进行中</th><th>已关闭</th><th>完成率</th><th>平均周期</th><th>明细</th></tr>
+          <tr><td>湿法-CMP</td><td data-period-num>15</td><td data-period-num>5</td><td data-period-num>10</td><td>66.7%</td><td>35天</td><td><a class="table-link" data-action="drill" data-title="湿法-CMP · 明细" data-sub="按申请部门 · 演示数据" data-cols="需求号,需求类型,负责人,状态,周期,账套">查看</a></td></tr>
+          <tr><td>湿法-Clean</td><td data-period-num>12</td><td data-period-num>5</td><td data-period-num>7</td><td>58.3%</td><td>37天</td><td><a class="table-link" data-action="drill" data-title="湿法-Clean · 明细" data-cols="需求号,需求类型,负责人,状态,周期,账套">查看</a></td></tr>
+          <tr><td>湿法-ECP</td><td data-period-num>10</td><td data-period-num>3</td><td data-period-num>7</td><td>70.0%</td><td>31天</td><td><a class="table-link" data-action="drill" data-title="湿法-ECP · 明细" data-cols="需求号,需求类型,负责人,状态,周期,账套">查看</a></td></tr>
+          <tr><td>应用工程</td><td data-period-num>9</td><td data-period-num>3</td><td data-period-num>6</td><td>66.7%</td><td>29天</td><td><a class="table-link" data-action="drill" data-title="应用工程 · 明细" data-cols="需求号,需求类型,负责人,状态,周期,账套">查看</a></td></tr>
+          <tr><td>工艺验证</td><td data-period-num>8</td><td data-period-num>3</td><td data-period-num>5</td><td>62.5%</td><td>33天</td><td><a class="table-link" data-action="drill" data-title="工艺验证 · 明细" data-cols="需求号,需求类型,负责人,状态,周期,账套">查看</a></td></tr>
+        </table>
+      </div>
     </div>
-    <div class="panel-body flush" style="border-top:1px solid var(--border-light)">
-      <table>
-        <tr><th>产品组 / 负责人</th><th>数量</th><th>进行中</th><th>已关闭</th><th>完成率</th><th>平均周期</th><th>明细</th></tr>
-        <tr class="expand-row"><td><span class="exp-caret">▶</span>IC1 组 (张**)</td><td>13</td><td>5</td><td>8</td><td>61.5%</td><td>42天</td><td><a class="table-link" data-action="drill" data-title="IC1 组 · 研发需求明细" data-sub="按产品组 / 按负责人 · 演示数据" data-cols="需求号,需求类型,负责人,状态,周期,账套">查看</a></td></tr>
-        <tr class="detail-row" style="display:none"><td colspan="7"><div class="detail-inner"><div class="detail-grid"><div class="detail-kv"><div class="k">新工艺开发</div><div class="v">6 项</div></div><div class="detail-kv"><div class="k">工艺优化</div><div class="v">4 项</div></div><div class="detail-kv"><div class="k">软件验证</div><div class="v">3 项</div></div></div></div></td></tr>
-        <tr class="expand-row"><td><span class="exp-caret">▶</span>IC2 组 (李**)</td><td>10</td><td>4</td><td>6</td><td>60.0%</td><td>36天</td><td><a class="table-link" data-action="drill" data-title="IC2 组 · 研发需求明细" data-sub="按产品组 / 按负责人 · 演示数据" data-cols="需求号,需求类型,负责人,状态,周期,账套">查看</a></td></tr>
-        <tr class="detail-row" style="display:none"><td colspan="7"><div class="detail-inner"><div class="detail-grid"><div class="detail-kv"><div class="k">新功能开发</div><div class="v">5 项</div></div><div class="detail-kv"><div class="k">工艺优化</div><div class="v">3 项</div></div><div class="detail-kv"><div class="k">新工艺开发</div><div class="v">2 项</div></div></div></div></td></tr>
-        <tr><td>IC3 组 (王**)</td><td>10</td><td>3</td><td>7</td><td>70.0%</td><td>31天</td><td><a class="table-link" data-action="drill" data-title="IC3 组 · 研发需求明细" data-cols="需求号,需求类型,负责人,状态,周期,账套">查看</a></td></tr>
-        <tr><td>IC4 组 (刘**)</td><td>7</td><td>2</td><td>5</td><td>71.4%</td><td>26天</td><td><a class="table-link" data-action="drill" data-title="IC4 组 · 研发需求明细" data-cols="需求号,需求类型,负责人,状态,周期,账套">查看</a></td></tr>
-      </table>
-    </div>
+    <p class="chart-footnote" style="text-align:left;margin:10px 16px 14px">完成率演示按申请月归属，不按结案月。表格随上方分段视图切换。</p>
   </div>
   <div class="panel" style="margin-top:22px">
     <div class="panel-head"><div class="panel-head-left"><h3>部门/项目分析</h3></div></div>
@@ -310,8 +358,8 @@
   </div>
 </main>
 </div>
-<script src="assets/charts.js?v=67"></script>
-<script src="assets/app.js?v=67"></script>
+<script src="assets/charts.js?v=68"></script>
+<script src="assets/app.js?v=68"></script>
 <script>setActiveNav('wet-rd');</script>
 
 <script

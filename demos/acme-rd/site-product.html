@@ -4,16 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Site 与产品管理 - 盛美半导体研发运营看板</title>
-<link rel="stylesheet" href="assets/style.css?v=67">
-<link rel="stylesheet" href="assets/req-spec.css?v=67">
+<link rel="stylesheet" href="assets/style.css?v=68">
+<link rel="stylesheet" href="assets/req-spec.css?v=68">
 </head>
-<body>
+<body data-page="site-product">
 <div class="layout">
 <aside class="sidebar">
     <div class="brand">
     <div class="brand-logo">ACM</div>
     <h1>研发运营看板</h1>
-    <p>盛美半导体 · 演示原型 v4.4</p>
+    <p>盛美半导体 · 演示原型 v4.5</p>
   </div>
   <nav class="nav">
     <div class="nav-section">业务模块</div>
@@ -79,12 +79,39 @@
     <div class="req-item"><div class="req-idx">7</div><div class="req-body2"><div class="req-item-t">更新动态</div><div class="req-item-d">统计各产品 Case 更新数量、标准化文件更新、Case 流程内结案报告上传数（一流程有文件算 1 次），支持周更新与累计。</div></div></div>
   </div>
 </div>
-<div class="filter-bar">
-  <div class="filter-group"><label>Site</label><select><option>Top 10</option><option>全部(100+)</option><option>TSMC</option><option>SMIC</option><option>Intel</option></select></div>
-  <div class="filter-group"><label>产品类型</label><select><option>全部</option><option>WET</option><option>ECP</option><option>Track</option></select></div>
+<div class="filter-bar" id="site-scope-bar" data-filter-live="true">
+  <div class="filter-group"><label>Site</label>
+    <select id="site-scope-site">
+      <option value="all" selected>全部</option>
+      <option value="top10">Top 10</option>
+      <option value="TSMC">TSMC</option>
+      <option value="SMIC">SMIC</option>
+      <option value="Intel">Intel</option>
+      <option value="Samsung">Samsung</option>
+      <option value="Micron">Micron</option>
+      <option value="UMC">UMC</option>
+      <option value="YMTC">YMTC</option>
+      <option value="CXMT">CXMT</option>
+      <option value="Infineon">Infineon</option>
+      <option value="GlobalFoundries">GlobalFoundries</option>
+      <option value="Nanya">Nanya</option>
+      <option value="ST">ST</option>
+      <option value="HHGrace">HHGrace</option>
+      <option value="Powerchip">Powerchip</option>
+    </select>
+  </div>
+  <div class="filter-group"><label>产品类型</label>
+    <select id="site-scope-prod">
+      <option value="all" selected>全部</option>
+      <option value="WET">WET</option>
+      <option value="ECP">ECP</option>
+      <option value="Track">Track</option>
+    </select>
+  </div>
   <div class="filter-group"><label>机台类型</label><select><option>全部</option><option>成熟机台</option><option>量产机台</option><option>研发机台</option></select></div>
   <button class="btn-apply" type="button">应用</button>
 </div>
+<p class="chart-footnote" id="site-scope-hint" style="text-align:left;margin:-4px 0 14px">当前范围：全部 Site（演示全集） · 全部产品类型 · 14 个 Site</p>
 
 <div class="tab-shell">
 <div class="tabs">
@@ -96,6 +123,7 @@
   <button class="tab" data-target="tab-doc" data-group="site" data-hash="doc">标准化/产品文档</button>
   <button class="tab" data-target="tab-fanout" data-group="site" data-hash="fanout">Fanout 管理</button>
   <button class="tab" data-target="tab-dynamic" data-group="site" data-hash="dynamic">更新动态</button>
+  <button class="tab" data-target="tab-ship" data-group="site" data-hash="ship">出机计划</button>
 </div>
 <div id="tab-lixiang" class="tab-content active" data-group="site">
   <div class="sub-tabs">
@@ -104,14 +132,14 @@
   </div>
   <div class="sub-panel" data-sub-group="lx" data-sub-target="lx-site">
   <div class="kpi-grid fixed3">
-    <div class="kpi-card accent-blue clickable" data-href="site-detail.html"><div class="kpi-label">Site 立项总数</div><div class="kpi-value">186</div><div class="kpi-sub">OA 项目立项 · 客户名称</div></div>
-    <div class="kpi-card"><div class="kpi-label">覆盖 Site 数</div><div class="kpi-value">102</div><div class="kpi-sub">Top N + 筛选</div></div>
+    <div class="kpi-card accent-blue clickable" data-href="site-detail.html"><div class="kpi-label">Site 立项总数</div><div class="kpi-value" id="kpi-site-total">186</div><div class="kpi-sub">OA 项目立项 · 客户名称</div></div>
+    <div class="kpi-card"><div class="kpi-label">覆盖 Site 数</div><div class="kpi-value" id="kpi-site-cover">14</div><div class="kpi-sub">演示全集；Top 10 为子集</div></div>
     <div class="kpi-card accent-green"><div class="kpi-label">本月新增立项</div><div class="kpi-value">12</div></div>
   </div>
   <div class="grid-2">
     <div class="panel">
       <div class="panel-head"><div class="panel-head-left"><h3>Top Site 立项数量</h3></div><a class="link" href="site-detail.html">二级明细 →</a></div>
-      <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"TSMC","v":38},{"l":"SMIC","v":31},{"l":"Intel","v":26},{"l":"Samsung","v":21},{"l":"Micron","v":18},{"l":"其他","v":52}]'></div></div>
+      <div class="panel-body"><div class="chart-wrap" id="lx-site-chart" data-bars='[{"l":"TSMC","v":38},{"l":"SMIC","v":31},{"l":"Intel","v":26},{"l":"Samsung","v":21},{"l":"Micron","v":18},{"l":"UMC","v":14},{"l":"YMTC","v":12},{"l":"CXMT","v":10},{"l":"Infineon","v":9},{"l":"GF","v":8},{"l":"Nanya","v":7},{"l":"ST","v":6},{"l":"HHGrace","v":5},{"l":"Powerchip","v":4}]'></div></div>
     </div>
     <div class="panel">
       <div class="panel-head"><div class="panel-head-left"><h3>立项趋势 (近 6 月)</h3></div></div>
@@ -141,11 +169,14 @@
 
 <div id="tab-jitai" class="tab-content" data-group="site">
   <div class="kpi-grid">
-    <div class="kpi-card accent-blue"><div class="kpi-label">在管机台总数</div><div class="kpi-value">524</div><div class="kpi-sub">CRM</div></div>
+    <div class="kpi-card accent-blue"><div class="kpi-label">在管机台总数</div><div class="kpi-value">524</div><div class="kpi-sub">CRM 机台列表 · 演示</div></div>
     <div class="kpi-card"><div class="kpi-label">T2 阶段</div><div class="kpi-value">86</div></div>
     <div class="kpi-card"><div class="kpi-label">T3 阶段</div><div class="kpi-value">64</div></div>
     <div class="kpi-card"><div class="kpi-label">RLS 已发布</div><div class="kpi-value">218</div></div>
+    <div class="kpi-card accent-green"><div class="kpi-label">腔体开启率</div><div class="kpi-value">91%</div><div class="kpi-sub">演示 · 按设备序列号对账</div></div>
+    <div class="kpi-card accent-purple"><div class="kpi-label">uptime 达成率</div><div class="kpi-value">87%</div><div class="kpi-sub">演示 · 报表中心 CER/uptime</div></div>
   </div>
+  <p class="chart-footnote" style="text-align:left;margin:-4px 0 16px">腔体开启率 / uptime 达成率：来源 CRM 机台列表 + 报表中心（CER/uptime），按设备序列号关联。演示口径，未接生产库；此处不下钻空腔体表。</p>
   <div class="panel">
     <div class="panel-head"><div class="panel-head-left"><h3>机台状态分布 (Pre Setup → RLS)</h3></div></div>
     <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"Pre","v":30,"c":"#94a3b8"},{"l":"T0","v":45,"c":"#64748b"},{"l":"T1","v":61,"c":"#2563eb"},{"l":"T2","v":86,"c":"#4a7ab0"},{"l":"T3","v":64,"c":"#5b7c99"},{"l":"RLS","v":218,"c":"#7c3aed"}]'></div></div>
@@ -155,10 +186,22 @@
     <div class="panel-body flush">
       <table>
         <tr><th>Site</th><th>WET</th><th>ECP</th><th>Track</th><th>合计</th><th>装机进度</th></tr>
-        <tr><td>TSMC</td><td>86</td><td>42</td><td>28</td><td>156</td><td>T2/T3 占 38%</td></tr>
-        <tr><td>SMIC</td><td>64</td><td>38</td><td>22</td><td>124</td><td>T2/T3 占 42%</td></tr>
-        <tr><td>Intel</td><td>52</td><td>34</td><td>18</td><td>104</td><td>T2/T3 占 35%</td></tr>
-        <tr><td>Samsung</td><td>48</td><td>28</td><td>16</td><td>92</td><td>T2/T3 占 40%</td></tr>
+        <tbody id="jitai-site-body">
+        <tr data-site="TSMC" data-tier="1"><td>TSMC</td><td>86</td><td>42</td><td>28</td><td>156</td><td>T2/T3 占 38%</td></tr>
+        <tr data-site="SMIC" data-tier="1"><td>SMIC</td><td>64</td><td>38</td><td>22</td><td>124</td><td>T2/T3 占 42%</td></tr>
+        <tr data-site="Intel" data-tier="1"><td>Intel</td><td>52</td><td>34</td><td>18</td><td>104</td><td>T2/T3 占 35%</td></tr>
+        <tr data-site="Samsung" data-tier="1"><td>Samsung</td><td>48</td><td>28</td><td>16</td><td>92</td><td>T2/T3 占 40%</td></tr>
+        <tr data-site="Micron" data-tier="1"><td>Micron</td><td>36</td><td>22</td><td>12</td><td>70</td><td>T2/T3 占 33%</td></tr>
+        <tr data-site="UMC" data-tier="1"><td>UMC</td><td>28</td><td>16</td><td>10</td><td>54</td><td>T2/T3 占 31%</td></tr>
+        <tr data-site="YMTC" data-tier="1"><td>YMTC</td><td>24</td><td>14</td><td>8</td><td>46</td><td>T2/T3 占 29%</td></tr>
+        <tr data-site="CXMT" data-tier="1"><td>CXMT</td><td>20</td><td>12</td><td>7</td><td>39</td><td>T2/T3 占 28%</td></tr>
+        <tr data-site="Infineon" data-tier="1"><td>Infineon</td><td>16</td><td>10</td><td>6</td><td>32</td><td>T2/T3 占 27%</td></tr>
+        <tr data-site="GlobalFoundries" data-tier="1"><td>GlobalFoundries</td><td>14</td><td>9</td><td>5</td><td>28</td><td>T2/T3 占 26%</td></tr>
+        <tr data-site="Nanya" data-tier="2"><td>Nanya</td><td>12</td><td>7</td><td>4</td><td>23</td><td>T2/T3 占 24%</td></tr>
+        <tr data-site="ST" data-tier="2"><td>ST</td><td>10</td><td>6</td><td>3</td><td>19</td><td>T2/T3 占 22%</td></tr>
+        <tr data-site="HHGrace" data-tier="2"><td>HHGrace</td><td>9</td><td>5</td><td>3</td><td>17</td><td>T2/T3 占 21%</td></tr>
+        <tr data-site="Powerchip" data-tier="2"><td>Powerchip</td><td>7</td><td>4</td><td>2</td><td>13</td><td>T2/T3 占 20%</td></tr>
+        </tbody>
       </table>
     </div>
   </div>
@@ -167,38 +210,62 @@
 
 <div id="tab-layer" class="tab-content" data-group="site">
   <div class="kpi-grid">
-    <div class="kpi-card accent-blue"><div class="kpi-label">对标 POR 机台</div><div class="kpi-value">26</div><div class="kpi-sub">By Site 汇总</div></div>
-    <div class="kpi-card accent-green"><div class="kpi-label">RLS 完成</div><div class="kpi-value">21</div></div>
-    <div class="kpi-card accent-amber"><div class="kpi-label">待 Release Step</div><div class="kpi-value">6</div></div>
+    <div class="kpi-card accent-blue"><div class="kpi-label">对标 POR 机台</div><div class="kpi-value">31</div><div class="kpi-sub">By Site 汇总 · 演示</div></div>
+    <div class="kpi-card"><div class="kpi-label">ACM 机台数</div><div class="kpi-value">20</div><div class="kpi-sub">演示字段 · 未接生产 CRM</div></div>
+    <div class="kpi-card accent-green"><div class="kpi-label">RLS 完成</div><div class="kpi-value">25</div></div>
+    <div class="kpi-card accent-amber"><div class="kpi-label">待 Release Step</div><div class="kpi-value">7</div></div>
     <div class="kpi-card"><div class="kpi-label">整体 RLS 完成率</div><div class="kpi-value">81%</div></div>
   </div>
   <div class="panel">
-    <div class="panel-head"><div class="panel-head-left"><h3>By Site · Layer RLS 对标 POR</h3></div><span class="chip">点击行展开机台 Step 明细</span></div>
+    <div class="panel-head"><div class="panel-head-left"><h3>By Site · Layer RLS 对标 POR</h3></div><span class="chip">演示 vendor · 未接生产 CRM</span></div>
     <div class="panel-body flush">
       <table>
-        <tr><th>Site</th><th>POR 机台数</th><th>RLS 完成</th><th>RLS 完成率</th><th>待 Release Step</th><th>机台 Step/Application 明细</th></tr>
-        <tr class="expand-row"><td><span class="exp-caret">▶</span>TSMC-N28</td><td>12</td><td>10</td><td>83%</td><td>2</td><td><a class="table-link" data-action="drill" data-title="TSMC-N28 · 机台 Step RLS 明细" data-sub="每台机台各 Step(Application) 的 RLS 状况（CRM）" data-cols="机台号,Step(Application),POR对标,RLS状态,完成日期,负责人">查看 Step →</a></td></tr>
-        <tr class="detail-row" style="display:none"><td colspan="6"><div class="detail-inner"><div class="detail-grid">
+        <tr><th>Site</th><th>POR 机台数</th><th>ACM 机台数</th><th>POR vendor</th><th>RLS 完成</th><th>RLS 完成率</th><th>待 Release Step</th><th>机台 Step/Application 明细</th></tr>
+        <tr class="expand-row" data-site-row data-site="TSMC" data-tier="1"><td><span class="exp-caret">▶</span>TSMC-N28</td><td>12</td><td>9</td><td>ACM / TEL · 演示</td><td>10</td><td>83%</td><td>2</td><td><a class="table-link" data-action="drill" data-title="TSMC-N28 · 机台 Step RLS 明细" data-sub="演示 Step KV，未接生产 CRM" data-cols="机台号,Step(Application),POR对标,RLS状态,验证进度,LOOP,STAGE,Recipe,POR品牌">查看 Step →</a></td></tr>
+        <tr class="detail-row" style="display:none"><td colspan="8"><div class="detail-inner"><div class="detail-grid">
           <div class="detail-kv"><div class="k">机台 EQP-2201 · CMP</div><div class="v" style="color:var(--success)">RLS 已发布</div></div>
           <div class="detail-kv"><div class="k">机台 EQP-2202 · Clean</div><div class="v" style="color:var(--success)">RLS 已发布</div></div>
           <div class="detail-kv"><div class="k">机台 EQP-2208 · Etch</div><div class="v" style="color:var(--warning)">待 Release (Step 06)</div></div>
           <div class="detail-kv"><div class="k">机台 EQP-2210 · Plating</div><div class="v" style="color:var(--warning)">待 Release (Step 04)</div></div>
+          <div class="detail-kv"><div class="k">验证进度</div><div class="v">Step 06 / 8 · 演示</div></div>
+          <div class="detail-kv"><div class="k">LOOP</div><div class="v">LOOP-3 · BEOL</div></div>
+          <div class="detail-kv"><div class="k">STAGE</div><div class="v">T3 → RLS</div></div>
+          <div class="detail-kv"><div class="k">Recipe</div><div class="v">CMP-N28-B3 · 演示</div></div>
+          <div class="detail-kv"><div class="k">POR 品牌</div><div class="v">ACM / TEL · 演示</div></div>
         </div></div></td></tr>
-        <tr class="expand-row"><td><span class="exp-caret">▶</span>SMIC-14</td><td>8</td><td>7</td><td>88%</td><td>1</td><td><a class="table-link" data-action="drill" data-title="SMIC-14 · 机台 Step RLS 明细" data-sub="每台机台各 Step(Application) 的 RLS 状况（CRM）" data-cols="机台号,Step(Application),POR对标,RLS状态,完成日期,负责人">查看 Step →</a></td></tr>
-        <tr class="detail-row" style="display:none"><td colspan="6"><div class="detail-inner"><div class="detail-grid">
+        <tr class="expand-row" data-site-row data-site="SMIC" data-tier="1"><td><span class="exp-caret">▶</span>SMIC-14</td><td>8</td><td>5</td><td>DNS / LAM · 演示</td><td>7</td><td>88%</td><td>1</td><td><a class="table-link" data-action="drill" data-title="SMIC-14 · 机台 Step RLS 明细" data-sub="演示 Step KV，未接生产 CRM" data-cols="机台号,Step(Application),POR对标,RLS状态,验证进度,LOOP,STAGE,Recipe,POR品牌">查看 Step →</a></td></tr>
+        <tr class="detail-row" style="display:none"><td colspan="8"><div class="detail-inner"><div class="detail-grid">
           <div class="detail-kv"><div class="k">机台 EQP-1401 · CMP</div><div class="v" style="color:var(--success)">RLS 已发布</div></div>
           <div class="detail-kv"><div class="k">机台 EQP-1407 · Clean</div><div class="v" style="color:var(--warning)">待 Release (Step 03)</div></div>
+          <div class="detail-kv"><div class="k">验证进度</div><div class="v">Step 03 / 6 · 演示</div></div>
+          <div class="detail-kv"><div class="k">LOOP</div><div class="v">LOOP-2 · FEOL</div></div>
+          <div class="detail-kv"><div class="k">STAGE</div><div class="v">T2</div></div>
+          <div class="detail-kv"><div class="k">Recipe</div><div class="v">CLN-14-A1 · 演示</div></div>
+          <div class="detail-kv"><div class="k">POR 品牌</div><div class="v">DNS / LAM · 演示</div></div>
         </div></div></td></tr>
-        <tr class="expand-row"><td><span class="exp-caret">▶</span>Intel-A16</td><td>6</td><td>4</td><td>67%</td><td>3</td><td><a class="table-link" data-action="drill" data-title="Intel-A16 · 机台 Step RLS 明细" data-sub="每台机台各 Step(Application) 的 RLS 状况（CRM）" data-cols="机台号,Step(Application),POR对标,RLS状态,完成日期,负责人">查看 Step →</a></td></tr>
-        <tr class="detail-row" style="display:none"><td colspan="6"><div class="detail-inner"><div class="detail-grid">
+        <tr class="expand-row" data-site-row data-site="Intel" data-tier="1"><td><span class="exp-caret">▶</span>Intel-A16</td><td>6</td><td>2</td><td>ACM未涉及 · 演示</td><td>4</td><td>67%</td><td>3</td><td><a class="table-link" data-action="drill" data-title="Intel-A16 · 机台 Step RLS 明细" data-sub="演示 Step KV，未接生产 CRM" data-cols="机台号,Step(Application),POR对标,RLS状态,验证进度,LOOP,STAGE,Recipe,POR品牌">查看 Step →</a></td></tr>
+        <tr class="detail-row" style="display:none"><td colspan="8"><div class="detail-inner"><div class="detail-grid">
           <div class="detail-kv"><div class="k">机台 EQP-A161 · Etch</div><div class="v" style="color:var(--success)">RLS 已发布</div></div>
           <div class="detail-kv"><div class="k">机台 EQP-A163 · Clean</div><div class="v" style="color:var(--warning)">待 Release (Step 05)</div></div>
           <div class="detail-kv"><div class="k">机台 EQP-A165 · CMP</div><div class="v" style="color:var(--warning)">待 Release (Step 02)</div></div>
+          <div class="detail-kv"><div class="k">验证进度</div><div class="v">Step 02 / 7 · 演示</div></div>
+          <div class="detail-kv"><div class="k">LOOP</div><div class="v">LOOP-1 · MOL</div></div>
+          <div class="detail-kv"><div class="k">STAGE</div><div class="v">T1</div></div>
+          <div class="detail-kv"><div class="k">Recipe</div><div class="v">—</div></div>
+          <div class="detail-kv"><div class="k">POR 品牌</div><div class="v">ACM未涉及 · 演示</div></div>
+        </div></div></td></tr>
+        <tr class="expand-row" data-site-row data-site="Samsung" data-tier="1"><td><span class="exp-caret">▶</span>Samsung-V4</td><td>5</td><td>4</td><td>ACM · 演示</td><td>4</td><td>80%</td><td>1</td><td><a class="table-link" data-action="drill" data-title="Samsung-V4 · 机台 Step RLS 明细" data-sub="演示 Step KV，未接生产 CRM" data-cols="机台号,Step(Application),POR对标,RLS状态,验证进度,LOOP,STAGE,Recipe,POR品牌">查看 Step →</a></td></tr>
+        <tr class="detail-row" style="display:none"><td colspan="8"><div class="detail-inner"><div class="detail-grid">
+          <div class="detail-kv"><div class="k">验证进度</div><div class="v">Step 05 / 6 · 演示</div></div>
+          <div class="detail-kv"><div class="k">LOOP</div><div class="v">LOOP-2</div></div>
+          <div class="detail-kv"><div class="k">STAGE</div><div class="v">T3</div></div>
+          <div class="detail-kv"><div class="k">Recipe</div><div class="v">CMP-V4-C2 · 演示</div></div>
+          <div class="detail-kv"><div class="k">POR 品牌</div><div class="v">ACM · 演示</div></div>
         </div></div></td></tr>
       </table>
     </div>
   </div>
-  <div class="alert-box info">By Site 显示 Layer RLS 状况，对标 POR 机台数量，可下钻每台机台具体 Step 的 RLS 情况（Application / CRM）</div>
+  <div class="alert-box info">By Site 对标 POR 机台数；ACM 机台数与 POR vendor 为演示字段（ACM / TEL / DNS / LAM），未接生产 CRM。Step 下钻含验证进度 / LOOP / STAGE / Recipe / POR 品牌（演示 KV）。</div>
 </div>
 
 <div id="tab-spec" class="tab-content" data-group="site">
@@ -550,12 +617,64 @@
     <div class="panel-body"><div class="chart-wrap" data-group-bars='{"groups":[{"label":"湿法产品","values":[12,86]},{"label":"湿法化学","values":[8,64]},{"label":"ECP","values":[6,52]},{"label":"Track","values":[4,38]}],"series":["本周更新","累计更新"]}'></div></div>
   </div>
 </div>
+
+<div id="tab-ship" class="tab-content" data-group="site">
+  <div class="kpi-grid">
+    <div class="kpi-card accent-blue"><div class="kpi-label">未来半年预计出机</div><div class="kpi-value">46</div><div class="kpi-sub">2026-10 ~ 2027-03 · 演示</div></div>
+    <div class="kpi-card"><div class="kpi-label">覆盖 Site</div><div class="kpi-value">8</div></div>
+    <div class="kpi-card accent-amber"><div class="kpi-label">临港装配提前</div><div class="kpi-value">1<small>月</small></div><div class="kpi-sub">相对出机月</div></div>
+    <div class="kpi-card accent-green"><div class="kpi-label">本月待排</div><div class="kpi-value">7</div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>出机计划填报（演示）</h3></div><span class="chip">未对接生产计划</span></div>
+    <div class="panel-body">
+      <p class="chart-footnote" style="text-align:left;margin:0 0 12px">未来半年各 Site 预计出机。临港装配按出机月提前一个月排期。演示填报，写入下方清单。</p>
+      <div class="fanout-form-grid" id="ship-plan-form">
+        <label>Site
+          <select id="ship-site">
+            <option>TSMC</option><option>SMIC</option><option>Intel</option><option>Samsung</option>
+            <option>Micron</option><option>UMC</option><option>YMTC</option><option>临港</option>
+          </select>
+        </label>
+        <label>预计出机月
+          <select id="ship-month">
+            <option value="2026-10">2026-10</option>
+            <option value="2026-11">2026-11</option>
+            <option value="2026-12">2026-12</option>
+            <option value="2027-01">2027-01</option>
+            <option value="2027-02">2027-02</option>
+            <option value="2027-03">2027-03</option>
+          </select>
+        </label>
+        <label>预计出机数<input id="ship-qty" type="number" min="1" value="2"></label>
+        <label class="span-2">备注<input id="ship-note" type="text" value="临港装配提前一个月 · 演示"></label>
+      </div>
+      <div class="fanout-form-actions"><button class="btn btn-primary" type="button" id="ship-plan-submit">写入演示清单</button></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>未来半年出机清单</h3></div><button class="btn" type="button" data-action="export">导出 CSV</button></div>
+    <div class="panel-body flush">
+      <table>
+        <tr><th>Site</th><th>出机月</th><th>预计台数</th><th>临港装配月</th><th>装配说明</th><th>备注</th><th>标记</th></tr>
+        <tbody id="ship-plan-body">
+          <tr><td>TSMC</td><td>2026-10</td><td>6</td><td>2026-09</td><td>临港装配提前 1 个月</td><td>N28 CMP 批次</td><td><span class="tag tag-open">演示</span></td></tr>
+          <tr><td>SMIC</td><td>2026-11</td><td>4</td><td>2026-10</td><td>临港装配提前 1 个月</td><td>14nm Clean</td><td><span class="tag tag-open">演示</span></td></tr>
+          <tr><td>Intel</td><td>2026-12</td><td>3</td><td>2026-11</td><td>临港装配提前 1 个月</td><td>A16 验证机</td><td><span class="tag tag-open">演示</span></td></tr>
+          <tr><td>Samsung</td><td>2027-01</td><td>5</td><td>2026-12</td><td>临港装配提前 1 个月</td><td>V4 量产补机</td><td><span class="tag tag-open">演示</span></td></tr>
+          <tr><td>YMTC</td><td>2027-02</td><td>2</td><td>2027-01</td><td>临港装配提前 1 个月</td><td>Track 试用</td><td><span class="tag tag-open">演示</span></td></tr>
+          <tr><td>临港</td><td>2027-03</td><td>3</td><td>2027-02</td><td>临港装配提前 1 个月</td><td>线内周转</td><td><span class="tag tag-open">演示</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 </div>
   </div>
 </main>
 </div>
-<script src="assets/charts.js?v=67"></script>
-<script src="assets/app.js?v=67"></script>
+<script src="assets/charts.js?v=68"></script>
+<script src="assets/app.js?v=68"></script>
 <script>setActiveNav('site-product');</script>
 
 <script
