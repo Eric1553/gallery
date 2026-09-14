@@ -12,13 +12,14 @@
 - **Layer RLS**：表增加 ACM 机台数、POR vendor（ACM / TEL / DNS / LAM，标演示，未接生产 CRM）。Step 下钻补 验证进度 / LOOP / STAGE / Recipe / POR 品牌（演示 KV）。
 - **机台状态**：增加腔体开启率、uptime 达成率两张演示 KPI，脚注写明来源为 CRM 机台列表 + 报表中心（CER/uptime）、按设备序列号关联。不下钻空腔体表。
 - **出机计划**：Site 与产品下独立页签，演示填报未来半年各 Site 预计出机，临港装配按出机月提前一个月。不塞进机台状态。
+- **Fanout 文案**：客户界面去掉「帆软」，改为工作台 / 实现段表述。
 
 ## 未纳入
 
 - 自动生成 PPT / AI 报告。
 - 湿法产品部下真实组织树下钻（仍为演示分组）。
 - 生产 CRM vendor / 真实设备数量（vendor 与 ACM 机台数为演示字段）。
-- 未改 catalog.json / 封面 / 其他 DEMO；未推 ECS。
+- 未改 catalog.json / 封面 / 其他 DEMO。现场 v4.5 已推 stamp `20260914-124940-acme-rd-v45`。
 - 未改整体浅色风格。
 
 ## v4.4 仍有效
