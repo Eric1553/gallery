@@ -246,7 +246,7 @@ function initNavPrefetch() {
   const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 350));
   idle(() => {
     document.querySelectorAll('.nav a[href]').forEach(a => prefetch(a.getAttribute('href')));
-    ['assets/style.css?v=68', 'assets/charts.js?v=68', 'assets/app.js?v=68'].forEach(href => {
+    ['assets/style.css?v=68', 'assets/charts.js?v=68', 'assets/app.js?v=69'].forEach(href => {
       if (seen.has(href)) return;
       seen.add(href);
       const l = document.createElement('link');
@@ -674,7 +674,9 @@ function initRdView() {
         btn.classList.add('active');
         const view = btn.dataset.rdView || 'group';
         panel.querySelectorAll('[data-rd-pane]').forEach(v => {
-          v.style.display = v.dataset.rdPane === view ? '' : 'none';
+          const on = v.dataset.rdPane === view;
+          v.classList.toggle('is-hidden', !on);
+          v.hidden = !on;
         });
         refreshChartsSoon();
       });
