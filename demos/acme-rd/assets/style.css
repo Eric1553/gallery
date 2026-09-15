@@ -1095,6 +1095,19 @@ td { font-variant-numeric: tabular-nums; }
 .detail-kv { background: var(--surface); border: 1px solid var(--border-light); border-radius: 9px; padding: 10px 12px; }
 .detail-kv .k { font-size: 10.5px; color: var(--text-muted); font-weight: 600; }
 .detail-kv .v { font-size: 14px; font-weight: 700; margin-top: 3px; }
+.detail-subhead {
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--text);
+  margin: 14px 0 8px;
+}
+.detail-subhead:first-child { margin-top: 0; }
+.org-child-table { width: 100%; margin: 0; }
+.org-child-table td:first-child { padding-left: 22px; color: var(--text-secondary); }
+.vendor-zero { color: var(--text-muted); }
+.modal.wide { width: min(1180px, 96vw); }
+.r43-table { min-width: 1080px; font-size: 12px; }
+.layer-vendor-table { min-width: 1100px; }
 
 /* Layout grids preserved */
 .kpi-grid.fixed3 {

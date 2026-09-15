@@ -24,15 +24,17 @@ document.addEventListener('DOMContentLoaded', () => {
   initHrFilters();
   initSiteScopeFilters();
   initShipPlan();
+  initLingangOrgTree();
+  initAcmSkipForm();
   parkFeedbackOverlay();
 });
 
 function normalizeV4Shell() {
   document.querySelectorAll('.brand p').forEach(el => {
-    el.textContent = '盛美半导体 · 演示原型 v4.5';
+    el.textContent = '盛美半导体 · 演示原型 v4.6';
   });
   document.querySelectorAll('[data-demo-ver]').forEach(el => {
-    el.textContent = 'v4.5';
+    el.textContent = 'v4.6';
   });
 }
 
@@ -246,7 +248,7 @@ function initNavPrefetch() {
   const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 350));
   idle(() => {
     document.querySelectorAll('.nav a[href]').forEach(a => prefetch(a.getAttribute('href')));
-    ['assets/style.css?v=68', 'assets/charts.js?v=68', 'assets/app.js?v=69'].forEach(href => {
+    ['assets/style.css?v=70', 'assets/charts.js?v=68', 'assets/app.js?v=70'].forEach(href => {
       if (seen.has(href)) return;
       seen.add(href);
       const l = document.createElement('link');
@@ -522,14 +524,45 @@ function openDrillModal(el) {
       <button class="btn" data-action="export">下载当前明细 CSV</button>
     </div>
     <div class="panel" style="box-shadow:none">
-      <div class="panel-body flush"><table>${thead}${tbody}</table></div>
+      <div class="panel-body flush table-scroll"><table>${thead}${tbody}</table></div>
     </div>`);
+  if (cols.length >= 10) {
+    document.querySelector('#app-modal .modal')?.classList.add('wide');
+  }
   initActionLinks();
 }
 function presetDrillRows(title, cols) {
+  const stepPresets = {
+    'TSMC-N28': [
+      ['EQP-2201', 'CMP-06', 'POR', '已发布', 'Step 06/8', 'LOOP-3', 'T3→RLS', 'Cu CMP 主抛', 'CMP-N28-B3', 'Downforce 3.2psi / slurry ACM-S3', 'WET-CMP', 'ACM', '演示'],
+      ['EQP-2202', 'CLN-04', 'POR', '已发布', 'Step 04/6', 'LOOP-2', 'RLS', 'Pre-clean', 'CLN-N28-A2', 'SC1 65°C / 90s', 'WET-Clean', 'ACM', '演示'],
+      ['EQP-2208', 'ETC-06', 'POR', '待 Release', 'Step 06/8', 'LOOP-3', 'T3', 'Etch 主刻蚀', 'ETC-N28-D1', 'CF4 40sccm · 演示', 'Etch', 'TEL', '待 Release Step 06'],
+      ['EQP-2210', 'PLT-04', 'POR', '待 Release', 'Step 04/7', 'LOOP-3', 'T2', 'Cu plating', 'PLT-N28-B1', 'Current 1.8A · 演示', 'ECP', 'DNS', '待 Release Step 04']
+    ],
+    'SMIC-14': [
+      ['EQP-1401', 'CMP-05', 'POR', '已发布', 'Step 05/6', 'LOOP-2', 'RLS', 'Cu CMP', 'CMP-14-A3', '2.6psi / ACM-S2', 'WET-CMP', 'ACM', '演示'],
+      ['EQP-1407', 'CLN-03', 'POR', '待 Release', 'Step 03/6', 'LOOP-2', 'T2', 'Pre-clean 去胶', 'CLN-14-A1', 'SC1 65°C / 120s', 'WET-Clean', 'DNS', '待 Release Step 03'],
+      ['EQP-1408', 'ETC-02', 'POR', '已发布', 'Step 02/5', 'LOOP-1', 'RLS', 'Etch', '—', '—', 'Etch', 'LAM', 'ACM未涉及 · 演示']
+    ],
+    'Intel-A16': [
+      ['EQP-A161', 'ETC-04', 'POR', '已发布', 'Step 04/7', 'LOOP-1', 'RLS', 'Etch 主刻蚀', '—', '—', 'Etch', 'LAM', 'ACM未涉及 · EQP-A161'],
+      ['EQP-A163', 'CLN-05', 'POR', '待 Release', 'Step 05/7', 'LOOP-1', 'T1', 'Post-etch clean', '—', '—', 'WET-Clean', 'TEL', 'ACM未涉及 · EQP-A163'],
+      ['EQP-A165', 'CMP-02', 'POR', '待 Release', 'Step 02/7', 'LOOP-1', 'T1', 'Cu CMP', '—', '—', 'WET-CMP', 'DNS', 'ACM未涉及 · EQP-A165']
+    ],
+    'Samsung-V4': [
+      ['EQP-V401', 'CMP-05', 'POR', '已发布', 'Step 05/6', 'LOOP-2', 'T3', 'CMP 终点检测', 'CMP-V4-C2', 'Pad IC1000 / 2.8psi', 'WET-CMP', 'ACM', '演示'],
+      ['EQP-V404', 'CMP-06', 'POR', '待 Release', 'Step 06/6', 'LOOP-2', 'T3', 'Barrier CMP', 'CMP-V4-C3', '2.4psi · 演示', 'WET-CMP', 'TEL', '待 Release Step 05']
+    ]
+  };
+  const stepKey = Object.keys(stepPresets).find(k => title.includes(k));
+  if (stepKey) {
+    return stepPresets[stepKey].map(row => cols.map((_, i) => row[i] ?? '—'));
+  }
   const presets = {
     'IC1 组': [['RD-2026-061', '新工艺开发', '张**', '进行中', '42天', '演示账套'], ['RD-2026-038', '工艺优化', '张**', '已关闭', '45天', '演示账套']],
     'IC2 组': [['RD-2026-058', '工艺优化', '李**', '已关闭', '36天', '演示账套']],
+    '湿法产品部': [['EXT-2026-031', '客户A', '湿法-CMP', '已归档', '2026-03'], ['EXT-2026-028', '客户B', '湿法-Clean', '进行中', '2026-04'], ['EXT-2026-022', '客户C', '湿法-ECP', '已归档', '2026-05'], ['EXT-2026-019', '客户A', '湿法-Bevel', '进行中', '2026-06']],
+    '湿法-CMP': [['EXT-2026-031', '客户A', '湿法-CMP', '已归档', '2026-03'], ['EXT-2026-024', '客户B', '湿法-CMP', '进行中', '2026-05']],
     'TSMC': [['P-2026-0142', 'TSMC', 'WET-CMP', '进行中', '91%', '张**'], ['P-2026-0188', 'TSMC', 'ECP', '已归档', '86%', '李**']],
     'SMIC': [['P-2025-0887', 'SMIC', 'Track', '已归档', '94%', '刘**']]
   };
@@ -1097,20 +1130,20 @@ function initHrFilters() {
 }
 
 const SITE_DEMO_ROWS = [
-  { site: 'TSMC', n: 38, wet: 86, ecp: 42, track: 28, progress: 'T2/T3 占 38%', tier: 1 },
-  { site: 'SMIC', n: 31, wet: 64, ecp: 38, track: 22, progress: 'T2/T3 占 42%', tier: 1 },
-  { site: 'Intel', n: 26, wet: 52, ecp: 34, track: 18, progress: 'T2/T3 占 35%', tier: 1 },
-  { site: 'Samsung', n: 21, wet: 48, ecp: 28, track: 16, progress: 'T2/T3 占 40%', tier: 1 },
-  { site: 'Micron', n: 18, wet: 36, ecp: 22, track: 12, progress: 'T2/T3 占 33%', tier: 1 },
-  { site: 'UMC', n: 14, wet: 28, ecp: 16, track: 10, progress: 'T2/T3 占 31%', tier: 1 },
-  { site: 'YMTC', n: 12, wet: 24, ecp: 14, track: 8, progress: 'T2/T3 占 29%', tier: 1 },
-  { site: 'CXMT', n: 10, wet: 20, ecp: 12, track: 7, progress: 'T2/T3 占 28%', tier: 1 },
-  { site: 'Infineon', n: 9, wet: 16, ecp: 10, track: 6, progress: 'T2/T3 占 27%', tier: 1 },
-  { site: 'GlobalFoundries', n: 8, wet: 14, ecp: 9, track: 5, progress: 'T2/T3 占 26%', tier: 1 },
-  { site: 'Nanya', n: 7, wet: 12, ecp: 7, track: 4, progress: 'T2/T3 占 24%', tier: 2 },
-  { site: 'ST', n: 6, wet: 10, ecp: 6, track: 3, progress: 'T2/T3 占 22%', tier: 2 },
-  { site: 'HHGrace', n: 5, wet: 9, ecp: 5, track: 3, progress: 'T2/T3 占 21%', tier: 2 },
-  { site: 'Powerchip', n: 4, wet: 7, ecp: 4, track: 2, progress: 'T2/T3 占 20%', tier: 2 }
+  { site: 'TSMC', n: 38, wet: 86, ecp: 42, track: 28, progress: 'T2/T3 占 38%', tier: 1, st: { WET: [72, 11, 3], ECP: [35, 5, 2], Track: [23, 4, 1] } },
+  { site: 'SMIC', n: 31, wet: 64, ecp: 38, track: 22, progress: 'T2/T3 占 42%', tier: 1, st: { WET: [52, 9, 3], ECP: [31, 5, 2], Track: [18, 3, 1] } },
+  { site: 'Intel', n: 26, wet: 52, ecp: 34, track: 18, progress: 'T2/T3 占 35%', tier: 1, st: { WET: [42, 8, 2], ECP: [28, 4, 2], Track: [14, 3, 1] } },
+  { site: 'Samsung', n: 21, wet: 48, ecp: 28, track: 16, progress: 'T2/T3 占 40%', tier: 1, st: { WET: [40, 6, 2], ECP: [23, 4, 1], Track: [13, 2, 1] } },
+  { site: 'Micron', n: 18, wet: 36, ecp: 22, track: 12, progress: 'T2/T3 占 33%', tier: 1, st: { WET: [30, 5, 1], ECP: [18, 3, 1], Track: [10, 2, 0] } },
+  { site: 'UMC', n: 14, wet: 28, ecp: 16, track: 10, progress: 'T2/T3 占 31%', tier: 1, st: { WET: [23, 4, 1], ECP: [13, 2, 1], Track: [8, 2, 0] } },
+  { site: 'YMTC', n: 12, wet: 24, ecp: 14, track: 8, progress: 'T2/T3 占 29%', tier: 1, st: { WET: [20, 3, 1], ECP: [11, 2, 1], Track: [6, 2, 0] } },
+  { site: 'CXMT', n: 10, wet: 20, ecp: 12, track: 7, progress: 'T2/T3 占 28%', tier: 1, st: { WET: [16, 3, 1], ECP: [10, 2, 0], Track: [6, 1, 0] } },
+  { site: 'Infineon', n: 9, wet: 16, ecp: 10, track: 6, progress: 'T2/T3 占 27%', tier: 1, st: { WET: [13, 2, 1], ECP: [8, 2, 0], Track: [5, 1, 0] } },
+  { site: 'GlobalFoundries', n: 8, wet: 14, ecp: 9, track: 5, progress: 'T2/T3 占 26%', tier: 1, st: { WET: [11, 2, 1], ECP: [7, 2, 0], Track: [4, 1, 0] } },
+  { site: 'Nanya', n: 7, wet: 12, ecp: 7, track: 4, progress: 'T2/T3 占 24%', tier: 2, st: { WET: [10, 2, 0], ECP: [6, 1, 0], Track: [3, 1, 0] } },
+  { site: 'ST', n: 6, wet: 10, ecp: 6, track: 3, progress: 'T2/T3 占 22%', tier: 2, st: { WET: [8, 2, 0], ECP: [5, 1, 0], Track: [2, 1, 0] } },
+  { site: 'HHGrace', n: 5, wet: 9, ecp: 5, track: 3, progress: 'T2/T3 占 21%', tier: 2, st: { WET: [7, 2, 0], ECP: [4, 1, 0], Track: [2, 1, 0] } },
+  { site: 'Powerchip', n: 4, wet: 7, ecp: 4, track: 2, progress: 'T2/T3 占 20%', tier: 2, st: { WET: [6, 1, 0], ECP: [3, 1, 0], Track: [2, 0, 0] } }
 ];
 
 function visibleSiteDemo(siteVal) {
@@ -1149,6 +1182,31 @@ function initSiteScopeFilters() {
         : rows.reduce((a, r) => a + r.n, 0);
       total.dataset.periodBase = String(sum);
     }
+    const prods = prodVal === 'all' ? ['WET', 'ECP', 'Track'] : [prodVal];
+    const sumSt = (idx) => rows.reduce((a, r) => a + prods.reduce((b, p) => b + (r.st[p][idx] || 0), 0), 0);
+    const runN = sumSt(0);
+    const mntN = sumSt(1);
+    const downN = sumSt(2);
+    const runEl = document.getElementById('kpi-run-count');
+    const mntEl = document.getElementById('kpi-mnt-count');
+    const downEl = document.getElementById('kpi-down-count');
+    if (runEl) runEl.dataset.periodBase = String(runN);
+    if (mntEl) mntEl.dataset.periodBase = String(mntN);
+    if (downEl) downEl.dataset.periodBase = String(downN);
+    const rtChart = document.getElementById('jitai-runtime-chart');
+    if (rtChart) {
+      rtChart.dataset.periodBaseGroupBars = JSON.stringify({
+        groups: prods.map(p => ({
+          label: p,
+          values: [
+            rows.reduce((a, r) => a + r.st[p][0], 0),
+            rows.reduce((a, r) => a + r.st[p][1], 0),
+            rows.reduce((a, r) => a + r.st[p][2], 0)
+          ]
+        })),
+        series: ['运行中', '维护中', '停机']
+      });
+    }
     applyPeriodSlice(readPeriodValue());
     const jitaiBody = document.getElementById('jitai-site-body');
     if (jitaiBody) {
@@ -1159,6 +1217,15 @@ function initSiteScopeFilters() {
         const sum = prodVal === 'all' ? wet + ecp + track : pick({ ...r, wet, ecp, track });
         return `<tr data-site="${r.site}" data-tier="${r.tier}"><td>${r.site}</td><td>${prodVal === 'all' || prodVal === 'WET' ? wet : '—'}</td><td>${prodVal === 'all' || prodVal === 'ECP' ? ecp : '—'}</td><td>${prodVal === 'all' || prodVal === 'Track' ? track : '—'}</td><td>${sum}</td><td>${r.progress}</td></tr>`;
       }).join('');
+    }
+    const runtimeBody = document.getElementById('jitai-runtime-body');
+    if (runtimeBody) {
+      runtimeBody.innerHTML = rows.flatMap(r => prods.map(p => {
+        const run = scaleDemoNumber(r.st[p][0], factor, false);
+        const mnt = scaleDemoNumber(r.st[p][1], factor, false);
+        const down = scaleDemoNumber(r.st[p][2], factor, false);
+        return `<tr data-site="${r.site}" data-prod="${p}"><td>${r.site}</td><td>${p}</td><td>${run}</td><td>${mnt}</td><td>${down}</td><td>${run + mnt + down}</td></tr>`;
+      })).join('');
     }
     const hint = document.getElementById('site-scope-hint');
     if (hint) {
@@ -1172,6 +1239,11 @@ function initSiteScopeFilters() {
       const detail = row.nextElementSibling;
       if (detail?.classList.contains('detail-row')) detail.classList.toggle('is-hidden', !okSite);
     });
+    document.querySelectorAll('[data-acm-skip-row]').forEach(row => {
+      const okSite = siteVal === 'all' || (siteVal === 'top10' && row.dataset.tier !== '2') || row.dataset.site === siteVal;
+      const okProd = prodVal === 'all' || row.dataset.prod === prodVal;
+      row.classList.toggle('is-hidden', !(okSite && okProd));
+    });
   };
   siteSel.addEventListener('change', apply);
   prodSel.addEventListener('change', apply);
@@ -1179,7 +1251,60 @@ function initSiteScopeFilters() {
     event.preventDefault();
     apply();
   });
+  document.querySelector('.topbar-period')?.addEventListener('change', apply);
   apply();
+}
+
+function initLingangOrgTree() {
+  if (currentPageId() !== 'lingang') return;
+  const row = document.querySelector('[data-org-parent="wet"]');
+  const chart = document.getElementById('lg-dept-chart');
+  if (!row || !chart) return;
+  let parents = [];
+  let children = [];
+  try { parents = JSON.parse(chart.dataset.periodBaseBars || chart.dataset.bars || '[]'); } catch (e) { parents = []; }
+  try { children = JSON.parse(chart.dataset.orgChildren || '[]'); } catch (e) { children = []; }
+  const title = document.getElementById('lg-dept-title');
+  const syncChart = () => {
+    const open = row.classList.contains('open');
+    const data = open && children.length ? children : parents;
+    const raw = JSON.stringify(data);
+    chart.dataset.periodBaseBars = raw;
+    chart.dataset.bars = scaleChartPayload(raw, periodFactor(readPeriodValue()), false);
+    if (title) title.textContent = open ? '外部需求 · 湿法产品部下一级（演示）' : '外部需求 · 近半年 按部门';
+    chart.classList.remove('chart-rendered');
+    delete chart.dataset.chartW;
+    refreshChartsSoon(true);
+  };
+  row.addEventListener('click', event => {
+    if (event.target.closest('a,button,select,input')) return;
+    setTimeout(syncChart, 0);
+  });
+  row.addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ' ') setTimeout(syncChart, 0);
+  });
+}
+
+function initAcmSkipForm() {
+  const body = document.getElementById('acm-skip-body');
+  const submit = document.getElementById('acm-skip-submit');
+  if (!body || !submit) return;
+  submit.addEventListener('click', () => {
+    const site = document.getElementById('acm-skip-site')?.value || 'Intel';
+    const prod = document.getElementById('acm-skip-prod')?.value || '—';
+    const vendor = document.getElementById('acm-skip-vendor')?.value || 'LAM';
+    const count = document.getElementById('acm-skip-count')?.value || '1';
+    const remark = document.getElementById('acm-skip-remark')?.value || 'ACM未涉及';
+    const prodType = /Track/i.test(prod) ? 'Track' : /ECP|Etch|Plating/i.test(prod) ? 'ECP' : 'WET';
+    const tr = document.createElement('tr');
+    tr.dataset.acmSkipRow = '';
+    tr.dataset.site = site;
+    tr.dataset.prod = prodType;
+    tr.dataset.tier = '1';
+    tr.innerHTML = `<td>${escapeHtml(site)}</td><td>${escapeHtml(prod)}</td><td>${escapeHtml(vendor)}</td><td>${escapeHtml(count)}</td><td>${escapeHtml(remark)}</td>`;
+    body.prepend(tr);
+    showToast('已写入 ACM未涉及 演示清单（生产走 CRM Tool application 或填报）');
+  });
 }
 
 function initShipPlan() {

@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Site 与产品管理 - 盛美半导体研发运营看板</title>
-<link rel="stylesheet" href="assets/style.css?v=68">
-<link rel="stylesheet" href="assets/req-spec.css?v=68">
+<link rel="stylesheet" href="assets/style.css?v=70">
+<link rel="stylesheet" href="assets/req-spec.css?v=70">
 </head>
 <body data-page="site-product">
 <div class="layout">
@@ -13,7 +13,7 @@
     <div class="brand">
     <div class="brand-logo">ACM</div>
     <h1>研发运营看板</h1>
-    <p>盛美半导体 · 演示原型 v4.5</p>
+    <p>盛美半导体 · 演示原型 v4.6</p>
   </div>
   <nav class="nav">
     <div class="nav-section">业务模块</div>
@@ -71,8 +71,8 @@
 <div id="req-spec-data" data-title="Site 与产品管理 · 需求说明" data-sub="对应客户原始需求（立项 / 机台 / Spec / Recipe / 文档）" style="display:none">
   <div class="req-list">
     <div class="req-item"><div class="req-idx">1</div><div class="req-body2"><div class="req-item-t">立项管理</div><div class="req-item-d">①不同 Site 立项项目数：取 OA 项目立项流程（客户名称）；②不同产品类别立项数：取 OA 项目启动流程；按成熟 / 量产 / 研发机台分类。Site 约 100+，采用 Top N 排名 + 筛选框，并提供二级明细列表页。</div></div></div>
-    <div class="req-item"><div class="req-idx">2</div><div class="req-body2"><div class="req-item-t">机台状态</div><div class="req-item-d">从 CRM 展示各客户（Site）/ 产品类型的机台数量及装机进度，状态包括 Pre Setup / T0 / T1 / T2 / T3 / RLS 等，支持按月 / 年筛选。</div></div></div>
-    <div class="req-item"><div class="req-idx">3</div><div class="req-body2"><div class="req-item-t">Layer RLS 状况</div><div class="req-item-d">按Site 展示 Layer Release 状况，对标 POR 机台数量；可下钻至每个机台具体 Step 的 RLS 情况（Application 维度）。数据来源 CRM。</div></div></div>
+    <div class="req-item"><div class="req-idx">2</div><div class="req-body2"><div class="req-item-t">机台状态</div><div class="req-item-d">从 CRM 展示各客户（Site）/ 产品类型的机台数量及装机进度，状态包括 Pre Setup / T0 / T1 / T2 / T3 / RLS 等；另展示 CRM 机台列表运行态：运行中 / 维护中 / 停机，可按 Site / 产品类型筛选。支持按月 / 年筛选。</div></div></div>
+    <div class="req-item"><div class="req-idx">3</div><div class="req-body2"><div class="req-item-t">Layer RLS 状况</div><div class="req-item-d">按 Site 展示 Layer Release 状况，对标 POR 机台数与 ACM 机台数；vendor 分列数量（演示）。可下钻 Step（验证进度 / LOOP / STAGE / STEP_DESC / Recipe / Recipe Detail / Group分类 / POR品牌 / Remark）。另列 ACM 未涉及机台。数据来源 CRM，本页为演示。</div></div></div>
     <div class="req-item"><div class="req-idx">4</div><div class="req-body2"><div class="req-item-t">Spec 风险前置</div><div class="req-item-d">统计 Spec 风险前置流程发起数占 Spec 总流程（含 Spec 新增变更）比例；展示验证中 / 已归档 / 进行中；计算发起至归档耗时；按 Site 分布。</div></div></div>
     <div class="req-item"><div class="req-idx">5</div><div class="req-body2"><div class="req-item-t">Recipe / WPH</div><div class="req-item-d">按 IC1~IC4 组别切换，在各 Site 维度展示：Recipe—上传数量、上传完成度、健康度（均值）、修改完成度、入档率；WPH—上传数量、完成度、健康度（排除空值后取均值）。</div></div></div>
     <div class="req-item"><div class="req-idx">6</div><div class="req-body2"><div class="req-item-t">标准化文件 / 产品文档 / 公司级 Fanout</div><div class="req-item-d">标准化文件需求 / 发布：流程总数、已归档、入档率。产品文档：必传附件完成度，支持按阶段（T1 / T2 / T3 / RLS）、按项目 / Site 筛选。公司级 Fanout：申请发布（公司内/外、工艺/软件/安全/质量/硬件、产品类别关联经理）→ 区域经理选机台 → Site Manager 执行反馈 → 项目经理 / 工艺产品经理 / 设备产品经理定期汇总。</div></div></div>
@@ -177,6 +177,27 @@
     <div class="kpi-card accent-purple"><div class="kpi-label">uptime 达成率</div><div class="kpi-value">87%</div><div class="kpi-sub">演示 · 报表中心 CER/uptime</div></div>
   </div>
   <p class="chart-footnote" style="text-align:left;margin:-4px 0 16px">腔体开启率 / uptime 达成率：来源 CRM 机台列表 + 报表中心（CER/uptime），按设备序列号关联。演示口径，未接生产库；此处不下钻空腔体表。</p>
+  <div class="kpi-grid">
+    <div class="kpi-card accent-green"><div class="kpi-label">运行中</div><div class="kpi-value" id="kpi-run-count">668</div><div class="kpi-sub">CRM 机台列表 · 演示</div></div>
+    <div class="kpi-card accent-amber"><div class="kpi-label">维护中</div><div class="kpi-value" id="kpi-mnt-count">119</div><div class="kpi-sub">演示计数</div></div>
+    <div class="kpi-card"><div class="kpi-label">停机</div><div class="kpi-value" id="kpi-down-count">30</div><div class="kpi-sub">演示计数</div></div>
+  </div>
+  <p class="chart-footnote" style="text-align:left;margin:-4px 0 16px">运行态取 CRM 机台列表，按 Site / 产品类型筛选。演示计数，未接生产 CRM。</p>
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-left"><h3>运行态分布（按产品）</h3></div><span class="chip">运行中 / 维护中 / 停机</span></div>
+      <div class="panel-body"><div class="chart-wrap" id="jitai-runtime-chart" data-group-bars='{"groups":[{"label":"WET","values":[350,60,16]},{"label":"ECP","values":[202,35,10]},{"label":"Track","values":[116,24,4]}],"series":["运行中","维护中","停机"]}'></div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-left"><h3>Site × 产品 · 运行态</h3></div><span class="chip">演示</span></div>
+      <div class="panel-body flush table-scroll" style="max-height:280px">
+        <table>
+          <tr><th>Site</th><th>产品类型</th><th>运行中</th><th>维护中</th><th>停机</th><th>合计</th></tr>
+          <tbody id="jitai-runtime-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
   <div class="panel">
     <div class="panel-head"><div class="panel-head-left"><h3>机台状态分布 (Pre Setup → RLS)</h3></div></div>
     <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"Pre","v":30,"c":"#94a3b8"},{"l":"T0","v":45,"c":"#64748b"},{"l":"T1","v":61,"c":"#2563eb"},{"l":"T2","v":86,"c":"#4a7ab0"},{"l":"T3","v":64,"c":"#5b7c99"},{"l":"RLS","v":218,"c":"#7c3aed"}]'></div></div>
@@ -217,55 +238,157 @@
     <div class="kpi-card"><div class="kpi-label">整体 RLS 完成率</div><div class="kpi-value">81%</div></div>
   </div>
   <div class="panel">
-    <div class="panel-head"><div class="panel-head-left"><h3>By Site · Layer RLS 对标 POR</h3></div><span class="chip">演示 vendor · 未接生产 CRM</span></div>
-    <div class="panel-body flush">
-      <table>
-        <tr><th>Site</th><th>POR 机台数</th><th>ACM 机台数</th><th>POR vendor</th><th>RLS 完成</th><th>RLS 完成率</th><th>待 Release Step</th><th>机台 Step/Application 明细</th></tr>
-        <tr class="expand-row" data-site-row data-site="TSMC" data-tier="1"><td><span class="exp-caret">▶</span>TSMC-N28</td><td>12</td><td>9</td><td>ACM / TEL · 演示</td><td>10</td><td>83%</td><td>2</td><td><a class="table-link" data-action="drill" data-title="TSMC-N28 · 机台 Step RLS 明细" data-sub="演示 Step KV，未接生产 CRM" data-cols="机台号,Step(Application),POR对标,RLS状态,验证进度,LOOP,STAGE,Recipe,POR品牌">查看 Step →</a></td></tr>
-        <tr class="detail-row" style="display:none"><td colspan="8"><div class="detail-inner"><div class="detail-grid">
-          <div class="detail-kv"><div class="k">机台 EQP-2201 · CMP</div><div class="v" style="color:var(--success)">RLS 已发布</div></div>
-          <div class="detail-kv"><div class="k">机台 EQP-2202 · Clean</div><div class="v" style="color:var(--success)">RLS 已发布</div></div>
-          <div class="detail-kv"><div class="k">机台 EQP-2208 · Etch</div><div class="v" style="color:var(--warning)">待 Release (Step 06)</div></div>
-          <div class="detail-kv"><div class="k">机台 EQP-2210 · Plating</div><div class="v" style="color:var(--warning)">待 Release (Step 04)</div></div>
-          <div class="detail-kv"><div class="k">验证进度</div><div class="v">Step 06 / 8 · 演示</div></div>
-          <div class="detail-kv"><div class="k">LOOP</div><div class="v">LOOP-3 · BEOL</div></div>
-          <div class="detail-kv"><div class="k">STAGE</div><div class="v">T3 → RLS</div></div>
-          <div class="detail-kv"><div class="k">Recipe</div><div class="v">CMP-N28-B3 · 演示</div></div>
-          <div class="detail-kv"><div class="k">POR 品牌</div><div class="v">ACM / TEL · 演示</div></div>
-        </div></div></td></tr>
-        <tr class="expand-row" data-site-row data-site="SMIC" data-tier="1"><td><span class="exp-caret">▶</span>SMIC-14</td><td>8</td><td>5</td><td>DNS / LAM · 演示</td><td>7</td><td>88%</td><td>1</td><td><a class="table-link" data-action="drill" data-title="SMIC-14 · 机台 Step RLS 明细" data-sub="演示 Step KV，未接生产 CRM" data-cols="机台号,Step(Application),POR对标,RLS状态,验证进度,LOOP,STAGE,Recipe,POR品牌">查看 Step →</a></td></tr>
-        <tr class="detail-row" style="display:none"><td colspan="8"><div class="detail-inner"><div class="detail-grid">
-          <div class="detail-kv"><div class="k">机台 EQP-1401 · CMP</div><div class="v" style="color:var(--success)">RLS 已发布</div></div>
-          <div class="detail-kv"><div class="k">机台 EQP-1407 · Clean</div><div class="v" style="color:var(--warning)">待 Release (Step 03)</div></div>
-          <div class="detail-kv"><div class="k">验证进度</div><div class="v">Step 03 / 6 · 演示</div></div>
-          <div class="detail-kv"><div class="k">LOOP</div><div class="v">LOOP-2 · FEOL</div></div>
-          <div class="detail-kv"><div class="k">STAGE</div><div class="v">T2</div></div>
-          <div class="detail-kv"><div class="k">Recipe</div><div class="v">CLN-14-A1 · 演示</div></div>
-          <div class="detail-kv"><div class="k">POR 品牌</div><div class="v">DNS / LAM · 演示</div></div>
-        </div></div></td></tr>
-        <tr class="expand-row" data-site-row data-site="Intel" data-tier="1"><td><span class="exp-caret">▶</span>Intel-A16</td><td>6</td><td>2</td><td>ACM未涉及 · 演示</td><td>4</td><td>67%</td><td>3</td><td><a class="table-link" data-action="drill" data-title="Intel-A16 · 机台 Step RLS 明细" data-sub="演示 Step KV，未接生产 CRM" data-cols="机台号,Step(Application),POR对标,RLS状态,验证进度,LOOP,STAGE,Recipe,POR品牌">查看 Step →</a></td></tr>
-        <tr class="detail-row" style="display:none"><td colspan="8"><div class="detail-inner"><div class="detail-grid">
-          <div class="detail-kv"><div class="k">机台 EQP-A161 · Etch</div><div class="v" style="color:var(--success)">RLS 已发布</div></div>
-          <div class="detail-kv"><div class="k">机台 EQP-A163 · Clean</div><div class="v" style="color:var(--warning)">待 Release (Step 05)</div></div>
-          <div class="detail-kv"><div class="k">机台 EQP-A165 · CMP</div><div class="v" style="color:var(--warning)">待 Release (Step 02)</div></div>
-          <div class="detail-kv"><div class="k">验证进度</div><div class="v">Step 02 / 7 · 演示</div></div>
-          <div class="detail-kv"><div class="k">LOOP</div><div class="v">LOOP-1 · MOL</div></div>
-          <div class="detail-kv"><div class="k">STAGE</div><div class="v">T1</div></div>
-          <div class="detail-kv"><div class="k">Recipe</div><div class="v">—</div></div>
-          <div class="detail-kv"><div class="k">POR 品牌</div><div class="v">ACM未涉及 · 演示</div></div>
-        </div></div></td></tr>
-        <tr class="expand-row" data-site-row data-site="Samsung" data-tier="1"><td><span class="exp-caret">▶</span>Samsung-V4</td><td>5</td><td>4</td><td>ACM · 演示</td><td>4</td><td>80%</td><td>1</td><td><a class="table-link" data-action="drill" data-title="Samsung-V4 · 机台 Step RLS 明细" data-sub="演示 Step KV，未接生产 CRM" data-cols="机台号,Step(Application),POR对标,RLS状态,验证进度,LOOP,STAGE,Recipe,POR品牌">查看 Step →</a></td></tr>
-        <tr class="detail-row" style="display:none"><td colspan="8"><div class="detail-inner"><div class="detail-grid">
-          <div class="detail-kv"><div class="k">验证进度</div><div class="v">Step 05 / 6 · 演示</div></div>
-          <div class="detail-kv"><div class="k">LOOP</div><div class="v">LOOP-2</div></div>
-          <div class="detail-kv"><div class="k">STAGE</div><div class="v">T3</div></div>
-          <div class="detail-kv"><div class="k">Recipe</div><div class="v">CMP-V4-C2 · 演示</div></div>
-          <div class="detail-kv"><div class="k">POR 品牌</div><div class="v">ACM · 演示</div></div>
-        </div></div></td></tr>
+    <div class="panel-head"><div class="panel-head-left"><h3>By Site · Layer RLS 对标 POR</h3></div><span class="chip">演示 · 未接生产 CRM</span></div>
+    <div class="panel-body flush table-scroll">
+      <table class="layer-vendor-table">
+        <tr>
+          <th>Site</th>
+          <th>POR机台数</th>
+          <th>ACM机台数</th>
+          <th>ACM</th>
+          <th>TEL</th>
+          <th>DNS</th>
+          <th>LAM</th>
+          <th>RLS 完成</th>
+          <th>RLS 完成率</th>
+          <th>待 Release Step</th>
+          <th>机台 Step/Application 明细</th>
+        </tr>
+        <tr class="expand-row" data-site-row data-site="TSMC" data-tier="1"><td><span class="exp-caret">▶</span>TSMC-N28</td><td>12</td><td>9</td><td>7</td><td>3</td><td>1</td><td>1</td><td>10</td><td>83%</td><td>2</td><td><a class="table-link" data-action="drill" data-title="TSMC-N28 · 机台 Step RLS 明细" data-sub="演示 Step 字段，未接生产 CRM" data-cols="机台号,Step(Application),POR对标,RLS状态,验证进度,LOOP,STAGE,STEP_DESC,Recipe,Recipe Detail,Group分类,POR品牌,Remark">查看 Step →</a></td></tr>
+        <tr class="detail-row" style="display:none"><td colspan="11"><div class="detail-inner">
+          <div class="detail-subhead">Step KV · 演示</div>
+          <div class="detail-grid">
+            <div class="detail-kv"><div class="k">机台 EQP-2201 · CMP</div><div class="v" style="color:var(--success)">RLS 已发布</div></div>
+            <div class="detail-kv"><div class="k">机台 EQP-2202 · Clean</div><div class="v" style="color:var(--success)">RLS 已发布</div></div>
+            <div class="detail-kv"><div class="k">机台 EQP-2208 · Etch</div><div class="v" style="color:var(--warning)">待 Release (Step 06)</div></div>
+            <div class="detail-kv"><div class="k">机台 EQP-2210 · Plating</div><div class="v" style="color:var(--warning)">待 Release (Step 04)</div></div>
+            <div class="detail-kv"><div class="k">验证进度</div><div class="v">Step 06 / 8 · 演示</div></div>
+            <div class="detail-kv"><div class="k">LOOP</div><div class="v">LOOP-3 · BEOL</div></div>
+            <div class="detail-kv"><div class="k">STAGE</div><div class="v">T3 → RLS</div></div>
+            <div class="detail-kv"><div class="k">STEP_DESC</div><div class="v">Cu CMP 主抛</div></div>
+            <div class="detail-kv"><div class="k">Recipe</div><div class="v">CMP-N28-B3 · 演示</div></div>
+            <div class="detail-kv"><div class="k">Recipe Detail</div><div class="v">Downforce 3.2psi / slurry ACM-S3</div></div>
+            <div class="detail-kv"><div class="k">Group分类</div><div class="v">WET-CMP</div></div>
+            <div class="detail-kv"><div class="k">POR品牌</div><div class="v">ACM / TEL · 演示</div></div>
+            <div class="detail-kv"><div class="k">Remark</div><div class="v">Step 06 待 Release · 演示</div></div>
+          </div>
+          <div class="detail-subhead">对标字段 · 演示 · 未接生产 CRM</div>
+          <div class="table-scroll">
+            <table class="r43-table">
+              <tr><th>基准机台</th><th>配置</th><th>技术节点</th><th>Released</th><th>验证成功(未量产)</th><th>验证失败</th><th>验证中</th><th>Capacity</th><th>No capa</th><th>Total</th><th>量产占比</th><th>Capacity Ratio</th></tr>
+              <tr><td>EQP-2201</td><td>CMP dual-platen 300mm</td><td>N28</td><td>10</td><td>1</td><td>0</td><td>1</td><td>8</td><td>1</td><td>12</td><td>67%</td><td>1.12</td></tr>
+            </table>
+          </div>
+        </div></td></tr>
+        <tr class="expand-row" data-site-row data-site="SMIC" data-tier="1"><td><span class="exp-caret">▶</span>SMIC-14</td><td>8</td><td>5</td><td>3</td><td>1</td><td>3</td><td>1</td><td>7</td><td>88%</td><td>1</td><td><a class="table-link" data-action="drill" data-title="SMIC-14 · 机台 Step RLS 明细" data-sub="演示 Step 字段，未接生产 CRM" data-cols="机台号,Step(Application),POR对标,RLS状态,验证进度,LOOP,STAGE,STEP_DESC,Recipe,Recipe Detail,Group分类,POR品牌,Remark">查看 Step →</a></td></tr>
+        <tr class="detail-row" style="display:none"><td colspan="11"><div class="detail-inner">
+          <div class="detail-subhead">Step KV · 演示</div>
+          <div class="detail-grid">
+            <div class="detail-kv"><div class="k">机台 EQP-1401 · CMP</div><div class="v" style="color:var(--success)">RLS 已发布</div></div>
+            <div class="detail-kv"><div class="k">机台 EQP-1407 · Clean</div><div class="v" style="color:var(--warning)">待 Release (Step 03)</div></div>
+            <div class="detail-kv"><div class="k">验证进度</div><div class="v">Step 03 / 6 · 演示</div></div>
+            <div class="detail-kv"><div class="k">LOOP</div><div class="v">LOOP-2 · FEOL</div></div>
+            <div class="detail-kv"><div class="k">STAGE</div><div class="v">T2</div></div>
+            <div class="detail-kv"><div class="k">STEP_DESC</div><div class="v">Pre-clean 去胶</div></div>
+            <div class="detail-kv"><div class="k">Recipe</div><div class="v">CLN-14-A1 · 演示</div></div>
+            <div class="detail-kv"><div class="k">Recipe Detail</div><div class="v">SC1 65°C / 120s</div></div>
+            <div class="detail-kv"><div class="k">Group分类</div><div class="v">WET-Clean</div></div>
+            <div class="detail-kv"><div class="k">POR品牌</div><div class="v">DNS / LAM · 演示</div></div>
+            <div class="detail-kv"><div class="k">Remark</div><div class="v">Step 03 待 Release · 演示</div></div>
+          </div>
+          <div class="detail-subhead">对标字段 · 演示 · 未接生产 CRM</div>
+          <div class="table-scroll">
+            <table class="r43-table">
+              <tr><th>基准机台</th><th>配置</th><th>技术节点</th><th>Released</th><th>验证成功(未量产)</th><th>验证失败</th><th>验证中</th><th>Capacity</th><th>No capa</th><th>Total</th><th>量产占比</th><th>Capacity Ratio</th></tr>
+              <tr><td>EQP-1401</td><td>Clean 300mm</td><td>14nm</td><td>7</td><td>1</td><td>0</td><td>0</td><td>6</td><td>1</td><td>8</td><td>75%</td><td>1.05</td></tr>
+            </table>
+          </div>
+        </div></td></tr>
+        <tr class="expand-row" data-site-row data-site="Intel" data-tier="1"><td><span class="exp-caret">▶</span>Intel-A16</td><td>6</td><td>2</td><td class="vendor-zero">0</td><td>1</td><td>1</td><td>4</td><td>4</td><td>67%</td><td>3</td><td><a class="table-link" data-action="drill" data-title="Intel-A16 · 机台 Step RLS 明细" data-sub="演示 Step 字段，未接生产 CRM" data-cols="机台号,Step(Application),POR对标,RLS状态,验证进度,LOOP,STAGE,STEP_DESC,Recipe,Recipe Detail,Group分类,POR品牌,Remark">查看 Step →</a></td></tr>
+        <tr class="detail-row" style="display:none"><td colspan="11"><div class="detail-inner">
+          <div class="detail-subhead">Step KV · 演示</div>
+          <div class="detail-grid">
+            <div class="detail-kv"><div class="k">机台 EQP-A161 · Etch</div><div class="v" style="color:var(--success)">RLS 已发布</div></div>
+            <div class="detail-kv"><div class="k">机台 EQP-A163 · Clean</div><div class="v" style="color:var(--warning)">待 Release (Step 05)</div></div>
+            <div class="detail-kv"><div class="k">机台 EQP-A165 · CMP</div><div class="v" style="color:var(--warning)">待 Release (Step 02)</div></div>
+            <div class="detail-kv"><div class="k">验证进度</div><div class="v">Step 02 / 7 · 演示</div></div>
+            <div class="detail-kv"><div class="k">LOOP</div><div class="v">LOOP-1 · MOL</div></div>
+            <div class="detail-kv"><div class="k">STAGE</div><div class="v">T1</div></div>
+            <div class="detail-kv"><div class="k">STEP_DESC</div><div class="v">Etch 主刻蚀</div></div>
+            <div class="detail-kv"><div class="k">Recipe</div><div class="v">—</div></div>
+            <div class="detail-kv"><div class="k">Recipe Detail</div><div class="v">—</div></div>
+            <div class="detail-kv"><div class="k">Group分类</div><div class="v">Etch</div></div>
+            <div class="detail-kv"><div class="k">POR品牌</div><div class="v">LAM · ACM未涉及</div></div>
+            <div class="detail-kv"><div class="k">Remark</div><div class="v">ACM未涉及 · EQP-A161 / A163 · 演示</div></div>
+          </div>
+          <div class="detail-subhead">对标字段 · 演示 · 未接生产 CRM</div>
+          <div class="table-scroll">
+            <table class="r43-table">
+              <tr><th>基准机台</th><th>配置</th><th>技术节点</th><th>Released</th><th>验证成功(未量产)</th><th>验证失败</th><th>验证中</th><th>Capacity</th><th>No capa</th><th>Total</th><th>量产占比</th><th>Capacity Ratio</th></tr>
+              <tr><td>EQP-A161</td><td>Etch + Clean</td><td>A16</td><td>4</td><td>0</td><td>1</td><td>1</td><td>3</td><td>2</td><td>6</td><td>50%</td><td>0.88</td></tr>
+            </table>
+          </div>
+        </div></td></tr>
+        <tr class="expand-row" data-site-row data-site="Samsung" data-tier="1"><td><span class="exp-caret">▶</span>Samsung-V4</td><td>5</td><td>4</td><td>4</td><td>1</td><td class="vendor-zero">0</td><td class="vendor-zero">0</td><td>4</td><td>80%</td><td>1</td><td><a class="table-link" data-action="drill" data-title="Samsung-V4 · 机台 Step RLS 明细" data-sub="演示 Step 字段，未接生产 CRM" data-cols="机台号,Step(Application),POR对标,RLS状态,验证进度,LOOP,STAGE,STEP_DESC,Recipe,Recipe Detail,Group分类,POR品牌,Remark">查看 Step →</a></td></tr>
+        <tr class="detail-row" style="display:none"><td colspan="11"><div class="detail-inner">
+          <div class="detail-subhead">Step KV · 演示</div>
+          <div class="detail-grid">
+            <div class="detail-kv"><div class="k">验证进度</div><div class="v">Step 05 / 6 · 演示</div></div>
+            <div class="detail-kv"><div class="k">LOOP</div><div class="v">LOOP-2</div></div>
+            <div class="detail-kv"><div class="k">STAGE</div><div class="v">T3</div></div>
+            <div class="detail-kv"><div class="k">STEP_DESC</div><div class="v">CMP 终点检测</div></div>
+            <div class="detail-kv"><div class="k">Recipe</div><div class="v">CMP-V4-C2 · 演示</div></div>
+            <div class="detail-kv"><div class="k">Recipe Detail</div><div class="v">Pad IC1000 / 2.8psi</div></div>
+            <div class="detail-kv"><div class="k">Group分类</div><div class="v">WET-CMP</div></div>
+            <div class="detail-kv"><div class="k">POR品牌</div><div class="v">ACM · 演示</div></div>
+            <div class="detail-kv"><div class="k">Remark</div><div class="v">待 Release Step 05 · 演示</div></div>
+          </div>
+          <div class="detail-subhead">对标字段 · 演示 · 未接生产 CRM</div>
+          <div class="table-scroll">
+            <table class="r43-table">
+              <tr><th>基准机台</th><th>配置</th><th>技术节点</th><th>Released</th><th>验证成功(未量产)</th><th>验证失败</th><th>验证中</th><th>Capacity</th><th>No capa</th><th>Total</th><th>量产占比</th><th>Capacity Ratio</th></tr>
+              <tr><td>EQP-V401</td><td>CMP 300mm</td><td>V4</td><td>4</td><td>1</td><td>0</td><td>0</td><td>4</td><td>0</td><td>5</td><td>80%</td><td>1.20</td></tr>
+            </table>
+          </div>
+        </div></td></tr>
       </table>
     </div>
   </div>
-  <div class="alert-box info">By Site 对标 POR 机台数；ACM 机台数与 POR vendor 为演示字段（ACM / TEL / DNS / LAM），未接生产 CRM。Step 下钻含验证进度 / LOOP / STAGE / Recipe / POR 品牌（演示 KV）。</div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-head-left"><h3>ACM未涉及</h3></div><span class="chip">演示清单</span></div>
+    <div class="panel-body">
+      <p class="chart-footnote" style="text-align:left;margin:0 0 12px">生产走 CRM Tool application 或填报。本块仅演示，未接生产 CRM。</p>
+      <div class="fanout-form-grid" id="acm-skip-form">
+        <label>Site
+          <select id="acm-skip-site">
+            <option>TSMC</option><option>SMIC</option><option selected>Intel</option><option>Samsung</option>
+            <option>Micron</option><option>UMC</option>
+          </select>
+        </label>
+        <label>产品型号<input id="acm-skip-prod" type="text" value="Etch A16"></label>
+        <label>vendor
+          <select id="acm-skip-vendor">
+            <option>TEL</option><option>DNS</option><option selected>LAM</option><option>其他</option>
+          </select>
+        </label>
+        <label>Count<input id="acm-skip-count" type="number" min="1" value="1"></label>
+        <label class="span-2">Remark<input id="acm-skip-remark" type="text" value="ACM未涉及 · 机台号待填"></label>
+      </div>
+      <div class="fanout-form-actions"><button class="btn btn-primary" type="button" id="acm-skip-submit">写入演示清单</button></div>
+    </div>
+    <div class="panel-body flush" style="border-top:1px solid var(--border-light)">
+      <table>
+        <tr><th>Site</th><th>产品型号</th><th>vendor</th><th>Count</th><th>Remark</th></tr>
+        <tbody id="acm-skip-body">
+          <tr data-acm-skip-row data-site="Intel" data-prod="ECP" data-tier="1"><td>Intel-A16</td><td>Etch A16</td><td>LAM</td><td>2</td><td>ACM未涉及 · EQP-A161 / EQP-A163</td></tr>
+          <tr data-acm-skip-row data-site="Intel" data-prod="WET" data-tier="1"><td>Intel-A16</td><td>CMP A16</td><td>DNS</td><td>1</td><td>ACM未涉及 · EQP-A165</td></tr>
+          <tr data-acm-skip-row data-site="TSMC" data-prod="Track" data-tier="1"><td>TSMC-N28</td><td>Track N28</td><td>TEL</td><td>1</td><td>ACM未涉及 · TRK-2209</td></tr>
+          <tr data-acm-skip-row data-site="SMIC" data-prod="ECP" data-tier="1"><td>SMIC-14</td><td>Etch 14</td><td>LAM</td><td>1</td><td>ACM未涉及 · EQP-1408</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="alert-box info">POR机台数 / ACM机台数 / vendor 分列（ACM / TEL / DNS / LAM）均为演示字段，未接生产 CRM。Step 下钻含验证进度、LOOP、STAGE、STEP_DESC、Recipe、Recipe Detail、Group分类、POR品牌、Remark。对标字段（基准机台 / 配置 / 技术节点 / Released / 验证成功(未量产) / 验证失败 / 验证中 / Capacity / No capa / Total / 量产占比 / Capacity Ratio）标演示。ACM未涉及生产走 CRM Tool application 或填报。</div>
 </div>
 
 <div id="tab-spec" class="tab-content" data-group="site">
@@ -674,7 +797,7 @@
 </main>
 </div>
 <script src="assets/charts.js?v=68"></script>
-<script src="assets/app.js?v=69"></script>
+<script src="assets/app.js?v=70"></script>
 <script>setActiveNav('site-product');</script>
 
 <script
