@@ -1108,6 +1108,13 @@ td { font-variant-numeric: tabular-nums; }
 .modal.wide { width: min(1180px, 96vw); }
 .r43-table { min-width: 1080px; font-size: 12px; }
 .layer-vendor-table { min-width: 1100px; }
+.layer-vendor-table th,
+.r43-table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #fff;
+}
 
 /* Layout grids preserved */
 .kpi-grid.fixed3 {
