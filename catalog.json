@@ -422,7 +422,7 @@
       "industry": "半导体",
       "hall": "ops",
       "type": "售前原型",
-      "summary": "v4.6：湿法产品部下钻；机台运行中/维护中/停机；Layer RLS 多 vendor、ACM未涉及、Step 与对标字段。",
+      "summary": "v4.6：临港湿法组织树下钻；机台运行态；Layer RLS vendor 分列、ACM未涉及填报、Step/对标字段。",
       "tags": [
         "半导体",
         "研发运营",

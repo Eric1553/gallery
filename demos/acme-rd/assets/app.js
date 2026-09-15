@@ -248,7 +248,7 @@ function initNavPrefetch() {
   const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 350));
   idle(() => {
     document.querySelectorAll('.nav a[href]').forEach(a => prefetch(a.getAttribute('href')));
-    ['assets/style.css?v=70', 'assets/charts.js?v=68', 'assets/app.js?v=70'].forEach(href => {
+    ['assets/style.css?v=70', 'assets/charts.js?v=68', 'assets/app.js?v=71'].forEach(href => {
       if (seen.has(href)) return;
       seen.add(href);
       const l = document.createElement('link');
@@ -837,7 +837,7 @@ function periodFactor(value) {
 function scaleDemoNumber(n, factor, asPercent) {
   if (!Number.isFinite(n)) return n;
   let next = n * factor;
-  if (asPercent) next = Math.min(99.4, Math.max(24, next));
+  if (asPercent) next = Math.min(99.4, Math.max(0.1, next));
   if (Number.isInteger(n)) return Math.max(n === 0 ? 0 : 1, Math.round(next));
   return Math.round(next * 10) / 10;
 }

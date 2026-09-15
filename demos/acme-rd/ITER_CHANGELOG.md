@@ -11,6 +11,7 @@
 - **Step 明细（R42）**：下钻列/KV 补全 验证进度、LOOP、STAGE、STEP_DESC、Recipe、Recipe Detail、Group分类、POR品牌、Remark；保留 CSV 下载。
 - **By Site 对标字段（R43）**：Site 行展开后增加第二块表：基准机台 / 配置 / 技术节点 / Released / 验证成功(未量产) / 验证失败 / 验证中 / Capacity / No capa / Total / 量产占比 / Capacity Ratio。标 演示 · 未接生产 CRM。
 - 版本芯片 v4.5 → v4.6。浅色主题未改。
+- 百分比 KPI 不再被演示缩放卡到最低 24%（否则 Spec 变更率 8.3% 会显示成 24.0%）。
 
 ## 未纳入
 
