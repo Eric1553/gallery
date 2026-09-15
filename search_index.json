@@ -1402,7 +1402,7 @@
         "ops",
         "盛美研发运营看板"
       ],
-      "summary": "v4.4：公司级 Fanout 申请/选机/现场反馈/角色汇总；Layer RLS 独立页签；时间按年季月筛选。",
+      "summary": "v4.6：湿法产品部下钻；机台运行中/维护中/停机；Layer RLS 多 vendor、ACM未涉及、Step 与对标字段。",
       "modules": [
         {
           "label": "研发运营看板"
@@ -1501,7 +1501,7 @@
           "label": "11 类 OA 流程"
         },
         {
-          "label": "v4.4"
+          "label": "v4.6"
         },
         {
           "label": "结论"
