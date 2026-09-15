@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1",
-    "built_at": 1789317875,
+    "built_at": 1789472612,
     "demo_count": 25,
     "missing_html": [],
     "note": "Phase1 local DEMO body/module index for gallery search"
@@ -1402,7 +1402,7 @@
         "ops",
         "盛美研发运营看板"
       ],
-      "summary": "v4.4：公司级 Fanout 申请/选机/现场反馈/角色汇总；Layer RLS 独立页签；时间按年季月筛选。",
+      "summary": "v4.6：临港湿法组织树下钻；机台运行态；Layer RLS vendor 分列、ACM未涉及填报、Step/对标字段。",
       "modules": [
         {
           "label": "研发运营看板"
@@ -1501,7 +1501,7 @@
           "label": "11 类 OA 流程"
         },
         {
-          "label": "v4.4"
+          "label": "v4.6"
         },
         {
           "label": "结论"
@@ -1594,7 +1594,7 @@
         "知识库看板 - 盛美半导体研发运营看板",
         "知识库看板",
         "知识条目 vs Lesson Learn · 按产品",
-        "按组别 · 学习人次",
+        "按研发组织 · 学习人次",
         "最近发布（演示数据）",
         "接入状态",
         "知识库看板 · 需求说明",

@@ -2,8 +2,8 @@
   "meta": {
     "title": "DEMO案例库",
     "subtitle": "Vibe coding 成果的展示、检索与客户演示入口",
-    "version": "1.6.3",
-    "updated_at": "2026-09-13",
+    "version": "1.6.4",
+    "updated_at": "2026-09-15",
     "host_hint": "http://120.55.184.234",
     "cover_policy": "webp_thumb_800 + cover_1600",
     "cover_size": "3200x2000",
@@ -422,7 +422,7 @@
       "industry": "半导体",
       "hall": "ops",
       "type": "售前原型",
-      "summary": "v4.4：公司级 Fanout 申请/选机/现场反馈/角色汇总；Layer RLS 独立页签；时间按年季月筛选。",
+      "summary": "v4.6：临港湿法组织树下钻；机台运行态；Layer RLS vendor 分列、ACM未涉及填报、Step/对标字段。",
       "tags": [
         "半导体",
         "研发运营",
@@ -432,10 +432,11 @@
       "entry": "index.html",
       "source": "S-盛美半导体/dashboard-prototype",
       "featured": true,
-      "version_label": "v4.4",
+      "version_label": "v4.6",
       "cover": "cover.webp",
       "thumb": "thumb.webp",
       "added_at": "2026-04-22",
+      "updated_at": "2026-09-15",
       "audience": "client"
     },
     {

@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>临港研发线看板 - 盛美半导体研发运营看板</title>
-<link rel="stylesheet" href="assets/style.css?v=68">
-<link rel="stylesheet" href="assets/req-spec.css?v=68">
+<link rel="stylesheet" href="assets/style.css?v=70">
+<link rel="stylesheet" href="assets/req-spec.css?v=70">
 </head>
 <body data-page="lingang">
 <div class="layout">
@@ -13,7 +13,7 @@
     <div class="brand">
     <div class="brand-logo">ACM</div>
     <h1>研发运营看板</h1>
-    <p>盛美半导体 · 演示原型 v4.5</p>
+    <p>盛美半导体 · 演示原型 v4.6</p>
   </div>
   <nav class="nav">
     <div class="nav-section">业务模块</div>
@@ -70,7 +70,7 @@
 
 <div id="req-spec-data" data-title="临港研发线看板 · 需求说明" data-sub="对应客户原始需求（外部需求 / 功能变更 / 夜莺计划 / 物料 / 设备）" style="display:none">
   <div class="req-list">
-    <div class="req-item"><div class="req-idx">1</div><div class="req-body2"><div class="req-item-t">研发线外部需求导入</div><div class="req-item-d">研发线外部需求导入流程：已归档 / 未归档（除发起节点）；来源为客户信息；统计近半年所有部门；二级页展示关联其他流程。</div></div></div>
+    <div class="req-item"><div class="req-idx">1</div><div class="req-body2"><div class="req-item-t">研发线外部需求导入</div><div class="req-item-d">研发线外部需求导入流程：已归档 / 未归档（除发起节点）；来源为客户信息；统计近半年所有部门。部门图可下钻湿法产品部下一级（CMP / Clean / ECP 等，演示组织树，非生产主数据）。二级页展示关联其他流程。</div></div></div>
     <div class="req-item"><div class="req-idx">2</div><div class="req-body2"><div class="req-item-t">临港机台功能变更</div><div class="req-item-d">临港机台功能性变更改造申请：归档 + 未归档数量；发起人顶级部门分布；统计一年内所有部门。</div></div></div>
     <div class="req-item"><div class="req-idx">3</div><div class="req-body2"><div class="req-item-t">夜莺计划</div><div class="req-item-d">夜莺计划项目数及各阶段——立项（节点 01-04）、中期（04-07）、延期（06）、结案（12 归档）；按顶级部门分析。</div></div></div>
     <div class="req-item"><div class="req-idx">4</div><div class="req-body2"><div class="req-item-t">物料情况</div><div class="req-item-d">Wafer / FOUP / 耗材种类、数量；流程中 / 已结案；各设备 / 腔体状态；统计近 3 个月；范围为临港张江研发 + Wet-RD 新工艺研发部发起。</div></div></div>
@@ -97,23 +97,45 @@
     <div class="kpi-card accent-blue"><div class="kpi-label">需求总数</div><div class="kpi-value">45</div><div class="kpi-sub">近半年</div></div>
     <div class="kpi-card accent-green"><div class="kpi-label">已完成</div><div class="kpi-value">32</div></div>
     <div class="kpi-card accent-amber"><div class="kpi-label">进行中</div><div class="kpi-value">13</div></div>
-    <div class="kpi-card accent-purple"><div class="kpi-label">完成率</div><div class="kpi-value">71.1%</div><div class="kpi-sub">已完成 / 总数 · 口径待确认</div></div>
+    <div class="kpi-card accent-purple"><div class="kpi-label">完成率</div><div class="kpi-value">71.1%</div><div class="kpi-sub">已完成 / 总数 · 演示按申请月归属</div></div>
   </div>
+  <p class="chart-footnote" style="text-align:left;margin:-6px 0 16px">完成率演示按申请月归属，不按结案月。月度趋势为申请数量。</p>
   <div class="grid-2">
     <div class="panel">
       <div class="panel-head"><div class="panel-head-left"><h3>客户来源分布</h3></div><a class="link" href="lingang-ext-detail.html">关联流程明细 →</a></div>
       <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"客户A","v":18},{"l":"客户B","v":12},{"l":"客户C","v":8},{"l":"其他","v":7}]'></div></div>
     </div>
     <div class="panel">
-      <div class="panel-head"><div class="panel-head-left"><h3>月度需求导入趋势</h3></div></div>
-      <div class="panel-body"><div class="chart-wrap" data-line='{"labels":["1月","2月","3月","4月","5月","6月"],"series":[{"name":"需求数","data":[6,8,7,9,8,7],"c":"#2563eb"}]}'></div></div>
+      <div class="panel-head"><div class="panel-head-left"><h3>月度需求导入趋势</h3></div><span class="chip">申请数量</span></div>
+      <div class="panel-body"><div class="chart-wrap" data-line='{"labels":["1月","2月","3月","4月","5月","6月"],"series":[{"name":"申请数量","data":[6,8,7,9,8,7],"c":"#2563eb"}]}'></div>
+        <p class="chart-footnote">按申请月计数 · 演示</p>
+      </div>
     </div>
   </div>
   <div class="panel">
-    <div class="panel-head"><div class="panel-head-left"><h3>外部需求 · 近半年 按部门</h3></div></div>
-    <div class="panel-body"><div class="chart-wrap" data-bars='[{"l":"研发一部","v":14},{"l":"研发二部","v":11},{"l":"工艺部","v":9},{"l":"应用部","v":7},{"l":"湿法-CMP","v":5},{"l":"湿法-Clean","v":4},{"l":"湿法-ECP","v":3}]'></div>
-      <p class="chart-footnote">湿法-CMP / Clean / ECP</p>
+    <div class="panel-head"><div class="panel-head-left"><h3 id="lg-dept-title">外部需求 · 近半年 按部门</h3></div><span class="chip">演示组织树</span></div>
+    <div class="panel-body"><div class="chart-wrap" id="lg-dept-chart" data-org-children='[{"l":"湿法-CMP","v":5},{"l":"湿法-Clean","v":4},{"l":"湿法-ECP","v":3},{"l":"湿法-Bevel","v":2}]' data-bars='[{"l":"研发一部","v":10},{"l":"研发二部","v":9},{"l":"工艺部","v":7},{"l":"应用部","v":5},{"l":"湿法产品部","v":14}]'></div></div>
+    <div class="panel-body flush" style="border-top:1px solid var(--border-light)">
+      <table>
+        <tr><th>部门</th><th>申请数量</th><th>已完成</th><th>完成率</th><th>明细</th></tr>
+        <tr><td>研发一部</td><td data-period-num>10</td><td data-period-num>8</td><td>80%</td><td><a class="table-link" data-action="drill" data-title="研发一部 · 外部需求" data-sub="顶级部门 · 演示" data-cols="需求号,客户,部门,状态,申请月">查看</a></td></tr>
+        <tr><td>研发二部</td><td data-period-num>9</td><td data-period-num>6</td><td>67%</td><td><a class="table-link" data-action="drill" data-title="研发二部 · 外部需求" data-cols="需求号,客户,部门,状态,申请月">查看</a></td></tr>
+        <tr><td>工艺部</td><td data-period-num>7</td><td data-period-num>5</td><td>71%</td><td><a class="table-link" data-action="drill" data-title="工艺部 · 外部需求" data-cols="需求号,客户,部门,状态,申请月">查看</a></td></tr>
+        <tr><td>应用部</td><td data-period-num>5</td><td data-period-num>4</td><td>80%</td><td><a class="table-link" data-action="drill" data-title="应用部 · 外部需求" data-cols="需求号,客户,部门,状态,申请月">查看</a></td></tr>
+        <tr class="expand-row" data-org-parent="wet"><td><span class="exp-caret">▶</span>湿法产品部</td><td data-period-num>14</td><td data-period-num>9</td><td>64%</td><td><a class="table-link" data-action="drill" data-title="湿法产品部 · 外部需求" data-sub="点击行展开下一级 · 演示组织树" data-cols="需求号,客户,下级部门,状态,申请月">查看</a></td></tr>
+        <tr class="detail-row" style="display:none"><td colspan="5"><div class="detail-inner">
+          <div class="detail-subhead">湿法产品部 · 下一级（演示）</div>
+          <table class="org-child-table">
+            <tr><th>下级部门</th><th>申请数量</th><th>已完成</th><th>完成率</th><th>明细</th></tr>
+            <tr><td>湿法-CMP</td><td data-period-num>5</td><td data-period-num>4</td><td>80%</td><td><a class="table-link" data-action="drill" data-title="湿法-CMP · 外部需求" data-sub="湿法产品部下一级 · 演示" data-cols="需求号,客户,部门,状态,申请月">查看</a></td></tr>
+            <tr><td>湿法-Clean</td><td data-period-num>4</td><td data-period-num>2</td><td>50%</td><td><a class="table-link" data-action="drill" data-title="湿法-Clean · 外部需求" data-cols="需求号,客户,部门,状态,申请月">查看</a></td></tr>
+            <tr><td>湿法-ECP</td><td data-period-num>3</td><td data-period-num>2</td><td>67%</td><td><a class="table-link" data-action="drill" data-title="湿法-ECP · 外部需求" data-cols="需求号,客户,部门,状态,申请月">查看</a></td></tr>
+            <tr><td>湿法-Bevel</td><td data-period-num>2</td><td data-period-num>1</td><td>50%</td><td><a class="table-link" data-action="drill" data-title="湿法-Bevel · 外部需求" data-cols="需求号,客户,部门,状态,申请月">查看</a></td></tr>
+          </table>
+        </div></td></tr>
+      </table>
     </div>
+    <div class="panel-body" style="padding-top:0"><p class="chart-footnote" style="text-align:left">点击「湿法产品部」展开 CMP / Clean / ECP / Bevel。演示组织树，非生产组织主数据。完成率演示按申请月归属。</p></div>
   </div>
 </div>
 
@@ -235,7 +257,7 @@
 </main>
 </div>
 <script src="assets/charts.js?v=68"></script>
-<script src="assets/app.js?v=69"></script>
+<script src="assets/app.js?v=71"></script>
 <script>setActiveNav('lingang');</script>
 
 <script
