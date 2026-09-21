@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1",
-    "built_at": 1789472612,
+    "built_at": 1789957168,
     "demo_count": 25,
     "missing_html": [],
     "note": "Phase1 local DEMO body/module index for gallery search"
@@ -1882,7 +1882,7 @@
         "ops",
         "唯捷销售BI原型"
       ],
-      "summary": "多页销售管理驾驶舱，覆盖业绩、漏斗与过程管理。",
+      "summary": "完整多页版。多页销售管理驾驶舱，覆盖业绩、漏斗与过程管理。",
       "modules": [
         {
           "label": "销售BI看板体系 · 经营决策一站式门户"
