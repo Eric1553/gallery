@@ -2,8 +2,8 @@
   "meta": {
     "title": "DEMO案例库",
     "subtitle": "Vibe coding 成果的展示、检索与客户演示入口",
-    "version": "1.6.5",
-    "updated_at": "2026-09-21",
+    "version": "1.6.6",
+    "updated_at": "2026-09-24",
     "host_hint": "http://120.55.184.234",
     "cover_policy": "webp_thumb_800 + cover_1600",
     "cover_size": "3200x2000",
@@ -108,6 +108,7 @@
       "featured": true,
       "audience": "client",
       "family": "jingxin-helmsman",
+      "is_latest": true,
       "version_label": "桌面版",
       "form_factor": "desktop",
       "cover": "cover.webp",
@@ -138,6 +139,7 @@
       "featured": true,
       "audience": "client",
       "family": "jingxin-helmsman",
+      "is_latest": false,
       "version_label": "手机版",
       "form_factor": "mobile",
       "cover": "cover.webp",
@@ -590,7 +592,7 @@
       "source": "Y-隐冠半导体",
       "source_files": [
         "隐冠IPD流程蓝图看板.html",
-        "半导体IPD数字化方案-帆软售前讲稿.html"
+        "半导体IPD数字化方案-售前讲稿.html"
       ],
       "featured": false,
       "version_label": "v1",

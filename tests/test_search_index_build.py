@@ -55,6 +55,21 @@ class CompactAliasTests(unittest.TestCase):
         for banned in ("简道云", "帆软", "FDE"):
             self.assertNotIn(banned, blob, banned)
 
+    def test_client_demos_drop_fanruan_packaging(self):
+        index = json.loads((ROOT / "search_index.json").read_text(encoding="utf-8"))
+        for did in ("yinguang-ipd", "smic-finance"):
+            item = index["demos"][did]
+            for field in ("page_titles", "source_paths", "keywords", "aliases"):
+                blob = json.dumps(item.get(field), ensure_ascii=False)
+                self.assertNotIn("帆软", blob, f"{did}.{field}")
+        smic = index["demos"]["smic-finance"]
+        smic_blob = json.dumps(
+            {"keywords": smic["keywords"], "page_titles": smic["page_titles"]},
+            ensure_ascii=False,
+        )
+        self.assertNotIn("FVS", smic_blob)
+        self.assertNotIn("帆软", smic_blob)
+
 
 if __name__ == "__main__":
     unittest.main()
