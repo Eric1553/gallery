@@ -68,6 +68,22 @@ class CatalogContractTests(unittest.TestCase):
         latest = [d["id"] for d in catalog["demos"] if d.get("family") == "biren-finance" and d.get("archived") is not True and d.get("is_latest") is not False]
         self.assertEqual(latest, ["biren-finance"])
 
+    def test_jingxin_helmsman_family_latest_flags(self):
+        catalog = json.loads((ROOT / "catalog.json").read_text(encoding="utf-8"))
+        by_id = {d["id"]: d for d in catalog["demos"]}
+        desktop = by_id["jingxin-helmsman"]
+        mobile = by_id["jingxin-helmsman-mobile"]
+        self.assertEqual(desktop.get("family"), "jingxin-helmsman")
+        self.assertEqual(mobile.get("family"), "jingxin-helmsman")
+        self.assertIs(desktop.get("is_latest"), True)
+        self.assertIs(mobile.get("is_latest"), False)
+        self.assertIsNot(mobile.get("archived"), True)
+        self.assertEqual(catalog["meta"]["version"], "1.6.6")
+        self.assertEqual(catalog["meta"]["updated_at"], "2026-09-24")
+        yinguang = by_id["yinguang-ipd"]
+        self.assertNotIn("帆软", json.dumps(yinguang.get("source_files"), ensure_ascii=False))
+        self.assertTrue((ROOT / "demos" / "yinguang-ipd" / "半导体IPD数字化方案-售前讲稿.html").is_file())
+
     def test_internal_carousels_are_not_customer_featured(self):
         catalog = json.loads((ROOT / "catalog.json").read_text(encoding="utf-8"))
         for did in ("fde-carousel", "jiandaoyun-carousel"):

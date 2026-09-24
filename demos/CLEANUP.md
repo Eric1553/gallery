@@ -72,3 +72,7 @@ Re-read this file on current `main` and re-scanned `demos/`. Policy unchanged; n
 | New junk matching the Removed table | None found (no nested `Users/…` Mac paths, no carousel `start-server` / `启动轮播` leftovers, no unreferenced office blobs). `biren-ceo/壁仞科技_CEO决策看板_客户演示操作说明.docx` is linked from that demo’s README — keep. `static-demos/` remains README-only. |
 
 Handoff steps for later DEMO work: [`docs/DEMO-CHANGE-FLOW.md`](../docs/DEMO-CHANGE-FLOW.md). Merge ≠ deploy.
+
+## 2026-09-24 · archived rev thumbs stay warn-only
+
+`biren-finance__rev1` / `biren-finance__rev2` still have no `thumb.webp` / `cover.webp`. This catalog pass (1.6.6) **accepts validator warn-only** for those archived stubs, same as the prior ops decision. Do not invent covers. `biren-finance__rev3` already has both files. Trees stay archived (`family=biren-finance`, `archived=true`, `is_latest=false`).
