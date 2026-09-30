@@ -375,6 +375,7 @@ kind：`major` 重构 | `minor` 小迭代 | `patch` 修复
 | DEMO 改动协作规范 | `docs/DEMO-CHANGE-FLOW.md` |
 | Presales Brief v1 | `docs/PRESALES-BRIEF.md` + `schemas/presales_brief.v1.json` |
 | GitHub 连接 | `docs/GITHUB-GB-SETUP.md` |
+| FR 模板解析台 / fr-spec-lite | `docs/FR-SPEC-LITE-LOGIC.md` |
 | README | `README.md` |
 | Gallery 发版剧本 | `docs/RELEASE-PLAYBOOK.md` |
 | MaxKB 权威（ECS） | `/Users/lorin/Documents/ECS服务器/docs/MAXKB.md` |
