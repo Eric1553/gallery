@@ -2,8 +2,8 @@
   "meta": {
     "title": "DEMO案例库",
     "subtitle": "Vibe coding 成果的展示、检索与客户演示入口",
-    "version": "1.6.6",
-    "updated_at": "2026-09-24",
+    "version": "1.6.7",
+    "updated_at": "2026-10-26",
     "host_hint": "http://120.55.184.234",
     "cover_policy": "webp_thumb_800 + cover_1600",
     "cover_size": "3200x2000",
@@ -251,7 +251,7 @@
       "industry": "半导体",
       "hall": "ceo",
       "type": "售前/交付原型",
-      "summary": "浅色高质感财务分析原型：CEO看板、预算预实、订单/销售/应收/个人KPI、存货与研财，以及填报与明细报表。",
+      "summary": "财务一期原型：CEO总览、预算预实、销售经营、达成应收、个人KPI、存货与研发预实，支持筛选下钻及示例填报。",
       "tags": [
         "半导体",
         "财务分析",
@@ -259,9 +259,9 @@
         "研财协同"
       ],
       "entry": "index.html",
-      "source": "B-壁仞科技/财务项目/finance-dashboard-prototype",
+      "source": "B-壁仞科技/财务项目/07-DEMO原型/finance-dashboard-prototype",
       "featured": true,
-      "version_label": "最新",
+      "version_label": "v5",
       "baseline_id": "biren-finance__baseline",
       "cover": "cover.webp",
       "thumb": "thumb.webp",
@@ -269,6 +269,32 @@
       "family": "biren-finance",
       "is_latest": true,
       "audience": "client"
+    },
+    {
+      "id": "biren-finance__rev4",
+      "title": "壁仞 · 财务数字化（v4 · 10月客户更新）",
+      "client": "壁仞科技",
+      "industry": "半导体",
+      "hall": "ceo",
+      "type": "历史修订",
+      "summary": "V5迭代前冻结快照，包含年度预算、研发预实、存货跌价准备和月份下拉修复。",
+      "tags": [
+        "半导体",
+        "财务分析",
+        "预算预实",
+        "研财协同"
+      ],
+      "entry": "index.html",
+      "source": "B-壁仞科技/财务项目/07-DEMO原型/finance-dashboard-revisions/rev4",
+      "featured": false,
+      "version_label": "v4",
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "added_at": "2026-10-13",
+      "family": "biren-finance",
+      "is_latest": false,
+      "audience": "client",
+      "archived": true
     },
     {
       "id": "biren-finance__baseline",

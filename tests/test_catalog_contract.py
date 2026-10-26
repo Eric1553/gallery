@@ -78,8 +78,8 @@ class CatalogContractTests(unittest.TestCase):
         self.assertIs(desktop.get("is_latest"), True)
         self.assertIs(mobile.get("is_latest"), False)
         self.assertIsNot(mobile.get("archived"), True)
-        self.assertEqual(catalog["meta"]["version"], "1.6.6")
-        self.assertEqual(catalog["meta"]["updated_at"], "2026-09-24")
+        self.assertEqual(catalog["meta"]["version"], "1.6.7")
+        self.assertEqual(catalog["meta"]["updated_at"], "2026-10-26")
         yinguang = by_id["yinguang-ipd"]
         self.assertNotIn("帆软", json.dumps(yinguang.get("source_files"), ensure_ascii=False))
         self.assertTrue((ROOT / "demos" / "yinguang-ipd" / "半导体IPD数字化方案-售前讲稿.html").is_file())
