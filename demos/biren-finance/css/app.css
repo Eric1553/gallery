@@ -1070,3 +1070,12 @@ table.data tr.critical td { background: #fdecee; }
 @media(max-width:760px) { #view-budget > .grid-21,#view-sales > .grid-21,#view-rd > .grid-21,#view-inventory > .grid-21 { grid-template-columns:1fr; } }
 .form-group > .ph { display:flex; align-items:center; justify-content:space-between; gap:10px; padding-bottom:10px; border-bottom:1px solid var(--border-soft); }
 .form-group > .ph h3 { font-size:14px; margin:0; }.form-group > .ph .sub { font-size:11px; color:var(--text-3); }
+
+/* CEO summary has a normal text row: source tags and progress never share absolute coordinates. */
+#view-overview .ceo-hero-card .m { display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:5px 12px; }
+#view-overview .ceo-hero-card .m strong { font-size:11px; font-weight:650; white-space:nowrap; color:var(--brand-deep); }
+#view-overview .ceo-hero-card .l { align-items:flex-start; }
+#view-overview .ceo-hero-card .l > span:first-child { min-width:0; line-height:1.5; }
+#view-overview .ceo-hero-card .tag { flex-shrink:0; }
+#view-overview #ov-nextgen { height:260px; }
+#view-rd .grid-1 #rd-dept { height:140px; }

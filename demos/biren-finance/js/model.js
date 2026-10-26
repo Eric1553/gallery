@@ -27,7 +27,7 @@
   Object.entries(D.budget.deptTree).forEach(([l1,node])=>Object.entries(node.children).forEach(([l2,vals],i)=>{
     const fee=l1==='研发中心'?'研发':l1==='销售部'?'销售':l1==='供应链'?'量产':'管理';
     const subject=fee==='研发'?['工程服务费','云资源','委外测试'][i%3]:fee==='销售'?['差旅费','市场费用','会务费'][i%3]:fee==='量产'?'仓储物流':'办公费用';
-    budget.push({l1,l2,fee,subject,attribute:fee==='研发'?'项目预算':'部门预算',project:fee==='研发'?['BR100量产','软件平台','BR166验证'][i%3]:'通用运营',annual:vals[0],monthlyBudget:distribute(vals[0],Array(12).fill(1)),monthlyActual:[...distribute(vals[1],D.budget.monthActual.slice(0,7)),0,0,0,0,0]});
+    budget.push({l1,l2,fee,subject,attribute:fee,expenseType:fee==='研发'?'工程NRE':'部门行政费用',project:fee==='研发'?['BR100量产','软件平台','BR166验证'][i%3]:'通用运营',annual:vals[0],monthlyBudget:distribute(vals[0],Array(12).fill(1)),monthlyActual:[...distribute(vals[1],D.budget.monthActual.slice(0,7)),0,0,0,0,0]});
   }));
   const rd=D.rd.projects.labels.map((project,i)=>({project,l1:i===2||i===5?'软件中心':'研发中心',l2:i===2?'系统软件':i===5?'驱动栈':i===1?'验证测试':'芯片设计',budget:D.rd.projects.budget[i],used:D.rd.projects.actual[i],change:[260,200,160,120,80,40][i],prior:[520,460,280,180,120,80][i],subject:['工程服务费','委外测试','云资源','物料采购','工程服务费','人力分摊'][i],human:[800,600,1600,280,200,1280][i],status:i===1?'审批中':'已批准'}));
   rd.forEach(r=>{r.monthly=distribute(r.used-r.prior,D.rd.monthUsed.slice(0,7)).concat([0,0,0,0,0]);r.changes=distribute(r.change,[1,2,3,4,5,6,7]).concat([0,0,0,0,0]);});

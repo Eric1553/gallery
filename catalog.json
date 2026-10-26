@@ -2,7 +2,7 @@
   "meta": {
     "title": "DEMO案例库",
     "subtitle": "Vibe coding 成果的展示、检索与客户演示入口",
-    "version": "1.6.8",
+    "version": "1.6.9",
     "updated_at": "2026-10-26",
     "host_hint": "http://120.55.184.234",
     "cover_policy": "webp_thumb_800 + cover_1600",
@@ -261,7 +261,7 @@
       "entry": "index.html",
       "source": "B-壁仞科技/财务项目/07-DEMO原型/finance-dashboard-prototype",
       "featured": true,
-      "version_label": "v5.1",
+      "version_label": "v5.2",
       "baseline_id": "biren-finance__baseline",
       "cover": "cover.webp",
       "thumb": "thumb.webp",
@@ -269,6 +269,32 @@
       "family": "biren-finance",
       "is_latest": true,
       "audience": "client"
+    },
+    {
+      "id": "biren-finance__rev6",
+      "title": "壁仞 · 财务数字化（v5.1 · 需求复核前）",
+      "client": "壁仞科技",
+      "industry": "半导体",
+      "hall": "ceo",
+      "type": "历史修订",
+      "summary": "CEO重叠及需求复核纠正前冻结快照。现行请看biren-finance。",
+      "tags": [
+        "半导体",
+        "财务分析",
+        "预算预实",
+        "研财协同"
+      ],
+      "entry": "index.html",
+      "source": "B-壁仞科技/财务项目/07-DEMO原型/finance-dashboard-revisions/rev6",
+      "featured": false,
+      "version_label": "v5.1",
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "added_at": "2026-10-26",
+      "family": "biren-finance",
+      "is_latest": false,
+      "audience": "client",
+      "archived": true
     },
     {
       "id": "biren-finance__rev5",
