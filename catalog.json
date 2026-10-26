@@ -2,7 +2,7 @@
   "meta": {
     "title": "DEMO案例库",
     "subtitle": "Vibe coding 成果的展示、检索与客户演示入口",
-    "version": "1.6.7",
+    "version": "1.6.8",
     "updated_at": "2026-10-26",
     "host_hint": "http://120.55.184.234",
     "cover_policy": "webp_thumb_800 + cover_1600",
@@ -251,7 +251,7 @@
       "industry": "半导体",
       "hall": "ceo",
       "type": "售前/交付原型",
-      "summary": "财务一期原型：CEO总览、预算预实、销售经营、达成应收、个人KPI、存货与研发预实，支持筛选下钻及示例填报。",
+      "summary": "财务一期原型：固定分区、指标卡与常规图表，覆盖CEO、预算、销售、应收、个人KPI、存货、研发及填报明细。",
       "tags": [
         "半导体",
         "财务分析",
@@ -261,7 +261,7 @@
       "entry": "index.html",
       "source": "B-壁仞科技/财务项目/07-DEMO原型/finance-dashboard-prototype",
       "featured": true,
-      "version_label": "v5",
+      "version_label": "v5.1",
       "baseline_id": "biren-finance__baseline",
       "cover": "cover.webp",
       "thumb": "thumb.webp",
@@ -269,6 +269,32 @@
       "family": "biren-finance",
       "is_latest": true,
       "audience": "client"
+    },
+    {
+      "id": "biren-finance__rev5",
+      "title": "壁仞 · 财务数字化（v5 · 布局优化前）",
+      "client": "壁仞科技",
+      "industry": "半导体",
+      "hall": "ceo",
+      "type": "历史修订",
+      "summary": "全页BI布局优化前冻结快照，含达成率两位小数修复。",
+      "tags": [
+        "半导体",
+        "财务分析",
+        "预算预实",
+        "研财协同"
+      ],
+      "entry": "index.html",
+      "source": "B-壁仞科技/财务项目/07-DEMO原型/finance-dashboard-revisions/rev5",
+      "featured": false,
+      "version_label": "v5",
+      "cover": "cover.webp",
+      "thumb": "thumb.webp",
+      "added_at": "2026-10-26",
+      "family": "biren-finance",
+      "is_latest": false,
+      "audience": "client",
+      "archived": true
     },
     {
       "id": "biren-finance__rev4",
