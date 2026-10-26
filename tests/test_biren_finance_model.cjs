@@ -30,4 +30,6 @@ const all=M.arFilter({});
 close(M.sum(all,'amount'),M.sum(all.filter(r=>M.age(r.due)>=0),'amount')+M.sum(all.filter(r=>M.age(r.due)<0),'amount'));
 assert(M.arFilter({team:'华东团队'}).every(r=>r.team==='华东团队'));
 assert.equal(M.forms.length,10);
+assert.deepEqual([...new Set(M.budget.map(r=>r.attribute))].sort(),['研发','管理','销售','量产'].sort());
+assert.deepEqual([...new Set(M.budget.map(r=>r.expenseType))].sort(),['工程NRE','部门行政费用'].sort());
 console.log('Biren finance: aggregation, allocation, targets, scope filters and receivable reconciliation passed.');

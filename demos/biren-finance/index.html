@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>壁仞科技 · 财务数字化一期分析原型</title>
-  <link rel="stylesheet" href="css/app.css?v=20261026layout">
+  <link rel="stylesheet" href="css/app.css?v=20261026ceofix">
   <script src="js/vendor/echarts.min.js?v=20260731f"></script>
 </head>
 <body>
@@ -157,14 +157,9 @@
             </label>
             <label class="filter-field"><span>费用类型</span>
               <select id="bd-fee" aria-label="费用类型">
-                <option value="">全部费用类型</option>
-                <option>研发</option>
-                <option>管理</option>
-                <option>销售</option>
-                <option>量产</option>
-              </select>
+                <option value="">全部费用类型</option><option value="工程NRE">工程NRE</option><option value="部门行政费用">部门行政费用</option></select>
             </label>
-<label class="filter-field"><span>项目</span><select id="bd-project-filter"><option value="">全部项目</option><option>BR100量产</option><option>BR166验证</option><option>软件平台</option><option>通用运营</option></select></label><label class="filter-field"><span>预算属性</span><select id="bd-attribute"><option value="">全部属性</option><option>项目预算</option><option>部门预算</option></select></label>            <div class="filter-field">
+<label class="filter-field"><span>项目</span><select id="bd-project-filter"><option value="">全部项目</option><option>BR100量产</option><option>BR166验证</option><option>软件平台</option><option>通用运营</option></select></label><label class="filter-field"><span>预算属性</span><select id="bd-attribute"><option value="">全部预算属性</option><option value="研发">研发</option><option value="管理">管理</option><option value="销售">销售</option><option value="量产">量产</option></select></label>            <div class="filter-field">
               <span>时间</span>
               <div class="month-dd" id="bd-month-dd">
                 <button type="button" class="month-dd-btn" aria-haspopup="true" aria-expanded="false">1–7月 YTD</button>
@@ -188,7 +183,7 @@
             <div id="bd-subject" class="chart subject-chart"></div>
           </div>
         <div class="panel">
-            <div class="ph"><h3>按费用类型</h3><span class="sub">研发 / 管理 / 销售 / 量产</span></div>
+            <div class="ph"><h3>按预算属性</h3><span class="sub">研发 / 管理 / 销售 / 量产</span></div>
             <div id="bd-attr"></div>
           </div>
           </div><div class="grid grid-2"><div class="panel">
@@ -451,8 +446,8 @@
             <div class="ph"><h3>采购执行金额对比</h3><span class="sub">PR / PO / 验收 / 付款 · 明细口径</span></div>
             <div class="funnel" id="rd-funnel"></div>
           </div>
-          </div><div class="grid grid-2"><div class="panel tight"><div class="ph"><h3>部门投入金额</h3><span class="sub">一级 / 二级部门 · 万元</span></div><div id="rd-dept" class="chart sm"></div></div>
-        <div class="panel"><div class="ph"><h3>人力与非人力投入</h3><span class="sub">所选期间 · 万元</span></div><div id="rd-cost" class="chart sm"></div></div></div><div class="panel">
+          </div><div class="grid grid-1"><div class="panel tight"><div class="ph"><h3>部门投入金额</h3><span class="sub">一级 / 二级部门 · 万元</span></div><div id="rd-dept" class="chart sm"></div></div>
+        </div><div class="panel">
           <div class="ph"><h3>研发项目明细</h3><span class="sub">含审批状态</span></div>
           <div id="rd-detail"></div>
         </div>
@@ -490,8 +485,8 @@
   <div class="toast" id="toast"></div>
 
   <script src="js/data.js?v=20261026"></script>
-  <script src="js/model.js?v=20261026"></script>
-  <script src="js/app.js?v=20261026layout"></script>
+  <script src="js/model.js?v=20261026ceofix"></script>
+  <script src="js/app.js?v=20261026ceofix"></script>
   <!-- 客户反馈（独立服务 :8787）财务 DEMO -->
   <script src="http://120.55.184.234:8787/embed.js?v=20260801t" data-demo-id="biren-finance" data-api="http://120.55.184.234:8787" defer></script>
 <div class="modal" id="form-modal" hidden><div class="modal-backdrop" data-close-form></div><div class="modal-card finance-form-dialog" role="dialog" aria-modal="true" aria-labelledby="form-title"><div class="modal-head"><h3 id="form-title"></h3><button type="button" data-close-form aria-label="关闭填报">关闭</button></div><div class="note compact">示例填报暂存在本浏览器，不提交到业务系统。下载模板后可按列填写并上传 CSV。</div><div id="form-fields" class="finance-form-fields"></div><div class="finance-form-actions"><button type="button" id="form-download">下载 CSV 模板</button><label class="upload-label">上传 CSV<input type="file" id="form-upload" accept=".csv,text/csv"></label><button type="button" id="form-save">保存示例</button></div><p id="form-status" role="status"></p><div id="form-preview"></div></div></div>

@@ -281,10 +281,11 @@
     const rdNear=M.rd.filter(r=>r.used/r.budget>.95).length,rdOver=M.rd.some(r=>r.used/r.budget>1);
     o.lights[5].level=rdOver?'danger':rdNear?'warn':'ok';o.lights[5].desc=rdNear+' 个项目执行率超过95%';
     o.rdVs={labels:M.rd.map(r=>r.project),budget:M.rd.map(r=>r.budget),actual:M.rd.map(r=>r.used),rate:M.rd.map(r=>Math.round(r.used/r.budget*100))};
-    o.rdBudgetStruct.labels=['变更前预算','已批准变更','当前预算'];
-    o.rdRisks[2].title='已批准研发预算变更';o.rdRisks[2].desc='累计变更 '+money(M.sum(M.rd,'change'))+' 万，当前预算已包含该金额。';
-    o.rdBudgetStruct.values=[M.sum(M.rd,'budget')-M.sum(M.rd,'change'),M.sum(M.rd,'change'),M.sum(M.rd,'budget')];
+    o.rdBudgetStruct.labels=['年初预算','本年度新增项目预算','全年预算'];
+    o.rdBudgetStruct.values=[18600,3400,22000];
+    o.rdRisks[2].title='本年度新增项目预算';o.rdRisks[2].desc='新增项目预算 3,400 万；全年研发预算 22,000 万，与单项目全周期预算分开。';
     o.rdMix={labels:M.rd.map(r=>r.project),values:M.rd.map(r=>r.used)};
+    $('#ov-rd-mix').parentElement.querySelector('.sub').textContent='累计 '+money(M.sum(M.rd,'used'))+' 万元';
     o.invMix={labels:D.inventory.category.labels,values:D.inventory.category.values};
     o.nonRd={labels:['管理','销售','量产'],budget:['管理','销售','量产'].map(f=>M.sum(M.budget.filter(r=>r.fee===f),'annual')),actual:['管理','销售','量产'].map(f=>M.sum(M.budget.filter(r=>r.fee===f),r=>M.sum(r.monthlyActual.map(v=>({v})),'v')))};
     o.finKpis[3].value=(M.sum(o.nonRd.actual.map(v=>({v})),'v')/M.sum(o.nonRd.budget.map(v=>({v})),'v')*100).toFixed(2);
@@ -298,9 +299,8 @@
       <div class="ceo-hero-card ${h.tone}${h.tip ? " clickable" : ""}"${h.tip ? ` data-tip="${h.tip}"` : ""}>
         <div class="l"><span>${h.label}</span>${tagHtml(h.tag, h.tagText)}</div>
         <div class="v">${h.value}${h.unit ? `<small>${h.unit}</small>` : ""}</div>
-        <div class="m">${h.target}</div>
-        <div class="prog"><i style="width:${h.pct}%"></i></div>
-        <div class="ring" style="--p:${h.pct}"><span>${Math.round(h.pct)}%</span></div>
+        <div class="m"><span>${h.target}</span><strong>达成 ${Number(h.pct).toFixed(2)}%</strong></div>
+        <div class="prog"><i style="width:${Math.min(100,Math.max(0,h.pct))}%"></i></div>
       </div>`).join("");
 
     $("#ov-core-kpis").innerHTML = o.coreKpis.map(kpiHtml).join("");
@@ -404,11 +404,11 @@
     chart("ov-nextgen", {
       color: ["#66ccff", "#0b4fb8"],
       tooltip: baseTooltip(),
-      legend: { top: 0, textStyle: { color: "#566280", fontSize: 11 } },
-      grid: { left: 88, right: 48, top: 34, bottom: 20 },
+      legend: { top: 2, left: "center", itemWidth: 18, itemHeight: 10, itemGap: 22, textStyle: { color: "#566280", fontSize: 11 } },
+      grid: { left: 106, right: 90, top: 66, bottom: 34 },
       xAxis: [
-        { type: "value", name: "数量", nameTextStyle: { color: "#8a93a6", fontSize: 10 }, axisLabel: { color: "#8a93a6" }, splitLine: { show: false } },
-        { type: "value", name: "金额(万)", nameTextStyle: { color: "#8a93a6", fontSize: 10 }, axisLabel: { color: "#8a93a6" }, splitLine: { lineStyle: { color: "#eef2f8" } } },
+        { type: "value", name: "数量", position: "bottom", splitNumber: 3, nameGap: 12, nameTextStyle: { color: "#8a93a6", fontSize: 10 }, axisLabel: { color: "#8a93a6", fontSize: 10, hideOverlap: true }, splitLine: { show: false } },
+        { type: "value", name: "金额（万元）", position: "top", splitNumber: 3, nameGap: 12, nameTextStyle: { color: "#8a93a6", fontSize: 10 }, axisLabel: { color: "#8a93a6", fontSize: 10, hideOverlap: true }, splitLine: { lineStyle: { color: "#eef2f8" } } },
       ],
       yAxis: { type: "category", data: o.nextGen.labels, axisLabel: { color: "#566280", fontSize: 11 } },
       series: [
@@ -654,8 +654,8 @@
     $('#dt-scope').textContent = detailContext && detailContext.id === id ? ' 当前：' + detailContext.label : ' 当前：全部示例';
     if (detailContext && detailContext.id === id) { box.innerHTML=tableHtml(detailContext.rows, id==='arDetail'?{overdueDaysIdx:4}:{}); $all('#dt-tabs .tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===id)); return; }
     if (id==='personal'||id==='salesForecast') { box.innerHTML='<div class="note">请从对应看板进入明细。</div>'; return; }
-    if (id==='budgetDiff'&&!detailContext) D.details.budgetDiff=[['一级部门','二级部门','项目','科目','年度预算','YTD实际','预算差异率'],...M.budget.map(r=>[r.l1,r.l2,r.project,r.subject,money(r.annual),money(r.monthlyActual.reduce((a,b)=>a+b,0)),rate(r.monthlyActual.reduce((a,b)=>a+b,0),r.annual)])];
-    if (id==='rdDetail'&&!detailContext) D.details.rdDetail=[['项目','一级部门','二级部门','科目','全周期预算','全周期累计','预算使用率'],...M.rd.map(r=>[r.project,r.l1,r.l2,r.subject,money(r.budget),money(r.used),rate(r.used,r.budget)])];
+    if (id==='budgetDiff') D.details.budgetDiff=budgetDetailRows(M.budget.map(r=>({...r,actual:r.monthlyActual.slice(0,7).reduce((a,b)=>a+b,0),periodBudget:r.monthlyBudget.slice(0,7).reduce((a,b)=>a+b,0)})));
+    if (id==='rdDetail') D.details.rdDetail=rdDetailRows(M.rd.map(r=>({...r,periodUsed:r.monthly.slice(0,7).reduce((a,b)=>a+b,0),periodChange:r.changes.slice(0,7).reduce((a,b)=>a+b,0)})));
     if (id==='salesOrder') D.details.salesOrder=salesRows(M.sales);
     if (id==='arDetail') D.details.arDetail=arRows(M.receivables);
     // 切换明细 Tab 时先释放本区图表，避免实例绑在已删除节点上
@@ -824,26 +824,28 @@
     lineChart('kpi-rate-trend',months.map(m=>m+'月'),keys.map((key,i)=>({name:['订单','收入','回款'][i],data:months.map(m=>{const a=M.personal(name,[m]);return M.pct(a[key],a[key+'Target']);})})),'%');
     const rows=personalRows(p.rows,name);$('#kpi-own-detail').innerHTML=tableHtml(rows);$('#kpi-drill').onclick=()=>openDetail('personal',rows,'张明 / 本人分配后的订单与回款');
   }
+  function budgetDetailRows(rows) { return [['预算属性','费用类型','一级部门','二级部门','项目','预算科目','年度预算','期间预算','期间实际','期间差额','预算差异率'],...rows.map(r=>[r.attribute,r.expenseType,r.l1,r.l2,r.project,r.subject,money(r.annual),money(r.periodBudget),money(r.actual),money(r.actual-r.periodBudget),rate(r.actual,r.annual)])]; }
   function renderBudget() {
     bindDeptCascade('bd-dept-l1','bd-dept-l2',D.budget.deptTree,renderBudget);bindMonthMulti('bd-month-dd',renderBudget);['bd-fee','bd-project-filter','bd-attribute'].forEach(id=>bindSimple(id,renderBudget));
-    const months=selectedMonths($('#bd-month-dd'));const rows=M.budget.filter(r=>(!val('bd-dept-l1')||r.l1===val('bd-dept-l1'))&&(!val('bd-dept-l2')||r.l2===val('bd-dept-l2'))&&(!val('bd-fee')||r.fee===val('bd-fee'))&&(!val('bd-project-filter')||r.project===val('bd-project-filter'))&&(!val('bd-attribute')||r.attribute===val('bd-attribute')));
+    const months=selectedMonths($('#bd-month-dd'));const rows=M.budget.filter(r=>(!val('bd-dept-l1')||r.l1===val('bd-dept-l1'))&&(!val('bd-dept-l2')||r.l2===val('bd-dept-l2'))&&(!val('bd-fee')||r.expenseType===val('bd-fee'))&&(!val('bd-project-filter')||r.project===val('bd-project-filter'))&&(!val('bd-attribute')||r.attribute===val('bd-attribute')));
     const expanded=rows.map(r=>({...r,actual:months.reduce((n,m)=>n+r.monthlyActual[m-1],0),periodBudget:months.reduce((n,m)=>n+r.monthlyBudget[m-1],0)}));const annual=M.sum(rows,'annual'),actual=M.sum(expanded,'actual');
     $('#bd-scope').textContent=` 当前 ${monthSelectionLabel(months)}，${rows.length} 条预算科目记录；8–12月尚无实际发生数据。`;
     $('#bd-kpis').innerHTML=[card('年度预算总额',annual,'万','当前部门 / 项目 / 科目范围'),card('实际费用发生额',actual,'万','所选月份合计'),card('预算差异率',rate(actual,annual),'','实际费用 / 年度预算'),card('预算结余',annual-actual,'万','年度预算 − 所选期间实际'),card('超预算科目',expanded.filter(r=>r.actual>r.annual).length,'项','所选期间实际超过年度预算')].map(kpiHtml).join('');
     for(const [id,key] of [['bd-dept',val('bd-dept-l1')?'l2':'l1'],['bd-project','project'],['bd-subject','subject']]){const labels=[...new Set(rows.map(r=>r[key]))];horizontalChart(id,labels,[{name:'期间预算',data:labels.map(k=>M.sum(expanded.filter(r=>r[key]===k),'periodBudget'))},{name:'期间实际',data:labels.map(k=>M.sum(expanded.filter(r=>r[key]===k),'actual'))}]);}
     const mb=months.map(m=>M.sum(rows,r=>r.monthlyBudget[m-1])),ma=months.map(m=>M.sum(rows,r=>r.monthlyActual[m-1]));dualChart('bd-month',months.map(m=>m+'月'),mb,ma,['当月预算','当月实际']);let rb=0,ra=0;lineChart('bd-month-cum',months.map(m=>m+'月'),[{name:'所选月份预算累计',data:mb.map(v=>rb+=v)},{name:'所选月份实际累计',data:ma.map(v=>ra+=v)}]);
-    const fees=[...new Set(rows.map(r=>r.fee))];$('#bd-attr').innerHTML=tableHtml([['费用类型','年度预算','所选期间预算','实际发生','期间差额','预算差异率'],...fees.map(f=>{const x=expanded.filter(r=>r.fee===f),b=M.sum(x,'annual'),a=M.sum(x,'actual'),pb=M.sum(x,'periodBudget');return [f,money(b),money(pb),money(a),money(a-pb),rate(a,b)];})]);
-    const detail=[['费用类型','一级部门','二级部门','项目','预算科目','年度预算','期间预算','期间实际','期间差额','预算差异率'],...expanded.map(r=>[r.fee,r.l1,r.l2,r.project,r.subject,money(r.annual),money(r.periodBudget),money(r.actual),money(r.actual-r.periodBudget),rate(r.actual,r.annual)])];$('#bd-detail').innerHTML='<button class="detail-open" type="button">查看当前筛选明细 →</button>'+tableHtml(detail,{alertOn:9,alertOver:100});D.details.budgetDiff=detail;
+    const fees=[...new Set(rows.map(r=>r.fee))];$('#bd-attr').innerHTML=tableHtml([['预算属性','年度预算','所选期间预算','实际发生','期间差额','预算差异率'],...fees.map(f=>{const x=expanded.filter(r=>r.fee===f),b=M.sum(x,'annual'),a=M.sum(x,'actual'),pb=M.sum(x,'periodBudget');return [f,money(b),money(pb),money(a),money(a-pb),rate(a,b)];})]);
+    const detail=budgetDetailRows(expanded);$('#bd-detail').innerHTML='<button class="detail-open" type="button">查看当前筛选明细 →</button>'+tableHtml(detail,{alertOn:10,alertOver:100});D.details.budgetDiff=detail;
     $('#bd-detail').onclick=()=>openDetail('budgetDiff',detail,'年度预算当前部门 / 项目 / 月份');
   }
+  function rdDetailRows(rows) { return [['项目','一级部门','二级部门','预算科目','PR','PO','验收','付款','期间人力成本','项目预算','期间使用','全周期累计（含以前年度）','预算使用率','审批状态'],...rows.map(r=>[r.project,r.l1,r.l2,r.subject,...[1.16,1.08,1,.86].map(f=>money(r.periodUsed*f)),money(r.used?r.human*r.periodUsed/r.used:0),money(r.budget),money(r.periodUsed),money(r.used),rate(r.periodUsed,r.budget),r.status])]; }
   function renderRd() {
     bindDeptCascade('rd-dept-l1','rd-dept-l2',D.rd.deptTree,renderRd);bindMonthMulti('rd-month-dd',renderRd);bindSimple('rd-proj',renderRd);
     const months=selectedMonths($('#rd-month-dd'));const rows=M.rd.filter(r=>(!val('rd-proj')||r.project===val('rd-proj'))&&(!val('rd-dept-l1')||r.l1===val('rd-dept-l1'))&&(!val('rd-dept-l2')||r.l2===val('rd-dept-l2'))).map(r=>({...r,periodUsed:months.reduce((n,m)=>n+r.monthly[m-1],0),periodChange:months.reduce((n,m)=>n+r.changes[m-1],0)}));
     const budget=M.sum(rows,'budget'),used=M.sum(rows,'periodUsed');$('#rd-kpis').innerHTML=[card('项目总预算',budget,'万','全周期批准预算（含变更）'),card('累计使用预算',used,'万','所选月份合计'),card('预算使用率',rate(used,budget),'','所选期间使用 / 全周期预算'),card('预算变更',M.sum(rows,'periodChange'),'万','所选月份已批准变更')].map(kpiHtml).join('');
     $('#rd-scope').textContent=` 当前 ${monthSelectionLabel(months)}，${rows.length} 个项目；8–12月暂无实际发生。`;
     const funnel=[['PR',1.16],['PO',1.08],['验收',1],['付款',.86]];$('#rd-funnel').innerHTML=funnel.map(([n,f])=>`<div class="funnel-row"><div class="name">${n}</div><div class="bar-wrap"><div class="bar" style="width:${f/1.16*100}%">${(f/1.16*100).toFixed(0)}%</div></div><div class="amt">${money(used*f)} 万</div></div>`).join('');
-    const subjects=[...new Set(rows.map(r=>r.subject))];horizontalChart('rd-usage',subjects,[{name:'全周期预算',data:subjects.map(k=>M.sum(rows.filter(r=>r.subject===k),'budget'))},{name:'期间使用',data:subjects.map(k=>M.sum(rows.filter(r=>r.subject===k),'periodUsed'))}]);const departments=group(rows,val('rd-dept-l1')?'l2':'l1','periodUsed');horizontalChart('rd-dept',departments.map(r=>r.label),[{name:'期间投入',data:departments.map(r=>r.value)}]);const human=M.sum(rows,r=>r.used?r.human*r.periodUsed/r.used:0);horizontalChart('rd-cost',['人力成本','非人力成本'],[{name:'期间投入',data:[human,used-human]}]);
-    const detail=[['项目','一级部门','二级部门','预算科目','PR','PO','验收','付款','期间人力成本','项目预算','期间使用','全周期累计（含以前年度）','预算使用率','审批状态'],...rows.map(r=>[r.project,r.l1,r.l2,r.subject,...[1.16,1.08,1,.86].map(f=>money(r.periodUsed*f)),money(r.used?r.human*r.periodUsed/r.used:0),money(r.budget),money(r.periodUsed),money(r.used),rate(r.periodUsed,r.budget),r.status])];$('#rd-detail').innerHTML='<button class="detail-open" type="button">查看当前筛选明细 →</button>'+tableHtml(detail);D.details.rdDetail=detail;
+    const subjects=[...new Set(rows.map(r=>r.subject))];horizontalChart('rd-usage',subjects,[{name:'全周期预算',data:subjects.map(k=>M.sum(rows.filter(r=>r.subject===k),'budget'))},{name:'期间使用',data:subjects.map(k=>M.sum(rows.filter(r=>r.subject===k),'periodUsed'))}]);const departments=group(rows,val('rd-dept-l1')?'l2':'l1','periodUsed');horizontalChart('rd-dept',departments.map(r=>r.label),[{name:'期间投入',data:departments.map(r=>r.value)}]);
+    const detail=rdDetailRows(rows);$('#rd-detail').innerHTML='<button class="detail-open" type="button">查看当前筛选明细 →</button>'+tableHtml(detail);D.details.rdDetail=detail;
     $('#rd-detail').onclick=()=>openDetail('rdDetail',detail,'研发当前项目 / 部门 / 月份');
 
     setTimeout(()=>{const instance=charts.get('rd-usage');if(instance){instance.off('click');instance.on('click',e=>openDetail('rdDetail',[detail[0],...detail.slice(1).filter(r=>r[3]===e.name)],'预算科目：'+e.name));}},150);
