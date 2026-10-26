@@ -64,7 +64,7 @@
     const head = rows[0];
     const body = rows.slice(1);
     const alertIdx = opts && opts.alertOn ? opts.alertOn : null;
-    return `<div class="table-wrap"><table class="data"><thead><tr>${
+    return `<div class="table-caption">共 ${body.length} 条记录${head.length > 8 ? " · 左右滚动查看全部字段" : ""}</div><div class="table-wrap"><table class="data"><thead><tr>${
       head.map((h) => `<th>${esc(h)}</th>`).join("")
     }</tr></thead><tbody>${
       (body.length ? body : [["当前筛选无记录", ...head.slice(1).map(()=>"—")]]).map((r) => {
@@ -88,7 +88,10 @@
           if (String(c).startsWith("-") && String(c).includes("%")) cellCls += " pos";
           const hotPct = opts && opts.alertOver != null ? parseFloat(c) > opts.alertOver : parseFloat(c) > 10;
           if (!String(c).startsWith("-") && String(c).endsWith("%") && hotPct && alertIdx === i) cellCls += " neg";
-          return `<td class="${cellCls}">${esc(c)}</td>`;
+          const bar = opts && opts.barColumn === i;
+          const numeric = Number(String(c).replace(/,/g,''));
+          const content = bar ? `<div class="cell-bar"><i style="width:${Math.min(100,Math.max(0,numeric/(opts.barMax||1)*100))}%"></i><span>${esc(c)}</span></div>` : esc(c);
+          return `<td class="${cellCls}">${content}</td>`;
         }).join("")}</tr>`;
       }).join("")
     }</tbody></table></div>`;
@@ -275,8 +278,11 @@
     o.lights[0].desc='YTD 营收达成 '+rate(M.sum(M.sales,'revenue'),58000);
     o.lights[1].desc='标准成本毛利率 '+o.hero[1].value+'%，目标38%';
     o.lights[2].desc='逾期 '+money(overAmount)+' 万，占应收 '+rate(overAmount,balance);
-    o.lights[5].desc=M.rd.filter(r=>r.used/r.budget>.95).length+' 个项目执行率超过95%';
+    const rdNear=M.rd.filter(r=>r.used/r.budget>.95).length,rdOver=M.rd.some(r=>r.used/r.budget>1);
+    o.lights[5].level=rdOver?'danger':rdNear?'warn':'ok';o.lights[5].desc=rdNear+' 个项目执行率超过95%';
     o.rdVs={labels:M.rd.map(r=>r.project),budget:M.rd.map(r=>r.budget),actual:M.rd.map(r=>r.used),rate:M.rd.map(r=>Math.round(r.used/r.budget*100))};
+    o.rdBudgetStruct.labels=['变更前预算','已批准变更','当前预算'];
+    o.rdRisks[2].title='已批准研发预算变更';o.rdRisks[2].desc='累计变更 '+money(M.sum(M.rd,'change'))+' 万，当前预算已包含该金额。';
     o.rdBudgetStruct.values=[M.sum(M.rd,'budget')-M.sum(M.rd,'change'),M.sum(M.rd,'change'),M.sum(M.rd,'budget')];
     o.rdMix={labels:M.rd.map(r=>r.project),values:M.rd.map(r=>r.used)};
     o.invMix={labels:D.inventory.category.labels,values:D.inventory.category.values};
@@ -308,8 +314,9 @@
     $("#ov-inv-risks").innerHTML = ceoRiskHtml(o.invRisks);
     $("#ov-sales-kpis").innerHTML = o.salesKpis.map(kpiHtml).join("");
     $("#ov-sales-risks").innerHTML = ceoRiskHtml(o.salesRisks);
-    $("#ov-fin-kpis").innerHTML = o.finKpis.map(kpiHtml).join("");
+    $("#ov-fin-kpis").innerHTML = o.finKpis.slice(2).map(kpiHtml).join("");
 
+    $all('[data-section]',root).forEach(b=>b.onclick=()=>document.getElementById(b.dataset.section).scrollIntoView({behavior:'auto',block:'start'}));
     bindKpiTips(root);
     $all(".ceo-hero-card.clickable", root).forEach((el) => {
       el.onclick = () => go(el.dataset.tip);
@@ -614,25 +621,6 @@
     };
   }
 
-  function rateGauge(id, value, name, color) {
-    chart(id, {
-      series: [{
-        type: "gauge", startAngle: 220, endAngle: -40, min: 0, max: 100,
-        center: ["50%", "55%"], radius: "88%",
-        progress: { show: true, width: 12, itemStyle: { color } },
-        axisLine: { lineStyle: { width: 12, color: [[1, "#e8eef6"]] } },
-        pointer: { show: false },
-        axisTick: { show: false }, splitLine: { show: false }, axisLabel: { show: false },
-        detail: {
-          valueAnimation: true, formatter: v => Number(v).toFixed(2) + "%",
-          fontSize: 24, fontWeight: 800, color: "#12284f", offsetCenter: [0, "0%"],
-        },
-        title: { offsetCenter: [0, "32%"], color: "#8b95a8", fontSize: 12, fontWeight: 700 },
-        data: [{ value: Number(value) || 0, name }],
-      }],
-    });
-  }
-
   function sliceByPeriod(arr, period) {
     if (!arr || !arr.length) return [];
     if (period === "q2") return arr.slice(2, 5); // 4-6月（示意：2月起的第3-5段）
@@ -780,15 +768,18 @@
   const card = (label,value,unit='万',delta='',extra={}) => ({label,value:typeof value==='number'?money(value):value,unit,delta,...extra});
   function group(rows,key,metric) { const out=new Map();rows.forEach(r=>out.set(r[key],(out.get(r[key])||0)+(typeof metric==='function'?metric(r):Number(r[metric]||0)))); return [...out].map(([label,value])=>({label,value})); }
   function groupedChart(id,rows,key,metric,name='金额',color='#3399ff',top=0) {let data=group(rows,key,metric).sort((a,b)=>b.value-a.value);if(top)data=data.slice(0,top);chart(id,barOpt(name,data.map(d=>d.label),data.map(d=>Math.round(d.value*100)/100),color,{showLabel:true,rotate:20}));}
+  function horizontalChart(id,labels,series,unit='万元') {
+    chart(id,{color:['#99ddff','#2f8fff','#0b4fb8'],tooltip:{...baseTooltip(),axisPointer:{type:'shadow'},valueFormatter:v=>money(v)+' '+unit},legend:{show:series.length>1,top:0,textStyle:{fontSize:11}},grid:{left:['sl-pline','sl-form','sl-ind'].includes(id)?78:110,right:48,top:series.length>1?34:15,bottom:24},xAxis:{type:'value',name:unit,splitNumber:3,axisLabel:{color:'#8a93a6',fontSize:10,hideOverlap:true,formatter:v=>money(v)},splitLine:{lineStyle:{color:'#eef2f8'}}},yAxis:{type:'category',inverse:true,data:labels,axisLabel:{fontSize:11,color:'#5a6780'}},series:series.map((r,i)=>({...r,type:'bar',barMaxWidth:16,itemStyle:{color:series.length===1?'#3399ff':i?'#2f8fff':'#99ddff',borderRadius:[0,4,4,0]},label:series.length===1?{show:true,position:'right',fontSize:10,formatter:p=>money(p.value)}:{show:false}}))});
+  }
   function dualChart(id,labels,a,b,names=['订单','收入']) {chart(id,{color:['#99ddff','#3399ff'],tooltip:baseTooltip(),legend:{top:0},grid:{left:60,right:20,top:38,bottom:45},xAxis:{type:'category',data:labels,axisLabel:{interval:0,rotate:15}},yAxis:{type:'value',name:'万元'},series:[{name:names[0],type:'bar',data:a,barMaxWidth:18},{name:names[1],type:'bar',data:b,barMaxWidth:18}]});}
-  function lineChart(id,labels,series,unit='万元') {chart(id,{color:palette,tooltip:{...baseTooltip(),valueFormatter:v=>unit==='%'?Number(v).toFixed(2)+'%':money(v)},legend:{top:0},grid:{left:55,right:20,top:38,bottom:32},xAxis:{type:'category',data:labels},yAxis:{type:'value',name:unit},series:series.map(s=>({...s,type:'line',smooth:true}))});}
+  function lineChart(id,labels,series,unit='万元') {chart(id,{color:palette,tooltip:{...baseTooltip(),valueFormatter:v=>unit==='%'?Number(v).toFixed(2)+'%':money(v)},legend:{top:0},grid:{left:55,right:20,top:38,bottom:32},xAxis:{type:'category',data:labels},yAxis:{type:'value',name:unit,...(unit==='%'?{min:0,max:value=>Math.max(100,Math.ceil(value.max/20)*20)}:{})},series:series.map((s,i)=>({...s,type:'line',smooth:false,lineStyle:{type:s.name.includes('目标')?'dashed':'solid',width:2},symbolSize:5,...(unit==='%'&&i===0?{markLine:{silent:true,symbol:'none',lineStyle:{type:'dashed',color:'#9baac1'},label:{formatter:'目标 100%',position:'insideEndTop'},data:[{yAxis:100}]}}:{})}))});}
   const salesRows = rows => [['合同','客户','产品线','物料','销售员','新签含税','确认收入不含税','已交货数量','开票号','收入确认日'],...rows.map(r=>[r.id,r.customer,r.line,r.material,r.person,money(r.order),money(r.revenue),r.delivered,r.invoice,r.date])];
   const arRows = rows => [['客户','合同','应收金额','到期日','逾期天数','催收记录','责任销售','账龄'],...rows.map(r=>[r.customer,r.contract,money(r.amount),r.due,Math.max(0,M.age(r.due)),r.note,r.person,M.ageBand(r)])];
   const personalRows = (rows,name) => [['合同','客户','月份','分配比例','本人订单','本人收入','本人回款'],...rows.map(r=>{const share=r.allocations.find(a=>a.person===name).share;return [r.id,r.customer,r.month+'月',rate(share,1),money(r.order*share),money(r.revenue*share),money(r.collect*share)];})];
   let detailContext = null;
   function openDetail(id,rows,label) {detailContext={id,rows,label};go('details');}
   function renderSales() {
-    ['sl-period','sl-date-mode','sl-month','sl-day','sl-customer','sl-line-filter','sl-person'].forEach(id=>bindSimple(id,renderSales));
+    ['sl-period','sl-date-mode','sl-month','sl-day','sl-customer','sl-line-filter','sl-person','sl-rank-metric'].forEach(id=>bindSimple(id,renderSales));
     const mode=val('sl-date-mode');$('#sl-month-wrap').hidden=mode!=='month';$('#sl-day-wrap').hidden=mode!=='day';$('#sl-period').closest('label').hidden=mode!=='period';
     const date=mode==='day'?val('sl-day'):val('sl-month');
     const months=mode==='period'?M.periodMonths(val('sl-period')):[Number(date.slice(5,7))];
@@ -797,12 +788,14 @@
     const totalForecast=M.sum(M.forecast,'value');
     $('#sl-kpis').innerHTML=[card('新签订单额',order,'万','所选期间 · 含税'),card(mode==='period'&&val('sl-period')==='ytd'?'确认收入 YTD':'所选期间确认收入',rev,'万','所选期间 · 不含税'),card('在手订单',backlog,'万','所选订单未交余额 · 含税'),card('订单毛利率 · 预测',rate(order-M.sum(rows,'forecastCost'),order),'','预计成本'),card('订单毛利率 · 标准成本',rate(rev-M.sum(rows,'cost'),rev),'','已确认收入对应标准成本'),card('预计全年收入',totalForecast,'万','全年口径 · 含填报')].map(kpiHtml).join('');
     $('#sl-kpis .kpi:last-child').classList.add('clickable');$('#sl-kpis .kpi:last-child').onclick=()=>openDetail('salesForecast',[['构成','金额','口径'],...M.forecast.map(r=>[r.name,money(r.value),r.name==='在手订单'?'预计转收入，不直接使用含税合同金额':'销售填报，不与其他构成重复'])],'全年预测');
-    $('#sl-forecast').innerHTML=tableHtml([['构成','预计收入（不含税）','来源'],...M.forecast.map(r=>[r.name,money(r.value),r.name==='在手订单'?'在手订单排期测算':'销售填报'])]);
+    $('#sl-forecast').innerHTML=`<div class="forecast-total">${money(totalForecast)}<small>万元 · 全年预测</small></div><div class="forecast-stack">${M.forecast.map((r,i)=>`<i class="segment segment-${i}" style="width:${totalForecast?r.value/totalForecast*100:0}%" title="${esc(r.name)} ${money(r.value)} 万元"></i>`).join('')}</div><div class="forecast-legend">${M.forecast.map((r,i)=>`<div><span class="legend-dot segment-${i}"></span><span>${esc(r.name)}</span><strong>${money(r.value)}</strong></div>`).join('')}</div><div class="chart-footnote">在手订单按预计转收入金额测算；未签单预测、在谈商机分别维护。</div>`;
     $('#sl-scope').textContent=` 当前 ${rows.length} 笔订单。`;
-    groupedChart('sl-top-order',rows,'customer','order','新签订单','#3399ff',5);groupedChart('sl-top-rev',rows,'customer','revenue','确认收入','#27cc7c',5);
-    for(const [id,key] of [['sl-rank','customer'],['sl-line','line']]) {const labels=[...new Set(rows.map(r=>r[key]))];dualChart(id,labels,labels.map(k=>M.sum(rows.filter(r=>r[key]===k),'order')),labels.map(k=>M.sum(rows.filter(r=>r[key]===k),'revenue')));}
+    const metric=val('sl-rank-metric')||'order';
+    const rank=group(rows,'customer',metric).sort((a,b)=>b.value-a.value).slice(0,5);
+    horizontalChart('sl-rank',rank.map(r=>r.label),[{name:metric==='order'?'订单金额':'确认收入',data:rank.map(r=>r.value)}]);
+    const lines=[...new Set(rows.map(r=>r.line))];horizontalChart('sl-line',lines,['order','revenue'].map((key,i)=>({name:['订单','收入'][i],data:lines.map(k=>M.sum(rows.filter(r=>r.line===k),key))})));
     lineChart('sl-trend',months.map(m=>m+'月'),['order','revenue','backlog'].map((key,i)=>({name:['新签','确认','在手'][i],data:months.map(m=>M.sum(rows.filter(r=>r.month===m),key))})));
-    for(const [id,key] of [['sl-pline','line'],['sl-form','form'],['sl-ind','industry']]){const data=group(rows,key,'revenue');chart(id,pieOpt(data.map(d=>d.label),data.map(d=>d.value)));}
+    for(const [id,key] of [['sl-pline','line'],['sl-form','form'],['sl-ind','industry']]){const data=group(rows,key,'revenue').sort((a,b)=>b.value-a.value);horizontalChart(id,data.map(d=>d.label),[{name:'确认收入',data:data.map(d=>d.value)}]);}
     const table=salesRows(rows);$('#sl-orders').innerHTML=tableHtml(table);$('#sl-drill').onclick=()=>openDetail('salesOrder',table,'销售经营当前筛选');
   }
   function renderAr() {
@@ -810,20 +803,23 @@
     const f={person:val('ar-person'),team:val('ar-team'),aging:val('ar-f-aging')};const months=M.periodMonths(val('ar-period'));
     const rows=M.arFilter(f),overdue=rows.filter(r=>M.age(r.due)>0),due=rows.filter(r=>M.age(r.due)>=0);
     const actual=M.salesFilter({months,person:f.person,team:f.team});const targets=M.targets.filter(r=>months.includes(r.month)&&(!f.person||r.person===f.person)&&(!f.team||r.team===f.team));
-    $('#ar-kpis').innerHTML=[...['order','collect','revenue'].map((key,i)=>card(['订单达成率','回款达成率','收入达成率'][i],rate(M.sum(actual,key),M.sum(targets,key)),'',`实绩 ${money(M.sum(actual,key))} / 目标 ${money(M.sum(targets,key))}`)),card('应收余额',M.sum(rows,'amount'),'万','含未到期应收'),card('到期金额',M.sum(due,'amount'),'万','截至 2026-07-31'),card('逾期总额',M.sum(overdue,'amount'),'万','合同到期日已过',{tone:'warn'})].map(kpiHtml).join('');
-    const teams=f.team?[f.team]:['华东团队','华北团队'];chart('ar-achieve',{color:palette,tooltip:{...baseTooltip(),valueFormatter:v=>Number(v).toFixed(2)+'%'},legend:{top:0},grid:{left:40,right:15,top:40,bottom:28},xAxis:{type:'category',data:teams},yAxis:{type:'value',name:'%'},series:['order','collect','revenue'].map((key,i)=>({name:['订单','回款','收入'][i],type:'bar',data:teams.map(t=>{const a=actual.filter(r=>r.team===t),b=targets.filter(r=>r.team===t);return M.pct(M.sum(a,key),M.sum(b,key));}),barMaxWidth:22}))});
+    const achievement=['order','revenue','collect'].map((key,i)=>card(['订单达成率','收入达成率','回款达成率'][i],rate(M.sum(actual,key),M.sum(targets,key)),'',`实绩 ${money(M.sum(actual,key))} / 目标 ${money(M.sum(targets,key))}`));
+    const risk=[card('应收余额',M.sum(rows,'amount'),'万','含未到期应收'),card('到期金额',M.sum(due,'amount'),'万','含逾期及当日到期'),card('逾期总额',M.sum(overdue,'amount'),'万','合同到期日已过',{tone:overdue.length?'warn':''})];
+    $('#ar-kpis').innerHTML=`<div class="metric-group"><div class="group-label">经营达成 <span>所选期间</span></div><div class="kpis cols-3">${achievement.map(kpiHtml).join('')}</div></div><div class="metric-group"><div class="group-label">应收风险 <span>截至 ${M.asOf}</span></div><div class="kpis cols-3">${risk.map(kpiHtml).join('')}</div></div>`;
+    const teams=f.team?[f.team]:['华东团队','华北团队'];chart('ar-achieve',{color:palette,tooltip:{...baseTooltip(),valueFormatter:v=>Number(v).toFixed(2)+'%'},legend:{top:0},grid:{left:40,right:15,top:40,bottom:28},xAxis:{type:'category',data:teams},yAxis:{type:'value',name:'%'},series:['order','revenue','collect'].map((key,i)=>({name:['订单','收入','回款'][i],type:'bar',data:teams.map(t=>{const a=actual.filter(r=>r.team===t),b=targets.filter(r=>r.team===t);return M.pct(M.sum(a,key),M.sum(b,key));}),barMaxWidth:22}))});
     const bands=['1-30天','31-60天','61-90天','90天+'];chart('ar-aging-chart',pieOpt(bands,bands.map(b=>M.sum(rows.filter(r=>M.ageBand(r)===b),'amount'))));
-    groupedChart('ar-overdue',overdue,'customer','amount','逾期金额','#e44552',5);
-    const top=group(overdue,'customer','amount').sort((a,b)=>b.value-a.value).slice(0,5);$('#ar-top-table').innerHTML=tableHtml([['客户','逾期金额','最长逾期天数'],...top.map(t=>[t.label,money(t.value),Math.max(...overdue.filter(r=>r.customer===t.label).map(r=>M.age(r.due)))])]);
+    const top=group(overdue,'customer','amount').sort((a,b)=>b.value-a.value).slice(0,5);$('#ar-top-table').innerHTML=tableHtml([['客户','逾期金额','最长逾期天数'],...top.map(t=>[t.label,money(t.value),Math.max(...overdue.filter(r=>r.customer===t.label).map(r=>M.age(r.due)))])],{barColumn:1,barMax:Math.max(1,...top.map(t=>t.value))});
     lineChart('ar-collect-trend',months.map(m=>m+'月'),[{name:'回款实绩',data:months.map(m=>M.sum(actual.filter(r=>r.month===m),'collect'))},{name:'回款目标',data:months.map(m=>M.sum(targets.filter(r=>r.month===m),'collect'))}]);
     $('#ar-detail').innerHTML='<button class="detail-open" type="button">查看当前筛选明细 →</button>'+tableHtml(arRows(rows),{overdueDaysIdx:4});$('#ar-detail').onclick=()=>openDetail('arDetail',arRows(rows),'应收当前团队 / 销售员 / 账龄');
   }
   function renderKpi() {
     bindSimple('kpi-period',renderKpi);const months=M.periodMonths(val('kpi-period')),name='张明',p=M.personal(name,months);
     $('#kpi-self-name').textContent=name;
-    $('#kpi-kpis').innerHTML=['order','revenue','collect'].map((key,i)=>card(['新签订单额','确认收入','回款额'][i],p[key],'万','按本人分配比例')).concat(['order','revenue','collect'].map((key,i)=>card(['订单达成率','收入达成率','回款达成率'][i],rate(p[key],p[key+'Target']),'','本人实绩 / 本人同期目标'))).map(kpiHtml).join('');
-    const keys=['order','revenue','collect'];$('#kpi-vs').innerHTML=keys.map((key,i)=>`<div class="panel"><div class="ph"><h3>${['订单','收入','回款'][i]}目标与实绩</h3></div><p>目标 ${money(p[key+'Target'])} 万 · 实绩 ${money(p[key])} 万</p><div class="finance-progress"><i style="width:${Math.min(100,M.pct(p[key],p[key+'Target'])||0)}%"></i></div></div>`).join('');
-    keys.forEach((key,i)=>rateGauge('kpi-rate-'+['order','rev','collect'][i],M.pct(p[key],p[key+'Target'])||0,['订单达成率','收入达成率','回款达成率'][i],['#3399ff','#22c57a','#f0a020'][i]));
+    const keys=['order','revenue','collect'];
+    $('#kpi-kpis').innerHTML=keys.map((key,i)=>{
+      const achieved=M.pct(p[key],p[key+'Target'])||0, gap=p[key+'Target']-p[key];
+      return `<article class="metric-summary"><div class="summary-label">${['订单','收入','回款'][i]}达成</div><div class="summary-main"><strong>${rate(p[key],p[key+'Target'])}</strong><span>实绩 ${money(p[key])} 万</span></div><div class="finance-progress"><i style="width:${Math.min(100,Math.max(0,achieved))}%"></i></div><div class="summary-foot"><span>目标 ${money(p[key+'Target'])} 万</span><span>${gap>=0?'距目标':'超目标'} ${money(Math.abs(gap))} 万</span></div></article>`;
+    }).join('');
     lineChart('kpi-trend',months.map(m=>m+'月'),keys.map((key,i)=>({name:['新签','收入','回款'][i],data:months.map(m=>M.personal(name,[m])[key])})));
     lineChart('kpi-rate-trend',months.map(m=>m+'月'),keys.map((key,i)=>({name:['订单','收入','回款'][i],data:months.map(m=>{const a=M.personal(name,[m]);return M.pct(a[key],a[key+'Target']);})})),'%');
     const rows=personalRows(p.rows,name);$('#kpi-own-detail').innerHTML=tableHtml(rows);$('#kpi-drill').onclick=()=>openDetail('personal',rows,'张明 / 本人分配后的订单与回款');
@@ -834,7 +830,7 @@
     const expanded=rows.map(r=>({...r,actual:months.reduce((n,m)=>n+r.monthlyActual[m-1],0),periodBudget:months.reduce((n,m)=>n+r.monthlyBudget[m-1],0)}));const annual=M.sum(rows,'annual'),actual=M.sum(expanded,'actual');
     $('#bd-scope').textContent=` 当前 ${monthSelectionLabel(months)}，${rows.length} 条预算科目记录；8–12月尚无实际发生数据。`;
     $('#bd-kpis').innerHTML=[card('年度预算总额',annual,'万','当前部门 / 项目 / 科目范围'),card('实际费用发生额',actual,'万','所选月份合计'),card('预算差异率',rate(actual,annual),'','实际费用 / 年度预算'),card('预算结余',annual-actual,'万','年度预算 − 所选期间实际'),card('超预算科目',expanded.filter(r=>r.actual>r.annual).length,'项','所选期间实际超过年度预算')].map(kpiHtml).join('');
-    for(const [id,key] of [['bd-dept',val('bd-dept-l1')?'l2':'l1'],['bd-project','project'],['bd-subject','subject']]){const labels=[...new Set(rows.map(r=>r[key]))];dualChart(id,labels,labels.map(k=>M.sum(expanded.filter(r=>r[key]===k),'periodBudget')),labels.map(k=>M.sum(expanded.filter(r=>r[key]===k),'actual')),['期间预算','期间实际']);}
+    for(const [id,key] of [['bd-dept',val('bd-dept-l1')?'l2':'l1'],['bd-project','project'],['bd-subject','subject']]){const labels=[...new Set(rows.map(r=>r[key]))];horizontalChart(id,labels,[{name:'期间预算',data:labels.map(k=>M.sum(expanded.filter(r=>r[key]===k),'periodBudget'))},{name:'期间实际',data:labels.map(k=>M.sum(expanded.filter(r=>r[key]===k),'actual'))}]);}
     const mb=months.map(m=>M.sum(rows,r=>r.monthlyBudget[m-1])),ma=months.map(m=>M.sum(rows,r=>r.monthlyActual[m-1]));dualChart('bd-month',months.map(m=>m+'月'),mb,ma,['当月预算','当月实际']);let rb=0,ra=0;lineChart('bd-month-cum',months.map(m=>m+'月'),[{name:'所选月份预算累计',data:mb.map(v=>rb+=v)},{name:'所选月份实际累计',data:ma.map(v=>ra+=v)}]);
     const fees=[...new Set(rows.map(r=>r.fee))];$('#bd-attr').innerHTML=tableHtml([['费用类型','年度预算','所选期间预算','实际发生','期间差额','预算差异率'],...fees.map(f=>{const x=expanded.filter(r=>r.fee===f),b=M.sum(x,'annual'),a=M.sum(x,'actual'),pb=M.sum(x,'periodBudget');return [f,money(b),money(pb),money(a),money(a-pb),rate(a,b)];})]);
     const detail=[['费用类型','一级部门','二级部门','项目','预算科目','年度预算','期间预算','期间实际','期间差额','预算差异率'],...expanded.map(r=>[r.fee,r.l1,r.l2,r.project,r.subject,money(r.annual),money(r.periodBudget),money(r.actual),money(r.actual-r.periodBudget),rate(r.actual,r.annual)])];$('#bd-detail').innerHTML='<button class="detail-open" type="button">查看当前筛选明细 →</button>'+tableHtml(detail,{alertOn:9,alertOver:100});D.details.budgetDiff=detail;
@@ -846,7 +842,7 @@
     const budget=M.sum(rows,'budget'),used=M.sum(rows,'periodUsed');$('#rd-kpis').innerHTML=[card('项目总预算',budget,'万','全周期批准预算（含变更）'),card('累计使用预算',used,'万','所选月份合计'),card('预算使用率',rate(used,budget),'','所选期间使用 / 全周期预算'),card('预算变更',M.sum(rows,'periodChange'),'万','所选月份已批准变更')].map(kpiHtml).join('');
     $('#rd-scope').textContent=` 当前 ${monthSelectionLabel(months)}，${rows.length} 个项目；8–12月暂无实际发生。`;
     const funnel=[['PR',1.16],['PO',1.08],['验收',1],['付款',.86]];$('#rd-funnel').innerHTML=funnel.map(([n,f])=>`<div class="funnel-row"><div class="name">${n}</div><div class="bar-wrap"><div class="bar" style="width:${f/1.16*100}%">${(f/1.16*100).toFixed(0)}%</div></div><div class="amt">${money(used*f)} 万</div></div>`).join('');
-    const subjects=[...new Set(rows.map(r=>r.subject))];dualChart('rd-usage',subjects,subjects.map(k=>M.sum(rows.filter(r=>r.subject===k),'budget')),subjects.map(k=>M.sum(rows.filter(r=>r.subject===k),'periodUsed')),['全周期预算','期间使用']);groupedChart('rd-dept',rows,val('rd-dept-l1')?'l2':'l1','periodUsed','期间投入','#27cc7c');
+    const subjects=[...new Set(rows.map(r=>r.subject))];horizontalChart('rd-usage',subjects,[{name:'全周期预算',data:subjects.map(k=>M.sum(rows.filter(r=>r.subject===k),'budget'))},{name:'期间使用',data:subjects.map(k=>M.sum(rows.filter(r=>r.subject===k),'periodUsed'))}]);const departments=group(rows,val('rd-dept-l1')?'l2':'l1','periodUsed');horizontalChart('rd-dept',departments.map(r=>r.label),[{name:'期间投入',data:departments.map(r=>r.value)}]);const human=M.sum(rows,r=>r.used?r.human*r.periodUsed/r.used:0);horizontalChart('rd-cost',['人力成本','非人力成本'],[{name:'期间投入',data:[human,used-human]}]);
     const detail=[['项目','一级部门','二级部门','预算科目','PR','PO','验收','付款','期间人力成本','项目预算','期间使用','全周期累计（含以前年度）','预算使用率','审批状态'],...rows.map(r=>[r.project,r.l1,r.l2,r.subject,...[1.16,1.08,1,.86].map(f=>money(r.periodUsed*f)),money(r.used?r.human*r.periodUsed/r.used:0),money(r.budget),money(r.periodUsed),money(r.used),rate(r.periodUsed,r.budget),r.status])];$('#rd-detail').innerHTML='<button class="detail-open" type="button">查看当前筛选明细 →</button>'+tableHtml(detail);D.details.rdDetail=detail;
     $('#rd-detail').onclick=()=>openDetail('rdDetail',detail,'研发当前项目 / 部门 / 月份');
 
@@ -860,8 +856,15 @@
     $('#inv-kpis').innerHTML=[card('存货总额',total,unit,'所选期末结存'),card('可用物料',available,unit,'销售状态为可售'),card('呆料呆滞',slow,unit,'销售状态为呆滞观察'),card('整体存货周转天数',scoped.length?96:'—',scoped.length?'天':'','示例周转口径'),card('呆料呆滞周转率',scoped.length?'0.42':'—',scoped.length?'次':'','示例周转口径')].map(kpiHtml).join('');
     const provision=M.sum(scoped,'provision');$('#inv-provision').innerHTML=[card('存货跌价准备金额',provision,'万','示例计提口径，待财务确认'),card('变动影响',provision*.145,'万','本期净增加 · 示意'),card('毛利影响',scoped.length?'-1.8':'—',scoped.length?'pct':'','示意影响，待确认计提与结转规则')].map(kpiHtml).join('');
     const end=period==='q2'?'2026-06-30':'2026-07-31';const flowFactor=period==='q2'?3/7:period==='m7'?1/7:1;
-    $('#inv-flow').innerHTML=(val('inv-time-mode')==='period'?[card('采购入库',total*.36*flowFactor,unit,'所选时段发生额 · 示意'),card('生产结转',total*.27*flowFactor,unit,'所选时段发生额 · 示意'),card('销售出库',total*.26*flowFactor,unit,'所选时段发生额 · 示意')]:[card('时点结存',total,unit,end),card('可用结存',available,unit,end),card('呆滞结存',slow,unit,end)]).map(kpiHtml).join('');
-    for(const [id,dimension] of [['inv-cat','category'],['inv-aging','aging'],['inv-proj','project'],['inv-loc','location'],['inv-status','status']]){const g=group(scoped,dimension,key);if(id==='inv-cat')chart(id,pieOpt(g.map(r=>r.label),g.map(r=>r.value)));else groupedChart(id,scoped,dimension,key,'结存','#3399ff');}
+    $('#inv-flow').hidden=val('inv-time-mode')!=='period';
+    $('#inv-flow').innerHTML=(val('inv-time-mode')==='period'?[card('采购入库',total*.36*flowFactor,unit,'所选时段发生额 · 示意'),card('生产结转',total*.27*flowFactor,unit,'所选时段发生额 · 示意'),card('销售出库',total*.26*flowFactor,unit,'所选时段发生额 · 示意')]:[]).map(kpiHtml).join('');
+    for(const [id,dimension] of [['inv-aging','aging'],['inv-proj','project'],['inv-loc','location'],['inv-status','status']]){
+      let data=group(scoped,dimension,key);
+      if(dimension==='aging')data.sort((a,b)=>D.inventory.aging.labels.indexOf(a.label)-D.inventory.aging.labels.indexOf(b.label));
+      else data.sort((a,b)=>b.value-a.value);
+      horizontalChart(id,data.map(r=>r.label),[{name:'结存',data:data.map(r=>r.value)}],qty?'万 pcs':'万元');
+    }
+    $('#inv-proj-title').textContent=qty?'项目存货数量':'项目存货金额';
     // Existing inventory chart uses inv-cat-chart for its main pie.
     const categories=group(scoped,'category',key);chart('inv-cat-chart',pieOpt(categories.map(r=>r.label),categories.map(r=>r.value)));
     groupedChart('inv-slow',scoped.filter(r=>r.status==='呆滞观察'),'material',key,'呆滞结存','#f0a020',5);
@@ -883,7 +886,8 @@
   function validateForm(form,rows){for(const row of rows){if(row.length!==form.fields.length||row.some(v=>String(v).trim()===''))throw Error('请填齐全部字段并核对列数');form.fields.forEach((f,i)=>{if(/金额|目标|成本|预算$|分配比例|现有库存|待生产|已下订单|预计订单/.test(f)){const n=Number(row[i]);if(!Number.isFinite(n)||(!/变更金额/.test(f)&&n<0))throw Error(f+'须为有效数值');if(f.includes('比例')&&(n<0||n>100))throw Error('分配比例须在 0–100 之间');}if(/月份|生效月|签约月|月度/.test(f)){const n=Number(row[i]);if(!Number.isInteger(n)||n<1||n>12)throw Error('月份须为1–12的整数');}});}}
   function saveFormRows(rows){if(!rows.length)throw Error("请至少填写一行数据");validateForm(activeForm,rows);const saved={rows,updatedAt:new Date().toISOString()};formCache.set(activeForm.name,saved);let stored=true;try{localStorage.setItem('biren-finance-form-'+activeForm.name,JSON.stringify(saved));}catch{stored=false;}$('#form-status').textContent=stored?`已保存 ${rows.length} 行示例，仅存本浏览器。`:'浏览器禁止持久存储，已暂存在本页；关闭页面后不保留。';$('#form-preview').innerHTML=tableHtml([activeForm.fields,...rows]);}
   function renderForms() {
-    $('#forms-grid').innerHTML=M.forms.map((f,i)=>`<div class="form-card"><h4>${esc(f.name)}</h4><p>${f.fields.map(esc).join(' / ')}</p><div class="row"><span>${esc(f.owner)}</span><span class="pill ok">业务表</span></div><div class="row"><span>CSV 模板 / 在线填报</span><button type="button" data-form-index="${i}">打开</button></div></div>`).join('')+[1,2,3].map(i=>`<div class="form-card"><h4>预留填报 ${i}</h4><p>具体字段在需求确认后补充。</p><span class="pill info">预留</span></div>`).join('');
+    const groups=[{title:'预算与研发',indices:[0,1,2]},{title:'销售目标与商机',indices:[3,4,5,7]},{title:'成本与组织映射',indices:[6,8]},{title:'供应链',indices:[9]}];
+    $('#forms-grid').innerHTML=groups.map(g=>`<section class="form-group"><div class="ph"><h3>${g.title}</h3><span class="sub">${g.indices.length} 张业务表</span></div>${g.indices.map(i=>{const f=M.forms[i],saved=formStorage(f.name);return `<div class="form-list-row"><div><h4>${esc(f.name)}</h4><p>${f.fields.map(esc).join(' / ')}</p></div><span>${esc(f.owner)}</span><span class="form-state">${saved?'已存示例':'待填写'}</span><button type="button" data-form-index="${i}">打开</button></div>`;}).join('')}</section>`).join('')+'<div class="reserved-note">预留填报 1 / 2 / 3：字段在需求确认后补充。</div>';
     $('#forms-grid').onclick=e=>{const btn=e.target.closest('[data-form-index]');if(btn)openForm(M.forms[+btn.dataset.formIndex]);};
     document.querySelectorAll('[data-close-form]').forEach(b=>b.onclick=()=>{$('#form-modal').hidden=true;});
     $('#form-save').onclick=()=>{try{saveFormRows([Array.from($('#form-fields').querySelectorAll('input'),i=>i.value)]);}catch(e){$('#form-status').textContent=e.message;}};

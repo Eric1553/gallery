@@ -989,3 +989,84 @@ table.data tr.critical td { background: #fdecee; }
 .filters [hidden] { display:none !important; }
 .detail-open { margin-bottom:10px; border:1px solid var(--border); background:var(--brand-soft); color:var(--brand-deep); border-radius:8px; padding:7px 10px; font-size:12px; cursor:pointer; }
 #view-inventory .kpi .label { min-height:20px; }
+
+/* BI / Report layout: fixed sections, ordinary metric cards and charts. */
+.main,.panel,.view,.grid > * { min-width:0; }
+.filter-bar { position:sticky; top:8px; z-index:12; background:rgba(248,251,255,.98); }
+.note.compact { font-size:11.5px; line-height:1.6; padding:9px 12px; }
+.summary-cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin-bottom:16px; }
+.metric-summary { padding:18px; border:1px solid var(--border); border-radius:var(--radius); background:linear-gradient(150deg,#fff,#f5faff); box-shadow:var(--shadow-sm); }
+.summary-label { color:var(--text-2); font-size:13px; font-weight:700; }
+.summary-main { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:baseline; gap:8px; margin:12px 0; }
+.summary-main strong { font-size:34px; line-height:1.2; color:var(--brand-deep); letter-spacing:-1px; }
+.summary-main span { font-size:13px; color:var(--text); }
+.summary-foot { margin-top:12px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; font-size:11px; color:var(--text-2); }
+.metric-groups { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin-bottom:4px; }
+.group-label { display:flex; justify-content:space-between; gap:6px; color:var(--text); font-weight:700; font-size:13px; margin:0 0 9px; }
+.group-label span { font-size:11px; color:var(--text-3); font-weight:500; }
+.kpis.cols-3 { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.kpis.cols-2 { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.metric-group .kpi { padding:13px 12px; }.metric-group .kpi .value { font-size:25px; }
+.section-heading { display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin:20px 0 12px; }
+.section-heading h3 { font-size:15px; color:var(--text); }.section-heading span { font-size:11px; color:var(--text-3); }
+.chart-filter { display:flex; align-items:center; gap:7px; white-space:nowrap; font-size:11px; color:var(--text-2); }
+.chart-filter select { border:1px solid var(--border); border-radius:7px; background:white; padding:5px 8px; color:var(--text); font-size:11px; }
+.subject-chart { height:300px; }
+#view-sales .chart.sm { height:230px; }#view-sales .grid-111 .chart { height:190px; }
+#view-budget .chart.sm { height:220px; }#view-budget .subject-chart { height:300px; }
+#view-rd #rd-dept,#view-rd #rd-cost { height:160px; }
+.forecast-total { padding:10px 0 18px; font-size:30px; font-weight:750; color:var(--brand-deep); }
+.forecast-total small { display:block; font-size:11px; font-weight:500; margin-top:5px; color:var(--text-2); }
+.forecast-stack { display:flex; height:18px; overflow:hidden; border-radius:5px; margin-bottom:14px; }
+.forecast-stack i { display:block; min-width:0; }.segment-0 { background:#2f8fff; }.segment-1 { background:#66ccff; }.segment-2 { background:#badff6; }
+.forecast-legend { display:grid; gap:10px; }.forecast-legend > div { display:flex; gap:7px; align-items:center; font-size:11px; color:var(--text-2); }.forecast-legend strong { margin-left:auto; color:var(--text); font-size:12px; }
+.legend-dot { display:inline-block; width:8px; height:8px; border-radius:2px; flex-shrink:0; }
+.chart-footnote { font-size:10px; color:var(--text-3); line-height:1.6; margin-top:14px; }
+#sl-forecast { margin-bottom:0; }
+.table-caption { font-size:10px; color:var(--text-3); text-align:right; margin:2px 0 7px; }
+.table-wrap { max-height:340px; overflow:auto; position:relative; border:1px solid var(--border-soft); }
+.data th { position:sticky; top:0; z-index:2; background:#f3f7fb; }
+.data th:first-child,.data td:first-child { position:sticky; left:0; background:#fff; }
+.data th:first-child { z-index:3; background:#f3f7fb; }
+.data tr.alert td:first-child { background:#fff8e8; }.data tr.critical td:first-child { background:#fff0f2; }
+.data td { font-variant-numeric:tabular-nums; }.data td.num { text-align:right; }
+.cell-bar { min-width:95px; position:relative; padding:4px 0; }
+.cell-bar i { position:absolute; left:0; top:0; height:100%; background:#ffe3df; border-radius:3px; }
+.cell-bar span { position:relative; z-index:1; }
+#ar-top-table .table-wrap { max-height:260px; }
+#inv-flow[hidden] { display:none !important; }
+#inv-flow:not([hidden]) { margin-bottom:16px; }
+#view-inventory .chart.sm,#view-inventory .chart.xs { height:210px; }
+#view-inventory .provision { margin-bottom:14px; }
+#forms-grid { display:block; }
+.form-group { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:14px; box-shadow:var(--shadow-sm); }
+.form-list-row { display:grid; grid-template-columns:minmax(0,1fr) 100px 72px 60px; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border-soft); }
+.form-list-row:last-child { border-bottom:0; padding-bottom:0; }
+.form-list-row h4 { font-size:13px; }.form-list-row p { margin-top:5px; font-size:11px; color:var(--text-3); line-height:1.5; }
+.form-list-row > span { font-size:11px; color:var(--text-2); }
+.form-list-row .form-state { color:var(--brand-deep); }
+.form-list-row button { border:1px solid #b9dfff; background:var(--brand-soft); color:var(--brand-deep); border-radius:7px; padding:6px 10px; font-size:11px; cursor:pointer; }
+.reserved-note { padding:12px 16px; border:1px dashed var(--border); border-radius:10px; font-size:11px; color:var(--text-3); }
+.section-links { display:flex; gap:8px; flex-wrap:wrap; margin:0 0 14px; }
+.section-links button { padding:7px 12px; border:1px solid var(--border); border-radius:8px; background:rgba(255,255,255,.8); color:var(--brand-deep); cursor:pointer; font-size:11px; }
+#view-overview .ceo-sec { padding:16px; margin-bottom:14px; scroll-margin-top:30px; }
+#view-overview .ceo-sec-head { margin-bottom:12px; }
+#view-overview .chart.xs,#view-overview .chart.sm { height:175px; }
+#view-overview .ceo-hero-card { padding:14px 16px; min-height:114px; }
+#view-overview .ceo-hero-card .v { font-size:29px; }
+#view-overview .ceo-lights { gap:7px; }
+#view-overview .ceo-light { padding:9px 10px; }
+#view-overview #ov-rd-risks { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; padding:9px; }
+#view-overview #ov-rd-risks .risk-item { grid-template-columns:8px 1fr; align-items:start; padding:8px; }
+#view-overview #ov-rd-risks .risk-item .a { grid-column:2; font-size:10px; }
+#view-overview .ceo-hero-card.t2,#view-overview .ceo-hero-card.t3 { background:linear-gradient(145deg,#f0f8ff,#fff); border-color:#d3ecff; }
+#view-overview .ceo-hero-card.t2 .prog i,#view-overview .ceo-hero-card.t3 .prog i { background:linear-gradient(90deg,#66ccff,#2f8fff); }
+#view-overview .ceo-hero-card.t2 .ring,#view-overview .ceo-hero-card.t3 .ring { background:conic-gradient(#2f8fff calc(var(--p) * 1%),#e8eef6 0); }
+@media(max-width:1100px) { .metric-groups { grid-template-columns:1fr; }.summary-main strong { font-size:29px; }.summary-main { display:block; }.summary-main span { display:block; margin-top:8px; } }
+@media(max-width:760px) { .filter-bar { position:static; }.summary-cards { grid-template-columns:1fr; }.metric-groups .kpis { grid-template-columns:repeat(3,minmax(0,1fr)); }.metric-group .kpi .value { font-size:19px; }.metric-group .kpi .meta { font-size:9px; }.metric-group .kpi { padding:10px 7px; }.form-list-row { grid-template-columns:minmax(0,1fr) 60px; gap:8px; }.form-list-row > span { display:none; }.section-heading { align-items:start; flex-direction:column; gap:3px; }#view-overview #ov-rd-risks { grid-template-columns:1fr; }.kpis.cols-2 { grid-template-columns:repeat(2,minmax(0,1fr)); }.table-wrap { max-width:100%; } }
+#view-budget > .grid-21 { grid-template-columns:1.25fr 1fr; }
+#view-sales > .grid-21,#view-rd > .grid-21,#view-inventory > .grid-21 { grid-template-columns:1.35fr 1fr; }
+#view-overview .ceo-sec .grid { margin-bottom:10px; }
+@media(max-width:760px) { #view-budget > .grid-21,#view-sales > .grid-21,#view-rd > .grid-21,#view-inventory > .grid-21 { grid-template-columns:1fr; } }
+.form-group > .ph { display:flex; align-items:center; justify-content:space-between; gap:10px; padding-bottom:10px; border-bottom:1px solid var(--border-soft); }
+.form-group > .ph h3 { font-size:14px; margin:0; }.form-group > .ph .sub { font-size:11px; color:var(--text-3); }
