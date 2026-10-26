@@ -968,14 +968,28 @@ table.data tr.critical td { background: #fdecee; }
 /* 财务一期补充交互：沿用现有颜色、边框与圆角。 */
 .finance-progress { height:8px; margin-top:14px; border-radius:8px; background:var(--brand-soft); overflow:hidden; }
 .finance-progress i { display:block; height:100%; background:linear-gradient(90deg,#66ccff,#2f8fff); border-radius:8px; }
-.finance-form-dialog { padding:22px; width:min(880px,100%); }
-.finance-form-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin:16px 0; }
-.finance-form-fields label { display:grid; gap:6px; font-size:12px; color:var(--text-2); }
-.finance-form-fields input { width:100%; border:1px solid var(--border); padding:10px 12px; border-radius:8px; color:var(--text); background:#f8fbff; }
-.finance-form-actions { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:14px 0; }
-.finance-form-actions button,.upload-label { border:1px solid var(--border); border-radius:8px; background:var(--brand-soft); color:var(--brand-deep); padding:9px 12px; cursor:pointer; font-size:12px; }
-.upload-label input { display:block; max-width:210px; font-size:11px; margin-top:5px; }
-#form-status { margin:12px 0; font-size:12px; color:var(--brand-deep); }
+/* Shared by all ten data-entry forms. */
+.finance-form-dialog { padding:24px; width:min(880px,100%); scrollbar-gutter:stable; }
+.finance-form-dialog .modal-head { padding:0 0 16px; margin-bottom:16px; align-items:center; background:none; }
+.finance-form-dialog .modal-head h3 { margin:0; font-size:20px; line-height:1.5; }
+.finance-form-close { display:inline-flex; align-items:center; gap:8px; flex-shrink:0; padding:7px 12px; border:1px solid var(--border); border-radius:8px; background:#f8fbff; color:var(--text-2); font:inherit; font-size:13px; cursor:pointer; }
+.finance-form-close span { font-size:20px; line-height:1; }
+.finance-form-dialog .note { margin:0; padding:12px 14px; font-size:12px; line-height:1.7; border-radius:10px; }
+.finance-form-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px 20px; margin:22px 0; }
+.finance-form-fields label { display:grid; min-width:0; gap:8px; font-size:13px; font-weight:500; line-height:1.5; color:var(--text-2); }
+.finance-form-fields input { box-sizing:border-box; min-width:0; width:100%; height:42px; border:1px solid #dce5f1; padding:10px 12px; border-radius:8px; font:inherit; font-size:14px; font-weight:400; color:var(--text); background:#f8fbff; transition:border-color .15s,box-shadow .15s; }
+.finance-form-fields input:focus { outline:none; border-color:var(--brand-2); box-shadow:0 0 0 3px rgba(47,143,255,.12); background:#fff; }
+.finance-form-actions { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:0; padding-top:18px; border-top:1px solid var(--border); }
+.finance-form-actions button,.finance-form-actions .upload-label { box-sizing:border-box; display:inline-flex; align-items:center; justify-content:center; min-height:40px; margin:0; border:1px solid #d5e5f7; border-radius:8px; background:var(--brand-soft); color:var(--brand-deep); padding:9px 14px; cursor:pointer; font:inherit; font-size:13px; line-height:20px; }
+.finance-form-actions .upload-label { position:relative; overflow:hidden; }
+.upload-label input { position:absolute; inset:0; width:100%; height:100%; opacity:0; cursor:pointer; }
+.finance-form-actions #form-save { margin-left:auto; background:var(--brand-2); border-color:var(--brand-2); color:#fff; font-weight:600; }
+.finance-form-actions button:hover,.finance-form-actions .upload-label:hover,.finance-form-close:hover { filter:brightness(.97); }
+.finance-form-actions button:focus-visible,.finance-form-close:focus-visible,.upload-label:focus-within { outline:2px solid var(--brand-2); outline-offset:3px; }
+#form-status { margin:14px 0 0; font-size:12px; line-height:1.7; color:var(--brand-deep); overflow-wrap:anywhere; }
+#form-status:empty,#form-preview:empty { display:none; }
+#form-preview { margin-top:18px; min-width:0; }
+@media(max-width:540px) { .finance-form-dialog { padding:18px; } .finance-form-dialog .modal-head h3 { font-size:18px; } .finance-form-actions { display:grid; grid-template-columns:1fr 1fr; } .finance-form-actions #form-save { grid-column:1 / -1; margin-left:0; } }
 #sl-forecast { margin-bottom:12px; }
 #view-sales .panel,#view-kpi .panel { min-width:0; }
 #inv-flow,#inv-provision { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
