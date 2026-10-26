@@ -223,6 +223,56 @@ table { border-collapse: collapse; width: 100%; }
   min-width: 148px;
   background-image: none;
 }
+.month-dd { position: relative; }
+.month-dd-btn {
+  height: 34px; min-width: 148px; max-width: 240px; padding: 0 28px 0 12px;
+  border: 1px solid var(--border); border-radius: 10px;
+  background-color: rgba(255,255,255,.92);
+  color: var(--text-2); font-size: 12px; font-weight: 600;
+  box-shadow: var(--shadow-sm); text-align: left; cursor: pointer;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #8b95a8 50%),
+    linear-gradient(135deg, #8b95a8 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) calc(50% - 2px),
+    calc(100% - 9px) calc(50% - 2px);
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+.month-dd-panel {
+  position: absolute; z-index: 30; top: 38px; left: 0; width: 132px;
+  max-height: 280px; overflow: auto;
+  background: #fff; border: 1px solid var(--border); border-radius: 10px;
+  box-shadow: 0 10px 28px rgba(21, 32, 43, .12); padding: 6px;
+}
+.month-dd-panel label {
+  display: flex; align-items: center; gap: 8px;
+  padding: 5px 8px; border-radius: 8px;
+  font-size: 12px; font-weight: 650; color: var(--text);
+  cursor: pointer; white-space: nowrap;
+}
+.month-dd-panel label:hover { background: #f3f6f9; }
+.filters .month-dd-panel input[type="checkbox"] {
+  width: 14px; height: 14px; min-width: 14px; max-width: 14px;
+  margin: 0; padding: 0; flex: 0 0 14px;
+  appearance: auto; -webkit-appearance: checkbox;
+  background: none; background-image: none;
+  border-radius: 3px; box-shadow: none;
+}
+.provision {
+  display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 12px; margin: 0 0 14px;
+}
+.provision .cell {
+  background: rgba(255,255,255,.88);
+  border: 1px solid var(--border); border-radius: 14px; padding: 12px 14px;
+  box-shadow: var(--shadow-sm);
+}
+.provision .k { font-size: 12px; color: var(--text-3); font-weight: 750; }
+.provision .v { font-size: 22px; font-weight: 780; margin-top: 4px; color: var(--text); letter-spacing: -.02em; }
+.provision .v small { font-size: 12px; font-weight: 700; margin-left: 4px; color: var(--text-2); }
+.provision .s { font-size: 12px; color: var(--text-2); margin-top: 4px; }
+.provision .cell.warn .v { color: #b45309; }
+
 .filters .chip-btn {
   height: 34px; padding: 0 12px;
   border: 1px solid var(--border); border-radius: 10px;
@@ -747,6 +797,7 @@ table.data tr.critical td { background: #fdecee; }
 
 @media (max-width: 1280px) {
   .kpis, .kpis.cols-5, .kpis.cols-4 { grid-template-columns: repeat(3, 1fr); }
+  .provision { grid-template-columns: 1fr; }
   .grid-1, .grid-2, .grid-12, .grid-21, .grid-3, .grid-111 { grid-template-columns: 1fr; }
   .form-cards { grid-template-columns: 1fr 1fr; }
   .mosaic-kpi, .hero-band, .dim-row { grid-template-columns: 1fr; }
@@ -913,3 +964,28 @@ table.data tr.critical td { background: #fdecee; }
   .ceo-link { margin-left: 0; }
   .ceo-sec-head { flex-wrap: wrap; }
 }
+
+/* 财务一期补充交互：沿用现有颜色、边框与圆角。 */
+.finance-progress { height:8px; margin-top:14px; border-radius:8px; background:var(--brand-soft); overflow:hidden; }
+.finance-progress i { display:block; height:100%; background:linear-gradient(90deg,#66ccff,#2f8fff); border-radius:8px; }
+.finance-form-dialog { padding:22px; width:min(880px,100%); }
+.finance-form-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin:16px 0; }
+.finance-form-fields label { display:grid; gap:6px; font-size:12px; color:var(--text-2); }
+.finance-form-fields input { width:100%; border:1px solid var(--border); padding:10px 12px; border-radius:8px; color:var(--text); background:#f8fbff; }
+.finance-form-actions { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:14px 0; }
+.finance-form-actions button,.upload-label { border:1px solid var(--border); border-radius:8px; background:var(--brand-soft); color:var(--brand-deep); padding:9px 12px; cursor:pointer; font-size:12px; }
+.upload-label input { display:block; max-width:210px; font-size:11px; margin-top:5px; }
+#form-status { margin:12px 0; font-size:12px; color:var(--brand-deep); }
+#sl-forecast { margin-bottom:12px; }
+#view-sales .panel,#view-kpi .panel { min-width:0; }
+#inv-flow,#inv-provision { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+.data tbody tr.alert { background:#fff8e8; }.data tbody tr.critical { background:#fff0f2; }
+@media(max-width:760px) { .finance-form-fields { grid-template-columns:1fr; } #inv-flow,#inv-provision { grid-template-columns:1fr; } }
+
+.ph button,#kpi-drill,#dt-reset { border:1px solid var(--border); background:var(--brand-soft); color:var(--brand-deep); border-radius:8px; padding:7px 10px; font-size:12px; cursor:pointer; }
+#dt-project { border:1px solid var(--border); background:white; border-radius:8px; padding:8px 12px; color:var(--text); }
+#view-inventory .panel { min-width:0; }
+
+.filters [hidden] { display:none !important; }
+.detail-open { margin-bottom:10px; border:1px solid var(--border); background:var(--brand-soft); color:var(--brand-deep); border-radius:8px; padding:7px 10px; font-size:12px; cursor:pointer; }
+#view-inventory .kpi .label { min-height:20px; }

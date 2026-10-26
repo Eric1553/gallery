@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>壁仞科技 · 财务数字化一期分析原型</title>
-  <link rel="stylesheet" href="css/app.css?v=20260804c" />
+  <link rel="stylesheet" href="css/app.css?v=20261026" />
   <script src="js/vendor/echarts.min.js?v=20260731f"></script>
 </head>
 <body>
@@ -136,31 +136,46 @@
           <div>
             <div class="eyebrow">BUDGET</div>
             <h2>公司年度预算预实看板</h2>
-            <p class="desc">年度/月度预算 · 属性/费用类型 · 部门/项目 · 预实差异</p>
+            <p class="desc">面向各部门 M 层、M-1 负责人及财务 · 一级/二级部门 · 按月多选 · 预算差异率 · 预算科目预实对比</p>
           </div>
         </div>
         <div class="filter-bar">
           <div class="filters">
-            <label class="filter-field"><span>部门</span>
-              <select aria-label="部门"><option>全部部门</option><option>研发中心</option><option>销售部</option></select>
+            <label class="filter-field"><span>一级部门</span>
+              <select id="bd-dept-l1" aria-label="一级部门">
+                <option value="">全部一级部门</option>
+                <option>研发中心</option>
+                <option>销售部</option>
+                <option>供应链</option>
+                <option>职能</option>
+              </select>
+            </label>
+            <label class="filter-field"><span>二级部门</span>
+              <select id="bd-dept-l2" aria-label="二级部门">
+                <option value="">全部二级部门</option>
+              </select>
             </label>
             <label class="filter-field"><span>费用类型</span>
-              <select aria-label="费用类型">
-                <option>全部费用类型</option>
+              <select id="bd-fee" aria-label="费用类型">
+                <option value="">全部费用类型</option>
                 <option>研发</option>
                 <option>管理</option>
                 <option>销售</option>
                 <option>量产</option>
               </select>
             </label>
-            <label class="filter-field"><span>时间</span>
-              <select aria-label="时间"><option>2026 YTD</option><option>2026-07</option></select>
-            </label>
+<label class="filter-field"><span>项目</span><select id="bd-project-filter"><option value="">全部项目</option><option>BR100量产</option><option>BR166验证</option><option>软件平台</option><option>通用运营</option></select></label><label class="filter-field"><span>预算属性</span><select id="bd-attribute"><option value="">全部属性</option><option>项目预算</option><option>部门预算</option></select></label>            <div class="filter-field">
+              <span>时间</span>
+              <div class="month-dd" id="bd-month-dd">
+                <button type="button" class="month-dd-btn" aria-haspopup="true" aria-expanded="false">1–7月 YTD</button>
+                <div class="month-dd-panel" hidden></div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="note compact">预算上传 + SAP 付款；科目映射未齐时按可对齐层级展示。</div>
+        <div class="note compact">使用对象是各部门负责人和财务，老板看 CEO 看板。单选月份看该月，多选合计所选月份。预算差异率 = 实际费用发生额 / 年度预算总额。<span id="bd-scope"></span></div>
         <div class="kpis cols-5" id="bd-kpis"></div>
-        <div class="grid grid-2">
+        <div class="grid grid-111">
           <div class="panel">
             <div class="ph"><h3>部门预算预实对比</h3><span class="sub">万元</span></div>
             <div id="bd-dept" class="chart sm"></div>
@@ -169,6 +184,10 @@
             <div class="ph"><h3>项目预算预实对比</h3><span class="sub">万元</span></div>
             <div id="bd-project" class="chart sm"></div>
           </div>
+          <div class="panel">
+            <div class="ph"><h3>预算科目预实对比</h3><span class="sub">万元</span></div>
+            <div id="bd-subject" class="chart sm"></div>
+          </div>
         </div>
         <div class="grid grid-2">
           <div class="panel">
@@ -176,7 +195,7 @@
             <div id="bd-month" class="chart sm"></div>
           </div>
           <div class="panel">
-            <div class="ph"><h3>累计预算 vs 实际</h3><span class="sub">折线 · 万元</span></div>
+            <div class="ph"><h3>所选月份累计预算 vs 实际</h3><span class="sub">折线 · 万元</span></div>
             <div id="bd-month-cum" class="chart sm"></div>
           </div>
         </div>
@@ -192,86 +211,13 @@
         </div>
       </section>
 
-      <!-- 订单总览 -->
-      <section class="view" id="view-order">
-        <div class="topbar">
-          <div>
-            <div class="eyebrow">ORDERS</div>
-            <h2>订单总览看板</h2>
-            <p class="desc">新签/收入/在手 · 预测与实际毛利 · 预计全年收入 · TOP客户与构成</p>
-          </div>
-        </div>
-        <div class="filter-bar">
-          <div class="filters">
-            <label class="filter-field"><span>产品线</span>
-              <select aria-label="产品线"><option>全部产品线</option><option>训练卡</option><option>推理卡</option></select>
-            </label>
-            <label class="filter-field"><span>日期维度</span>
-              <select id="od-dim" aria-label="日期维度">
-                <option value="year">按年</option>
-                <option value="quarter" selected>按季</option>
-                <option value="month">按月</option>
-                <option value="day">按日</option>
-              </select>
-            </label>
-            <label class="filter-field"><span>期间</span>
-              <select id="od-period" aria-label="期间"></select>
-            </label>
-            <label class="filter-field" id="od-day-wrap" hidden>
-              <span>日期</span>
-              <input id="od-day" type="date" value="2026-07-31" aria-label="具体日期" />
-            </label>
-          </div>
-        </div>
-        <div class="note compact">订单含税 / 收入不含税；支持按年 / 季 / 月 / 日切换日期维度。实际毛利待成本还原；点击「预计全年收入」可下钻查看「在手 + 预期 + 商机」构成。<span id="od-dim-hint"></span></div>
-        <div class="kpis" id="od-kpis"></div>
-        <div class="grid grid-2">
-          <div class="panel"><div class="ph"><h3>TOP5 客户新签订单</h3><span class="sub">万元 · 含税</span></div><div id="od-top-order" class="chart sm"></div></div>
-          <div class="panel"><div class="ph"><h3>TOP5 客户确认收入</h3><span class="sub">万元 · 不含税</span></div><div id="od-top-rev" class="chart sm"></div></div>
-        </div>
-        <div class="grid grid-111">
-          <div class="panel"><div class="ph"><h3>产品线收入构成</h3></div><div id="od-pline" class="chart sm"></div></div>
-          <div class="panel"><div class="ph"><h3>按产品形态拆分</h3></div><div id="od-form" class="chart sm"></div></div>
-          <div class="panel"><div class="ph"><h3>按客户行业拆分</h3></div><div id="od-ind" class="chart sm"></div></div>
-        </div>
-      </section>
-
-      <!-- 销售经营 -->
       <section class="view" id="view-sales">
-        <div class="topbar">
-          <div>
-            <div class="eyebrow">SALES</div>
-            <h2>销售经营看板</h2>
-            <p class="desc">新签/收入/在手 · 标准成本毛利率 · 客户/产品线排行 · 趋势与订单明细</p>
-          </div>
-        </div>
-        <div class="filter-bar">
-          <div class="filters">
-            <label class="filter-field"><span>人员</span>
-              <select id="sl-person" aria-label="销售人员">
-                <option value="">全部销售</option>
-                <option>张明</option><option>李华</option><option>王芳</option>
-                <option>赵强</option><option>陈晨</option><option>周凯</option>
-              </select>
-            </label>
-            <label class="filter-field"><span>时间</span>
-              <select id="sl-period" aria-label="时间">
-                <option>2026 YTD</option><option>2026 Q2</option><option>近 3 个月</option>
-              </select>
-            </label>
-          </div>
-        </div>
-        <div class="note compact">SAP/OA 报表；毛利按标准成本；成本分析表来源待确认。</div>
-        <div class="kpis cols-4" id="sl-kpis"></div>
-        <div class="grid grid-111">
-          <div class="panel"><div class="ph"><h3>按客户 · 订单与收入排行</h3></div><div id="sl-rank" class="chart sm"></div></div>
-          <div class="panel"><div class="ph"><h3>按产品线 · 订单与收入排行</h3></div><div id="sl-line" class="chart sm"></div></div>
-          <div class="panel"><div class="ph"><h3>新签—确认—在手趋势</h3></div><div id="sl-trend" class="chart sm"></div></div>
-        </div>
-        <div class="panel">
-          <div class="ph"><h3>销售订单明细</h3><span class="sub">合同 / 客户 / 物料 / 金额 / 交货 / 开票 / 收入确认</span></div>
-          <div id="sl-orders"></div>
-        </div>
+        <div class="topbar"><div><div class="eyebrow">SALES</div><h2>销售经营看板</h2><p class="desc">经营总览 · 客户与产品分析 · 订单明细</p></div></div>
+        <div class="filter-bar"><div class="filters"><label class="filter-field"><span>日期维度</span><select id="sl-date-mode"><option value="period">期间</option><option value="month">按月</option><option value="day">按日</option></select></label><label class="filter-field"><span>时间</span><select id="sl-period" aria-label="时间"><option value="ytd">2026 YTD</option><option value="year">2026全年（截至7月）</option><option value="q1">2026 Q1</option><option value="q2">2026 Q2</option><option value="m3">近3个月</option><option value="m7">2026-07</option></select></label><label class="filter-field" id="sl-month-wrap" hidden><span>月份</span><input id="sl-month" type="month" value="2026-07"></label><label class="filter-field" id="sl-day-wrap" hidden><span>日期</span><input id="sl-day" type="date" value="2026-07-15"></label><label class="filter-field"><span>客户</span><select id="sl-customer" aria-label="客户"><option value="">全部客户</option><option value="客户A">客户A</option><option value="客户B">客户B</option><option value="客户C">客户C</option><option value="客户D">客户D</option><option value="客户E">客户E</option><option value="客户F">客户F</option></select></label><label class="filter-field"><span>产品线</span><select id="sl-line-filter" aria-label="产品线"><option value="">全部产品线</option><option value="训练卡">训练卡</option><option value="推理卡">推理卡</option><option value="板卡整机">板卡整机</option><option value="软件与服务">软件与服务</option></select></label><label class="filter-field"><span>销售员</span><select id="sl-person" aria-label="销售员"><option value="">全部销售</option><option value="张明">张明</option><option value="李华">李华</option><option value="王芳">王芳</option><option value="赵强">赵强</option><option value="陈晨">陈晨</option><option value="周凯">周凯</option></select></label></div></div>
+        <div class="note compact">订单含税、确认收入不含税；毛利均使用标准成本。全年收入预测采用固定全年口径，筛选只作用于经营实绩；示例数据用于演示。<span id="sl-scope"></span></div>
+        <div class="kpis" id="sl-kpis"></div>
+        <div class="panel tight"><div class="ph"><h3>预计全年收入构成</h3><span class="sub">全年预测 · 万元 · 未签单预测与在谈商机分开维护</span></div><div id="sl-forecast"></div></div>
+        <div class="grid grid-2"><div class="panel"><div class="ph"><h3>TOP5 客户新签订单</h3><span class="sub">万元 · 含税</span></div><div id="sl-top-order" class="chart sm"></div></div><div class="panel"><div class="ph"><h3>TOP5 客户确认收入</h3><span class="sub">万元 · 不含税</span></div><div id="sl-top-rev" class="chart sm"></div></div></div><div class="grid grid-111"><div class="panel"><div class="ph"><h3>按客户 · 订单与收入排行</h3><span class="sub"></span></div><div id="sl-rank" class="chart sm"></div></div><div class="panel"><div class="ph"><h3>按产品线 · 订单与收入排行</h3><span class="sub"></span></div><div id="sl-line" class="chart sm"></div></div><div class="panel"><div class="ph"><h3>新签—确认—在手趋势</h3><span class="sub"></span></div><div id="sl-trend" class="chart sm"></div></div></div><div class="grid grid-111"><div class="panel"><div class="ph"><h3>产品线收入构成</h3><span class="sub"></span></div><div id="sl-pline" class="chart sm"></div></div><div class="panel"><div class="ph"><h3>按产品形态拆分</h3><span class="sub"></span></div><div id="sl-form" class="chart sm"></div></div><div class="panel"><div class="ph"><h3>按客户行业拆分</h3><span class="sub"></span></div><div id="sl-ind" class="chart sm"></div></div></div><div class="panel"><div class="ph"><h3>销售订单明细</h3><button type="button" id="sl-drill">查看分析明细 →</button></div><div id="sl-orders"></div></div>
       </section>
 
       <!-- 销售达成应收 -->
@@ -280,12 +226,12 @@
           <div>
             <div class="eyebrow">COLLECTION</div>
             <h2>销售达成应收</h2>
-            <p class="desc">三项达成率 · 应收余额 · 逾期总额 · 催收明细</p>
+            <p class="desc">三项达成率 · 回款趋势 · 应收与到期 · 逾期催收</p>
           </div>
         </div>
         <div class="filter-bar">
           <div class="filters">
-            <label class="filter-field"><span>人员</span>
+            <label class="filter-field"><span>团队</span><select id="ar-team" aria-label="团队"><option value="">全部团队</option><option value="华东团队">华东团队</option><option value="华北团队">华北团队</option></select></label><label class="filter-field"><span>实绩期间</span><select id="ar-period" aria-label="实绩期间"><option value="ytd">2026 YTD</option><option value="q2">2026 Q2</option><option value="m3">近3个月</option><option value="m7">2026-07</option></select></label><label class="filter-field"><span>销售员</span>
               <select id="ar-person" aria-label="责任销售">
                 <option value="">全部销售</option>
                 <option>张明</option><option>李华</option><option>王芳</option>
@@ -301,14 +247,14 @@
             </label>
           </div>
         </div>
-        <div class="note compact">达成率目标来自 KPI 填报；应收取自 SAP。账龄仅展示周期维度（已去掉「未到期」）；是否到期归入逾期口径统计。<span class="footnote-chip" title="逾期：按合同约定收款条款的到期日判断；超过到期日未回款计入逾期。">逾期口径 ⓘ</span></div>
-        <div class="kpis cols-5" id="ar-kpis"></div>
+        <div class="note compact">达成率 = 所选期间实绩 / 同期目标；应收为 2026-07-31 时点余额。到期金额含已逾期和当日到期；逾期按合同到期日判断。账龄按开票日计算，账龄筛选仅作用于应收区。</div>
+        <div class="kpis" id="ar-kpis"></div>
         <div class="grid grid-111">
-          <div class="panel"><div class="ph"><h3>三项达成率对比</h3></div><div id="ar-achieve" class="chart sm"></div></div>
-          <div class="panel"><div class="ph"><h3>应收余额 · 账龄结构</h3><span class="sub">不含未到期</span></div><div id="ar-aging-chart" class="chart sm"></div></div>
+          <div class="panel"><div class="ph"><h3>团队三项达成率对比</h3></div><div id="ar-achieve" class="chart sm"></div></div>
+          <div class="panel"><div class="ph"><h3>应收账龄结构</h3><span class="sub">含未到期应收 · 按开票日</span></div><div id="ar-aging-chart" class="chart sm"></div></div>
           <div class="panel"><div class="ph"><h3>逾期金额分布</h3><span class="sub">口径：合同约定收款条款</span></div><div id="ar-overdue" class="chart sm"></div></div>
         </div>
-        <div class="panel">
+<div class="grid grid-2"><div class="panel"><div class="ph"><h3>回款趋势</h3><span class="sub">万元</span></div><div id="ar-collect-trend" class="chart sm"></div></div><div class="panel"><div class="ph"><h3>逾期 TOP 客户</h3><span class="sub">金额 / 最长逾期天数</span></div><div id="ar-top-table"></div></div></div>        <div class="panel">
           <div class="ph"><h3>应收与催收明细</h3><span class="sub">报价明细报表范围内</span></div>
           <div id="ar-detail"></div>
         </div>
@@ -339,7 +285,7 @@
             </div>
         </div>
         </div>
-        <div class="note compact">个人看板：仅展示当前登录销售本人数据（DEMO 固定为「张明」）。组内人员下拉请在「销售经营看板」使用。切换时间后联动下方指标与图表。</div>
+        <div class="note compact">当前用户视角示例：张明。订单、收入及回款按合同分配比例归属个人，目标独立维护。正式权限由业务系统控制。</div>
         <div class="kpis" id="kpi-kpis"></div>
         <div class="vs-grid" id="kpi-vs"></div>
         <div class="panel tight" style="margin-bottom:14px">
@@ -360,7 +306,7 @@
             <div id="kpi-rate-trend" class="chart" style="height:260px"></div>
           </div>
         </div>
-      </section>
+      <div class="panel"><div class="ph"><h3>本人订单与回款</h3><span class="sub">合同金额 × 分配比例</span></div><div id="kpi-own-detail"></div><button type="button" id="kpi-drill">查看本人明细 →</button></div></section>
 
       <!-- 存货分析 -->
       <section class="view" id="view-inventory">
@@ -368,7 +314,7 @@
           <div>
             <div class="eyebrow">INVENTORY</div>
             <h2>存货分析看板</h2>
-            <p class="desc">类别 / 库龄 / 项目 / 位置 / 销售状态 · 采购结转销售 · 呆滞与周转</p>
+            <p class="desc">类别 / 库龄 / 项目 / 位置 / 销售状态 · 采购结转销售 · 呆滞与周转 · 存货跌价准备</p>
           </div>
         </div>
         <div class="filter-bar">
@@ -449,8 +395,9 @@
             </label>
           </div>
         </div>
-        <div class="note compact">周转依赖 MB51；库存明细（ZMM019）在月结逻辑确认后生成。筛选联动下方图表与 KPI。</div>
+        <div class="note compact">库存快照与采购结转销售分开查看；类别、库龄、项目、库位和销售状态交叉筛选。周转、供需推演与跌价影响为独立示例，计提口径待财务确认。</div>
         <div class="kpis cols-5" id="inv-kpis"></div>
+        <div class="provision" id="inv-provision"></div>
         <div class="split-metric" id="inv-flow"></div>
         <div class="grid grid-12">
           <div class="panel">
@@ -461,7 +408,7 @@
             <div id="inv-fg-balance"></div>
           </div>
           <div class="panel">
-            <div class="ph"><h3>产成品相关 · 当月预算 vs 实际</h3><span class="sub">柱状示意 · 万元（累计见折线）</span></div>
+            <div class="ph"><h3>产成品相关 · 当月预算 vs 实际</h3><span class="sub">独立供需示例 · 万元</span></div>
             <div id="inv-fg-month" class="chart sm"></div>
           </div>
         </div>
@@ -472,7 +419,7 @@
               <span class="drill-badge">可下钻</span>
               <span class="sub" id="inv-cat-unit">万元</span>
             </div>
-            <div id="inv-cat" class="chart xs drill-chart" role="button" tabindex="0" aria-label="点击类别查看二级明细"></div>
+            <div id="inv-cat" class="chart xs drill-chart" aria-label="点击类别查看明细"></div>
           </div>
           <div class="panel tight"><div class="ph"><h3 id="inv-aging-title">库龄分布</h3><span class="sub" id="inv-aging-unit">万元</span></div><div id="inv-aging" class="chart xs"></div></div>
           <div class="panel tight"><div class="ph"><h3 id="inv-proj-title">项目存货金额</h3><span class="sub" id="inv-proj-unit">万元</span></div><div id="inv-proj" class="chart xs"></div></div>
@@ -493,39 +440,48 @@
           <div>
             <div class="eyebrow">R&amp;D</div>
             <h2>研发项目预实看板</h2>
-            <p class="desc">PR / PO / 验收 / 付款 · 科目 · 部门 · 人力 · 预实差异</p>
+            <p class="desc">面向管理层、项目 PM 及财务 · 项目总预算 / 累计使用 / 使用率 / 预算变更</p>
           </div>
         </div>
         <div class="filter-bar">
           <div class="filters">
             <label class="filter-field"><span>项目</span>
-              <select aria-label="项目"><option>全部项目</option><option>BR100量产</option><option>BR166验证</option></select>
+              <select id="rd-proj" aria-label="项目"><option value="">全部项目</option><option>BR100量产</option><option>BR166验证</option><option>软件平台</option><option>互连板卡</option><option>散热方案</option><option>驱动栈</option></select>
             </label>
-            <label class="filter-field"><span>部门</span>
-              <select aria-label="部门"><option>全部部门</option><option>硬件研发</option><option>软件平台</option></select>
+            <label class="filter-field"><span>一级部门</span>
+              <select id="rd-dept-l1" aria-label="一级部门">
+                <option value="">全部一级部门</option>
+                <option>研发中心</option>
+                <option>软件中心</option>
+              </select>
             </label>
-            <label class="filter-field"><span>时间</span>
-              <select aria-label="时间"><option>2026 YTD</option><option>2026 Q2</option><option>2026-07</option></select>
+            <label class="filter-field"><span>二级部门</span>
+              <select id="rd-dept-l2" aria-label="二级部门">
+                <option value="">全部二级部门</option>
+              </select>
             </label>
+            <div class="filter-field">
+              <span>时间</span>
+              <div class="month-dd" id="rd-month-dd">
+                <button type="button" class="month-dd-btn" aria-haspopup="true" aria-expanded="false">1–7月 YTD</button>
+                <div class="month-dd-panel" hidden></div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="note compact">数据复用既有研财看板；项目预算参照来自上传。</div>
-        <div class="kpis cols-5" id="rd-kpis"></div>
+        <div class="note compact">单选月份看该月，多选合计所选月份。累计使用预算按所选月份合计；全周期累计另列于项目明细（含以前年度）。PR / PO / 验收 / 付款、人力成本在明细中查看。<span id="rd-scope"></span></div>
+        <div class="kpis cols-4" id="rd-kpis"></div>
         <div class="grid grid-21">
           <div class="panel tight">
-            <div class="ph"><h3>采购执行漏斗</h3><span class="sub">PR / PO / 验收 / 付款</span></div>
+            <div class="ph"><h3>采购执行漏斗</h3><span class="sub">PR / PO / 验收 / 付款 · 明细口径</span></div>
             <div class="funnel" id="rd-funnel"></div>
           </div>
           <div class="panel tight">
-            <div class="ph"><h3>费用类型构成</h3><span class="sub">含人力成本</span></div>
-            <div id="rd-mix" class="chart sm"></div>
+            <div class="ph"><h3>预算使用情况 by 预算科目</h3><span class="sub">全周期预算 vs 所选期间使用 · 万元</span></div>
+            <div id="rd-usage" class="chart sm"></div>
           </div>
         </div>
-        <div class="grid grid-111">
-          <div class="panel tight"><div class="ph"><h3>项目预算与验收投入</h3><span class="sub">万元</span></div><div id="rd-proj" class="chart xs"></div></div>
-          <div class="panel tight"><div class="ph"><h3>预算科目金额</h3><span class="sub">万元</span></div><div id="rd-subject" class="chart xs"></div></div>
-          <div class="panel tight"><div class="ph"><h3>部门投入金额</h3><span class="sub">万元</span></div><div id="rd-dept" class="chart xs"></div></div>
-        </div>
+        <div class="panel tight"><div class="ph"><h3>部门投入金额</h3><span class="sub">一级 / 二级部门 · 万元</span></div><div id="rd-dept" class="chart sm"></div></div>
         <div class="panel">
           <div class="ph"><h3>研发项目明细</h3><span class="sub">含审批状态</span></div>
           <div id="rd-detail"></div>
@@ -541,7 +497,7 @@
             <p class="desc">年度预算 / 研项预算 / KPI目标 / 标准成本 / 商机 / 映射 + buffer</p>
           </div>
         </div>
-        <div class="note compact">报价约 10 张填报（含 3 张 buffer），不额外扩表。</div>
+        <div class="note compact">按业务用途展示预算、销售、成本与映射表；另列 3 项预留。成品结存沿用现有演示，最终张数与评估范围核定。</div>
         <div class="form-cards" id="forms-grid"></div>
       </section>
 
@@ -554,7 +510,7 @@
             <p class="desc">预实差异 · 研发明细 · 全周期卡片 · 订单/应收/库存/出入库</p>
           </div>
         </div>
-        <div class="note compact">明细表结构示意；库存明细依赖月结逻辑确认。</div>
+        <div class="note compact">明细沿用专题页筛选条件；可清除筛选查看全量示例。库存与出入库数据均为原型示意。<span id="dt-scope"></span> <button type="button" id="dt-reset">清除筛选</button></div>
         <div class="tabs" id="dt-tabs"></div>
         <div id="dt-body"></div>
       </section>
@@ -563,71 +519,15 @@
 
   <div class="toast" id="toast"></div>
 
-  <div class="modal" id="inv-drill-modal" hidden>
-    <div class="modal-backdrop" data-inv-close></div>
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="inv-drill-modal-title">
-      <header class="modal-head">
-        <div>
-          <div class="modal-eyebrow">二级明细 · 弹窗</div>
-          <h3 id="inv-drill-modal-title">原材料</h3>
-        </div>
-        <button type="button" class="modal-close" data-inv-close aria-label="关闭">×</button>
-      </header>
-      <div class="modal-body">
-        <section class="modal-section">
-          <div class="ph"><h4>二级明细构成</h4><span class="sub" id="inv-drill-cat-unit">万元</span></div>
-          <div id="inv-drill-cat-table"></div>
-        </section>
-        <section class="modal-section">
-          <div class="ph"><h4>库龄分布</h4><span class="sub" id="inv-drill-aging-unit">万元</span></div>
-          <div id="inv-drill-aging-table"></div>
-        </section>
-      </div>
-      <footer class="modal-foot">
-        <span class="muted">示意数据 · 对应二级页面表格</span>
-        <button type="button" class="btn-primary" data-inv-close>关闭</button>
-      </footer>
-    </div>
-  </div>
-
-  <div class="modal" id="od-forecast-modal" hidden>
-    <div class="modal-backdrop" data-od-close></div>
-    <div class="modal-card modal-card-lg" role="dialog" aria-modal="true" aria-labelledby="od-forecast-modal-title">
-      <header class="modal-head">
-        <div>
-          <div class="modal-eyebrow">二级页面 · 预计全年收入</div>
-          <h3 id="od-forecast-modal-title">预计全年收入 · 构成明细</h3>
-          <p class="modal-sub" id="od-forecast-modal-sub">在手 + 预期 + 商机</p>
-        </div>
-        <button type="button" class="modal-close" data-od-close aria-label="关闭">×</button>
-      </header>
-      <div class="modal-body">
-        <div class="od-part-grid" id="od-forecast-parts"></div>
-        <div class="grid grid-12">
-          <section class="modal-section">
-            <div class="ph"><h4>构成占比</h4><span class="sub">万元</span></div>
-            <div id="od-forecast-pie" class="chart sm"></div>
-          </section>
-          <section class="modal-section">
-            <div class="ph"><h4>明细清单</h4><span class="sub">示意下钻</span></div>
-            <div id="od-forecast-detail"></div>
-          </section>
-        </div>
-      </div>
-      <footer class="modal-foot">
-        <span class="muted">示意数据 · 在手取 SAP，预期为排期测算，商机来自填报</span>
-        <button type="button" class="btn-primary" data-od-close>关闭</button>
-      </footer>
-    </div>
-  </div>
-
-  <script src="js/data.js?v=20260804c"></script>
-  <script src="js/app.js?v=20260804c"></script>
+  <script src="js/data.js?v=20261026"></script>
+  <script src="js/model.js?v=20261026"></script>
+  <script src="js/app.js?v=20261026"></script>
   <!-- 客户反馈（独立服务 :8787）财务 DEMO -->
   <script
     src="http://120.55.184.234:8787/embed.js?v=20260801t"
     data-demo-id="biren-finance"
     data-api="http://120.55.184.234:8787"
     defer></script>
+<div class="modal" id="form-modal" hidden><div class="modal-backdrop" data-close-form></div><div class="modal-card finance-form-dialog" role="dialog" aria-modal="true" aria-labelledby="form-title"><div class="modal-head"><h3 id="form-title"></h3><button type="button" data-close-form aria-label="关闭填报">关闭</button></div><div class="note compact">示例填报暂存在本浏览器，不提交到业务系统。下载模板后可按列填写并上传 CSV。</div><div id="form-fields" class="finance-form-fields"></div><div class="finance-form-actions"><button type="button" id="form-download">下载 CSV 模板</button><label class="upload-label">上传 CSV<input type="file" id="form-upload" accept=".csv,text/csv"></label><button type="button" id="form-save">保存示例</button></div><p id="form-status" role="status"></p><div id="form-preview"></div></div></div>
 </body>
 </html>
