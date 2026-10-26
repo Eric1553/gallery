@@ -266,7 +266,7 @@
     const o = D.overview;
     const a=M.receivables,over=a.filter(r=>M.age(r.due)>0),balance=M.sum(a,'amount'),overAmount=M.sum(over,'amount');
     o.hero[0].value=money(M.sum(M.sales,'revenue'));o.hero[0].pct=M.sum(M.sales,'revenue')/58000*100;
-    o.hero[1].value=(100*(M.sum(M.sales,'revenue')-M.sum(M.sales,'cost'))/M.sum(M.sales,'revenue')).toFixed(1);
+    o.hero[1].value=(100*(M.sum(M.sales,'revenue')-M.sum(M.sales,'cost'))/M.sum(M.sales,'revenue')).toFixed(2);
     o.hero[1].pct=Number(o.hero[1].value)/38*100;
     o.coreKpis[0].value=money(M.sum(M.sales,'backlog'));o.coreKpis[3].value=money(M.sum(M.forecast,'value'));
     o.salesKpis[0].value=money(balance);o.salesKpis[1].value=money(overAmount);o.salesKpis[1].delta='占应收 '+rate(overAmount,balance);
@@ -281,7 +281,7 @@
     o.rdMix={labels:M.rd.map(r=>r.project),values:M.rd.map(r=>r.used)};
     o.invMix={labels:D.inventory.category.labels,values:D.inventory.category.values};
     o.nonRd={labels:['管理','销售','量产'],budget:['管理','销售','量产'].map(f=>M.sum(M.budget.filter(r=>r.fee===f),'annual')),actual:['管理','销售','量产'].map(f=>M.sum(M.budget.filter(r=>r.fee===f),r=>M.sum(r.monthlyActual.map(v=>({v})),'v')))};
-    o.finKpis[3].value=(M.sum(o.nonRd.actual.map(v=>({v})),'v')/M.sum(o.nonRd.budget.map(v=>({v})),'v')*100).toFixed(1);
+    o.finKpis[3].value=(M.sum(o.nonRd.actual.map(v=>({v})),'v')/M.sum(o.nonRd.budget.map(v=>({v})),'v')*100).toFixed(2);
     o.invRisks[0].desc='长库龄存货 '+money(M.sum(M.inventory.filter(r=>!['90天内','90-180'].includes(r.aging)),'amount'))+' 万，需评审处置。';
     o.invRisks[1].desc='呆滞占用 '+money(M.sum(M.inventory.filter(r=>r.status==='呆滞观察'),'amount'))+' 万';
     o.salesRisks[1].desc='逾期明细可按客户、合同和天数查看';
@@ -579,7 +579,7 @@
         borderColor: "#e2e8f2",
         textStyle: { color: "#17346e", fontSize: 12 },
         confine: true,
-        formatter: (p) => `${p.name}<br/>${p.marker}${p.value.toLocaleString()} ${unit}（${p.percent}%）`,
+        formatter: (p) => `${p.name}<br/>${p.marker}${p.value.toLocaleString()} ${unit}（${Number(p.percent).toFixed(2)}%）`,
         extraCssText: "z-index:20;box-shadow:0 8px 20px rgba(18,40,79,.12);",
       },
       // 图例与扇区标签分离，避免重叠
@@ -605,7 +605,7 @@
         label: { show: false },
         labelLine: { show: false },
         emphasis: {
-          label: { show: true, formatter: "{d}%", fontSize: 13, fontWeight: 700, color: "#12284f" },
+          label: { show: true, formatter: p => Number(p.percent).toFixed(2) + "%", fontSize: 13, fontWeight: 700, color: "#12284f" },
           scale: true,
           scaleSize: 4,
         },
@@ -624,7 +624,7 @@
         pointer: { show: false },
         axisTick: { show: false }, splitLine: { show: false }, axisLabel: { show: false },
         detail: {
-          valueAnimation: true, formatter: "{value}%",
+          valueAnimation: true, formatter: v => Number(v).toFixed(2) + "%",
           fontSize: 24, fontWeight: 800, color: "#12284f", offsetCenter: [0, "0%"],
         },
         title: { offsetCenter: [0, "32%"], color: "#8b95a8", fontSize: 12, fontWeight: 700 },
@@ -776,12 +776,12 @@
   const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const val = id => document.getElementById(id)?.value || '';
   const money = n => Number(n).toLocaleString('zh-CN',{maximumFractionDigits:2});
-  const rate = (a,b) => b ? (a/b*100).toFixed(1)+'%' : '—';
+  const rate = (a,b) => b ? (a/b*100).toFixed(2)+'%' : '—';
   const card = (label,value,unit='万',delta='',extra={}) => ({label,value:typeof value==='number'?money(value):value,unit,delta,...extra});
   function group(rows,key,metric) { const out=new Map();rows.forEach(r=>out.set(r[key],(out.get(r[key])||0)+(typeof metric==='function'?metric(r):Number(r[metric]||0)))); return [...out].map(([label,value])=>({label,value})); }
   function groupedChart(id,rows,key,metric,name='金额',color='#3399ff',top=0) {let data=group(rows,key,metric).sort((a,b)=>b.value-a.value);if(top)data=data.slice(0,top);chart(id,barOpt(name,data.map(d=>d.label),data.map(d=>Math.round(d.value*100)/100),color,{showLabel:true,rotate:20}));}
   function dualChart(id,labels,a,b,names=['订单','收入']) {chart(id,{color:['#99ddff','#3399ff'],tooltip:baseTooltip(),legend:{top:0},grid:{left:60,right:20,top:38,bottom:45},xAxis:{type:'category',data:labels,axisLabel:{interval:0,rotate:15}},yAxis:{type:'value',name:'万元'},series:[{name:names[0],type:'bar',data:a,barMaxWidth:18},{name:names[1],type:'bar',data:b,barMaxWidth:18}]});}
-  function lineChart(id,labels,series,unit='万元') {chart(id,{color:palette,tooltip:baseTooltip(),legend:{top:0},grid:{left:55,right:20,top:38,bottom:32},xAxis:{type:'category',data:labels},yAxis:{type:'value',name:unit},series:series.map(s=>({...s,type:'line',smooth:true}))});}
+  function lineChart(id,labels,series,unit='万元') {chart(id,{color:palette,tooltip:{...baseTooltip(),valueFormatter:v=>unit==='%'?Number(v).toFixed(2)+'%':money(v)},legend:{top:0},grid:{left:55,right:20,top:38,bottom:32},xAxis:{type:'category',data:labels},yAxis:{type:'value',name:unit},series:series.map(s=>({...s,type:'line',smooth:true}))});}
   const salesRows = rows => [['合同','客户','产品线','物料','销售员','新签含税','确认收入不含税','已交货数量','开票号','收入确认日'],...rows.map(r=>[r.id,r.customer,r.line,r.material,r.person,money(r.order),money(r.revenue),r.delivered,r.invoice,r.date])];
   const arRows = rows => [['客户','合同','应收金额','到期日','逾期天数','催收记录','责任销售','账龄'],...rows.map(r=>[r.customer,r.contract,money(r.amount),r.due,Math.max(0,M.age(r.due)),r.note,r.person,M.ageBand(r)])];
   const personalRows = (rows,name) => [['合同','客户','月份','分配比例','本人订单','本人收入','本人回款'],...rows.map(r=>{const share=r.allocations.find(a=>a.person===name).share;return [r.id,r.customer,r.month+'月',rate(share,1),money(r.order*share),money(r.revenue*share),money(r.collect*share)];})];
@@ -811,7 +811,7 @@
     const rows=M.arFilter(f),overdue=rows.filter(r=>M.age(r.due)>0),due=rows.filter(r=>M.age(r.due)>=0);
     const actual=M.salesFilter({months,person:f.person,team:f.team});const targets=M.targets.filter(r=>months.includes(r.month)&&(!f.person||r.person===f.person)&&(!f.team||r.team===f.team));
     $('#ar-kpis').innerHTML=[...['order','collect','revenue'].map((key,i)=>card(['订单达成率','回款达成率','收入达成率'][i],rate(M.sum(actual,key),M.sum(targets,key)),'',`实绩 ${money(M.sum(actual,key))} / 目标 ${money(M.sum(targets,key))}`)),card('应收余额',M.sum(rows,'amount'),'万','含未到期应收'),card('到期金额',M.sum(due,'amount'),'万','截至 2026-07-31'),card('逾期总额',M.sum(overdue,'amount'),'万','合同到期日已过',{tone:'warn'})].map(kpiHtml).join('');
-    const teams=f.team?[f.team]:['华东团队','华北团队'];chart('ar-achieve',{color:palette,tooltip:baseTooltip(),legend:{top:0},grid:{left:40,right:15,top:40,bottom:28},xAxis:{type:'category',data:teams},yAxis:{type:'value',name:'%'},series:['order','collect','revenue'].map((key,i)=>({name:['订单','回款','收入'][i],type:'bar',data:teams.map(t=>{const a=actual.filter(r=>r.team===t),b=targets.filter(r=>r.team===t);return M.pct(M.sum(a,key),M.sum(b,key));}),barMaxWidth:22}))});
+    const teams=f.team?[f.team]:['华东团队','华北团队'];chart('ar-achieve',{color:palette,tooltip:{...baseTooltip(),valueFormatter:v=>Number(v).toFixed(2)+'%'},legend:{top:0},grid:{left:40,right:15,top:40,bottom:28},xAxis:{type:'category',data:teams},yAxis:{type:'value',name:'%'},series:['order','collect','revenue'].map((key,i)=>({name:['订单','回款','收入'][i],type:'bar',data:teams.map(t=>{const a=actual.filter(r=>r.team===t),b=targets.filter(r=>r.team===t);return M.pct(M.sum(a,key),M.sum(b,key));}),barMaxWidth:22}))});
     const bands=['1-30天','31-60天','61-90天','90天+'];chart('ar-aging-chart',pieOpt(bands,bands.map(b=>M.sum(rows.filter(r=>M.ageBand(r)===b),'amount'))));
     groupedChart('ar-overdue',overdue,'customer','amount','逾期金额','#e44552',5);
     const top=group(overdue,'customer','amount').sort((a,b)=>b.value-a.value).slice(0,5);$('#ar-top-table').innerHTML=tableHtml([['客户','逾期金额','最长逾期天数'],...top.map(t=>[t.label,money(t.value),Math.max(...overdue.filter(r=>r.customer===t.label).map(r=>M.age(r.due)))])]);
