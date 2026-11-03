@@ -17,10 +17,12 @@
   const salesFilter = f => sales.filter(r=>(!f.months||f.months.includes(r.month))&&(!f.customer||r.customer===f.customer)&&(!f.line||r.line===f.line)&&(!f.person||r.person===f.person)&&(!f.team||r.team===f.team));
   const personal = (name,months) => { const rows=monthsFilter(sales,months).filter(r=>r.allocations.some(a=>a.person===name)); const allocation=r=>r.allocations.find(a=>a.person===name).share; const target=targets.filter(r=>r.person===name&&months.includes(r.month)); return {rows,order:sum(rows,r=>r.order*allocation(r)),revenue:sum(rows,r=>r.revenue*allocation(r)),collect:sum(rows,r=>r.collect*allocation(r)),orderTarget:sum(target,'order'),revenueTarget:sum(target,'revenue'),collectTarget:sum(target,'collect')}; };
   const asOf = '2026-07-31';
-  const age = date => Math.floor((Date.parse(asOf+'T00:00:00Z')-Date.parse(date+'T00:00:00Z'))/86400000);
+  const age = (date,cutoff=window.BIREN_MODEL?.asOf||asOf) => Math.floor((Date.parse(cutoff+'T00:00:00Z')-Date.parse(date+'T00:00:00Z'))/86400000);
   const receivables=people.flatMap((person,i)=>[0,1,2].map((j)=>({customer:`客户${'ABCDEF'[i]}`,contract:`AR2026-${i+1}${j+1}`,person,team:team(person),amount:360+i*85+j*120,due:j===0?'2026-08-20':j===1?'2026-07-15':`2026-0${3+i%3}-15`,invoiceDate:j===0?'2026-07-20':j===1?'2026-06-20':'2026-02-15',note:j===0?'合同约定账期内':j===1?'已对账，跟进回款':'已发催收函'})));
   const ageBand = r => { const n=age(r.invoiceDate);return n<=30?'1-30天':n<=60?'31-60天':n<=90?'61-90天':'90天+'; };
   const arFilter = f => receivables.filter(r=>(!f.person||r.person===f.person)&&(!f.team||r.team===f.team)&&(!f.aging||ageBand(r)===f.aging));
+  sales.forEach((r,i)=>{r.sku=r.material;r.employeeId='E'+String(1001+people.indexOf(r.person));r.invoiced=Math.round(r.revenue*1.13*100)/100;r.unbilled=Math.max(0,r.order-r.invoiced);});
+  receivables.forEach((r,i)=>{r.paymentDays=Math.round((Date.parse(r.due)-Date.parse(r.invoiceDate))/86400000);r.invoice='ARINV-'+(i+1);r.orderId=sales.find(s=>s.person===r.person).id;r.employeeId='E'+String(1001+people.indexOf(r.person));});
   const forecast = [{name:'在手订单',value:Math.round(sum(sales,'backlog')/1.13)},{name:'未签单预测',value:31450},{name:'在谈商机',value:9200}];
   // 预算每条记录对应一个部门、项目、预算科目；月度值可以追溯到该行。
   const budget=[];
