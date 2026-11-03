@@ -773,20 +773,23 @@
   }
   function dualChart(id,labels,a,b,names=['订单','收入']) {chart(id,{color:['#99ddff','#3399ff'],tooltip:baseTooltip(),legend:{top:0},grid:{left:60,right:20,top:38,bottom:45},xAxis:{type:'category',data:labels,axisLabel:{interval:0,rotate:15}},yAxis:{type:'value',name:'万元'},series:[{name:names[0],type:'bar',data:a,barMaxWidth:18},{name:names[1],type:'bar',data:b,barMaxWidth:18}]});}
   function lineChart(id,labels,series,unit='万元') {chart(id,{color:palette,tooltip:{...baseTooltip(),valueFormatter:v=>unit==='%'?Number(v).toFixed(2)+'%':money(v)},legend:{top:0},grid:{left:55,right:20,top:38,bottom:32},xAxis:{type:'category',data:labels},yAxis:{type:'value',name:unit,...(unit==='%'?{min:0,max:value=>Math.max(100,Math.ceil(value.max/20)*20)}:{})},series:series.map((s,i)=>({...s,type:'line',smooth:false,lineStyle:{type:s.name.includes('目标')?'dashed':'solid',width:2},symbolSize:5,...(unit==='%'&&i===0?{markLine:{silent:true,symbol:'none',lineStyle:{type:'dashed',color:'#9baac1'},label:{formatter:'目标 100%',position:'insideEndTop'},data:[{yAxis:100}]}}:{})}))});}
-  const salesRows = rows => [['合同','客户','产品线','物料','销售员','新签含税','确认收入不含税','已交货数量','开票号','收入确认日'],...rows.map(r=>[r.id,r.customer,r.line,r.material,r.person,money(r.order),money(r.revenue),r.delivered,r.invoice,r.date])];
-  const arRows = rows => [['客户','合同','应收金额','到期日','逾期天数','催收记录','责任销售','账龄'],...rows.map(r=>[r.customer,r.contract,money(r.amount),r.due,Math.max(0,M.age(r.due)),r.note,r.person,M.ageBand(r)])];
+  const salesRows = rows => [['订单号','客户','产品线','SKU / 物料','销售员','SAP工号','订单金额（含税）','已开票（含税）','应开票（含税）','确认收入（不含税）','回款金额','在手订单','预测成本','标准成本','已交货数量','开票号','业务日期'],...rows.map(r=>[r.id,r.customer,r.line,r.sku,r.person,r.employeeId,money(r.order),money(r.invoiced),money(r.unbilled),money(r.revenue),money(r.collect),money(r.backlog),money(r.forecastCost),money(r.cost),r.delivered,r.invoice,r.date])];
+  const arRows = rows => [['客户','合同','应收余额（截止日）','到期日','逾期天数','催收记录','责任销售','开票账龄','关联订单','开票号','开票日','合同账期（天）','SAP工号','到期应收','逾期金额'],...rows.map(r=>[r.customer,r.contract,money(r.amount),r.due,Math.max(0,M.age(r.due)),r.note,r.person,M.ageBand(r),r.orderId,r.invoice,r.invoiceDate,r.paymentDays,r.employeeId,money(M.age(r.due)>=0?r.amount:0),money(M.age(r.due)>0?r.amount:0)])];
   const personalRows = (rows,name) => [['合同','客户','月份','分配比例','本人订单','本人收入','本人回款'],...rows.map(r=>{const share=r.allocations.find(a=>a.person===name).share;return [r.id,r.customer,r.month+'月',rate(share,1),money(r.order*share),money(r.revenue*share),money(r.collect*share)];})];
   let detailContext = null;
   function openDetail(id,rows,label) {detailContext={id,rows,label};go('details');}
+  function reviewMonths(p){const a=val(p+'-start')||'2026-01-01',b=val(p+'-end')||'2026-07-31';return Array.from({length:12},(_,i)=>i+1).filter(m=>`2026-${String(m).padStart(2,'0')}-01`<=b&&new Date(Date.UTC(2026,m,0)).toISOString().slice(0,10)>=a);}
+  function reviewTargets(rows,prefix){const start=val(prefix+'-start')||'2026-01-01',end=val(prefix+'-end')||'2026-07-31';return rows.map(r=>{const a=Date.UTC(2026,r.month-1,1),b=Date.UTC(2026,r.month,1)-86400000,lo=Math.max(a,Date.parse(start)),hi=Math.min(b,Date.parse(end));const factor=Math.max(0,(hi-lo)/86400000+1)/((b-a)/86400000+1);return {...r,...Object.fromEntries(['order','revenue','collect'].map(k=>[k,r[k]*factor]))};});}
   function renderSales() {
-    ['sl-period','sl-date-mode','sl-month','sl-day','sl-customer','sl-line-filter','sl-person','sl-rank-metric'].forEach(id=>bindSimple(id,renderSales));
+    ['sl-period','sl-date-mode','sl-month','sl-day','sl-customer','sl-line-filter','sl-person','sl-rank-metric','sl-start','sl-end','sl-query','sl-order','sl-sku'].forEach(id=>bindSimple(id,renderSales));
     const mode=val('sl-date-mode');$('#sl-month-wrap').hidden=mode!=='month';$('#sl-day-wrap').hidden=mode!=='day';$('#sl-period').closest('label').hidden=mode!=='period';
     const date=mode==='day'?val('sl-day'):val('sl-month');
-    const months=mode==='period'?M.periodMonths(val('sl-period')):[Number(date.slice(5,7))];
-    const rows=M.salesFilter({months,customer:val('sl-customer'),line:val('sl-line-filter'),person:val('sl-person')}).filter(r=>mode==='period'||(date.startsWith('2026-')&&(mode!=='day'||r.date===date)));
+    const months=reviewMonths('sl');
+    let rows=M.salesFilter({months,customer:val('sl-customer'),line:val('sl-line-filter'),person:val('sl-person')}).filter(r=>mode==='period'||(date.startsWith('2026-')&&(mode!=='day'||r.date===date)));
+    rows=window.reviewFilter?window.reviewFilter(rows,'sl'):rows;
     const order=M.sum(rows,'order'),rev=M.sum(rows,'revenue'),backlog=M.sum(rows,'backlog');
     const totalForecast=M.sum(M.forecast,'value');
-    $('#sl-kpis').innerHTML=[card('新签订单额',order,'万','所选期间 · 含税'),card(mode==='period'&&val('sl-period')==='ytd'?'确认收入 YTD':'所选期间确认收入',rev,'万','所选期间 · 不含税'),card('在手订单',backlog,'万','所选订单未交余额 · 含税'),card('订单毛利率 · 预测',rate(order-M.sum(rows,'forecastCost'),order),'','预计成本'),card('订单毛利率 · 标准成本',rate(rev-M.sum(rows,'cost'),rev),'','已确认收入对应标准成本'),card('预计全年收入',totalForecast,'万','全年口径 · 含填报')].map(kpiHtml).join('');
+    $('#sl-kpis').innerHTML=[card('应开票金额',M.sum(rows,'unbilled'),'万','订单金额 − 已开票金额 · 含税'),card('回款金额',M.sum(rows,'collect'),'万','所选期间发生额'),card('新签订单额',order,'万','所选期间 · 含税'),card('所选期间确认收入',rev,'万','所选期间 · 不含税'),card('在手订单',backlog,'万','所选订单未交余额 · 含税'),card('订单毛利率 · 预测',rate(order-M.sum(rows,'forecastCost'),order),'','预计成本'),card('订单毛利率 · 标准成本',rate(rev-M.sum(rows,'cost'),rev),'','已确认收入对应标准成本'),card('预计全年收入',totalForecast,'万','全年口径 · 含填报')].map(kpiHtml).join('');
     $('#sl-kpis .kpi:last-child').classList.add('clickable');$('#sl-kpis .kpi:last-child').onclick=()=>openDetail('salesForecast',[['构成','金额','口径'],...M.forecast.map(r=>[r.name,money(r.value),r.name==='在手订单'?'预计转收入，不直接使用含税合同金额':'销售填报，不与其他构成重复'])],'全年预测');
     $('#sl-forecast').innerHTML=`<div class="forecast-total">${money(totalForecast)}<small>万元 · 全年预测</small></div><div class="forecast-stack">${M.forecast.map((r,i)=>`<i class="segment segment-${i}" style="width:${totalForecast?r.value/totalForecast*100:0}%" title="${esc(r.name)} ${money(r.value)} 万元"></i>`).join('')}</div><div class="forecast-legend">${M.forecast.map((r,i)=>`<div><span class="legend-dot segment-${i}"></span><span>${esc(r.name)}</span><strong>${money(r.value)}</strong></div>`).join('')}</div><div class="chart-footnote">在手订单按预计转收入金额测算；未签单预测、在谈商机分别维护。</div>`;
     $('#sl-scope').textContent=` 当前 ${rows.length} 笔订单。`;
@@ -796,16 +799,18 @@
     const lines=[...new Set(rows.map(r=>r.line))];horizontalChart('sl-line',lines,['order','revenue'].map((key,i)=>({name:['订单','收入'][i],data:lines.map(k=>M.sum(rows.filter(r=>r.line===k),key))})));
     lineChart('sl-trend',months.map(m=>m+'月'),['order','revenue','backlog'].map((key,i)=>({name:['新签','确认','在手'][i],data:months.map(m=>M.sum(rows.filter(r=>r.month===m),key))})));
     for(const [id,key] of [['sl-pline','line'],['sl-form','form'],['sl-ind','industry']]){const data=group(rows,key,'revenue').sort((a,b)=>b.value-a.value);horizontalChart(id,data.map(d=>d.label),[{name:'确认收入',data:data.map(d=>d.value)}]);}
-    const table=salesRows(rows);$('#sl-orders').innerHTML=tableHtml(table);$('#sl-drill').onclick=()=>openDetail('salesOrder',table,'销售经营当前筛选');
+    const table=salesRows(rows);$('#sl-kpis .kpi').parentElement.querySelectorAll('.kpi:not(:last-child)').forEach(el=>{el.classList.add('clickable');el.onclick=()=>openDetail('salesOrder',table,'销售指标计算明细（当前筛选）');});$('#sl-orders').innerHTML=tableHtml(table);$('#sl-drill').onclick=()=>openDetail('salesOrder',table,'销售经营当前筛选');
   }
   function renderAr() {
-    ['ar-team','ar-period','ar-person','ar-f-aging'].forEach(id=>bindSimple(id,renderAr));
-    const f={person:val('ar-person'),team:val('ar-team'),aging:val('ar-f-aging')};const months=M.periodMonths(val('ar-period'));
-    const rows=M.arFilter(f),overdue=rows.filter(r=>M.age(r.due)>0),due=rows.filter(r=>M.age(r.due)>=0);
-    const actual=M.salesFilter({months,person:f.person,team:f.team});const targets=M.targets.filter(r=>months.includes(r.month)&&(!f.person||r.person===f.person)&&(!f.team||r.team===f.team));
+    ['ar-team','ar-period','ar-person','ar-f-aging','ar-start','ar-end'].forEach(id=>bindSimple(id,renderAr));
+    M.asOf=val('ar-end')||'2026-07-31';
+    const f={person:val('ar-person'),team:val('ar-team'),aging:val('ar-f-aging')};const months=reviewMonths('ar');
+    const rows=M.arFilter(f).filter(r=>r.invoiceDate<=M.asOf),overdue=rows.filter(r=>M.age(r.due)>0),due=rows.filter(r=>M.age(r.due)>=0);
+    const actual=(window.reviewFilter||((r)=>r))(M.salesFilter({months,person:f.person,team:f.team}),'ar');const targets=reviewTargets(M.targets.filter(r=>months.includes(r.month)&&(!f.person||r.person===f.person)&&(!f.team||r.team===f.team)),'ar');
     const achievement=['order','revenue','collect'].map((key,i)=>card(['订单达成率','收入达成率','回款达成率'][i],rate(M.sum(actual,key),M.sum(targets,key)),'',`实绩 ${money(M.sum(actual,key))} / 目标 ${money(M.sum(targets,key))}`));
-    const risk=[card('应收余额',M.sum(rows,'amount'),'万','含未到期应收'),card('到期金额',M.sum(due,'amount'),'万','含逾期及当日到期'),card('逾期总额',M.sum(overdue,'amount'),'万','合同到期日已过',{tone:overdue.length?'warn':''})];
+    const risk=[card('回款金额',M.sum(actual,'collect'),'万','所选日期区间发生额'),card('应收余额',M.sum(rows,'amount'),'万','截止日余额快照 · 含未到期'),card('当月应收金额（含历史逾期）',M.sum(due,'amount'),'万','含逾期及当日到期'),card('逾期总额',M.sum(overdue,'amount'),'万','合同到期日已过',{tone:overdue.length?'warn':''})];
     $('#ar-kpis').innerHTML=`<div class="metric-group"><div class="group-label">经营达成 <span>所选期间</span></div><div class="kpis cols-3">${achievement.map(kpiHtml).join('')}</div></div><div class="metric-group"><div class="group-label">应收风险 <span>截至 ${M.asOf}</span></div><div class="kpis cols-3">${risk.map(kpiHtml).join('')}</div></div>`;
+    $('#ar-kpis').querySelectorAll('.kpi').forEach((el,i)=>{el.classList.add('clickable');el.onclick=()=>openDetail(i<4?'salesOrder':'arDetail',i<4?salesRows(actual):arRows(i===5?due:i===6?overdue:rows),'指标计算明细 · 截至 '+M.asOf);});
     const teams=f.team?[f.team]:['华东团队','华北团队'];chart('ar-achieve',{color:palette,tooltip:{...baseTooltip(),valueFormatter:v=>Number(v).toFixed(2)+'%'},legend:{top:0},grid:{left:40,right:15,top:40,bottom:28},xAxis:{type:'category',data:teams},yAxis:{type:'value',name:'%'},series:['order','revenue','collect'].map((key,i)=>({name:['订单','收入','回款'][i],type:'bar',data:teams.map(t=>{const a=actual.filter(r=>r.team===t),b=targets.filter(r=>r.team===t);return M.pct(M.sum(a,key),M.sum(b,key));}),barMaxWidth:22}))});
     const bands=['1-30天','31-60天','61-90天','90天+'];chart('ar-aging-chart',pieOpt(bands,bands.map(b=>M.sum(rows.filter(r=>M.ageBand(r)===b),'amount'))));
     const top=group(overdue,'customer','amount').sort((a,b)=>b.value-a.value).slice(0,5);$('#ar-top-table').innerHTML=tableHtml([['客户','逾期金额','最长逾期天数'],...top.map(t=>[t.label,money(t.value),Math.max(...overdue.filter(r=>r.customer===t.label).map(r=>M.age(r.due)))])],{barColumn:1,barMax:Math.max(1,...top.map(t=>t.value))});
@@ -813,16 +818,19 @@
     $('#ar-detail').innerHTML='<button class="detail-open" type="button">查看当前筛选明细 →</button>'+tableHtml(arRows(rows),{overdueDaysIdx:4});$('#ar-detail').onclick=()=>openDetail('arDetail',arRows(rows),'应收当前团队 / 销售员 / 账龄');
   }
   function renderKpi() {
-    bindSimple('kpi-period',renderKpi);const months=M.periodMonths(val('kpi-period')),name='张明',p=M.personal(name,months);
+    ['kpi-period','kpi-start','kpi-end'].forEach(id=>bindSimple(id,renderKpi));M.asOf=val('kpi-end')||'2026-07-31';const months=reviewMonths('kpi'),name='张明',p=M.personal(name,months);
+    const pt=reviewTargets(M.targets.filter(r=>r.person===name),'kpi');['order','revenue','collect'].forEach(k=>p[k+'Target']=M.sum(pt,k));
+    p.rows=(window.reviewFilter||((r)=>r))(p.rows,'kpi');['order','revenue','collect'].forEach(k=>p[k]=M.sum(p.rows,r=>r[k]*r.allocations.find(a=>a.person===name).share));
     $('#kpi-self-name').textContent=name;
     const keys=['order','revenue','collect'];
     $('#kpi-kpis').innerHTML=keys.map((key,i)=>{
       const achieved=M.pct(p[key],p[key+'Target'])||0, gap=p[key+'Target']-p[key];
       return `<article class="metric-summary"><div class="summary-label">${['订单','收入','回款'][i]}达成</div><div class="summary-main"><strong>${rate(p[key],p[key+'Target'])}</strong><span>实绩 ${money(p[key])} 万</span></div><div class="finance-progress"><i style="width:${Math.min(100,Math.max(0,achieved))}%"></i></div><div class="summary-foot"><span>目标 ${money(p[key+'Target'])} 万</span><span>${gap>=0?'距目标':'超目标'} ${money(Math.abs(gap))} 万</span></div></article>`;
     }).join('');
-    lineChart('kpi-trend',months.map(m=>m+'月'),keys.map((key,i)=>({name:['新签','收入','回款'][i],data:months.map(m=>M.personal(name,[m])[key])})));
-    lineChart('kpi-rate-trend',months.map(m=>m+'月'),keys.map((key,i)=>({name:['订单','收入','回款'][i],data:months.map(m=>{const a=M.personal(name,[m]);return M.pct(a[key],a[key+'Target']);})})),'%');
-    const rows=personalRows(p.rows,name);$('#kpi-own-detail').innerHTML=tableHtml(rows);$('#kpi-drill').onclick=()=>openDetail('personal',rows,'张明 / 本人分配后的订单与回款');
+    const ownAr=M.arFilter({person:name}).filter(r=>r.invoiceDate<=M.asOf);$('#kpi-risk').innerHTML=[card('应收余额',M.sum(ownAr,'amount'),'万','责任销售 · 截止日快照'),card('逾期总额',M.sum(ownAr.filter(r=>M.age(r.due)>0),'amount'),'万','合同到期日早于截止日')].map(kpiHtml).join('');$('#kpi-risk').querySelectorAll('.kpi').forEach((el,i)=>{el.classList.add('clickable');el.onclick=()=>openDetail('arDetail',arRows(i?ownAr.filter(r=>M.age(r.due)>0):ownAr),'本人应收风险明细');});
+    lineChart('kpi-trend',months.map(m=>m+'月'),keys.map((key,i)=>({name:['新签','收入','回款'][i],data:months.map(m=>M.sum(p.rows.filter(r=>r.month===m),r=>r[key]*r.allocations.find(a=>a.person===name).share))})));
+    lineChart('kpi-rate-trend',months.map(m=>m+'月'),keys.map((key,i)=>({name:['订单','收入','回款'][i],data:months.map(m=>{return M.pct(M.sum(p.rows.filter(r=>r.month===m),r=>r[key]*r.allocations.find(a=>a.person===name).share),M.sum(pt.filter(r=>r.month===m),key));})})),'%');
+    const rows=personalRows(p.rows,name);$('#kpi-kpis').querySelectorAll('.metric-summary').forEach(el=>{el.classList.add('clickable');el.onclick=()=>openDetail('personal',rows,'本人指标计算明细');});$('#kpi-own-detail').innerHTML=tableHtml(rows);$('#kpi-drill').onclick=()=>openDetail('personal',rows,'张明 / 本人分配后的订单与回款');
   }
   function budgetDetailRows(rows) { return [['预算属性','费用类型','一级部门','二级部门','项目','预算科目','年度预算','期间预算','期间实际','期间差额','预算差异率'],...rows.map(r=>[r.attribute,r.expenseType,r.l1,r.l2,r.project,r.subject,money(r.annual),money(r.periodBudget),money(r.actual),money(r.actual-r.periodBudget),rate(r.actual,r.annual)])]; }
   function renderBudget() {

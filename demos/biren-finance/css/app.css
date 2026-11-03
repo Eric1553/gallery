@@ -1093,3 +1093,9 @@ table.data tr.critical td { background: #fdecee; }
 #view-overview .ceo-hero-card .tag { flex-shrink:0; }
 #view-overview #ov-nextgen { height:260px; }
 #view-rd .grid-1 #rd-dept { height:140px; }
+
+.review-note {font-size:12px;color:var(--text-2);line-height:1.7;margin:10px 0;}
+
+#ar-kpis .metric-group:last-child .kpis {grid-template-columns:repeat(2,minmax(0,1fr));} .filter-bar > .review-note {flex-basis:100%;} @media(max-width:540px){#ar-kpis .metric-group:last-child .kpis {grid-template-columns:1fr;}}
+
+#sl-kpis {grid-template-columns:repeat(4,minmax(0,1fr));}.filters input[type="search"] {background-image:none;} @media(max-width:1000px){#sl-kpis {grid-template-columns:repeat(2,minmax(0,1fr));}} @media(max-width:540px){#sl-kpis {grid-template-columns:1fr;}}
